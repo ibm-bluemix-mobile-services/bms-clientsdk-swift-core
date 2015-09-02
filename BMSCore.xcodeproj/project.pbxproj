@@ -10,6 +10,11 @@
 		92F263FB1B94EBB50063CC1D /* BMSCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F263FA1B94EBB50063CC1D /* BMSCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92F264021B94EBB60063CC1D /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		92F264071B94EBB60063CC1D /* BMSCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264061B94EBB60063CC1D /* BMSCoreTests.swift */; };
+		92F2646A1B9639140063CC1D /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264691B9639140063CC1D /* BMSClient.swift */; };
+		92F2646C1B964C940063CC1D /* ResourceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F2646B1B964C940063CC1D /* ResourceRequest.swift */; };
+		92F264721B9666A60063CC1D /* ResponseListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264711B9666A60063CC1D /* ResponseListener.swift */; };
+		92F264741B966D2B0063CC1D /* BMSRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264731B966D2B0063CC1D /* BMSRequest.swift */; };
+		92F264761B966F010063CC1D /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264751B966F010063CC1D /* Response.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +34,11 @@
 		92F264011B94EBB60063CC1D /* BMSCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BMSCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F264061B94EBB60063CC1D /* BMSCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMSCoreTests.swift; sourceTree = "<group>"; };
 		92F264081B94EBB60063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		92F264691B9639140063CC1D /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
+		92F2646B1B964C940063CC1D /* ResourceRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceRequest.swift; sourceTree = "<group>"; };
+		92F264711B9666A60063CC1D /* ResponseListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseListener.swift; sourceTree = "<group>"; };
+		92F264731B966D2B0063CC1D /* BMSRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSRequest.swift; sourceTree = "<group>"; };
+		92F264751B966F010063CC1D /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				92F263FA1B94EBB50063CC1D /* BMSCore.h */,
+				92F264661B9639010063CC1D /* NetworkRequests */,
 				92F263FC1B94EBB50063CC1D /* Info.plist */,
 			);
 			path = BMSCore;
@@ -84,6 +95,34 @@
 				92F264081B94EBB60063CC1D /* Info.plist */,
 			);
 			path = BMSCoreTests;
+			sourceTree = "<group>";
+		};
+		92F264661B9639010063CC1D /* NetworkRequests */ = {
+			isa = PBXGroup;
+			children = (
+				92F264671B9639010063CC1D /* API */,
+				92F264681B9639010063CC1D /* Internal */,
+			);
+			path = NetworkRequests;
+			sourceTree = "<group>";
+		};
+		92F264671B9639010063CC1D /* API */ = {
+			isa = PBXGroup;
+			children = (
+				92F264711B9666A60063CC1D /* ResponseListener.swift */,
+				92F264691B9639140063CC1D /* BMSClient.swift */,
+				92F2646B1B964C940063CC1D /* ResourceRequest.swift */,
+				92F264751B966F010063CC1D /* Response.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		92F264681B9639010063CC1D /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				92F264731B966D2B0063CC1D /* BMSRequest.swift */,
+			);
+			path = Internal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -142,6 +181,7 @@
 		92F263EE1B94EBB50063CC1D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = IBM;
 				TargetAttributes = {
@@ -193,6 +233,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92F2646A1B9639140063CC1D /* BMSClient.swift in Sources */,
+				92F264741B966D2B0063CC1D /* BMSRequest.swift in Sources */,
+				92F2646C1B964C940063CC1D /* ResourceRequest.swift in Sources */,
+				92F264721B9666A60063CC1D /* ResponseListener.swift in Sources */,
+				92F264761B966F010063CC1D /* Response.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +352,7 @@
 		92F2640C1B94EBB60063CC1D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -317,12 +363,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		92F2640D1B94EBB60063CC1D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -375,6 +423,7 @@
 				92F2640D1B94EBB60063CC1D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		92F2640E1B94EBB60063CC1D /* Build configuration list for PBXNativeTarget "BMSCoreTests" */ = {
 			isa = XCConfigurationList;
@@ -383,6 +432,7 @@
 				92F264101B94EBB60063CC1D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
