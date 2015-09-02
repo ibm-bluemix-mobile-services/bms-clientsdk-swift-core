@@ -109,10 +109,10 @@
 		92F264671B9639010063CC1D /* API */ = {
 			isa = PBXGroup;
 			children = (
-				92F264711B9666A60063CC1D /* ResponseListener.swift */,
 				92F264691B9639140063CC1D /* BMSClient.swift */,
-				92F2646B1B964C940063CC1D /* ResourceRequest.swift */,
 				92F264751B966F010063CC1D /* Response.swift */,
+				92F264711B9666A60063CC1D /* ResponseListener.swift */,
+				92F2646B1B964C940063CC1D /* ResourceRequest.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
