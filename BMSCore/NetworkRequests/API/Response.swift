@@ -11,6 +11,7 @@ import Foundation
 
 public struct Response: CustomStringConvertible {
     
+    
     // MARK: Properties (public)
     
     public var description: String {
@@ -74,7 +75,7 @@ public struct Response: CustomStringConvertible {
     
     
     
-    // MARK: Properties (private)
+    // MARK: Properties (internal/private)
     
     private var alamoFireResponse: NSHTTPURLResponse
     private var headers: [String: String]
@@ -96,19 +97,19 @@ public struct Response: CustomStringConvertible {
 
 
 /**
-* Error codes explaining why the request failed.
-*/
+ *  Error codes explaining why the request failed.
+ */
 public enum ErrorCode {
     
     /**
-    * The client failed to connect to the server. Possible reasons include connection timeout,
-    * DNS failures, secure connection problems, etc.
-    */
+     *  The client failed to connect to the server. Possible reasons include connection timeout,
+     *  DNS failures, secure connection problems, etc.
+     */
     case UNABLE_TO_CONNECT
     
     /**
-    * The server responded with a failure code.
-    */
+     *  The server responded with a failure code.
+     */
     case SERVER_ERROR
 }
 
