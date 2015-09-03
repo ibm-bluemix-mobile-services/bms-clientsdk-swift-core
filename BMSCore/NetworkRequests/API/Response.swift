@@ -28,7 +28,7 @@ public struct Response: CustomStringConvertible {
     /**
     *  Dictionary with all the headers and the corresponding values for each one.
     */
-    public func responseHeaders() -> [String: String] {
+    public var responseHeaders: [String: String] {
         return [:]
     }
     
@@ -49,19 +49,19 @@ public struct Response: CustomStringConvertible {
     /**
      *  The body of the response as a byte array. Returns nil if there is no body.
      */
-    public func responseBytes() -> [UInt8] {
+    public var responseBytes: [UInt8] {
         return [UInt8]()
     }
     
     /** 
-     *  Returns true if this response redirects to another resource.
+     *  True if this response redirects to another resource.
      */
     public var isRedirect: Bool {
         return false
     }
     
     /**
-     *  Returns true if the code is in [200..300), which means the request was
+     *  True if the code is in [200..300), which means the request was
      *  successfully received, understood, and accepted.
      */
     public var isSuccessful: Bool {
