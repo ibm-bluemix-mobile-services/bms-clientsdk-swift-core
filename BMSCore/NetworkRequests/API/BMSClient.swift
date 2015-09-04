@@ -55,6 +55,15 @@ public class BMSClient {
     
     
     
+    // MARK: Initializer
+    
+    init() {
+        defaultRequestTimeout = 20000
+        rewriteDomain = ""
+    }
+    
+    
+    
     // MARK: Methods (public)
     
     /**
@@ -87,15 +96,6 @@ public class BMSClient {
      */
     public func unregisterAuthenticationHandler() {
         
-    }
-    
-    
-    
-    // MARK: Initializer
-    
-    init() {
-        defaultRequestTimeout = 20000
-        rewriteDomain = ""
     }
     
 }

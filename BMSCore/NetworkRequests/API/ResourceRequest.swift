@@ -20,14 +20,6 @@ public class ResourceRequest: BMSRequest {
     
     
     
-    // MARK: Methods (internal/private)
-    
-    override func sendRequestWithRequestBody(requestBody: String, delegate: ResponseDelegate) {
-        
-    }
-    
-    
-    
     // MARK: Initializers
     
     /**
@@ -46,5 +38,11 @@ public class ResourceRequest: BMSRequest {
     }
     
     
+    
+    // MARK: Methods (internal/private)
+    
+    override func sendRequestWithRequestBody(requestBody: String, delegate: ResponseDelegate) {
+        
+    }
     
 }

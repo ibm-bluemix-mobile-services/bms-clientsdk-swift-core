@@ -41,6 +41,27 @@ public class BMSRequest {
     
     
     
+    // MARK: Initializers
+    
+    /**
+    *  Constructs a new request with the specified URL, using the specified HTTP method.
+    *  Additionally this constructor sets a custom timeout.
+    *
+    *  @param url     The resource URL
+    *  @param method  The HTTP method to use.
+    *  @param timeout The timeout in milliseconds for this request.
+    *  @throws IllegalArgumentException if the method name is not one of the valid HTTP method names.
+    *  @throws MalformedURLException    if the URL is not a valid URL
+    */
+    // TODO: Throws
+    
+    // DGONZ: Why not include query parameters and headers in initializers?
+    init(url: String, method: String, timeout: Int = BMSRequest.DEFAULT_TIMEOUT) {
+        self.url = url
+        self.method = method
+        self.timeout = timeout
+    }
+    
     
     
     // MARK: Methods (public)
@@ -135,29 +156,6 @@ public class BMSRequest {
     
     func unregisterInterceptor() {
         
-    }
-    
-    
-    
-    // MARK: Initializers
-    
-    /**
-     *  Constructs a new request with the specified URL, using the specified HTTP method.
-     *  Additionally this constructor sets a custom timeout.
-     *
-     *  @param url     The resource URL
-     *  @param method  The HTTP method to use.
-     *  @param timeout The timeout in milliseconds for this request.
-     *  @throws IllegalArgumentException if the method name is not one of the valid HTTP method names.
-     *  @throws MalformedURLException    if the URL is not a valid URL
-     */
-    // TODO: Throws
-    
-    // DGONZ: Why not include query parameters and headers in initializers?
-    init(url: String, method: String, timeout: Int = BMSRequest.DEFAULT_TIMEOUT) {
-        self.url = url
-        self.method = method
-        self.timeout = timeout
     }
     
 }
