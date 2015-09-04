@@ -9,7 +9,7 @@
 import Foundation
 
 
-public struct Response: CustomStringConvertible {
+public class Response: CustomStringConvertible {
     
     
     // MARK: Properties (public)

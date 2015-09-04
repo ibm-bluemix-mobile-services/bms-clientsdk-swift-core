@@ -11,4 +11,6 @@ import Foundation
 
 class BMSRequest {
     
+    
+    
 }
