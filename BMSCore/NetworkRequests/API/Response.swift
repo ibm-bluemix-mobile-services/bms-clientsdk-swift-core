@@ -26,8 +26,8 @@ public class Response: CustomStringConvertible {
     }
     
     /**
-    *  Dictionary with all the headers and the corresponding values for each one.
-    */
+     *  Dictionary with all the headers and the corresponding values for each one.
+     */
     public var responseHeaders: [String: String] {
         return [:]
     }
@@ -111,7 +111,5 @@ public enum ErrorCode {
      *  The server responded with a failure code.
      */
     case SERVER_ERROR
+    
 }
-
-
-

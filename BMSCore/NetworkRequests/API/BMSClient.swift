@@ -12,6 +12,8 @@ import Foundation
 public class BMSClient {
     
     
+    // MARK: Constants
+    
     /**
      *  The class singleton
      */
