@@ -11,7 +11,6 @@
 		92F264021B94EBB60063CC1D /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		92F264071B94EBB60063CC1D /* BMSCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264061B94EBB60063CC1D /* BMSCoreTests.swift */; };
 		92F2646A1B9639140063CC1D /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264691B9639140063CC1D /* BMSClient.swift */; };
-		92F2646C1B964C940063CC1D /* ResourceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F2646B1B964C940063CC1D /* ResourceRequest.swift */; };
 		92F264761B966F010063CC1D /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264751B966F010063CC1D /* Response.swift */; };
 		92F264781B97C1C90063CC1D /* ResponseDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264771B97C1C90063CC1D /* ResponseDelegate.swift */; };
 		92F2647B1B9A3C9F0063CC1D /* BMSRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F2647A1B9A3C9F0063CC1D /* BMSRequest.swift */; };
@@ -35,7 +34,6 @@
 		92F264061B94EBB60063CC1D /* BMSCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMSCoreTests.swift; sourceTree = "<group>"; };
 		92F264081B94EBB60063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92F264691B9639140063CC1D /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
-		92F2646B1B964C940063CC1D /* ResourceRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceRequest.swift; sourceTree = "<group>"; };
 		92F264751B966F010063CC1D /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		92F264771B97C1C90063CC1D /* ResponseDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDelegate.swift; sourceTree = "<group>"; };
 		92F2647A1B9A3C9F0063CC1D /* BMSRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSRequest.swift; sourceTree = "<group>"; };
@@ -112,7 +110,6 @@
 				92F264751B966F010063CC1D /* Response.swift */,
 				92F264771B97C1C90063CC1D /* ResponseDelegate.swift */,
 				92F2647A1B9A3C9F0063CC1D /* BMSRequest.swift */,
-				92F2646B1B964C940063CC1D /* ResourceRequest.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -228,7 +225,6 @@
 				92F2646A1B9639140063CC1D /* BMSClient.swift in Sources */,
 				92F264781B97C1C90063CC1D /* ResponseDelegate.swift in Sources */,
 				92F2647B1B9A3C9F0063CC1D /* BMSRequest.swift in Sources */,
-				92F2646C1B964C940063CC1D /* ResourceRequest.swift in Sources */,
 				92F264761B966F010063CC1D /* Response.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
