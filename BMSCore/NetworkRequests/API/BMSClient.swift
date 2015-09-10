@@ -19,11 +19,6 @@ public class BMSClient {
     
     // MARK: Constants
     
-    /**
-     *  The class singleton
-     */
-    public static let sharedInstance = BMSClient()
-    
     public static let HTTP_SCHEME = "http"
     public static let HTTPS_SCHEME = "https"
     
@@ -36,21 +31,17 @@ public class BMSClient {
     /**
      *  Specifies the base back-end URL
      */
-    public var backendRoute: String {
-        return ""
-    }
+    public private(set) var backendRoute: String
     
     /**
      *  Specifies the back end application id.
      */
-    public var backendGUID: String {
-        return ""
-    }
+    public private(set) var backendGUID: String
     
     /**
      *  Specifies default request timeout.
      */
-    public var defaultRequestTimeout: Int
+    public var requestTimeout: Int = 20000
     
     
     
@@ -62,27 +53,21 @@ public class BMSClient {
     
     // MARK: Initializer
     
-    init() {
-        defaultRequestTimeout = 20000
+    /**
+     *  Sets the base URL for the authorization server.
+     *
+     *  @param backendRoute Specifies the base URL for the authorization server
+     *  @param backendGUID  Specifies the GUID of the application
+     */
+    init(backendRoute: String, backendGUID: String) {
+        self.backendRoute = backendRoute
+        self.backendGUID = backendGUID
         rewriteDomain = ""
     }
     
     
     
     // MARK: Methods (public)
-    
-    /**
-     *  Sets the base URL for the authorization server.
-     *  <p>
-     *  This method should be called before you send the first request that requires authorization.
-     *  </p>
-     *
-     *  @param backendRoute Specifies the base URL for the authorization server
-     *  @param backendGUID  Specifies the GUID of the application
-     */
-    public func initializeWithBackendRoute(backendRoute: String, backendGUID: String) {
-        
-    }
     
     /**
      *  Registers a delegate that will handle authentication for the specified realm
