@@ -15,6 +15,8 @@ import Foundation
 
 
 // TODO: INCORPORATE ALAMOFIRE
+
+// ANTON: Worth it to prefix classes? Not necessary or even encouraged in Swift.
 public class BMSRequest {
     
     
@@ -71,21 +73,14 @@ public class BMSRequest {
     
     // MARK: Methods (public)
     
-    // DGONZ: Public properties instead of getters and setters?
-    
-    // DGONZ: Is removeHeaders necessary? User can just set to nil.
-    
-    // DGONZ: Is addHeader and addQueryParams necessary? They are just String:String dictionaries
-    
-    // TODO: Delegates vs completion blocks 
-    // (Obj-C API had only 1 send method, and it took a block as its only parameter)
+    // ANTON: Add send with delegate method(s)?
     
     /**
      *  Send this resource request asynchronously, without a request body.
      *
      *  @param delegate The delegate whose onSuccess or onFailure methods will be called when this request finishes.
      */
-    public func sendWithDelegate(delegate: ResponseDelegate) {
+    public func sendWithCompletionHandler(delegate: ResponseDelegate) {
         
     }
     
@@ -93,10 +88,11 @@ public class BMSRequest {
      *  Send this resource request asynchronously, with the given string as the request body.
      *  If no content type header was set, this method will set it to "text/plain".
      *
-     *  @param requestBody The request body text
-     *  @param delegate    The delegate whose onSuccess or onFailure methods will be called when this request finishes.
+     *  @param completionHandler    The closure that will be called when this request finishes.
+     *  @param requestBody          The request body text
      */
-    public func sendWithRequestBody(requestBody: String, delegate: ResponseDelegate) {
+    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void,
+                                         requestBody: String) {
         
     }
     
@@ -104,10 +100,11 @@ public class BMSRequest {
      *  Send this resource request asynchronously, with the given JSON object as the request body.
      *  If no content type header was set, this method will set it to "application/json".
      *
-     *  @param json     The JSON object to put in the request body
-     *  @param delegate The delegate whose onSuccess or onFailure methods will be called when this request finishes.
+     *  @param completionHandler    The closure that will be called when this request finishes.
+     *  @param requestJson          The JSON object to put in the request body
      */
-    public func sendWithRequestJson(jsonData: [String: AnyObject], delegate: ResponseDelegate) {
+    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void,
+                                         requestJson: [String: AnyObject]) {
         
     }
     
@@ -115,10 +112,11 @@ public class BMSRequest {
      *  Send this resource request asynchronously, with the content of the given byte array as the request body.
      *  Note that this method does not set any content type header, if such a header is required it must be set before calling this method.
      *
-     *  @param data     The byte array containing the request body
-     *  @param delegate The delegate whose onSuccess or onFailure methods will be called when this request finishes.
+     *  @param completionHandler    The closure that will be called when this request finishes.
+     *  @param requestData          The data containing the request body
      */
-    public func sendWithRequestBytes(byteData: [UInt8], delegate: ResponseDelegate) {
+    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void,
+                                         requestData: [NSData]) {
         
     }
     
@@ -126,10 +124,11 @@ public class BMSRequest {
     *  Send this resource request asynchronously, with the given form parameters as the request body.
     *  This method will set the content type header to "application/x-www-form-urlencoded".
     *
-    *  @param formParameters The parameters to put in the request body
-    *  @param delegate       The delegate whose onSuccess or onFailure methods will be called when this request finishes.
+    *  @param completionHandler     The closure that will be called when this request finishes.
+    *  @param requestFormParameters The parameters to put in the request body
     */
-    public func sendWithFormParameters(formParameters: [String: String], delegate: ResponseDelegate) {
+    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void,
+                                         requestFormParameters: [String: String]) {
         
     }
     
