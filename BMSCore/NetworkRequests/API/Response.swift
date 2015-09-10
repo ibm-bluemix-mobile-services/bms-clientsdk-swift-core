@@ -104,6 +104,8 @@ public class Response: CustomStringConvertible {
 /**
  *  Error codes explaining why the request failed.
  */
+
+// TODO: Add more errors as needed
 public enum ErrorCode {
     
     /**

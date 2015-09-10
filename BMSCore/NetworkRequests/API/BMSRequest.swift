@@ -29,20 +29,17 @@ public class BMSRequest {
     
     // MARK: Properties (public)
     
+    // TODO: Access levels - which properties should be publicly settable?
     public private(set) var method: String
     public private(set) var url: String
-    public var queryParameters: [String: String]?
-    public var headers: [String: String]?
-    public var timeout: Int
+    public private(set) var queryParameters: [String: String]?
+    public private(set) var headers: [String: String]?
+    public private(set) var timeout: Int
     // TODO: AlamoFire client?
     // TODO: Callback object?
-    public var callBack: AnyObject {
+    private var callBack: AnyObject {
         return ""
     }
-    
-    
-    
-    // MARK: Properties (internal/private)
     
     
     
@@ -54,16 +51,19 @@ public class BMSRequest {
     *
     *  @param url     The resource URL
     *  @param method  The HTTP method to use.
+    *  @param headers  Optional headers to add to the request.
+    *  @param parameters  Optional query parameters to add to the request.
     *  @param timeout The timeout in milliseconds for this request.
     *  @throws IllegalArgumentException if the method name is not one of the valid HTTP method names.
     *  @throws MalformedURLException    if the URL is not a valid URL
     */
-    // TODO: Throws
     
-    // DGONZ: Why not include query parameters and headers in initializers?
-    init(url: String, method: String, timeout: Int = BMSRequest.DEFAULT_TIMEOUT) {
+    // TODO: Throws
+    init(url: String, method: String, headers: [String: String]?, parameters: [String: String]?, timeout: Int = BMSRequest.DEFAULT_TIMEOUT) {
         self.url = url
         self.method = method
+        self.headers = headers
+        self.queryParameters = parameters
         self.timeout = timeout
     }
     
