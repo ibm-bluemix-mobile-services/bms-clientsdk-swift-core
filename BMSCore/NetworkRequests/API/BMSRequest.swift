@@ -22,10 +22,10 @@ public class BMSRequest {
     
     // MARK: Constants
     
-    static let DEFAULT_TIMEOUT: Int = 60000;
-    static let CONTENT_TYPE: String = "Content-Type"
-    static let JSON_CONTENT_TYPE: String = "application/json"
-    static let TEXT_PLAIN: String = "text/plain"
+    static let DEFAULT_TIMEOUT = 60000;
+    static let CONTENT_TYPE = "Content-Type"
+    static let JSON_CONTENT_TYPE = "application/json"
+    static let TEXT_PLAIN = "text/plain"
     
     
     
@@ -34,9 +34,14 @@ public class BMSRequest {
     // TODO: Access levels - which properties should be publicly settable?
     public private(set) var method: String
     public private(set) var url: String
-    public private(set) var queryParameters: [String: String]?
+    public private(set) var queryParameters: [String: AnyObject]?
     public private(set) var headers: [String: String]?
     public private(set) var timeout: Int
+    
+    
+    
+    // MARK: Properties (internal/private)
+    
     // TODO: AlamoFire client?
     // TODO: Callback object?
     private var callBack: AnyObject {
@@ -61,7 +66,7 @@ public class BMSRequest {
     */
     
     // TODO: Throws
-    init(url: String, method: String, headers: [String: String]?, parameters: [String: String]?, timeout: Int = BMSRequest.DEFAULT_TIMEOUT) {
+    init(url: String, method: String, headers: [String: String]?, parameters: [String: AnyObject]?, timeout: Int = BMSRequest.DEFAULT_TIMEOUT) {
         self.url = url
         self.method = method
         self.headers = headers
@@ -78,9 +83,9 @@ public class BMSRequest {
     /**
      *  Send this resource request asynchronously, without a request body.
      *
-     *  @param delegate The delegate whose onSuccess or onFailure methods will be called when this request finishes.
+     *  @param completionHandler    The closure that will be called when this request finishes.
      */
-    public func sendWithCompletionHandler(delegate: ResponseDelegate) {
+    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void) {
         
     }
     
