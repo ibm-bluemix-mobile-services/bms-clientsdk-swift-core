@@ -37,6 +37,6 @@ public protocol ResponseDelegate {
      *  @param response Contains detail regarding why the request failed
      *  @param error Error that could have caused the request to fail. Null if no error is thrown.
      */
-    func onFailure (response: Response, error: NSError)
+    func onFailure (response: Response, error: ErrorType)
     
 }
