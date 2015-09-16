@@ -12,17 +12,20 @@
 */
 
 import Foundation
+import Alamofire
 
 
-// TODO: INCORPORATE ALAMOFIRE
+// GET, POST, PUT, etc.
+public typealias HttpMethod = Alamofire.Method
 
-// ANTON: Worth it to prefix classes? Not necessary or even encouraged in Swift.
+
+// TODO: Remove class prefix
 public class BMSRequest {
     
     
     // MARK: Constants
     
-    static let DEFAULT_TIMEOUT = 60000;
+    static let DEFAULT_TIMEOUT = 60000.0;
     static let CONTENT_TYPE = "Content-Type"
     static let JSON_CONTENT_TYPE = "application/json"
     static let TEXT_PLAIN = "text/plain"
@@ -32,21 +35,18 @@ public class BMSRequest {
     // MARK: Properties (public)
     
     // TODO: Access levels - which properties should be publicly settable?
-    public private(set) var method: String
-    public private(set) var url: String
+    public let method: HttpMethod
+    public let url: URLStringConvertible
+    public let headers: [String: String]?
+    public let timeout: Double
     public private(set) var queryParameters: [String: AnyObject]?
-    public private(set) var headers: [String: String]?
-    public private(set) var timeout: Int
     
     
     
     // MARK: Properties (internal/private)
     
-    // TODO: AlamoFire client?
-    // TODO: Callback object?
-    private var callBack: AnyObject {
-        return ""
-    }
+    let networkManager: Alamofire.Manager
+    private var startTime: NSTimeInterval = 0.0
     
     
     
@@ -66,74 +66,68 @@ public class BMSRequest {
     */
     
     // TODO: Throws
-    init(url: String, method: String, headers: [String: String]?, parameters: [String: AnyObject]?, timeout: Int = BMSRequest.DEFAULT_TIMEOUT) {
+    public init(url: String,
+               method: HttpMethod,
+               headers: [String: String]?,
+               timeout: Double = BMSRequest.DEFAULT_TIMEOUT) {
+        
         self.url = url
         self.method = method
         self.headers = headers
-        self.queryParameters = parameters
         self.timeout = timeout
+        
+        // Set timeout
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        configuration.timeoutIntervalForRequest = timeout
+        networkManager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: nil)
     }
     
     
     
     // MARK: Methods (public)
     
-    // ANTON: Add send with delegate method(s)?
+    // TODO: Add JSON or text
     
-    /**
-     *  Send this resource request asynchronously, without a request body.
-     *
-     *  @param completionHandler    The closure that will be called when this request finishes.
-     */
-    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void) {
+    // If no content type header was set, this method will set it to "text/plain"
+    public func addRequestBody(requestString: String) {
+        
+    }
+    
+    // If no content type header was set, this method will set it to "application/json"
+    public func addRequestBody(requestJson: [String: AnyObject]?) {
+        
+    }
+    
+    // This method will set the content type header to "application/x-www-form-urlencoded".
+    public func addQueryParameters(requestParameters: [String: String]) {
         
     }
     
     /**
-     *  Send this resource request asynchronously, with the given string as the request body.
-     *  If no content type header was set, this method will set it to "text/plain".
+     *  Send this resource request asynchronously.
      *
      *  @param completionHandler    The closure that will be called when this request finishes.
-     *  @param requestBody          The request body text
      */
-    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void,
-                                         requestBody: String) {
+    public func sendWithCompletionHandler(callback: (Response) -> Void) {
         
-    }
-    
-    /**
-     *  Send this resource request asynchronously, with the given JSON object as the request body.
-     *  If no content type header was set, this method will set it to "application/json".
-     *
-     *  @param completionHandler    The closure that will be called when this request finishes.
-     *  @param requestJson          The JSON object to put in the request body
-     */
-    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void,
-                                         requestJson: [String: AnyObject]) {
+        let bmsCompletionHandler = {
+            (request: NSURLRequest?, response: NSHTTPURLResponse?, data: NSData?, error: ErrorType?) -> Void in
+            
+            let endTime = NSDate.timeIntervalSinceReferenceDate()
+            let roundTripTime = endTime - self.startTime
+            
+            // TODO: Build the "Response" object
+            let bmsResponse = Response(response: response!, error: error!) // Fix the forced unwrapping !
+            
+            // TODO: Callback with only one parameter?
+            callback(bmsResponse)
+            
+        }
         
-    }
-    
-    /**
-     *  Send this resource request asynchronously, with the content of the given byte array as the request body.
-     *  Note that this method does not set any content type header, if such a header is required it must be set before calling this method.
-     *
-     *  @param completionHandler    The closure that will be called when this request finishes.
-     *  @param requestData          The data containing the request body
-     */
-    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void,
-                                         requestData: [NSData]) {
+        startTime = NSDate.timeIntervalSinceReferenceDate()
         
-    }
-    
-    /**
-    *  Send this resource request asynchronously, with the given form parameters as the request body.
-    *  This method will set the content type header to "application/x-www-form-urlencoded".
-    *
-    *  @param completionHandler     The closure that will be called when this request finishes.
-    *  @param requestFormParameters The parameters to put in the request body
-    */
-    public func sendWithCompletionHandler(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, NSData?, ErrorType?) -> Void,
-                                         requestFormParameters: [String: String]) {
+        networkManager.request(self.method, self.url, parameters: self.queryParameters, headers: self.headers)
+                      .response(completionHandler: bmsCompletionHandler)
         
     }
     
@@ -143,28 +137,6 @@ public class BMSRequest {
     
     // TODO: Figure out how to handle redirects with AlamoFire
     
-    func sendRequestWithRequestBody(requestBody: String, delegate: ResponseDelegate) {
-        
-    }
-    
-    func combineUrlWithQueryParameters(queryParameters: [String: String], url: String) {
-        
-    }
-    
-    func urlContainsUriPath(url: String) {
-        
-    }
-    
-    func setUp() {
-        
-    }
-    
-    func registerInterceptor() {
-        
-    }
-    
-    func unregisterInterceptor() {
-        
-    }
     
 }
+
