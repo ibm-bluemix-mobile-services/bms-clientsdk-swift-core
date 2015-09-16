@@ -14,6 +14,8 @@
 import Foundation
 
 
+// TODO: Make interface? Reduce to just have status, responseString, responseJson, and headers
+
 public class Response: CustomStringConvertible {
     
     
@@ -54,8 +56,8 @@ public class Response: CustomStringConvertible {
     /**
      *  The body of the response as a byte array. Returns nil if there is no body.
      */
-    public var responseBytes: [UInt8] {
-        return [UInt8]()
+    public var responseData: [NSData] {
+        return [("" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!]
     }
     
     /** 
@@ -90,11 +92,11 @@ public class Response: CustomStringConvertible {
     // MARK: Initializer
     
     // TODO: Add AlamoFire response parameter
-    init(response: NSHTTPURLResponse, error: ErrorCode?) {
+    init(response: NSHTTPURLResponse, error: ErrorType?) {
         alamoFireResponse = response
         headers = [:]
         
-        errorCode = error
+        errorCode = nil
     }
     
 }
