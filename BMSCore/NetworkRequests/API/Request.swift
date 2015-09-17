@@ -19,7 +19,6 @@ import Alamofire
 public typealias HttpMethod = Alamofire.Method
 
 
-// TODO: Remove class prefix
 public class Request {
     
     
@@ -36,7 +35,7 @@ public class Request {
     
     // TODO: Access levels - which properties should be publicly settable?
     public let method: HttpMethod
-    public let url: URLStringConvertible
+    public let url: String
     public let headers: [String: String]?
     public let timeout: Double
     public private(set) var queryParameters: [String: AnyObject]?
@@ -47,6 +46,23 @@ public class Request {
     
     let networkManager: Alamofire.Manager
     private var startTime: NSTimeInterval = 0.0
+    var allowRedirects: Bool {
+        get {
+            return self.allowRedirects
+        }
+        set(redirectionIsAllowed) {
+            if redirectionIsAllowed {
+                networkManager.delegate.taskWillPerformHTTPRedirection = { _, _, _, request in
+                    return request
+                }
+            }
+            else {
+                networkManager.delegate.taskWillPerformHTTPRedirection = { _, _, _, _ in
+                    return nil
+                }
+            }
+        }
+    }
     
     
     
@@ -76,7 +92,7 @@ public class Request {
         self.headers = headers
         self.timeout = timeout
         
-        // Set timeout
+        // Set timeout and initialize Alamofire manager
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = timeout
         networkManager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: nil)
@@ -130,13 +146,5 @@ public class Request {
                       .response(completionHandler: bmsCompletionHandler)
         
     }
-    
-    
-    
-    // MARK: Methods (internal/private)
-    
-    // TODO: Figure out how to handle redirects with AlamoFire
-    
-    
 }
 
