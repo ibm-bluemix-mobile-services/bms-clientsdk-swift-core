@@ -31,17 +31,12 @@ public class BMSClient {
     /**
      *  Specifies the base back-end URL
      */
-    public private(set) var backendRoute: String
+    public private(set) var bluemixAppRoute: String
     
     /**
      *  Specifies the back end application id.
      */
-    public private(set) var backendGUID: String
-    
-    /**
-     *  Specifies default request timeout.
-     */
-    public var requestTimeout: Int = 20000
+    public let bluemixAppGUID: String
     
     
     
@@ -59,33 +54,10 @@ public class BMSClient {
      *  @param backendRoute Specifies the base URL for the authorization server
      *  @param backendGUID  Specifies the GUID of the application
      */
-    init(backendRoute: String, backendGUID: String) {
-        self.backendRoute = backendRoute
-        self.backendGUID = backendGUID
+    init(bluemixAppRoute: String, bluemixAppGUID: String) {
+        self.bluemixAppRoute = bluemixAppRoute
+        self.bluemixAppGUID = bluemixAppGUID
         rewriteDomain = ""
-    }
-    
-    
-    
-    // MARK: Methods (public)
-    
-    /**
-     *  Registers a delegate that will handle authentication for the specified realm
-     *  
-     *  @param authenticationDelegate Delegate that will handle authentication challenges
-     *  @param realm Realm name
-     */
-    public func registerAuthenticationHandler() {
-        
-    }
-    
-    /**
-     *  Unregisters an authentication delegate for the specified realm
-     *
-     *  @param realm Realm name
-     */
-    public func unregisterAuthenticationHandler() {
-        
     }
     
 }
