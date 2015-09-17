@@ -20,7 +20,7 @@ public typealias HttpMethod = Alamofire.Method
 
 
 // TODO: Remove class prefix
-public class BMSRequest {
+public class Request {
     
     
     // MARK: Constants
@@ -69,7 +69,7 @@ public class BMSRequest {
     public init(url: String,
                method: HttpMethod,
                headers: [String: String]?,
-               timeout: Double = BMSRequest.DEFAULT_TIMEOUT) {
+               timeout: Double = Request.DEFAULT_TIMEOUT) {
         
         self.url = url
         self.method = method
