@@ -133,10 +133,9 @@ public class Request {
             let roundTripTime = endTime - self.startTime
             
             // TODO: Build the "Response" object
-            let bmsResponse = Response(response: response!, error: error!) // Fix the forced unwrapping !
             
             // TODO: Callback with only one parameter?
-            callback(bmsResponse)
+//            callback()
             
         }
         
@@ -146,5 +145,13 @@ public class Request {
                       .response(completionHandler: bmsCompletionHandler)
         
     }
+    
+    
+    
+    // MARK: Methods (internal/private)
+    
+    // TODO: Network logging interceptor
+    
+    
 }
 
