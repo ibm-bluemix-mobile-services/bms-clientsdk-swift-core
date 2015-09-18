@@ -9,7 +9,7 @@
 import Foundation
 
 
-protocol MFPClient {
+internal protocol MFPClient {
     
     /**
      *  Specifies default request timeout.
@@ -37,7 +37,7 @@ protocol MFPClient {
 }
 
 
-extension MFPClient {
+internal extension MFPClient {
     
     func registerAuthenticationDelegate(delegate: Any, realm: String) {
         
