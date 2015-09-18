@@ -9,22 +9,23 @@
 import Foundation
 
 
-public struct BMSResponse: Response, CustomStringConvertible {
+// TODO: Documentation
+public struct BMSResponse: Response {
     
     
     // MARK: Properties (public)
     
-    public let description: String
+    public let statusCode: Int?
     
-    public let status: String
+    // TODO: Change from [NSObject: AnyObject] to [String: String]?
+    public let headers: [NSObject: AnyObject]?
     
-    public let headers: [String: String]
+    public let responseText: String?
     
-    public let responseText: String
+    // TODO: Change from AnyObject to [String: AnyObject]?
+    public let responseJSON: AnyObject?
     
-    public let responseJSON: [String: AnyObject]
-    
-    public let responseData: NSData
+    public let responseData: NSData?
     
     public let error: ErrorType?
     
@@ -32,19 +33,35 @@ public struct BMSResponse: Response, CustomStringConvertible {
     
     // MARK: Properties (internal/private)
     
-    private let alamoFireResponse: NSHTTPURLResponse
+    let alamoFireResponse: NSHTTPURLResponse?
+    
+    let isSuccessful: Bool?
     
     let isRedirect: Bool
-    
-    let isSuccessful: Bool
     
     
     
     // MARK: Initializer
     
-    // TODO: Implement initializer
-//    init() {
-//        
-//    }
+    init(responseText: String?, responseJSON: AnyObject?, responseData: NSData?, error: ErrorType?, alamoFireResponse: NSHTTPURLResponse?, isRedirect: Bool) {
+        
+        self.responseText = responseText
+        self.responseJSON = responseJSON
+        self.responseData = responseData
+        self.error = error
+        self.alamoFireResponse = alamoFireResponse
+        self.isRedirect = isRedirect
+        
+        self.statusCode = alamoFireResponse?.statusCode
+        
+        if let status = statusCode {
+            isSuccessful = (200..<300 ~= status)
+        }
+        else {
+            isSuccessful = false
+        }
+        
+        self.headers = alamoFireResponse?.allHeaderFields
+    }
     
 }

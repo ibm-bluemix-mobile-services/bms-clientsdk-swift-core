@@ -19,22 +19,29 @@ public protocol Response {
     /**
      *  HTTP status of the response. Returns "0" for no response.
      */
-    var status: String { get }
+    var statusCode: Int? { get }
     
     /**
     *  HTTP headers from the response.
     */
-    var headers: [String: String] { get }
+    // TODO: Change from [NSObject: AnyObject] to [String: String]?
+    var headers: [NSObject: AnyObject]? { get }
     
     /**
      *  The body of the response as a String. Returns nil if there is no body or exception occurred when building the response string.
      */
-    var responseText: String { get }
+    var responseText: String? { get }
     
     /**
      *  The body of the response as a JSONObject. Returns nil if there is no body or if it is not a valid JSONObject.
      */
-    var responseJSON: [String: AnyObject] { get }
+    // TODO: Change from AnyObject to [String: AnyObject]?
+    var responseJSON: AnyObject? { get }
+    
+    /**
+     *  The body of the response as NSData. Returns nil if there is no body or if it is not valid NSData.
+     */
+    var responseData: NSData? { get }
     
     /**
      *  The error code for the cause of the failure.
