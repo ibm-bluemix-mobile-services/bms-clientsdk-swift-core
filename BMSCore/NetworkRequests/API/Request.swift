@@ -19,6 +19,7 @@ import Alamofire
 public typealias HttpMethod = Alamofire.Method
 
 
+// TODO: Split into 2 classes like Response?
 public class Request {
     
     
@@ -105,17 +106,17 @@ public class Request {
     // TODO: Add JSON or text
     
     // If no content type header was set, this method will set it to "text/plain"
-    public func addRequestBody(requestString: String) {
+    public func setRequestBody(requestString: String) {
         
     }
     
     // If no content type header was set, this method will set it to "application/json"
-    public func addRequestBody(requestJson: [String: AnyObject]?) {
+    public func setRequestBody(requestJson: [String: AnyObject]?) {
         
     }
     
     // This method will set the content type header to "application/x-www-form-urlencoded".
-    public func addQueryParameters(requestParameters: [String: String]) {
+    public func setQueryParameters(requestParameters: [String: String]) {
         
     }
     
@@ -124,26 +125,44 @@ public class Request {
      *
      *  @param completionHandler    The closure that will be called when this request finishes.
      */
-    public func sendWithCompletionHandler(callback: (Response) -> Void) {
+    public func sendWithCompletionHandler(callback: (BMSResponse) -> Void) {
         
-        let bmsCompletionHandler = {
+        var resultString: String?
+        var resultJSON: AnyObject?
+        
+        // TODO: Restructure into multiple methods
+        
+        // Build the BMSResponse object, and pass it to the user
+        let buildAndSendResponse = {
             (request: NSURLRequest?, response: NSHTTPURLResponse?, data: NSData?, error: ErrorType?) -> Void in
             
+            // TODO: Rewrite timer to be better organized (possibly separate method)
             let endTime = NSDate.timeIntervalSinceReferenceDate()
             let roundTripTime = endTime - self.startTime
             
-            // TODO: Build the "Response" object
+            let alamoFireResponse = BMSResponse(responseText: resultString, responseJSON: resultJSON, responseData: data, alamoFireResponse: response, isRedirect: self.allowRedirects)
             
             // TODO: Callback with only one parameter?
-//            callback()
+            callback(alamoFireResponse)
             
+        }
+        
+        let extractStringResponse = {
+            (_: NSURLRequest?, _: NSHTTPURLResponse?, result: Result<String>) -> Void in
+                resultString = result.value
+        }
+        
+        let extractJsonResponse = {
+            (_: NSURLRequest?, _: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
+            resultJSON = result.value
         }
         
         startTime = NSDate.timeIntervalSinceReferenceDate()
         
         networkManager.request(self.method, self.url, parameters: self.queryParameters, headers: self.headers)
-                      .response(completionHandler: bmsCompletionHandler)
-        
+                      .responseString(completionHandler: extractStringResponse)
+                      .responseJSON(completionHandler: extractJsonResponse)
+                      .response(completionHandler: buildAndSendResponse)
     }
     
     
@@ -154,4 +173,3 @@ public class Request {
     
     
 }
-
