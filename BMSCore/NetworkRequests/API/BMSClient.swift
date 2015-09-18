@@ -14,15 +14,15 @@
 import Foundation
 
 
-public class BMSClient {
+public class BMSClient: MFPClient {
     
     
     // MARK: Constants
     
-    public static let HTTP_SCHEME = "http"
-    public static let HTTPS_SCHEME = "https"
-    
+    private static let HTTP_SCHEME = "http"
+    private static let HTTPS_SCHEME = "https"
     private static let QUERY_PARAM_SUBZONE = "subzone"
+    static let DEFAULT_TIMEOUT = 60.0; // TODO: seconds?
     
     
     
@@ -37,6 +37,9 @@ public class BMSClient {
      *  Specifies the back end application id.
      */
     public let bluemixAppGUID: String
+    
+    // TODO: Unit check
+    public var defaultRequestTimeout: Double = 30.0 // seconds
     
     
     
@@ -57,6 +60,7 @@ public class BMSClient {
     init(bluemixAppRoute: String, bluemixAppGUID: String) {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
+        
         rewriteDomain = ""
     }
     

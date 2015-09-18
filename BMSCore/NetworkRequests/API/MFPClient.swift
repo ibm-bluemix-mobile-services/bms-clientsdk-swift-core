@@ -14,9 +14,7 @@ internal protocol MFPClient {
     /**
      *  Specifies default request timeout.
      */
-    var requestTimeout: Int { get set }
-    
-    var challengeHandler: [String: Any] { get }
+    var defaultRequestTimeout: Double { get set }
     
     
     /**
@@ -32,7 +30,7 @@ internal protocol MFPClient {
      *
      *  @param realm Realm name
      */
-    func unregisterAuthenticationHandler()
+    func unregisterAuthenticationDelegate()
     
 }
 
@@ -40,11 +38,11 @@ internal protocol MFPClient {
 internal extension MFPClient {
     
     func registerAuthenticationDelegate(delegate: Any, realm: String) {
-        
+        // Default implementation goes here!
     }
     
-    func unregisterAuthenticationHandler() {
-        
+    func unregisterAuthenticationDelegate() {
+        // Default implementation goes here!
     }
     
 }
