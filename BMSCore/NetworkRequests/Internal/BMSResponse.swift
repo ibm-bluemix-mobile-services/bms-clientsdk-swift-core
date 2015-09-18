@@ -27,8 +27,6 @@ public struct BMSResponse: Response {
     
     public let responseData: NSData?
     
-    public let error: ErrorType?
-    
     
     
     // MARK: Properties (internal/private)
@@ -43,12 +41,11 @@ public struct BMSResponse: Response {
     
     // MARK: Initializer
     
-    init(responseText: String?, responseJSON: AnyObject?, responseData: NSData?, error: ErrorType?, alamoFireResponse: NSHTTPURLResponse?, isRedirect: Bool) {
+    init(responseText: String?, responseJSON: AnyObject?, responseData: NSData?, alamoFireResponse: NSHTTPURLResponse?, isRedirect: Bool) {
         
         self.responseText = responseText
         self.responseJSON = responseJSON
         self.responseData = responseData
-        self.error = error
         self.alamoFireResponse = alamoFireResponse
         self.isRedirect = isRedirect
         

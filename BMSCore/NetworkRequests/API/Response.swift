@@ -43,10 +43,4 @@ public protocol Response {
      */
     var responseData: NSData? { get }
     
-    /**
-     *  The error code for the cause of the failure.
-     */
-    var error: ErrorType? { get }
-
-    
 }
