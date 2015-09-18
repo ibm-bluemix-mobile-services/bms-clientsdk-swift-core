@@ -18,8 +18,7 @@ import Foundation
  * ResponseListener is the interface that will be called after the ResourceRequest has completed or failed.
  */
 
-// TODO: Will customers use this? If not, change from "public" to "internal"
-public protocol ResponseDelegate {
+internal protocol ResponseDelegate {
     
     /**
      *  This method will be called only when a response from the server has been received with an http status
