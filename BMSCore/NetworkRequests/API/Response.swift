@@ -36,4 +36,10 @@ public protocol Response {
      */
     var responseJSON: [String: AnyObject] { get }
     
+    /**
+     *  The error code for the cause of the failure.
+     */
+    var error: ErrorType? { get }
+
+    
 }
