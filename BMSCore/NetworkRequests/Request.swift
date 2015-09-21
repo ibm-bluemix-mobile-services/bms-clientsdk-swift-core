@@ -19,13 +19,13 @@ import Alamofire
 public typealias HttpMethod = Alamofire.Method
 
 
-// TODO: Split into 2 classes like Response?
+// TODO: Replace Alamofire with NSURLSession
+
 public class Request {
     
     
     // MARK: Constants
     
-    static let DEFAULT_TIMEOUT = 60000.0;
     static let CONTENT_TYPE = "Content-Type"
     static let JSON_CONTENT_TYPE = "application/json"
     static let TEXT_PLAIN = "text/plain"
@@ -34,18 +34,24 @@ public class Request {
     
     // MARK: Properties (public)
     
-    // TODO: Access levels - which properties should be publicly settable?
-    public let method: HttpMethod
     public let url: String
-    public let headers: [String: String]?
-    public let timeout: Double
-    public private(set) var queryParameters: [String: AnyObject]?
+    public let method: HttpMethod
+    
+    public var timeout: Double
+    public var headers: [String: String]?
+    public var queryParameters: [String: AnyObject]?
+    public var requestBody: String? {
+        didSet {
+            contentType = "application/x-www-form-urlencoded"
+        }
+    }
     
     
     
     // MARK: Properties (internal/private)
     
     let networkManager: Alamofire.Manager
+    var contentType = "text/plain"
     private var startTime: NSTimeInterval = 0.0
     var allowRedirects: Bool {
         get {
@@ -84,48 +90,32 @@ public class Request {
     
     // TODO: Throws
     public init(url: String,
-               method: HttpMethod,
-               headers: [String: String]?,
-               timeout: Double = Request.DEFAULT_TIMEOUT) {
-        
-        self.url = url
-        self.method = method
-        self.headers = headers
-        self.timeout = timeout
-        
-        // Set timeout and initialize Alamofire manager
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        configuration.timeoutIntervalForRequest = timeout
-        networkManager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: nil)
+        method: HttpMethod,
+        //               timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
+        timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
+        headers: [String: String]? = nil) {
+            
+            self.url = url
+            self.method = method
+            self.headers = headers
+            self.timeout = timeout
+            
+            // Set timeout and initialize Alamofire manager
+            let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+            configuration.timeoutIntervalForRequest = timeout
+            networkManager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: nil)
     }
     
     
     
     // MARK: Methods (public)
     
-    // TODO: Add JSON or text
-    
-    // If no content type header was set, this method will set it to "text/plain"
-    public func setRequestBody(requestString: String) {
-        
-    }
-    
-    // If no content type header was set, this method will set it to "application/json"
-    public func setRequestBody(requestJson: [String: AnyObject]?) {
-        
-    }
-    
-    // This method will set the content type header to "application/x-www-form-urlencoded".
-    public func setQueryParameters(requestParameters: [String: String]) {
-        
-    }
-    
     /**
-     *  Send this resource request asynchronously.
-     *
-     *  @param completionHandler    The closure that will be called when this request finishes.
-     */
-    public func sendWithCompletionHandler(callback: (MFPResponse) -> Void) {
+    *  Send this resource request asynchronously.
+    *
+    *  @param completionHandler    The closure that will be called when this request finishes.
+    */
+    public func sendWithCompletionHandler(callback: (MFPResponse, ErrorType?) -> Void) {
         
         var resultString: String?
         var resultJSON: AnyObject?
@@ -136,23 +126,21 @@ public class Request {
         let buildAndSendResponse = {
             (request: NSURLRequest?, response: NSHTTPURLResponse?, data: NSData?, error: ErrorType?) -> Void in
             
-            // TODO: Rewrite timer to be better organized (possibly separate method)
             let endTime = NSDate.timeIntervalSinceReferenceDate()
             let roundTripTime = endTime - self.startTime
             
             let alamoFireResponse = MFPResponse(responseText: resultString, responseJSON: resultJSON, responseData: data, alamoFireResponse: response, isRedirect: self.allowRedirects)
             
-            // TODO: Callback with only one parameter?
-            callback(alamoFireResponse)
+            callback(alamoFireResponse, error)
             
         }
         
         let extractStringResponse = {
             (_: NSURLRequest?, _: NSHTTPURLResponse?, result: Result<String>) -> Void in
-                resultString = result.value
+            resultString = result.value
         }
         
-        let extractJsonResponse = {
+        let extractJSONResponse = {
             (_: NSURLRequest?, _: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
             resultJSON = result.value
         }
@@ -160,9 +148,9 @@ public class Request {
         startTime = NSDate.timeIntervalSinceReferenceDate()
         
         networkManager.request(self.method, self.url, parameters: self.queryParameters, headers: self.headers)
-                      .responseString(completionHandler: extractStringResponse)
-                      .responseJSON(completionHandler: extractJsonResponse)
-                      .response(completionHandler: buildAndSendResponse)
+            .responseString(completionHandler: extractStringResponse)
+            .responseJSON(completionHandler: extractJSONResponse)
+            .response(completionHandler: buildAndSendResponse)
     }
     
     
