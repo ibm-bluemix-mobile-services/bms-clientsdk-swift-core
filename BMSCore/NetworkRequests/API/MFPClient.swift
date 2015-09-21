@@ -10,12 +10,12 @@ import Foundation
 
 
 internal protocol MFPClient {
+
     
     /**
      *  Specifies default request timeout.
      */
     var defaultRequestTimeout: Double { get set }
-    
     
     /**
      *  Registers a delegate that will handle authentication for the specified realm

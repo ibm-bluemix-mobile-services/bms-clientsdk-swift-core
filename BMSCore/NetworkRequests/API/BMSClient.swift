@@ -14,7 +14,7 @@
 import Foundation
 
 
-public class BMSClient: MFPClient {
+public struct BMSClient: MFPClient {
     
     
     // MARK: Constants
@@ -22,34 +22,36 @@ public class BMSClient: MFPClient {
     private static let HTTP_SCHEME = "http"
     private static let HTTPS_SCHEME = "https"
     private static let QUERY_PARAM_SUBZONE = "subzone"
-    static let DEFAULT_TIMEOUT = 60.0; // TODO: seconds?
     
     
     
     // MARK: Properties (public)
     
+    public static let sharedInstance = BMSClient()
+    
     /**
      *  Specifies the base back-end URL
      */
-    public private(set) var bluemixAppRoute: String
+    public private(set) var bluemixAppRoute: String?
     
     /**
      *  Specifies the back end application id.
      */
-    public let bluemixAppGUID: String
+    public private(set) var bluemixAppGUID: String?
     
-    // TODO: Unit check
     public var defaultRequestTimeout: Double = 30.0 // seconds
     
     
     
     // MARK: Properties (internal/private)
     
-    var rewriteDomain: String
+    internal private(set) var rewriteDomain: String?
     
     
     
     // MARK: Initializer
+    
+    init() {}
     
     /**
      *  Sets the base URL for the authorization server.
