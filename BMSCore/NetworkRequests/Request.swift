@@ -21,6 +21,8 @@ public typealias HttpMethod = Alamofire.Method
 
 // TODO: Replace Alamofire with NSURLSession
 
+// TODO: Error handling (throws)
+
 public class Request {
     
     
@@ -88,12 +90,10 @@ public class Request {
     *  @throws MalformedURLException    if the URL is not a valid URL
     */
     
-    // TODO: Throws
     public init(url: String,
-        method: HttpMethod,
-        //               timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
-        timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
-        headers: [String: String]? = nil) {
+               method: HttpMethod,
+               timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
+               headers: [String: String]? = nil) {
             
             self.url = url
             self.method = method
@@ -119,8 +119,6 @@ public class Request {
         
         var resultString: String?
         var resultJSON: AnyObject?
-        
-        // TODO: Restructure into multiple methods
         
         // Build the BMSResponse object, and pass it to the user
         let buildAndSendResponse = {
@@ -152,12 +150,5 @@ public class Request {
             .responseJSON(completionHandler: extractJSONResponse)
             .response(completionHandler: buildAndSendResponse)
     }
-    
-    
-    
-    // MARK: Methods (internal/private)
-    
-    // TODO: Network logging interceptor
-    
     
 }

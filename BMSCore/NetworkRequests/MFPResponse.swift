@@ -8,7 +8,7 @@
 
 import Foundation
 
-// TODO: Get rid of "Internal" and "API" folders - they are useless
+
 public struct MFPResponse: Response {
     
     

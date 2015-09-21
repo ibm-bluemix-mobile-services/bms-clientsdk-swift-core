@@ -49,9 +49,9 @@ public struct BMSClient: MFPClient {
     
     
     
-    // MARK: Initializer
+    // MARK: Initializers
     
-    init() {}
+    init() {} // Required for sharedInstance to create an empty BMSClient
     
     /**
      *  Sets the base URL for the authorization server.

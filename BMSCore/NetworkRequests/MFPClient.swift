@@ -30,7 +30,7 @@ internal protocol MFPClient {
      *
      *  @param realm Realm name
      */
-    func unregisterAuthenticationDelegate()
+    func unregisterAuthenticationDelegate(realm: String)
     
 }
 
@@ -41,7 +41,7 @@ internal extension MFPClient {
         // Default implementation goes here!
     }
     
-    func unregisterAuthenticationDelegate() {
+    func unregisterAuthenticationDelegate(realm: String) {
         // Default implementation goes here!
     }
     
