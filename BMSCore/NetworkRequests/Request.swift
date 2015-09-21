@@ -125,7 +125,7 @@ public class Request {
      *
      *  @param completionHandler    The closure that will be called when this request finishes.
      */
-    public func sendWithCompletionHandler(callback: (BMSResponse) -> Void) {
+    public func sendWithCompletionHandler(callback: (MFPResponse) -> Void) {
         
         var resultString: String?
         var resultJSON: AnyObject?
@@ -140,7 +140,7 @@ public class Request {
             let endTime = NSDate.timeIntervalSinceReferenceDate()
             let roundTripTime = endTime - self.startTime
             
-            let alamoFireResponse = BMSResponse(responseText: resultString, responseJSON: resultJSON, responseData: data, alamoFireResponse: response, isRedirect: self.allowRedirects)
+            let alamoFireResponse = MFPResponse(responseText: resultString, responseJSON: resultJSON, responseData: data, alamoFireResponse: response, isRedirect: self.allowRedirects)
             
             // TODO: Callback with only one parameter?
             callback(alamoFireResponse)

@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		92304A1D1BB0A31D001E02E1 /* MFPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A1C1BB0A31D001E02E1 /* MFPResponse.swift */; settings = {ASSET_TAGS = (); }; };
-		92369A0A1BAB145500AD7F3D /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92369A091BAB145500AD7F3D /* Request.swift */; settings = {ASSET_TAGS = (); }; };
-		92369A0D1BAB5BC900AD7F3D /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92369A0C1BAB5BC900AD7F3D /* MFPClient.swift */; settings = {ASSET_TAGS = (); }; };
+		92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A381BB0A711001E02E1 /* BMSClient.swift */; settings = {ASSET_TAGS = (); }; };
+		92304A3F1BB0A711001E02E1 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A391BB0A711001E02E1 /* MFPClient.swift */; settings = {ASSET_TAGS = (); }; };
+		92304A401BB0A711001E02E1 /* MFPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3A1BB0A711001E02E1 /* MFPResponse.swift */; settings = {ASSET_TAGS = (); }; };
+		92304A411BB0A711001E02E1 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3B1BB0A711001E02E1 /* Request.swift */; settings = {ASSET_TAGS = (); }; };
+		92304A421BB0A711001E02E1 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3C1BB0A711001E02E1 /* Response.swift */; settings = {ASSET_TAGS = (); }; };
+		92304A431BB0A711001E02E1 /* ResponseDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3D1BB0A711001E02E1 /* ResponseDelegate.swift */; settings = {ASSET_TAGS = (); }; };
 		92F263FB1B94EBB50063CC1D /* BMSCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F263FA1B94EBB50063CC1D /* BMSCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92F264021B94EBB60063CC1D /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		92F264071B94EBB60063CC1D /* BMSCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264061B94EBB60063CC1D /* BMSCoreTests.swift */; };
-		92F2646A1B9639140063CC1D /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264691B9639140063CC1D /* BMSClient.swift */; };
-		92F264761B966F010063CC1D /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264751B966F010063CC1D /* Response.swift */; };
-		92F264781B97C1C90063CC1D /* ResponseDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F264771B97C1C90063CC1D /* ResponseDelegate.swift */; };
 		ED5BF53FE5EB20F2C9F0A72B /* Pods_BMSCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FC8C39C4C9B5113337D8F55 /* Pods_BMSCoreTests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F93F0D1FAA7121DDD984D4D9 /* Pods_BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4CC18F188537A1FA5C5F15C /* Pods_BMSCore.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -34,18 +34,18 @@
 		2FC8C39C4C9B5113337D8F55 /* Pods_BMSCoreTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BMSCoreTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		39AD222DD0E05B8A0BF23F4A /* Pods-BMSCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BMSCore.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BMSCore/Pods-BMSCore.debug.xcconfig"; sourceTree = "<group>"; };
 		7DF245511371C53966E0751A /* Pods-BMSCoreTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BMSCoreTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BMSCoreTests/Pods-BMSCoreTests.debug.xcconfig"; sourceTree = "<group>"; };
-		92304A1C1BB0A31D001E02E1 /* MFPResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPResponse.swift; sourceTree = "<group>"; };
-		92369A091BAB145500AD7F3D /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
-		92369A0C1BAB5BC900AD7F3D /* MFPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPClient.swift; sourceTree = "<group>"; };
+		92304A381BB0A711001E02E1 /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
+		92304A391BB0A711001E02E1 /* MFPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPClient.swift; sourceTree = "<group>"; };
+		92304A3A1BB0A711001E02E1 /* MFPResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPResponse.swift; sourceTree = "<group>"; };
+		92304A3B1BB0A711001E02E1 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		92304A3C1BB0A711001E02E1 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		92304A3D1BB0A711001E02E1 /* ResponseDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDelegate.swift; sourceTree = "<group>"; };
 		92F263F71B94EBB50063CC1D /* BMSCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F263FA1B94EBB50063CC1D /* BMSCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BMSCore.h; sourceTree = "<group>"; };
 		92F263FC1B94EBB50063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92F264011B94EBB60063CC1D /* BMSCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BMSCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F264061B94EBB60063CC1D /* BMSCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMSCoreTests.swift; sourceTree = "<group>"; };
 		92F264081B94EBB60063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		92F264691B9639140063CC1D /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
-		92F264751B966F010063CC1D /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
-		92F264771B97C1C90063CC1D /* ResponseDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDelegate.swift; sourceTree = "<group>"; };
 		A9B53C1E3030BD9BEBC482DD /* Pods-BMSCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BMSCore.release.xcconfig"; path = "Pods/Target Support Files/Pods-BMSCore/Pods-BMSCore.release.xcconfig"; sourceTree = "<group>"; };
 		D432FB8835B6B271F22F8FBF /* Pods-BMSCoreTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BMSCoreTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BMSCoreTests/Pods-BMSCoreTests.release.xcconfig"; sourceTree = "<group>"; };
 		D4CC18F188537A1FA5C5F15C /* Pods_BMSCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BMSCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,14 +92,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		92369A101BAB70D200AD7F3D /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				92304A1C1BB0A31D001E02E1 /* MFPResponse.swift */,
-			);
-			path = Internal;
-			sourceTree = "<group>";
-		};
 		92F263ED1B94EBB50063CC1D = {
 			isa = PBXGroup;
 			children = (
@@ -142,22 +134,14 @@
 		92F264661B9639010063CC1D /* NetworkRequests */ = {
 			isa = PBXGroup;
 			children = (
-				92369A101BAB70D200AD7F3D /* Internal */,
-				92F264671B9639010063CC1D /* API */,
+				92304A391BB0A711001E02E1 /* MFPClient.swift */,
+				92304A381BB0A711001E02E1 /* BMSClient.swift */,
+				92304A3B1BB0A711001E02E1 /* Request.swift */,
+				92304A3C1BB0A711001E02E1 /* Response.swift */,
+				92304A3A1BB0A711001E02E1 /* MFPResponse.swift */,
+				92304A3D1BB0A711001E02E1 /* ResponseDelegate.swift */,
 			);
 			path = NetworkRequests;
-			sourceTree = "<group>";
-		};
-		92F264671B9639010063CC1D /* API */ = {
-			isa = PBXGroup;
-			children = (
-				92F264691B9639140063CC1D /* BMSClient.swift */,
-				92369A0C1BAB5BC900AD7F3D /* MFPClient.swift */,
-				92369A091BAB145500AD7F3D /* Request.swift */,
-				92F264751B966F010063CC1D /* Response.swift */,
-				92F264771B97C1C90063CC1D /* ResponseDelegate.swift */,
-			);
-			path = API;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -351,12 +335,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92304A1D1BB0A31D001E02E1 /* MFPResponse.swift in Sources */,
-				92F2646A1B9639140063CC1D /* BMSClient.swift in Sources */,
-				92369A0D1BAB5BC900AD7F3D /* MFPClient.swift in Sources */,
-				92369A0A1BAB145500AD7F3D /* Request.swift in Sources */,
-				92F264781B97C1C90063CC1D /* ResponseDelegate.swift in Sources */,
-				92F264761B966F010063CC1D /* Response.swift in Sources */,
+				92304A3F1BB0A711001E02E1 /* MFPClient.swift in Sources */,
+				92304A431BB0A711001E02E1 /* ResponseDelegate.swift in Sources */,
+				92304A411BB0A711001E02E1 /* Request.swift in Sources */,
+				92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */,
+				92304A401BB0A711001E02E1 /* MFPResponse.swift in Sources */,
+				92304A421BB0A711001E02E1 /* Response.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
