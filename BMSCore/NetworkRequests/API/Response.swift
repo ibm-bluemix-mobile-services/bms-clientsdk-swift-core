@@ -24,7 +24,6 @@ public protocol Response {
     /**
     *  HTTP headers from the response.
     */
-    // TODO: Change from [NSObject: AnyObject] to [String: String]?
     var headers: [NSObject: AnyObject]? { get }
     
     /**
@@ -35,7 +34,6 @@ public protocol Response {
     /**
      *  The body of the response as a JSONObject. Returns nil if there is no body or if it is not a valid JSONObject.
      */
-    // TODO: Change from AnyObject to [String: AnyObject]?
     var responseJSON: AnyObject? { get }
     
     /**

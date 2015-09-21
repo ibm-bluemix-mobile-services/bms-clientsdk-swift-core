@@ -8,21 +8,18 @@
 
 import Foundation
 
-
-// TODO: Documentation
-public struct BMSResponse: Response {
+// TODO: Get rid of "Internal" and "API" folders - they are useless
+public struct MFPResponse: Response {
     
     
     // MARK: Properties (public)
     
     public let statusCode: Int?
     
-    // TODO: Change from [NSObject: AnyObject] to [String: String]?
     public let headers: [NSObject: AnyObject]?
     
     public let responseText: String?
     
-    // TODO: Change from AnyObject to [String: AnyObject]?
     public let responseJSON: AnyObject?
     
     public let responseData: NSData?
