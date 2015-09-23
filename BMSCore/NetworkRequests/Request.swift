@@ -15,18 +15,6 @@ import Foundation
 
 
 
-// Headers 
-//      Can have multiple values per key
-//      Do not overwrite content-type if user already set it
-// Query parameters
-//      Don't allow multiple values - keep as [String: String] type
-//      For appending to URL - does not affect MIME type
-// HTTP body
-//      NSData
-//      String - Set Content-type to "text/plain" if not already set
-
-
-
 // TODO: Error handling (throws)
 
 // TODO: Documentation
@@ -48,7 +36,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     public private(set) var resourceUrl: String
     public let httpMethod: HttpMethod
     public var timeout: Double
-    public private(set) var headers: [String: String]?
+    public private(set) var headers: [String: String]
     // TODO: Append query parameters to the URL right before sending the request (like in Android SDK)
     public var queryParameters: [String: String]?
     public private(set) var requestBody: NSData?
@@ -82,7 +70,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     public init(url: String,
                method: HttpMethod = HttpMethod.GET,
                timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
-               headers: [String: String]?,
+               headers: [String: String] = [:],
                queryParameters: [String: String]?) {
             
         self.resourceUrl = url
@@ -105,15 +93,27 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     // MARK: Methods (public)
     
     // TODO: Perform error handling or make the developer do it?
+    // Sets Content-Type to "application/json"
     public func setRequestBodyWithJSON(requestJSON: AnyObject) throws {
         
         requestBody = try NSJSONSerialization.dataWithJSONObject(requestJSON, options: NSJSONWritingOptions.PrettyPrinted)
+        
+        if let _ = headers[Request.CONTENT_TYPE] {}
+        else {
+            headers[Request.CONTENT_TYPE] = Request.JSON_CONTENT_TYPE
+        }
     }
     
+    // Sets Content-Type to "text/plain"
     // Only supports UTF-8 encoding
     public func setRequestBodyWithString(requestString: String) {
         
         requestBody = requestString.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        if let _ = headers[Request.CONTENT_TYPE] {}
+        else {
+            headers[Request.CONTENT_TYPE] = Request.TEXT_PLAIN_TYPE
+        }
     }
     
     public func setRequestBodyWithData(requestData: NSData) {
@@ -132,8 +132,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         let buildAndSendResponse = {
             (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
-            let endTime = NSDate.timeIntervalSinceReferenceDate()
-            let roundTripTime = endTime - self.startTime
+            let roundTripTime = NSDate.timeIntervalSinceReferenceDate() - self.startTime
             
             let networkResponse = MFPResponse(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
             
@@ -142,7 +141,10 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         }
         
         // Build request
-        networkRequest.HTTPMethod = self.httpMethod.rawValue
+        if let _ = queryParameters {
+            resourceUrl = appendQueryParameters(queryParameters!, toURL: self.resourceUrl)
+        }
+        networkRequest.HTTPMethod = httpMethod.rawValue
         networkRequest.allHTTPHeaderFields = headers
         networkRequest.HTTPBody = requestBody
         
@@ -153,18 +155,14 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
     
-    // MARK: Methods (internal/private)
-    
-    
-    
     // MARK: NSURLSessionTaskDelegate
     
     // Handle HTTP redirection
     public func URLSession(session: NSURLSession,
-                          task: NSURLSessionTask,
-                          willPerformHTTPRedirection response: NSHTTPURLResponse,
-                          newRequest request: NSURLRequest,
-                          completionHandler: ((NSURLRequest?) -> Void))
+        task: NSURLSessionTask,
+        willPerformHTTPRedirection response: NSHTTPURLResponse,
+        newRequest request: NSURLRequest,
+        completionHandler: ((NSURLRequest?) -> Void))
     {
         var redirectRequest: NSURLRequest?
         
@@ -173,6 +171,30 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         }
         
         completionHandler(redirectRequest)
+    }
+
+    
+    
+    
+    // MARK: Methods (internal/private)
+    
+    // Returns the URL with query parameters appended to it
+    func appendQueryParameters(parameters: [String: String], toURL: String) -> String {
+        
+        var parametersInURLFormat = [String]()
+        for (key, var value) in parameters {
+            
+            if let urlSafeValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
+                value = urlSafeValue
+            }
+            else {
+                value = ""
+                // TODO: Log an error here
+            }
+            parametersInURLFormat += [key + "=" + "\(value)"]
+        }
+        
+        return (!parametersInURLFormat.isEmpty ? "?" : "") + parametersInURLFormat.joinWithSeparator("&")
     }
     
 }
