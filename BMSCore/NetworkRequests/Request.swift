@@ -29,6 +29,8 @@ import Foundation
 
 // TODO: Error handling (throws)
 
+// TODO: Documentation
+
 public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
@@ -49,7 +51,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     public private(set) var headers: [String: String]?
     // TODO: Append query parameters to the URL right before sending the request (like in Android SDK)
     public var queryParameters: [String: String]?
-    public var requestBody: String?
+    public private(set) var requestBody: NSData?
     
     
     
@@ -102,6 +104,23 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     // MARK: Methods (public)
     
+    // TODO: Perform error handling or make the developer do it?
+    public func setRequestBodyWithJSON(requestJSON: AnyObject) throws {
+        
+        requestBody = try NSJSONSerialization.dataWithJSONObject(requestJSON, options: NSJSONWritingOptions.PrettyPrinted)
+    }
+    
+    // Only supports UTF-8 encoding
+    public func setRequestBodyWithString(requestString: String) {
+        
+        requestBody = requestString.dataUsingEncoding(NSUTF8StringEncoding)
+    }
+    
+    public func setRequestBodyWithData(requestData: NSData) {
+        
+        requestBody = requestData
+    }
+    
     /**
     *  Send this resource request asynchronously.
     *
@@ -122,8 +141,10 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             
         }
         
+        // Build request
         networkRequest.HTTPMethod = self.httpMethod.rawValue
         networkRequest.allHTTPHeaderFields = headers
+        networkRequest.HTTPBody = requestBody
         
         startTime = NSDate.timeIntervalSinceReferenceDate()
         
