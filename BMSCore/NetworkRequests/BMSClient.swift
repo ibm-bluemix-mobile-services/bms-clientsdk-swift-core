@@ -17,13 +17,6 @@ import Foundation
 public struct BMSClient: MFPClient {
     
     
-    // MARK: Constants
-    
-    private static let HTTP_SCHEME = "http"
-    private static let HTTPS_SCHEME = "https"
-    private static let QUERY_PARAM_SUBZONE = "subzone"
-    
-    
     
     // MARK: Properties (public)
     
@@ -39,7 +32,7 @@ public struct BMSClient: MFPClient {
      */
     public private(set) var bluemixAppGUID: String?
     
-    public var defaultRequestTimeout: Double = 30.0 // seconds
+    public var defaultRequestTimeout: Double = 20.0 // seconds
     
     
     
