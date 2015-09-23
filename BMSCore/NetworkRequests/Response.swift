@@ -35,5 +35,10 @@ public protocol Response {
      *  The body of the response as NSData. Returns nil if there is no body or if it is not valid NSData.
      */
     var responseData: NSData? { get }
+
+    /**
+    *  The body of the response as JSON. Returns nil if there is no body or if it is not valid JSON.
+    */
+    var responseJSON: AnyObject? { get }
     
 }

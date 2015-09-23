@@ -12,6 +12,7 @@ import Foundation
 public struct MFPResponse: Response {
     
     
+    
     // MARK: Properties (public)
     
     public let statusCode: Int?
@@ -21,6 +22,8 @@ public struct MFPResponse: Response {
     public let responseText: String?
     
     public let responseData: NSData?
+    
+    public let responseJSON: AnyObject?
     
     
     
@@ -46,10 +49,19 @@ public struct MFPResponse: Response {
         if let responseData = responseData {
             self.responseData = responseData
             self.responseText = String(NSString(data: responseData, encoding: NSUTF8StringEncoding))
+            
+            do {
+                self.responseJSON = try NSJSONSerialization.JSONObjectWithData(responseData, options: NSJSONReadingOptions.MutableContainers)
+            }
+            catch {
+                self.responseJSON = nil
+                // Log a warning/error
+            }
         }
         else {
             self.responseData = nil
             self.responseText = nil
+            self.responseJSON = nil
         }
         
         if let status = statusCode {
