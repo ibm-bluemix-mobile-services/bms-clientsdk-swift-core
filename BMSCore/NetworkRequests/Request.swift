@@ -12,18 +12,16 @@
 */
 
 import Foundation
-import Alamofire
 
 
-// GET, POST, PUT, etc.
-public typealias HttpMethod = Alamofire.Method
+public enum HttpMethod: String {
+    case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
+}
 
-
-// TODO: Replace Alamofire with NSURLSession
 
 // TODO: Error handling (throws)
 
-public class Request {
+public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
     // MARK: Constants
@@ -41,37 +39,21 @@ public class Request {
     
     public var timeout: Double
     public var headers: [String: String]?
-    public var queryParameters: [String: AnyObject]?
-    public var requestBody: String? {
+    public var queryParameters: [String: AnyObject]? {
         didSet {
             contentType = "application/x-www-form-urlencoded"
         }
     }
+    public var requestBody: String?
     
     
     
     // MARK: Properties (internal/private)
     
-    let networkManager: Alamofire.Manager
+    var networkSession: NSURLSession
     var contentType = "text/plain"
     private var startTime: NSTimeInterval = 0.0
-    var allowRedirects: Bool {
-        get {
-            return self.allowRedirects
-        }
-        set(redirectionIsAllowed) {
-            if redirectionIsAllowed {
-                networkManager.delegate.taskWillPerformHTTPRedirection = { _, _, _, request in
-                    return request
-                }
-            }
-            else {
-                networkManager.delegate.taskWillPerformHTTPRedirection = { _, _, _, _ in
-                    return nil
-                }
-            }
-        }
-    }
+    var allowRedirects: Bool = true
     
     
     
@@ -91,7 +73,7 @@ public class Request {
     */
     
     public init(url: String,
-               method: HttpMethod,
+               method: HttpMethod = HttpMethod.GET,
                timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
                headers: [String: String]? = nil) {
             
@@ -100,10 +82,10 @@ public class Request {
             self.headers = headers
             self.timeout = timeout
             
-            // Set timeout and initialize Alamofire manager
+            // Set timeout and initialize network session
             let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
             configuration.timeoutIntervalForRequest = timeout
-            networkManager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: nil)
+            networkSession = NSURLSession(configuration: configuration)
     }
     
     
@@ -117,38 +99,49 @@ public class Request {
     */
     public func sendWithCompletionHandler(callback: (MFPResponse, ErrorType?) -> Void) {
         
-        var resultString: String?
-        var resultJSON: AnyObject?
-        
         // Build the BMSResponse object, and pass it to the user
         let buildAndSendResponse = {
-            (request: NSURLRequest?, response: NSHTTPURLResponse?, data: NSData?, error: ErrorType?) -> Void in
+            (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
             let endTime = NSDate.timeIntervalSinceReferenceDate()
             let roundTripTime = endTime - self.startTime
             
-            let alamoFireResponse = MFPResponse(responseText: resultString, responseJSON: resultJSON, responseData: data, alamoFireResponse: response, isRedirect: self.allowRedirects)
+            let networkResponse = MFPResponse(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
             
-            callback(alamoFireResponse, error)
+            callback(networkResponse, error)
             
         }
         
-        let extractStringResponse = {
-            (_: NSURLRequest?, _: NSHTTPURLResponse?, result: Result<String>) -> Void in
-            resultString = result.value
-        }
-        
-        let extractJSONResponse = {
-            (_: NSURLRequest?, _: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
-            resultJSON = result.value
-        }
+        let networkRequest = NSMutableURLRequest(URL: NSURL(string: self.url)!)
+        networkRequest.HTTPMethod = self.method.rawValue
         
         startTime = NSDate.timeIntervalSinceReferenceDate()
         
-        networkManager.request(self.method, self.url, parameters: self.queryParameters, headers: self.headers)
-            .responseString(completionHandler: extractStringResponse)
-            .responseJSON(completionHandler: extractJSONResponse)
-            .response(completionHandler: buildAndSendResponse)
+        networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+    }
+    
+    
+    
+    // MARK: Methods (internal/private)
+    
+    
+    
+    // MARK: NSURLSessionTaskDelegate
+    
+    // Handle HTTP redirection
+    public func URLSession(session: NSURLSession,
+                          task: NSURLSessionTask,
+                          willPerformHTTPRedirection response: NSHTTPURLResponse,
+                          newRequest request: NSURLRequest,
+                          completionHandler: ((NSURLRequest?) -> Void))
+    {
+        var redirectRequest: NSURLRequest? = request
+        
+        if !allowRedirects {
+            redirectRequest = nil
+        }
+        
+        completionHandler(redirectRequest)
     }
     
 }

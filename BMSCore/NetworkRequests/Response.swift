@@ -32,11 +32,6 @@ public protocol Response {
     var responseText: String? { get }
     
     /**
-     *  The body of the response as a JSONObject. Returns nil if there is no body or if it is not a valid JSONObject.
-     */
-    var responseJSON: AnyObject? { get }
-    
-    /**
      *  The body of the response as NSData. Returns nil if there is no body or if it is not valid NSData.
      */
     var responseData: NSData? { get }

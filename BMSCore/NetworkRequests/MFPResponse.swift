@@ -20,15 +20,13 @@ public struct MFPResponse: Response {
     
     public let responseText: String?
     
-    public let responseJSON: AnyObject?
-    
     public let responseData: NSData?
     
     
     
     // MARK: Properties (internal/private)
     
-    let alamoFireResponse: NSHTTPURLResponse?
+    let httpResponse: NSHTTPURLResponse?
     
     let isSuccessful: Bool?
     
@@ -38,15 +36,21 @@ public struct MFPResponse: Response {
     
     // MARK: Initializer
     
-    init(responseText: String?, responseJSON: AnyObject?, responseData: NSData?, alamoFireResponse: NSHTTPURLResponse?, isRedirect: Bool) {
+    init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool) {
         
-        self.responseText = responseText
-        self.responseJSON = responseJSON
-        self.responseData = responseData
-        self.alamoFireResponse = alamoFireResponse
         self.isRedirect = isRedirect
+        self.httpResponse = httpResponse
+        self.headers = httpResponse?.allHeaderFields
+        self.statusCode = httpResponse?.statusCode
         
-        self.statusCode = alamoFireResponse?.statusCode
+        if let responseData = responseData {
+            self.responseData = responseData
+            self.responseText = String(NSString(data: responseData, encoding: NSUTF8StringEncoding))
+        }
+        else {
+            self.responseData = nil
+            self.responseText = nil
+        }
         
         if let status = statusCode {
             isSuccessful = (200..<300 ~= status)
@@ -54,8 +58,6 @@ public struct MFPResponse: Response {
         else {
             isSuccessful = false
         }
-        
-        self.headers = alamoFireResponse?.allHeaderFields
     }
     
 }
