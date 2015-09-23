@@ -14,9 +14,17 @@
 import Foundation
 
 
-public enum HttpMethod: String {
-    case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
-}
+
+// Headers 
+//      Can have multiple values per key
+//      Do not overwrite content-type if user already set it
+// Query parameters
+//      Don't allow multiple values - keep as [String: String] type
+//      For appending to URL - does not affect MIME type
+// HTTP body
+//      NSData
+//      String - Set Content-type to "text/plain" if not already set
+
 
 
 // TODO: Error handling (throws)
@@ -24,26 +32,23 @@ public enum HttpMethod: String {
 public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
+    
     // MARK: Constants
     
     static let CONTENT_TYPE = "Content-Type"
     static let JSON_CONTENT_TYPE = "application/json"
-    static let TEXT_PLAIN = "text/plain"
+    static let TEXT_PLAIN_TYPE = "text/plain"
     
     
     
     // MARK: Properties (public)
     
-    public let url: String
-    public let method: HttpMethod
-    
+    public private(set) var resourceUrl: String
+    public let httpMethod: HttpMethod
     public var timeout: Double
-    public var headers: [String: String]?
-    public var queryParameters: [String: AnyObject]? {
-        didSet {
-            contentType = "application/x-www-form-urlencoded"
-        }
-    }
+    public private(set) var headers: [String: String]?
+    // TODO: Append query parameters to the URL right before sending the request (like in Android SDK)
+    public var queryParameters: [String: String]?
     public var requestBody: String?
     
     
@@ -51,7 +56,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     // MARK: Properties (internal/private)
     
     var networkSession: NSURLSession
-    var contentType = "text/plain"
+    var networkRequest: NSMutableURLRequest
     private var startTime: NSTimeInterval = 0.0
     var allowRedirects: Bool = true
     
@@ -75,17 +80,22 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     public init(url: String,
                method: HttpMethod = HttpMethod.GET,
                timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
-               headers: [String: String]? = nil) {
+               headers: [String: String]?,
+               queryParameters: [String: String]?) {
             
-            self.url = url
-            self.method = method
-            self.headers = headers
-            self.timeout = timeout
+        self.resourceUrl = url
+        self.httpMethod = method
+        self.headers = headers
+        self.timeout = timeout
+        self.queryParameters = queryParameters
+        
+        // Set timeout and initialize network session
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        configuration.timeoutIntervalForRequest = timeout
+        networkSession = NSURLSession(configuration: configuration)
             
-            // Set timeout and initialize network session
-            let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-            configuration.timeoutIntervalForRequest = timeout
-            networkSession = NSURLSession(configuration: configuration)
+        // TODO: Add URL after it is built
+        networkRequest = NSMutableURLRequest()
     }
     
     
@@ -112,8 +122,8 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             
         }
         
-        let networkRequest = NSMutableURLRequest(URL: NSURL(string: self.url)!)
-        networkRequest.HTTPMethod = self.method.rawValue
+        networkRequest.HTTPMethod = self.httpMethod.rawValue
+        networkRequest.allHTTPHeaderFields = headers
         
         startTime = NSDate.timeIntervalSinceReferenceDate()
         
@@ -135,13 +145,19 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
                           newRequest request: NSURLRequest,
                           completionHandler: ((NSURLRequest?) -> Void))
     {
-        var redirectRequest: NSURLRequest? = request
+        var redirectRequest: NSURLRequest?
         
-        if !allowRedirects {
-            redirectRequest = nil
+        if allowRedirects {
+            redirectRequest = request
         }
         
         completionHandler(redirectRequest)
     }
     
+}
+
+
+
+public enum HttpMethod: String {
+    case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
 }
