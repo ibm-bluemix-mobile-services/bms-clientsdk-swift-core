@@ -15,27 +15,21 @@ import XCTest
 @testable import BMSCore
 
 class BMSClientTests: XCTestCase {
+
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    func testInitialization() {
+        
+        let clientInstance = BMSClient.sharedInstance
+        XCTAssertNil(clientInstance.bluemixAppRoute, "BMSClient has not yet been initialized")
+        XCTAssertNil(clientInstance.bluemixAppGUID, "BMSClient has not yet been initialized")
+        
+        clientInstance.initializeForBluemixApp(route: "http://example.com", GUID: "1234")
+        XCTAssertEqual(clientInstance.bluemixAppRoute, "http://example.com")
+        XCTAssertEqual(clientInstance.bluemixAppGUID, "1234")
+        
+        // Make sure the sharedInstance singleton is persistent
+        let newClientInstance = BMSClient.sharedInstance
+        XCTAssertEqual(newClientInstance.bluemixAppRoute, "http://example.com")
+        XCTAssertEqual(newClientInstance.bluemixAppGUID, "1234")
     }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
 }

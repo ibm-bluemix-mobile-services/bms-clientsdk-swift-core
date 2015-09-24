@@ -14,7 +14,7 @@
 import Foundation
 
 
-public struct BMSClient: MFPClient {
+public class BMSClient: MFPClient {
     
     
     
@@ -52,7 +52,7 @@ public struct BMSClient: MFPClient {
      *  @param backendRoute Specifies the base URL for the authorization server
      *  @param backendGUID  Specifies the GUID of the application
      */
-    init(bluemixAppRoute: String, bluemixAppGUID: String) {
+    public func initializeForBluemixApp(route bluemixAppRoute: String, GUID bluemixAppGUID: String) {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
         
