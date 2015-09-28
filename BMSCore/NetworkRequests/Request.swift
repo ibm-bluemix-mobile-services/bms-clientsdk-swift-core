@@ -62,7 +62,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     *  @param method  The HTTP method to use.
     *  @param headers  Optional headers to add to the request.
     *  @param parameters  Optional query parameters to add to the request.
-    *  @param timeout The timeout in milliseconds for this request.
+    *  @param timeout The timeout in seconds for this request.
     *  @throws IllegalArgumentException if the method name is not one of the valid HTTP method names.
     *  @throws MalformedURLException    if the URL is not a valid URL
     */
@@ -71,7 +71,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
                method: HttpMethod = HttpMethod.GET,
                timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
                headers: [String: String] = [:],
-               queryParameters: [String: String]?) {
+               queryParameters: [String: String] = [:]) {
             
         self.resourceUrl = url
         self.httpMethod = method
@@ -84,7 +84,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         configuration.timeoutIntervalForRequest = timeout
         networkSession = NSURLSession(configuration: configuration)
             
-        // TODO: Add URL after it is built
         networkRequest = NSMutableURLRequest()
     }
     
@@ -126,7 +125,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     *
     *  @param completionHandler    The closure that will be called when this request finishes.
     */
-    public func sendWithCompletionHandler(callback: (MFPResponse, ErrorType?) -> Void) {
+    public func sendWithCompletionHandler(callback: (Response, ErrorType?) -> Void) {
         
         // Build the BMSResponse object, and pass it to the user
         let buildAndSendResponse = {
@@ -136,7 +135,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             
             let networkResponse = MFPResponse(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
             
-            callback(networkResponse, error)
+            callback(networkResponse as Response, error)
             
         }
         
@@ -175,11 +174,14 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
 
     
     
-    
     // MARK: Methods (internal/private)
     
     // Returns the URL with query parameters appended to it
-    func appendQueryParameters(parameters: [String: String], toURL: String) -> String {
+    func appendQueryParameters(parameters: [String: String], toURL originalUrl: String) -> String {
+        
+        if parameters.isEmpty {
+            return originalUrl
+        }
         
         var parametersInURLFormat = [String]()
         for (key, var value) in parameters {
@@ -189,12 +191,12 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             }
             else {
                 value = ""
-                // TODO: Log an error here
+                // Log an error here
             }
             parametersInURLFormat += [key + "=" + "\(value)"]
         }
         
-        return (!parametersInURLFormat.isEmpty ? "?" : "") + parametersInURLFormat.joinWithSeparator("&")
+        return originalUrl + (originalUrl.containsString("?") ? "" : "?") + parametersInURLFormat.joinWithSeparator("&")
     }
     
 }
