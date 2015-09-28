@@ -38,43 +38,52 @@ public struct MFPResponse: Response {
     
     let isSuccessful: Bool?
     
-    let isRedirect: Bool
+    let isRedirect: Bool?
     
     
     
     // MARK: Initializer
     
-    init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool) {
+    init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool?) {
         
         self.isRedirect = isRedirect
         self.httpResponse = httpResponse
         self.headers = httpResponse?.allHeaderFields
         self.statusCode = httpResponse?.statusCode
         
-        if let responseData = responseData {
-            self.responseData = responseData
-            self.responseText = String(NSString(data: responseData, encoding: NSUTF8StringEncoding))
-            
-            do {
-                self.responseJSON = try NSJSONSerialization.JSONObjectWithData(responseData, options: NSJSONReadingOptions.MutableContainers)
-            }
-            catch {
-                self.responseJSON = nil
-                // Log a warning/error
-            }
-        }
-        else {
-            self.responseData = nil
-            self.responseText = nil
-            self.responseJSON = nil
-        }
+        (self.responseData, self.responseText, self.responseJSON) = MFPResponse.buildResponseWithData(responseData)
+        
+        print((self.responseText))
         
         if let status = statusCode {
             isSuccessful = (200..<300 ~= status)
         }
         else {
-            isSuccessful = false
+            isSuccessful = nil
         }
+    }
+    
+    static private func buildResponseWithData(responseData: NSData?) -> (NSData?, String?, AnyObject?) {
+        
+        var responseAsData: NSData?
+        var responseAsText: String?
+        var responseAsJSON: AnyObject?
+        
+        if let responseData = responseData {
+            responseAsData = responseData
+            if let responseAsNSString = NSString(data: responseData, encoding: NSUTF8StringEncoding) {
+                responseAsText = String(responseAsNSString)
+            }
+            
+            do {
+                responseAsJSON = try NSJSONSerialization.JSONObjectWithData(responseData, options: NSJSONReadingOptions.MutableContainers)
+            }
+            catch let jsonConversionError {
+                // Log the jsonConversionError with MFP Logger
+            }
+        }
+        
+        return (responseAsData, responseAsText, responseAsJSON)
     }
     
 }

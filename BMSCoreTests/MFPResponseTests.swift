@@ -16,26 +16,61 @@ import XCTest
 
 class MFPResponseTests: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    func testInit() {
+        
+        let responseData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
+        let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        let testResponse = MFPResponse(responseData: responseData!, httpResponse: httpURLResponse, isRedirect: true)
+        
+        XCTAssertEqual(testResponse.statusCode, 200)
+        XCTAssertEqual(testResponse.headers as! [String: String], ["key": "value"])
+        XCTAssertEqual(testResponse.responseData, responseData)
+        XCTAssertEqual(testResponse.responseText, "{\"key1\": \"value1\", \"key2\": \"value2\"}")
+        XCTAssertEqual(testResponse.responseJSON as? NSDictionary, ["key1": "value1", "key2": "value2"])
+        XCTAssertEqual(testResponse.httpResponse, httpURLResponse)
+        XCTAssertTrue(testResponse.isSuccessful != nil && testResponse.isSuccessful!)
+        XCTAssertTrue(testResponse.isRedirect != nil && testResponse.isRedirect!)
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    func testInitWithNilParameters() {
+        
+        let emptyResponse = MFPResponse(responseData: nil, httpResponse: nil, isRedirect: nil)
+        
+        XCTAssertNil(emptyResponse.statusCode)
+        XCTAssertNil(emptyResponse.headers)
+        XCTAssertNil(emptyResponse.responseData)
+        XCTAssertNil(emptyResponse.responseText)
+        XCTAssertNil(emptyResponse.responseJSON)
+        XCTAssertNil(emptyResponse.httpResponse)
+        XCTAssertNil(emptyResponse.isSuccessful)
+        XCTAssertNil(emptyResponse.isRedirect)
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    
+    // MARK: buildResponseWithData()
+    
+    func testInitWithInvalidJSON() {
+        
+        let responseDataWithInvalidJSON = "NOT JSON".dataUsingEncoding(NSUTF8StringEncoding)
+        let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        let invalidJSONResponse = MFPResponse(responseData: responseDataWithInvalidJSON!, httpResponse: httpURLResponse, isRedirect: true)
+        
+        XCTAssertEqual(invalidJSONResponse.responseData, responseDataWithInvalidJSON)
+        XCTAssertEqual(invalidJSONResponse.responseText, "NOT JSON")
+        XCTAssertNil(invalidJSONResponse.responseJSON)
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
+    func testInitWithInvalidJSONAndString() {
+        
+        let responseDataWithInvalidJSONAndString = NSData(bytes: [0x00, 0xFF] as [UInt8], length: 2)
+        let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        let invalidStringResponse = MFPResponse(responseData: responseDataWithInvalidJSONAndString, httpResponse: httpURLResponse, isRedirect: true)
+        
+        XCTAssertEqual(invalidStringResponse.responseData, responseDataWithInvalidJSONAndString)
+        XCTAssertNil(invalidStringResponse.responseText)
+        XCTAssertNil(invalidStringResponse.responseJSON)
     }
     
 }
