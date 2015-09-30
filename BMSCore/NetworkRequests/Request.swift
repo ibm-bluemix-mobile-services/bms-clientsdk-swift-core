@@ -15,13 +15,15 @@ import Foundation
 
 
 
-// TODO: Error handling (throws)
+public enum HttpMethod: String {
+    case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
+}
 
-// TODO: Documentation
+
 
 public class Request: NSObject, NSURLSessionTaskDelegate {
     
-    
+
     
     // MARK: Constants
     
@@ -93,9 +95,15 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     // TODO: Perform error handling or make the developer do it?
     // Sets Content-Type to "application/json"
-    public func setRequestBodyWithJSON(requestJSON: AnyObject) throws {
+    public func setRequestBodyWithJSON(requestJSON: AnyObject) {
         
-        requestBody = try NSJSONSerialization.dataWithJSONObject(requestJSON, options: NSJSONWritingOptions.PrettyPrinted)
+        do {
+            requestBody = try NSJSONSerialization.dataWithJSONObject(requestJSON, options: NSJSONWritingOptions.PrettyPrinted)
+        }
+        catch {
+            // Swift cannot catch NSExceptions anyway, so no use in making the user implement a do/catch
+            // Log Error!
+        }
         
         if let _ = headers[Request.CONTENT_TYPE] {}
         else {
@@ -141,7 +149,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         
         // Build request
         if let _ = queryParameters {
-            resourceUrl = appendQueryParameters(queryParameters!, toURL: self.resourceUrl)
+            resourceUrl = Request.appendQueryParameters(queryParameters!, toURL: self.resourceUrl)
         }
         networkRequest.HTTPMethod = httpMethod.rawValue
         networkRequest.allHTTPHeaderFields = headers
@@ -177,7 +185,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     // MARK: Methods (internal/private)
     
     // Returns the URL with query parameters appended to it
-    func appendQueryParameters(parameters: [String: String], toURL originalUrl: String) -> String {
+    static func appendQueryParameters(parameters: [String: String], toURL originalUrl: String) -> String {
         
         if parameters.isEmpty {
             return originalUrl
@@ -196,13 +204,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             parametersInURLFormat += [key + "=" + "\(value)"]
         }
         
-        return originalUrl + (originalUrl.containsString("?") ? "" : "?") + parametersInURLFormat.joinWithSeparator("&")
+        return originalUrl + (originalUrl[originalUrl.endIndex.predecessor()] == "?" ? "" : "?") + parametersInURLFormat.joinWithSeparator("&")
     }
     
-}
-
-
-
-public enum HttpMethod: String {
-    case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
 }

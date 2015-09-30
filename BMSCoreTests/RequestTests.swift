@@ -16,26 +16,155 @@ import XCTest
 
 class RequestTests: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    // MARK: init
+    
+    func testInitWithAllParameters() {
+        
+        let request = Request(url: "http://example.com", method: HttpMethod.GET, timeout: 10.0, headers:["Content-Type": "text/plain"], queryParameters: ["someKey": "someValue"])
+        
+        XCTAssertEqual(request.resourceUrl, "http://example.com")
+        XCTAssertEqual(request.httpMethod.rawValue, "GET")
+        XCTAssertEqual(request.timeout, 10.0)
+        XCTAssertEqual(request.headers, ["Content-Type": "text/plain"])
+        XCTAssertEqual(request.queryParameters!, ["someKey": "someValue"])
+        XCTAssertNotNil(request.networkRequest)
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    func testInitWithDefaultParameters() {
+        
+        let request = Request(url: "http://example.com")
+        
+        XCTAssertEqual(request.resourceUrl, "http://example.com")
+        XCTAssertEqual(request.httpMethod.rawValue, "GET")
+        XCTAssertEqual(request.timeout, BMSClient.sharedInstance.defaultRequestTimeout)
+        XCTAssertEqual(request.headers, [:])
+        XCTAssertEqual(request.queryParameters!, [:])
+        XCTAssertNotNil(request.networkRequest)
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
+    
+    // MARK: setRequestBody
+    
+    func testSetRequestBodyWithValidJSON() {
+        
+        let request = Request(url: "http://example.com")
+        let json = ["key1": "value1", "key2": "value2"]
+        var requestBodyAsJSON: AnyObject?
+        request.setRequestBodyWithJSON(json)
+        do {
+            requestBodyAsJSON = try NSJSONSerialization.JSONObjectWithData(request.requestBody!, options: .MutableContainers)
         }
+        catch let jsonError {
+            XCTFail("Failed to create JSON object. Error: \(jsonError)")
+        }
+        
+        XCTAssertEqual(requestBodyAsJSON as! [String: String], json)
+        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], Request.JSON_CONTENT_TYPE)
+    }
+    
+    func testSetRequestBodyWithInvalidJSON() {
+        
+        // Cannot implement the below test because it causes an NSException.
+        // Swift cannot catch NSExceptions, so this test will always fail. 
+        // Uncomment below to confirm that the test fails with an NSInvalidArgumentException: Invalid top-level type in JSON write
+        
+//        let request = Request(url: "http://example.com")
+//        let json = "INVALID JSON"
+//        request.setRequestBodyWithJSON(json)
+    }
+    
+    func testSetRequestBodyWithJSONAndContentHeader() {
+        
+        let request = Request(url: "http://example.com", headers: ["Content-Type": "media-type"])
+        let json = ["key1": "value1", "key2": "value2"]
+        var requestBodyAsJSON: AnyObject?
+        request.setRequestBodyWithJSON(json)
+        do {
+            requestBodyAsJSON = try NSJSONSerialization.JSONObjectWithData(request.requestBody!, options: .MutableContainers)
+        }
+        catch let jsonError {
+            XCTFail("Failed to create JSON object. Error: \(jsonError)")
+        }
+        
+        XCTAssertEqual(requestBodyAsJSON as! [String: String], json)
+        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], "media-type")
+    }
+    
+    func testSetRequestBodyWithString() {
+        
+        let request = Request(url: "http://example.com")
+        let dataString = "Some data text"
+        request.setRequestBodyWithString(dataString)
+        let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
+        
+        XCTAssertEqual(requestBodyAsString, dataString)
+        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], Request.TEXT_PLAIN_TYPE)
+    }
+    
+    func testSetRequestBodyWithStringAndContentHeader() {
+        
+        let request = Request(url: "http://example.com", headers: ["Content-Type": "media-type"])
+        let dataString = "Some data text"
+        request.setRequestBodyWithString(dataString)
+        let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
+        
+        XCTAssertEqual(requestBodyAsString, dataString)
+        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], "media-type")
+    }
+    
+    func testSetRequestBodyWithData() {
+        
+        let request = Request(url: "http://example.com")
+        let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
+        request.setRequestBodyWithData(requestData!)
+        
+        XCTAssertEqual(request.requestBody, requestData)
+        // The setRequestBodyWithData(requestData: NSData) method should not affect the Content-Type header
+    }
+    
+    
+    
+    // MARK: addQueryParameters
+    
+    func testAddQueryParametersWithValidParameters() {
+        
+        let url = "http://example.com"
+        let parameters = ["key1": "value1", "key2": "value2"]
+        let finalUrl = Request.appendQueryParameters(parameters, toURL: url)
+        
+        XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
+    }
+    
+    func testAddQueryParametersWithRemovedQuestionMark() {
+        
+        let url = "http://example.com?"
+        
+        let parameters = ["key1": "value1", "key2": "value2"]
+        let finalUrl = Request.appendQueryParameters(parameters, toURL: url)
+        
+        XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
+    }
+    
+    func testAddQueryParametersWithCorrectNumberOfAmpersands() {
+        
+        let url = "http://example.com"
+        let parameters = ["k1": "v1", "k2": "v2", "k3": "v3", "k4": "v4"]
+        let finalUrl = Request.appendQueryParameters(parameters, toURL: url)
+        
+        let numberOfAmpersands = finalUrl.componentsSeparatedByString("&")
+        
+        XCTAssertEqual(numberOfAmpersands.count - 1, 3)
+    }
+    
+    func testAddQueryParametersWithReservedCharacters() {
+        
+        let url = "http://example.com"
+        let parameters = ["Reserved characters": "\"#%<>[\\]^`{|}"]
+        let finalUrl = Request.appendQueryParameters(parameters, toURL: url)
+        
+        XCTAssert(finalUrl.containsString("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
     }
     
 }

@@ -53,12 +53,12 @@ class MFPResponseTests: XCTestCase {
     
     func testInitWithInvalidJSON() {
         
-        let responseDataWithInvalidJSON = "NOT JSON".dataUsingEncoding(NSUTF8StringEncoding)
+        let responseDataWithInvalidJSON = "INVALID JSON".dataUsingEncoding(NSUTF8StringEncoding)
         let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
         let invalidJSONResponse = MFPResponse(responseData: responseDataWithInvalidJSON!, httpResponse: httpURLResponse, isRedirect: true)
         
         XCTAssertEqual(invalidJSONResponse.responseData, responseDataWithInvalidJSON)
-        XCTAssertEqual(invalidJSONResponse.responseText, "NOT JSON")
+        XCTAssertEqual(invalidJSONResponse.responseText, "INVALID JSON")
         XCTAssertNil(invalidJSONResponse.responseJSON)
     }
     
