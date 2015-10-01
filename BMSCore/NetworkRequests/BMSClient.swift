@@ -11,27 +11,25 @@
 *     limitations under the License.
 */
 
-import Foundation
 
-
+/**
+    A singleton that serve as an entry point to Bluemix client-server communication.
+*/
 public class BMSClient: MFPClient {
-    
     
     
     // MARK: Properties (public)
     
+    /// This singleton should be used for all `BMSClient` activity
     public static let sharedInstance = BMSClient()
     
-    /**
-     *  Specifies the base back-end URL
-     */
+    /// Specifies the base back end URL
     public private(set) var bluemixAppRoute: String?
     
-    /**
-     *  Specifies the back end application id.
-     */
+    /// Specifies the back end application id.
     public private(set) var bluemixAppGUID: String?
     
+    /// Specifies the default timeout (in seconds) for all BMS network requests.
     public var defaultRequestTimeout: Double = 20.0 // seconds
     
     
@@ -46,11 +44,12 @@ public class BMSClient: MFPClient {
     
     init() {} // Required for sharedInstance to create an empty BMSClient
     
+    
     /**
-     *  Sets the base URL for the authorization server.
-     *
-     *  @param backendRoute Specifies the base URL for the authorization server
-     *  @param backendGUID  Specifies the GUID of the application
+        Sets the base URL for the authorization server.
+
+        - parameter backendRoute: Specifies the base URL for the authorization server
+        - parameter backendGUID:  Specifies the GUID of the Bluemix application
      */
     public func initializeForBluemixApp(route bluemixAppRoute: String, GUID bluemixAppGUID: String) {
         self.bluemixAppRoute = bluemixAppRoute

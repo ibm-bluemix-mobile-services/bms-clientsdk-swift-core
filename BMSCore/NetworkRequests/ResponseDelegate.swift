@@ -11,30 +11,31 @@
 *     limitations under the License.
 */
 
-import Foundation
-
 
 /**
- * ResponseListener is the interface that will be called after the ResourceRequest has completed or failed.
- */
-
+    The delegate that will be called after the MFP request has completed or failed.
+*/
+// TODO: Delete this protocol if it does not get used
 internal protocol ResponseDelegate {
     
+    
     /**
-     *  This method will be called only when a response from the server has been received with an http status
-     *  in the 200 range.
-     *
-     *  @param response The server response
+        This method will be called only when a response from the server has been received with an http status
+        in the 200 range.
+    
+        - parameter response: The server response
      */
     func onSuccess (response: Response)
     
+    
     /**
-     *  This method will be called either when there is no response from the server or when the status
-     *  from the server response is in the 400 or 500 ranges. The FailResponse contains an error code
-     *  distinguishing between the different cases.
-     *
-     *  @param response Contains detail regarding why the request failed
-     *  @param error Error that could have caused the request to fail. Null if no error is thrown.
+        This method will be called in the following cases:
+            * There is no response from the server.
+            * The status from the server response is in the 400 or 500 range.
+            * There is an operational failure such as: authentication failure, data validation failure, or custom failure.
+    
+        - parameter response: Contains detail regarding why the request failed
+        - parameter error:    Error that caused the request to fail
      */
     func onFailure (response: Response, error: ErrorType)
     

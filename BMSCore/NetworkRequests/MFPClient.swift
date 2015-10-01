@@ -11,29 +11,30 @@
 *     limitations under the License.
 */
 
-import Foundation
 
-
+/**
+    Defines the methods and properties needed to create network connections to a generic (Foundation or Bluemix) MobileFirst server.
+*/
 internal protocol MFPClient {
-
     
-    /**
-     *  Specifies default request timeout.
-     */
+    
+    /// Specifies the default timeout (in seconds) for all BMS network requests.
     var defaultRequestTimeout: Double { get set }
     
+    
     /**
-     *  Registers a delegate that will handle authentication for the specified realm
-     *
-     *  @param delegate The delegate that will handle authentication challenges
-     *  @param forRealm The realm name
+        Registers a delegate that will handle authentication for the specified realm.
+        
+        - parameter delegate: The delegate that will handle authentication challenges
+        - parameter forRealm: The realm name
      */
     func registerAuthenticationDelegate(delegate: Any, realm: String)
     
+    
     /**
-     *  Unregisters an authentication delegate for the specified realm
-     *
-     *  @param realm Realm name
+        Unregisters the authentication delegate for the specified realm.
+    
+        - parameter realm: The realm name
      */
     func unregisterAuthenticationDelegate(realm: String)
     
@@ -42,12 +43,14 @@ internal protocol MFPClient {
 
 internal extension MFPClient {
     
+    
     func registerAuthenticationDelegate(delegate: Any, realm: String) {
-        // Default implementation goes here!
+        // TODO: Default implementation goes here!
     }
     
+    
     func unregisterAuthenticationDelegate(realm: String) {
-        // Default implementation goes here!
+        // TODO: Default implementation goes here!
     }
     
 }

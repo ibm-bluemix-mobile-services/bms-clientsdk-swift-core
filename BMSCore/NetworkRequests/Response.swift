@@ -11,34 +11,31 @@
 *     limitations under the License.
 */
 
-import Foundation
 
+// ANTON: This protocol seems unnecessary
 
+/**
+    Contains useful data received from an HTTP network response.
+*/
 public protocol Response {
     
-    /**
-     *  HTTP status of the response. Returns "0" for no response.
-     */
+    
+    /// HTTP status of the response
     var statusCode: Int? { get }
     
-    /**
-    *  HTTP headers from the response.
-    */
+    /// HTTP headers from the response
     var headers: [NSObject: AnyObject]? { get }
-    
-    /**
-     *  The body of the response as a String. Returns nil if there is no body or exception occurred when building the response string.
-     */
+
+    /// The body of the response as a String.
+    /// Returns nil if there is no body or an exception occurred when building the response string.
     var responseText: String? { get }
     
-    /**
-     *  The body of the response as NSData. Returns nil if there is no body or if it is not valid NSData.
-     */
+    /// The body of the response as NSData. 
+    /// Returns nil if there is no body or if the response is not valid NSData.
     var responseData: NSData? { get }
 
-    /**
-    *  The body of the response as JSON. Returns nil if there is no body or if it is not valid JSON.
-    */
+    /// The body of the response as JSON. 
+    /// Returns nil if there is no body or if the response is not valid JSON.
     var responseJSON: AnyObject? { get }
     
 }

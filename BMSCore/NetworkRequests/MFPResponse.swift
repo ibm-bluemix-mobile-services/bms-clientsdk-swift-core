@@ -11,23 +11,31 @@
 *     limitations under the License.
 */
 
-import Foundation
 
-
+/**
+    Contains useful data received from an HTTP network response.
+*/
 public struct MFPResponse: Response {
-    
     
     
     // MARK: Properties (public)
     
+    /// HTTP status of the response
     public let statusCode: Int?
     
+    /// HTTP headers from the response
     public let headers: [NSObject: AnyObject]?
     
+    /// The body of the response as a String.
+    /// Returns nil if there is no body or an exception occurred when building the response string.
     public let responseText: String?
     
+    /// The body of the response as NSData.
+    /// Returns nil if there is no body or if the response is not valid NSData.
     public let responseData: NSData?
     
+    /// The body of the response as JSON.
+    /// Returns nil if there is no body or if the response is not valid JSON.
     public let responseJSON: AnyObject?
     
     
@@ -44,6 +52,13 @@ public struct MFPResponse: Response {
     
     // MARK: Initializer
     
+    /**
+        Store data from the NSHTTPURLResponse
+    
+        - parameter responseData: Data returned from the server
+        - parameter httpResponse: Response object returned from the NSURLSession request
+        - parameter isRedirect:   True if the response requires a redirect
+    */
     init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool?) {
         
         self.isRedirect = isRedirect
@@ -63,6 +78,8 @@ public struct MFPResponse: Response {
         }
     }
     
+    
+    // Try to convert response NSData to String and JSON
     static private func buildResponseWithData(responseData: NSData?) -> (NSData?, String?, AnyObject?) {
         
         var responseAsData: NSData?
@@ -79,10 +96,9 @@ public struct MFPResponse: Response {
                 responseAsJSON = try NSJSONSerialization.JSONObjectWithData(responseData, options: NSJSONReadingOptions.MutableContainers)
             }
             catch let jsonConversionError {
-                // Log the jsonConversionError with MFP Logger
+                // TODO: Log the jsonConversionError with MFP Logger
             }
         }
-        
         return (responseAsData, responseAsText, responseAsJSON)
     }
     
