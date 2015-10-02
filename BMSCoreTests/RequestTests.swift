@@ -21,9 +21,9 @@ class RequestTests: XCTestCase {
     
     func testInitWithAllParameters() {
         
-        let request = Request(url: "http://example.com", method: HttpMethod.GET, timeout: 10.0, headers:["Content-Type": "text/plain"], queryParameters: ["someKey": "someValue"])
+        let request = Request(url: NSURL(string: "http://example.com")!, method: HttpMethod.GET, timeout: 10.0, headers:["Content-Type": "text/plain"], queryParameters: ["someKey": "someValue"])
         
-        XCTAssertEqual(request.resourceUrl, "http://example.com")
+        XCTAssertEqual(String(request.resourceUrl), "http://example.com?someKey=someValue")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, 10.0)
         XCTAssertEqual(request.headers, ["Content-Type": "text/plain"])
@@ -33,9 +33,9 @@ class RequestTests: XCTestCase {
     
     func testInitWithDefaultParameters() {
         
-        let request = Request(url: "http://example.com")
+        let request = Request(url: NSURL(string: "http://example.com")!)
         
-        XCTAssertEqual(request.resourceUrl, "http://example.com")
+        XCTAssertEqual(String(request.resourceUrl), "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, BMSClient.sharedInstance.defaultRequestTimeout)
         XCTAssertEqual(request.headers, [:])
@@ -49,7 +49,7 @@ class RequestTests: XCTestCase {
     
     func testSetRequestBodyWithValidJSON() {
         
-        let request = Request(url: "http://example.com")
+        let request = Request(url: NSURL(string: "http://example.com")!)
         let json = ["key1": "value1", "key2": "value2"]
         var requestBodyAsJSON: AnyObject?
         request.setRequestBodyWithJSON(json)
@@ -77,7 +77,7 @@ class RequestTests: XCTestCase {
     
     func testSetRequestBodyWithJSONAndContentHeader() {
         
-        let request = Request(url: "http://example.com", headers: ["Content-Type": "media-type"])
+        let request = Request(url: NSURL(string: "http://example.com")!, headers: ["Content-Type": "media-type"])
         let json = ["key1": "value1", "key2": "value2"]
         var requestBodyAsJSON: AnyObject?
         request.setRequestBodyWithJSON(json)
@@ -94,7 +94,7 @@ class RequestTests: XCTestCase {
     
     func testSetRequestBodyWithString() {
         
-        let request = Request(url: "http://example.com")
+        let request = Request(url: NSURL(string: "http://example.com")!)
         let dataString = "Some data text"
         request.setRequestBodyWithString(dataString)
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
@@ -105,7 +105,7 @@ class RequestTests: XCTestCase {
     
     func testSetRequestBodyWithStringAndContentHeader() {
         
-        let request = Request(url: "http://example.com", headers: ["Content-Type": "media-type"])
+        let request = Request(url: NSURL(string: "http://example.com")!, headers: ["Content-Type": "media-type"])
         let dataString = "Some data text"
         request.setRequestBodyWithString(dataString)
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
@@ -116,7 +116,7 @@ class RequestTests: XCTestCase {
     
     func testSetRequestBodyWithData() {
         
-        let request = Request(url: "http://example.com")
+        let request = Request(url: NSURL(string: "http://example.com")!)
         let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
         request.setRequestBodyWithData(requestData!)
         
@@ -130,28 +130,28 @@ class RequestTests: XCTestCase {
     
     func testAddQueryParametersWithValidParameters() {
         
-        let url = "http://example.com"
+        let url = NSURL(string: "http://example.com")
         let parameters = ["key1": "value1", "key2": "value2"]
-        let finalUrl = Request.appendQueryParameters(parameters, toURL: url)
+        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
         
         XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
     }
     
     func testAddQueryParametersWithRemovedQuestionMark() {
         
-        let url = "http://example.com?"
+        let url = NSURL(string: "http://example.com?")
         
         let parameters = ["key1": "value1", "key2": "value2"]
-        let finalUrl = Request.appendQueryParameters(parameters, toURL: url)
+        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
         
         XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
     }
     
     func testAddQueryParametersWithCorrectNumberOfAmpersands() {
         
-        let url = "http://example.com"
+        let url = NSURL(string: "http://example.com")
         let parameters = ["k1": "v1", "k2": "v2", "k3": "v3", "k4": "v4"]
-        let finalUrl = Request.appendQueryParameters(parameters, toURL: url)
+        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
         
         let numberOfAmpersands = finalUrl.componentsSeparatedByString("&")
         
@@ -160,9 +160,9 @@ class RequestTests: XCTestCase {
     
     func testAddQueryParametersWithReservedCharacters() {
         
-        let url = "http://example.com"
-        let parameters = ["Reserved characters": "\"#%<>[\\]^`{|}"]
-        let finalUrl = Request.appendQueryParameters(parameters, toURL: url)
+        let url = NSURL(string: "http://example.com")
+        let parameters = ["Reserved_characters": "\"#%<>[\\]^`{|}"]
+        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
         
         XCTAssert(finalUrl.containsString("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
     }

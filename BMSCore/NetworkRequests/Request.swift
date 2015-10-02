@@ -47,7 +47,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     // MARK: Properties (public)
     
     /// URL that the request is being sent to
-    public private(set) var resourceUrl: String
+    public private(set) var resourceUrl: NSURL
     
     /// HTTP method (GET, POST, etc.)
     public let httpMethod: HttpMethod
@@ -88,25 +88,27 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         - parameter headers:         Optional headers to add to the request.
         - parameter queryParameters: Optional query parameters to add to the request.
     */
-    // TODO: Make initializer failable with check if url can be converted to NSURL
-    public init(url: String,
+    public init(url: NSURL,
                method: HttpMethod = HttpMethod.GET,
                timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
                headers: [String: String] = [:],
                queryParameters: [String: String] = [:]) {
-            
+        
         self.resourceUrl = url
         self.httpMethod = method
         self.headers = headers
         self.timeout = timeout
         self.queryParameters = queryParameters
         
-        // Set timeout and initialize network session
+        // Set timeout and initialize network session and request
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = timeout
         networkSession = NSURLSession(configuration: configuration)
-            
         networkRequest = NSMutableURLRequest()
+                
+        super.init()
+        
+        self.resourceUrl = Request.appendQueryParameters(queryParameters, toURL: url)
     }
     
     
@@ -166,7 +168,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     }
     
     
-    // TODO: Forgot to set networkRequest URL
     /**
         Send this resource request asynchronously. 
         The response received from the server is parsed into a `Response` object which is passed back
@@ -189,9 +190,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         }
         
         // Build request
-        if let _ = queryParameters {
-            resourceUrl = Request.appendQueryParameters(queryParameters!, toURL: self.resourceUrl)
-        }
+        networkRequest.URL = resourceUrl
         networkRequest.HTTPMethod = httpMethod.rawValue
         networkRequest.allHTTPHeaderFields = headers
         networkRequest.HTTPBody = requestBody
@@ -237,27 +236,29 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
         - returns: The original URL with the query parameters appended to it
     */
-    static func appendQueryParameters(parameters: [String: String], toURL originalUrl: String) -> String {
+    static func appendQueryParameters(parameters: [String: String], toURL originalUrl: NSURL) -> NSURL {
         
         if parameters.isEmpty {
             return originalUrl
         }
         
-        var parametersInURLFormat = [String]()
-        for (key, var value) in parameters {
-            
-            // Example: Backslash characters get converted to %5C
-            if let urlSafeValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
-                value = urlSafeValue
-            }
-            else {
-                value = ""
-                // TODO: Log an error here
-            }
-            parametersInURLFormat += [key + "=" + "\(value)"]
+        var parametersInURLFormat = [NSURLQueryItem]()
+        for (key, value) in parameters {
+            parametersInURLFormat += [NSURLQueryItem(name: key, value: value)]
         }
         
-        return originalUrl + (originalUrl[originalUrl.endIndex.predecessor()] == "?" ? "" : "?") + parametersInURLFormat.joinWithSeparator("&")
+        let newUrlComponents = NSURLComponents(URL: originalUrl, resolvingAgainstBaseURL: false)
+        newUrlComponents?.queryItems = parametersInURLFormat
+        
+        if let newUrl = newUrlComponents?.URL {
+            return newUrl
+        }
+        else {
+            // CODE REVIEW: Throw error or just log?
+            
+            // TODO: Log a warning or error here
+            return originalUrl
+        }
     }
     
 }
