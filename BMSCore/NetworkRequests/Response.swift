@@ -12,7 +12,7 @@
 */
 
 
-// ANTON: This protocol seems unnecessary
+// CODE REVIEW: This protocol seems unnecessary
 
 /**
     Contains useful data received from an HTTP network response.

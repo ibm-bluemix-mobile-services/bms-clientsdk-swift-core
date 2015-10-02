@@ -125,6 +125,23 @@ class RequestTests: XCTestCase {
     }
     
     
+    // TODO: Try implementing send() unit tests
+    // MARK: sendWithCompletionHandler
+    
+//    func testSendWithCompletionHandler() {
+//        
+//        class MockNSURLSession: NSURLSession {
+//            
+//            override private func dataTaskWithRequest(request: NSURLRequest, completionHandler: (NSData?, NSURLResponse?, NSError?) -> Void) -> NSURLSessionDataTask {
+//                
+//            }
+//        }
+//        
+//        let request = Request(url: NSURL(string: "http://example.com")!)
+//        request.sendWithCompletionHandler( {(response: Response, error: ErrorType?) -> Void in })
+//    }
+    
+    
     
     // MARK: addQueryParameters
     
@@ -137,9 +154,28 @@ class RequestTests: XCTestCase {
         XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
     }
     
-    func testAddQueryParametersWithRemovedQuestionMark() {
+    func testAddQueryParametersWithReservedCharacters() {
         
-        let url = NSURL(string: "http://example.com?")
+        let url = NSURL(string: "http://example.com")
+        let parameters = ["Reserved_characters": "\"#%<>[\\]^`{|}"]
+        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
+        
+        XCTAssert(finalUrl.containsString("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
+    }
+    
+    func testAddQueryParametersWillRemoveTrailingQuestionMarks() {
+        
+        let url = NSURL(string: "http://example.com???")
+        
+        let parameters = ["key1": "value1", "key2": "value2"]
+        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
+        
+        XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
+    }
+    
+    func testAddQueryParametersReplaceOriginalQueryParameters() {
+        
+        let url = NSURL(string: "http://example.com?doomedKey=doomedValue")
         
         let parameters = ["key1": "value1", "key2": "value2"]
         let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
@@ -157,14 +193,5 @@ class RequestTests: XCTestCase {
         
         XCTAssertEqual(numberOfAmpersands.count - 1, 3)
     }
-    
-    func testAddQueryParametersWithReservedCharacters() {
-        
-        let url = NSURL(string: "http://example.com")
-        let parameters = ["Reserved_characters": "\"#%<>[\\]^`{|}"]
-        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
-        
-        XCTAssert(finalUrl.containsString("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
-    }
-    
+
 }

@@ -96,7 +96,7 @@ public struct MFPResponse: Response {
                 responseAsJSON = try NSJSONSerialization.JSONObjectWithData(responseData, options: NSJSONReadingOptions.MutableContainers)
             }
             catch let jsonConversionError {
-                // TODO: Log the jsonConversionError with MFP Logger
+                // TODO: Log the jsonConversionError 
             }
         }
         return (responseAsData, responseAsText, responseAsJSON)

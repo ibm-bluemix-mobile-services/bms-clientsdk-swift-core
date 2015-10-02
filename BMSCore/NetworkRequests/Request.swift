@@ -23,8 +23,8 @@ public enum HttpMethod: String {
 /**
     Build and send HTTP network requests.
 
-    When building a Request object, all properties must be provided in the initializer, except for the `requestBody`, 
-        which can be supplied as NSData, JSON, or text via one of the following methods:
+    When building a Request object, all properties must be provided in the initializer, 
+        except for the `requestBody`, which can be supplied as NSData, JSON, or text via one of the following methods:
 
         setRequestBodyWithJSON(requestJSON: AnyObject)
         setRequestBodyWithString(requestString: String)
@@ -32,6 +32,11 @@ public enum HttpMethod: String {
 
     The response received from the server is parsed into a `Response` object which is returned 
         in the `sendWithCompletionHandler` callback.
+
+    // CODE REVIEW: Does this make sense?
+    
+    **Warning** If `queryParameters` is supplied to the initializer, those parameters will overwrite
+        any query parameters included in the `url`.
 */
 public class Request: NSObject, NSURLSessionTaskDelegate {
 
@@ -181,6 +186,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         let buildAndSendResponse = {
             (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
+            // TODO: Make use of the round trip time with Analytics
             let roundTripTime = NSDate.timeIntervalSinceReferenceDate() - self.startTime
             
             let networkResponse = MFPResponse(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
@@ -228,8 +234,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     /**
         Returns the supplied URL with query parameters appended to it; the original URL is not modified.
         Characters in the query parameters that are not URL safe are automatically converted to percent-encoding.
-        No such safeguards exist for the URL (except for trailing question marks), so make sure it is a valid URL
-            before passing it to this function.
     
         - parameter parameters:  The query parameters to be appended to the end of the url string
         - parameter originalURL: The url that the `parameters` will be appeneded to
