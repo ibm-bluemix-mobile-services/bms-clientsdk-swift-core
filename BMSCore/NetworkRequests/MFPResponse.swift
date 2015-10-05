@@ -68,8 +68,6 @@ public struct MFPResponse: Response {
         
         (self.responseData, self.responseText, self.responseJSON) = MFPResponse.buildResponseWithData(responseData)
         
-        print((self.responseText))
-        
         if let status = statusCode {
             isSuccessful = (200..<300 ~= status)
         }

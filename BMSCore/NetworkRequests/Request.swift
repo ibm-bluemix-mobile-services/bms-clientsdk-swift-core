@@ -180,7 +180,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
 
         - parameter completionHandler: The closure that will be called when this request finishes.
     */
-    public func sendWithCompletionHandler(callback: (Response, ErrorType?) -> Void) {
+    public func sendWithCompletionHandler(callback: ((Response, ErrorType?) -> Void)?) {
         
         // Build the BMSResponse object, and pass it to the user
         let buildAndSendResponse = {
@@ -191,8 +191,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             
             let networkResponse = MFPResponse(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
             
-            callback(networkResponse as Response, error)
-            
+            callback?(networkResponse as Response, error)
         }
         
         // Build request
