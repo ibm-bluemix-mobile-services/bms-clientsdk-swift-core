@@ -8,24 +8,33 @@
 
 import WatchKit
 import Foundation
+import BMSCoreWatchOS
 
 
 class InterfaceController: WKInterfaceController {
 
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    
+    @IBOutlet var responseLabel: WKInterfaceLabel!
+    
+    
+    @IBAction func getRequestButtonPressed() {
         
-        // Configure interface objects here.
+        let getRequest = Request(url: NSURL(string: "http://httpbin.org/get")!, method: HttpMethod.GET, timeout: 10.0)
+        getRequest.sendWithCompletionHandler( { (response: Response, error: ErrorType?) in
+            
+            var responseLabelText: String
+            
+            if let responseError = error {
+                responseLabelText = "ERROR: \(responseError)"
+            }
+            else {
+                responseLabelText = "Status: \(response.statusCode!) \n\n"
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.responseLabel.setText(responseLabelText)
+            })
+        } )
     }
-
-    override func willActivate() {
-        // This method is called when watch view controller is about to be visible to user
-        super.willActivate()
-    }
-
-    override func didDeactivate() {
-        // This method is called when watch view controller is no longer visible
-        super.didDeactivate()
-    }
-
+    
 }
