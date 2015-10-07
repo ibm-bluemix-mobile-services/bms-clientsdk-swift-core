@@ -13,12 +13,12 @@
 
 
 /**
-    Defines the methods and properties needed to create network connections to a generic (Foundation or Bluemix) MobileFirst server.
+    Defines the methods and properties needed to create network connections to a server.
 */
 internal protocol MFPClient {
     
     
-    /// Specifies the default timeout (in seconds) for all BMS network requests.
+    /// Specifies the default timeout (in seconds) for all network requests.
     var defaultRequestTimeout: Double { get set }
     
     

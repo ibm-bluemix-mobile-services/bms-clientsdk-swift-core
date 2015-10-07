@@ -42,7 +42,7 @@ public class BMSClient: MFPClient {
     
     // MARK: Initializers
     
-    init() {} // Required for sharedInstance to create an empty BMSClient
+    private init() {} // Required for sharedInstance to create an empty BMSClient
     
     
     /**
@@ -51,10 +51,11 @@ public class BMSClient: MFPClient {
         - parameter backendRoute: Specifies the base URL for the authorization server
         - parameter backendGUID:  Specifies the GUID of the Bluemix application
      */
-    public func initializeForBluemixApp(route bluemixAppRoute: String, GUID bluemixAppGUID: String) {
+    public func initializeWithBluemixAppRoute(bluemixAppRoute: String, bluemixAppGUID: String) {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
         
+        // TDOO: Generate rewriteDomain
         rewriteDomain = ""
     }
     

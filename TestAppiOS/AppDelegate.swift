@@ -18,8 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         let myBMSClient = BMSClient.sharedInstance
-        myBMSClient.initializeForBluemixApp(route: "", GUID: "")
-        myBMSClient.defaultRequestTimeout = 10.0 // seconds
+//        myBMSClient.initializeForBluemixApp(route: "", GUID: "")
+//        myBMSClient.defaultRequestTimeout = 10.0 // seconds
         
         return true
     }
