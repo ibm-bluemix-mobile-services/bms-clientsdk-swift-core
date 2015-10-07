@@ -11,11 +11,11 @@
 *     limitations under the License.
 */
 
-
+// CODE REVIEW: Rename from MFPResponse to Response
 /**
     Contains useful data received from an HTTP network response.
 */
-public struct MFPResponse: Response {
+public class MFPResponse {
     
     
     // MARK: Properties (public)
@@ -33,6 +33,8 @@ public struct MFPResponse: Response {
     /// The body of the response as NSData.
     /// Returns nil if there is no body or if the response is not valid NSData.
     public let responseData: NSData?
+    
+    // CODE REVIEW: REMOVE JSON
     
     /// The body of the response as JSON.
     /// Returns nil if there is no body or if the response is not valid JSON.
@@ -59,7 +61,7 @@ public struct MFPResponse: Response {
         - parameter httpResponse: Response object returned from the NSURLSession request
         - parameter isRedirect:   True if the response requires a redirect
     */
-    init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool?) {
+    internal init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool?) {
         
         self.isRedirect = isRedirect
         self.httpResponse = httpResponse

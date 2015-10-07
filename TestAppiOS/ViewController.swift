@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     @IBAction func getRequestButtonPressed(sender: AnyObject) {
         
         let getRequest = Request(url: NSURL(string: "http://httpbin.org/get")!, method: HttpMethod.GET, timeout: 10.0)
-        getRequest.sendWithCompletionHandler( { (response: Response, error: ErrorType?) in
+        getRequest.sendWithCompletionHandler( { (response: MFPResponse, error: ErrorType?) in
             
             var responseLabelText = ""
             
@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     @IBAction func postRequestButtonPressed(sender: AnyObject) {
         
         let getRequest = Request(url: NSURL(string: "http://httpbin.org/post")!, method: HttpMethod.POST, timeout: 10.0)
-        getRequest.sendWithCompletionHandler( { (response: Response, error: ErrorType?) in
+        getRequest.sendWithCompletionHandler( { (response: MFPResponse, error: ErrorType?) in
             
             var responseLabelText = ""
             

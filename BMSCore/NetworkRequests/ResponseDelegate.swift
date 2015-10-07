@@ -25,7 +25,7 @@ internal protocol ResponseDelegate {
     
         - parameter response: The server response
      */
-    func onSuccess (response: Response)
+    func onSuccess (response: MFPResponse)
     
     
     /**
@@ -37,6 +37,6 @@ internal protocol ResponseDelegate {
         - parameter response: Contains detail regarding why the request failed
         - parameter error:    Error that caused the request to fail
      */
-    func onFailure (response: Response, error: ErrorType)
+    func onFailure (response: MFPResponse, error: ErrorType)
     
 }
