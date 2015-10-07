@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A381BB0A711001E02E1 /* BMSClient.swift */; settings = {ASSET_TAGS = (); }; };
 		92304A3F1BB0A711001E02E1 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A391BB0A711001E02E1 /* MFPClient.swift */; settings = {ASSET_TAGS = (); }; };
-		92304A401BB0A711001E02E1 /* MFPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3A1BB0A711001E02E1 /* MFPResponse.swift */; settings = {ASSET_TAGS = (); }; };
 		92304A411BB0A711001E02E1 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3B1BB0A711001E02E1 /* Request.swift */; settings = {ASSET_TAGS = (); }; };
 		92304A431BB0A711001E02E1 /* ResponseDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3D1BB0A711001E02E1 /* ResponseDelegate.swift */; settings = {ASSET_TAGS = (); }; };
 		9235D0AB1BC3181900946A32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9235D0AA1BC3181900946A32 /* AppDelegate.swift */; };
@@ -27,11 +26,11 @@
 		9235D0E71BC32D1B00946A32 /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		9235D0FC1BC33D5600946A32 /* BMSCoreWatchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; };
 		9235D0FD1BC33D5600946A32 /* BMSCoreWatchOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		927F4CD21BC5DD1800A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; settings = {ASSET_TAGS = (); }; };
 		92A8E4D91BBF2D9C00995FE8 /* BMSCoreWatchOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A8E4D81BBF2D9C00995FE8 /* BMSCoreWatchOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92A8E4DE1BBF2DA400995FE8 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A391BB0A711001E02E1 /* MFPClient.swift */; settings = {ASSET_TAGS = (); }; };
 		92A8E4DF1BBF2DA600995FE8 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A381BB0A711001E02E1 /* BMSClient.swift */; settings = {ASSET_TAGS = (); }; };
 		92A8E4E01BBF2DA800995FE8 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3B1BB0A711001E02E1 /* Request.swift */; settings = {ASSET_TAGS = (); }; };
-		92A8E4E21BBF2DAD00995FE8 /* MFPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3A1BB0A711001E02E1 /* MFPResponse.swift */; settings = {ASSET_TAGS = (); }; };
 		92A8E4E31BBF2DAF00995FE8 /* ResponseDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3D1BB0A711001E02E1 /* ResponseDelegate.swift */; settings = {ASSET_TAGS = (); }; };
 		92D63D311BB468D30073A032 /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D63D301BB468D30073A032 /* RequestTests.swift */; settings = {ASSET_TAGS = (); }; };
 		92D63D331BB4693E0073A032 /* BMSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D63D321BB4693E0073A032 /* BMSClientTests.swift */; settings = {ASSET_TAGS = (); }; };
@@ -110,7 +109,6 @@
 /* Begin PBXFileReference section */
 		92304A381BB0A711001E02E1 /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
 		92304A391BB0A711001E02E1 /* MFPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPClient.swift; sourceTree = "<group>"; };
-		92304A3A1BB0A711001E02E1 /* MFPResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPResponse.swift; sourceTree = "<group>"; };
 		92304A3B1BB0A711001E02E1 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		92304A3D1BB0A711001E02E1 /* ResponseDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseDelegate.swift; sourceTree = "<group>"; };
 		9235D0A81BC3181900946A32 /* TestAppiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestAppiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +127,7 @@
 		9235D0CF1BC3184000946A32 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		9235D0D11BC3184000946A32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9235D0D31BC3184000946A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		927F4CD11BC5DD1800A19360 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCoreWatchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92A8E4D81BBF2D9C00995FE8 /* BMSCoreWatchOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BMSCoreWatchOS.h; sourceTree = "<group>"; };
 		92A8E4DA1BBF2D9C00995FE8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -288,7 +287,7 @@
 				92304A391BB0A711001E02E1 /* MFPClient.swift */,
 				92304A381BB0A711001E02E1 /* BMSClient.swift */,
 				92304A3B1BB0A711001E02E1 /* Request.swift */,
-				92304A3A1BB0A711001E02E1 /* MFPResponse.swift */,
+				927F4CD11BC5DD1800A19360 /* Response.swift */,
 				92304A3D1BB0A711001E02E1 /* ResponseDelegate.swift */,
 			);
 			path = NetworkRequests;
@@ -555,7 +554,6 @@
 				92A8E4E31BBF2DAF00995FE8 /* ResponseDelegate.swift in Sources */,
 				92A8E4DE1BBF2DA400995FE8 /* MFPClient.swift in Sources */,
 				92A8E4E01BBF2DA800995FE8 /* Request.swift in Sources */,
-				92A8E4E21BBF2DAD00995FE8 /* MFPResponse.swift in Sources */,
 				92A8E4DF1BBF2DA600995FE8 /* BMSClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -568,7 +566,7 @@
 				92304A431BB0A711001E02E1 /* ResponseDelegate.swift in Sources */,
 				92304A411BB0A711001E02E1 /* Request.swift in Sources */,
 				92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */,
-				92304A401BB0A711001E02E1 /* MFPResponse.swift in Sources */,
+				927F4CD21BC5DD1800A19360 /* Response.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

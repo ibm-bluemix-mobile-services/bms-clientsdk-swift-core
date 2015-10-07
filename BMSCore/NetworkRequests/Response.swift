@@ -11,7 +11,7 @@
 *     limitations under the License.
 */
 
-// CODE REVIEW: Rename from MFPResponse to Response
+
 /**
     Contains useful data received from an HTTP network response.
 */
@@ -33,8 +33,6 @@ public class MFPResponse {
     /// The body of the response as NSData.
     /// Returns nil if there is no body or if the response is not valid NSData.
     public let responseData: NSData?
-    
-    // CODE REVIEW: REMOVE JSON
     
     /// The body of the response as JSON.
     /// Returns nil if there is no body or if the response is not valid JSON.
