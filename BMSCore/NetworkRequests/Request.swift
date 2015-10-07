@@ -1,4 +1,4 @@
-/*
+ /*
 *     Copyright 2015 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
@@ -19,6 +19,15 @@ public enum HttpMethod: String {
     case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
 }
 
+// CODE REVIEW: Create custom ErrorType called "MFPError" - case for NSURL and case for appendQueryParameters
+// CODE REVIEW: Figure out how to create a message associated with the error
+private enum MFPError: String, ErrorType {
+    case test = "aadsf"
+    
+    
+}
+ 
+// CODE REVIEW: REMOVE JSON EVERYWHERE
 
 /**
     Build and send HTTP network requests.
@@ -30,13 +39,8 @@ public enum HttpMethod: String {
         setRequestBodyWithString(requestString: String)
         setRequestBodyWithData(requestData: NSData)
 
-    The response received from the server is parsed into a `Response` object which is returned 
+    The response received from the server is parsed into a `MFPResponse` object which is returned
         in the `sendWithCompletionHandler` callback.
-
-    // CODE REVIEW: Does this make sense?
-    
-    **Warning** If `queryParameters` is supplied to the initializer, those parameters will overwrite
-        any query parameters included in the `url`.
 */
 public class Request: NSObject, NSURLSessionTaskDelegate {
 
@@ -46,6 +50,11 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     static let CONTENT_TYPE = "Content-Type"
     static let JSON_CONTENT_TYPE = "application/json"
     static let TEXT_PLAIN_TYPE = "text/plain"
+    
+    // CODE REVIEW: Replace setRequestBodyWith... and send methods
+    func sendWithCompletionHandler() {}
+    func sendString(requestBody: String) {}
+    func sendData(requestBody: NSData) {}
     
     
     
@@ -78,7 +87,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     var networkRequest: NSMutableURLRequest
     var allowRedirects: Bool = true
     private var startTime: NSTimeInterval = 0.0
-
+    
     
     
     // MARK: Initializers
@@ -93,6 +102,8 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         - parameter headers:         Optional headers to add to the request.
         - parameter queryParameters: Optional query parameters to add to the request.
     */
+    // CODE REVIEW: url parameter should be String, and converted to an NSURL
+    // CODE REVIEW: Handle url String -> NSURL conversion failure in send() methods (return error in callback)
     public init(url: NSURL,
                method: HttpMethod = HttpMethod.GET,
                timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
@@ -180,7 +191,9 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
 
         - parameter completionHandler: The closure that will be called when this request finishes.
     */
-    public func sendWithCompletionHandler(callback: ((Response, ErrorType?) -> Void)?) {
+    public func sendWithCompletionHandler(callback: ((MFPResponse, ErrorType?) -> Void)?) {
+        
+        
         
         // Build the BMSResponse object, and pass it to the user
         let buildAndSendResponse = {
@@ -191,7 +204,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             
             let networkResponse = MFPResponse(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
             
-            callback?(networkResponse as Response, error)
+            callback?(networkResponse as MFPResponse, MFPError.test)
         }
         
         // Build request
@@ -249,7 +262,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         for (key, value) in parameters {
             parametersInURLFormat += [NSURLQueryItem(name: key, value: value)]
         }
-        
+        // CODE REVIEW: Append parameters to existing parameters
         let newUrlComponents = NSURLComponents(URL: originalUrl, resolvingAgainstBaseURL: false)
         newUrlComponents?.queryItems = parametersInURLFormat
         
@@ -257,7 +270,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             return newUrl
         }
         else {
-            // CODE REVIEW: Throw error or just log?
+            // CODE REVIEW: Like with resourceUrl, check if this works in the send() methods and pass a custom error back to completion handler
             
             // TODO: Log a warning or error here
             return originalUrl
@@ -265,3 +278,9 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     }
     
 }
+
+
+
+
+
+
