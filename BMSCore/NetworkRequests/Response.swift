@@ -15,7 +15,7 @@
 /**
     Contains useful data received from an HTTP network response.
 */
-public class MFPResponse {
+public class Response {
     
     
     // MARK: Properties (public)
@@ -66,7 +66,7 @@ public class MFPResponse {
         self.headers = httpResponse?.allHeaderFields
         self.statusCode = httpResponse?.statusCode
         
-        (self.responseData, self.responseText, self.responseJSON) = MFPResponse.buildResponseWithData(responseData)
+        (self.responseData, self.responseText, self.responseJSON) = Response.buildResponseWithData(responseData)
         
         if let status = statusCode {
             isSuccessful = (200..<300 ~= status)

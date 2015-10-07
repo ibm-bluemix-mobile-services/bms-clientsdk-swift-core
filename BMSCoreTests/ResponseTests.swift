@@ -14,14 +14,14 @@
 import XCTest
 @testable import BMSCore
 
-class MFPResponseTests: XCTestCase {
+class ResponseTests: XCTestCase {
     
 
     func testInit() {
         
         let responseData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
         let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
-        let testResponse = MFPResponse(responseData: responseData!, httpResponse: httpURLResponse, isRedirect: true)
+        let testResponse = Response(responseData: responseData!, httpResponse: httpURLResponse, isRedirect: true)
         
         XCTAssertEqual(testResponse.statusCode, 200)
         XCTAssertEqual(testResponse.headers as! [String: String], ["key": "value"])
@@ -35,7 +35,7 @@ class MFPResponseTests: XCTestCase {
     
     func testInitWithNilParameters() {
         
-        let emptyResponse = MFPResponse(responseData: nil, httpResponse: nil, isRedirect: nil)
+        let emptyResponse = Response(responseData: nil, httpResponse: nil, isRedirect: nil)
         
         XCTAssertNil(emptyResponse.statusCode)
         XCTAssertNil(emptyResponse.headers)
@@ -55,7 +55,7 @@ class MFPResponseTests: XCTestCase {
         
         let responseDataWithInvalidJSON = "INVALID JSON".dataUsingEncoding(NSUTF8StringEncoding)
         let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
-        let invalidJSONResponse = MFPResponse(responseData: responseDataWithInvalidJSON!, httpResponse: httpURLResponse, isRedirect: true)
+        let invalidJSONResponse = Response(responseData: responseDataWithInvalidJSON!, httpResponse: httpURLResponse, isRedirect: true)
         
         XCTAssertEqual(invalidJSONResponse.responseData, responseDataWithInvalidJSON)
         XCTAssertEqual(invalidJSONResponse.responseText, "INVALID JSON")
@@ -66,7 +66,7 @@ class MFPResponseTests: XCTestCase {
         
         let responseDataWithInvalidJSONAndString = NSData(bytes: [0x00, 0xFF] as [UInt8], length: 2)
         let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
-        let invalidStringResponse = MFPResponse(responseData: responseDataWithInvalidJSONAndString, httpResponse: httpURLResponse, isRedirect: true)
+        let invalidStringResponse = Response(responseData: responseDataWithInvalidJSONAndString, httpResponse: httpURLResponse, isRedirect: true)
         
         XCTAssertEqual(invalidStringResponse.responseData, responseDataWithInvalidJSONAndString)
         XCTAssertNil(invalidStringResponse.responseText)

@@ -23,7 +23,7 @@ class BMSClientTests: XCTestCase {
         XCTAssertNil(clientInstance.bluemixAppRoute, "BMSClient has not yet been initialized")
         XCTAssertNil(clientInstance.bluemixAppGUID, "BMSClient has not yet been initialized")
         
-        clientInstance.initializeForBluemixApp(route: "http://example.com", GUID: "1234")
+        clientInstance.initializeWithBluemixAppRoute("http://example.com", bluemixAppGUID: "1234")
         XCTAssertEqual(clientInstance.bluemixAppRoute, "http://example.com")
         XCTAssertEqual(clientInstance.bluemixAppGUID, "1234")
         
