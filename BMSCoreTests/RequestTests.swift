@@ -45,38 +45,40 @@ class RequestTests: XCTestCase {
     
     
     
-    // MARK: setRequestBody
+    // MARK: send
     
-    func testSetRequestBodyWithString() {
+    func testSendString() {
         
         let request = Request(url: NSURL(string: "http://example.com")!)
         let dataString = "Some data text"
-        request.setRequestBodyWithString(dataString)
+        
+        request.sendString(dataString, withCompletionHandler: nil)
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertEqual(requestBodyAsString, dataString)
         XCTAssertEqual(request.headers[Request.CONTENT_TYPE], Request.TEXT_PLAIN_TYPE)
     }
     
-    func testSetRequestBodyWithStringAndContentHeader() {
+    func testSendStringWithoutOverwritingContentTypeHeader() {
         
         let request = Request(url: NSURL(string: "http://example.com")!, headers: ["Content-Type": "media-type"])
         let dataString = "Some data text"
-        request.setRequestBodyWithString(dataString)
+        
+        request.sendString(dataString, withCompletionHandler: nil)
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertEqual(requestBodyAsString, dataString)
         XCTAssertEqual(request.headers[Request.CONTENT_TYPE], "media-type")
     }
     
-    func testSetRequestBodyWithData() {
+    func testSendData() {
         
         let request = Request(url: NSURL(string: "http://example.com")!)
         let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
-        request.setRequestBodyWithData(requestData!)
+        
+        request.sendData(requestData!, withCompletionHandler: nil)
         
         XCTAssertEqual(request.requestBody, requestData)
-        // The setRequestBodyWithData(requestData: NSData) method should not affect the Content-Type header
     }
     
     

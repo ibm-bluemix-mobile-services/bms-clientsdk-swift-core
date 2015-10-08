@@ -19,39 +19,35 @@ public enum HttpMethod: String {
     case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
 }
 
+
 // CODE REVIEW: Create custom ErrorType called "MFPError" - case for NSURL and case for appendQueryParameters
 // CODE REVIEW: Figure out how to create a message associated with the error
 private enum MFPError: String, ErrorType {
     case test = "aadsf"
-    
-    
 }
-
+ 
 
 /**
     Build and send HTTP network requests.
 
     When building a Request object, all properties must be provided in the initializer, 
-        except for the `requestBody`, which can be supplied as NSData or text via one of the following methods:
+        except for the `requestBody`, which can be supplied as either NSData or plain text 
+        when sending the request via one of the following methods:
 
-        setRequestBodyWithString(requestString: String)
-        setRequestBodyWithData(requestData: NSData)
-
-    The response received from the server is parsed into a `Response` object which is returned
-        in the `sendWithCompletionHandler` callback.
+        sendString(requestBody: String, withCompletionHandler callback: mfpCompletionHandler?)
+        sendData(requestBody: NSData, withCompletionHandler callback: mfpCompletionHandler?)
 */
 public class Request: NSObject, NSURLSessionTaskDelegate {
+    
+    
+    /// The type of the completion handler parameters in the `sendString` and `sendData` methods
+    public typealias mfpCompletionHandler = (Response, ErrorType?) -> Void
 
     
     // MARK: Constants
     
     static let CONTENT_TYPE = "Content-Type"
     static let TEXT_PLAIN_TYPE = "text/plain"
-    
-    // CODE REVIEW: Replace setRequestBodyWith... and send methods
-    func sendWithCompletionHandler() {}
-    func sendString(requestBody: String) {}
-    func sendData(requestBody: NSData) {}
     
     
     
@@ -126,43 +122,54 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
 
     
     /**
-        Sets the request body for the network request by first converting the String to NSData.
-        Sets the Content-Type header to "text/plain" if it is not already set.
+        Add a request body and send the request asynchronously.
     
-        - parameter requestString: Request body as a string. Must conform to UTF-8 encoding.
+        If the Content-Type header is not already set, it will be set to "text/plain".
+    
+        The response received from the server is packaged into a `Response` object which is passed back
+        via the completion handler parameter.
+    
+        - parameter requestBody: HTTP request body as a String
+        - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
-    public func setRequestBodyWithString(requestString: String) {
+    func sendString(requestBody: String, withCompletionHandler callback: mfpCompletionHandler?) {
         
-        requestBody = requestString.dataUsingEncoding(NSUTF8StringEncoding)
+        self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         if let _ = headers[Request.CONTENT_TYPE] {}
         else {
             headers[Request.CONTENT_TYPE] = Request.TEXT_PLAIN_TYPE
         }
-    }
-    
-    
-    /**
-        Sets the request body for the network request.
-    
-        - parameter requestData: Request body as NSData
-    */
-    public func setRequestBodyWithData(requestData: NSData) {
         
-        requestBody = requestData
+        self.sendWithCompletionHandler(callback)
     }
     
     
     /**
-        Send this resource request asynchronously. 
-        The response received from the server is parsed into a `Response` object which is passed back
-            via the `callback` parameter.
+        Add a request body and send the request asynchronously.
+        
+        The response received from the server is packaged into a `Response` object which is passed back
+        via the completion handler parameter.
+    
+        - parameter requestBody: HTTP request body as NSData
+        - parameter withCompletionHandler: The closure that will be called when this request finishes
+    */
+    func sendData(requestBody: NSData, withCompletionHandler callback: mfpCompletionHandler?) {
+        
+        self.requestBody = requestBody
+        self.sendWithCompletionHandler(callback)
+    }
+    
+    
+    /**
+        Send the request asynchronously.
+    
+        The response received from the server is packaged into a `Response` object which is passed back
+        via the completion handler parameter.
 
-        - parameter completionHandler: The closure that will be called when this request finishes.
+        - parameter completionHandler: The closure that will be called when this request finishes
     */
-    public func sendWithCompletionHandler(callback: ((Response, ErrorType?) -> Void)?) {
-        
-        
+    public func sendWithCompletionHandler(callback: mfpCompletionHandler?) {
         
         // Build the BMSResponse object, and pass it to the user
         let buildAndSendResponse = {
