@@ -47,51 +47,6 @@ class RequestTests: XCTestCase {
     
     // MARK: setRequestBody
     
-    func testSetRequestBodyWithValidJSON() {
-        
-        let request = Request(url: NSURL(string: "http://example.com")!)
-        let json = ["key1": "value1", "key2": "value2"]
-        var requestBodyAsJSON: AnyObject?
-        request.setRequestBodyWithJSON(json)
-        do {
-            requestBodyAsJSON = try NSJSONSerialization.JSONObjectWithData(request.requestBody!, options: .MutableContainers)
-        }
-        catch let jsonError {
-            XCTFail("Failed to create JSON object. Error: \(jsonError)")
-        }
-        
-        XCTAssertEqual(requestBodyAsJSON as! [String: String], json)
-        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], Request.JSON_CONTENT_TYPE)
-    }
-    
-    func testSetRequestBodyWithInvalidJSON() {
-        
-        // Cannot implement the below test because it causes an NSException.
-        // Swift cannot catch NSExceptions, so this test will always fail. 
-        // Uncomment below to confirm that the test fails with an NSInvalidArgumentException: Invalid top-level type in JSON write
-        
-//        let request = Request(url: "http://example.com")
-//        let json = "INVALID JSON"
-//        request.setRequestBodyWithJSON(json)
-    }
-    
-    func testSetRequestBodyWithJSONAndContentHeader() {
-        
-        let request = Request(url: NSURL(string: "http://example.com")!, headers: ["Content-Type": "media-type"])
-        let json = ["key1": "value1", "key2": "value2"]
-        var requestBodyAsJSON: AnyObject?
-        request.setRequestBodyWithJSON(json)
-        do {
-            requestBodyAsJSON = try NSJSONSerialization.JSONObjectWithData(request.requestBody!, options: .MutableContainers)
-        }
-        catch let jsonError {
-            XCTFail("Failed to create JSON object. Error: \(jsonError)")
-        }
-        
-        XCTAssertEqual(requestBodyAsJSON as! [String: String], json)
-        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], "media-type")
-    }
-    
     func testSetRequestBodyWithString() {
         
         let request = Request(url: NSURL(string: "http://example.com")!)
@@ -123,23 +78,6 @@ class RequestTests: XCTestCase {
         XCTAssertEqual(request.requestBody, requestData)
         // The setRequestBodyWithData(requestData: NSData) method should not affect the Content-Type header
     }
-    
-    
-    // TODO: Try implementing send() unit tests
-    // MARK: sendWithCompletionHandler
-    
-//    func testSendWithCompletionHandler() {
-//        
-//        class MockNSURLSession: NSURLSession {
-//            
-//            override private func dataTaskWithRequest(request: NSURLRequest, completionHandler: (NSData?, NSURLResponse?, NSError?) -> Void) -> NSURLSessionDataTask {
-//                
-//            }
-//        }
-//        
-//        let request = Request(url: NSURL(string: "http://example.com")!)
-//        request.sendWithCompletionHandler( {(response: Response, error: ErrorType?) -> Void in })
-//    }
     
     
     

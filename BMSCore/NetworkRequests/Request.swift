@@ -26,20 +26,18 @@ private enum MFPError: String, ErrorType {
     
     
 }
- 
-// CODE REVIEW: REMOVE JSON EVERYWHERE
+
 
 /**
     Build and send HTTP network requests.
 
     When building a Request object, all properties must be provided in the initializer, 
-        except for the `requestBody`, which can be supplied as NSData, JSON, or text via one of the following methods:
+        except for the `requestBody`, which can be supplied as NSData or text via one of the following methods:
 
-        setRequestBodyWithJSON(requestJSON: AnyObject)
         setRequestBodyWithString(requestString: String)
         setRequestBodyWithData(requestData: NSData)
 
-    The response received from the server is parsed into a `MFPResponse` object which is returned
+    The response received from the server is parsed into a `Response` object which is returned
         in the `sendWithCompletionHandler` callback.
 */
 public class Request: NSObject, NSURLSessionTaskDelegate {
@@ -48,7 +46,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     // MARK: Constants
     
     static let CONTENT_TYPE = "Content-Type"
-    static let JSON_CONTENT_TYPE = "application/json"
     static let TEXT_PLAIN_TYPE = "text/plain"
     
     // CODE REVIEW: Replace setRequestBodyWith... and send methods
@@ -75,7 +72,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     /// Query parameters to append to the `resourceURL`
     public var queryParameters: [String: String]?
     
-    /// The request body can be supplied as NSData, JSON, or String, but is always converted to NSData
+    /// The request body can be supplied as NSData or String, but is always converted to NSData
     ///     before sending the request.
     public private(set) var requestBody: NSData?
     
@@ -126,35 +123,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         
         self.resourceUrl = Request.appendQueryParameters(queryParameters, toURL: url)
     }
-    
-    
-    
-    // MARK: Methods (public)
-    
-    /**
-        Sets the request body for the network request by first converting the JSON to NSData.
-        Sets the Content-Type header to "application/json" if it is not already set.
-    
-        **Warning:** This method may throw an NSException. As of Swift 2.0, NSExceptions cannot be caught,
-            so this would cause the app to crash. Ensure that the `requestJSON` parameter is valid JSON.
 
-        - parameter requestJSON: The request body in JSON format
-    */
-    public func setRequestBodyWithJSON(requestJSON: AnyObject) {
-        
-        do {
-            requestBody = try NSJSONSerialization.dataWithJSONObject(requestJSON, options: NSJSONWritingOptions.PrettyPrinted)
-        }
-        catch {
-            // Swift cannot catch NSExceptions anyway, so no use in making the user implement a do/try/catch
-        }
-        
-        if let _ = headers[Request.CONTENT_TYPE] {}
-        else {
-            headers[Request.CONTENT_TYPE] = Request.JSON_CONTENT_TYPE
-        }
-    }
-    
     
     /**
         Sets the request body for the network request by first converting the String to NSData.
@@ -191,7 +160,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
 
         - parameter completionHandler: The closure that will be called when this request finishes.
     */
-    public func sendWithCompletionHandler(callback: ((MFPResponse, ErrorType?) -> Void)?) {
+    public func sendWithCompletionHandler(callback: ((Response, ErrorType?) -> Void)?) {
         
         
         
@@ -202,9 +171,9 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             // TODO: Make use of the round trip time with Analytics
             let roundTripTime = NSDate.timeIntervalSinceReferenceDate() - self.startTime
             
-            let networkResponse = MFPResponse(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
+            let networkResponse = Response(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
             
-            callback?(networkResponse as MFPResponse, MFPError.test)
+            callback?(networkResponse as Response, error)
         }
         
         // Build request

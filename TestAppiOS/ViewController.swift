@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     
     @IBOutlet var responseLabel: UITextView!
     
-    
+    // CODE REVIEW: Add checks for unwrapping headers and status code (print error if they are nil)
     @IBAction func getRequestButtonPressed(sender: AnyObject) {
         
         let getRequest = Request(url: NSURL(string: "http://httpbin.org/get")!, method: HttpMethod.GET, timeout: 10.0)
@@ -27,9 +27,8 @@ class ViewController: UIViewController {
             }
             else {
                 responseLabelText = "Status Code: \(response.statusCode!) \n\n"
-                responseLabelText += "Headers: \(response.headers) \n\n"
-                responseLabelText += "Response Text: \(response.responseText) \n\n"
-                responseLabelText += "Response JSON: \(response.responseJSON) \n\n"
+                responseLabelText += "Headers: \(response.headers!) \n\n"
+                responseLabelText += "Response Text: \(response.responseText!) \n\n"
             }
             
             dispatch_async(dispatch_get_main_queue(), {
@@ -51,9 +50,8 @@ class ViewController: UIViewController {
             }
             else {
                 responseLabelText = "Status Code: \(response.statusCode!) \n\n"
-                responseLabelText += "Headers: \(response.headers) \n\n"
-                responseLabelText += "Response Text: \(response.responseText) \n\n"
-                responseLabelText += "Response JSON: \(response.responseJSON) \n\n"
+                responseLabelText += "Headers: \(response.headers!) \n\n"
+                responseLabelText += "Response Text: \(response.responseText!) \n\n"
             }
             
             dispatch_async(dispatch_get_main_queue(), {

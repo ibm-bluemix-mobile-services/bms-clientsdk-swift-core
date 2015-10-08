@@ -34,10 +34,6 @@ public class Response {
     /// Returns nil if there is no body or if the response is not valid NSData.
     public let responseData: NSData?
     
-    /// The body of the response as JSON.
-    /// Returns nil if there is no body or if the response is not valid JSON.
-    public let responseJSON: AnyObject?
-    
     
     
     // MARK: Properties (internal/private)
@@ -66,7 +62,8 @@ public class Response {
         self.headers = httpResponse?.allHeaderFields
         self.statusCode = httpResponse?.statusCode
         
-        (self.responseData, self.responseText, self.responseJSON) = Response.buildResponseWithData(responseData)
+        self.responseData = responseData
+        self.responseText = Response.buildResponseStringWithData(responseData)
         
         if let status = statusCode {
             isSuccessful = (200..<300 ~= status)
@@ -77,27 +74,17 @@ public class Response {
     }
     
     
-    // Try to convert response NSData to String and JSON
-    static private func buildResponseWithData(responseData: NSData?) -> (NSData?, String?, AnyObject?) {
+    // Try to convert response NSData to String
+    static private func buildResponseStringWithData(responseData: NSData?) -> String? {
         
-        var responseAsData: NSData?
         var responseAsText: String?
-        var responseAsJSON: AnyObject?
         
-        if let responseData = responseData {
-            responseAsData = responseData
-            if let responseAsNSString = NSString(data: responseData, encoding: NSUTF8StringEncoding) {
+        if let _ = responseData {
+            if let responseAsNSString = NSString(data: responseData!, encoding: NSUTF8StringEncoding) {
                 responseAsText = String(responseAsNSString)
             }
-            
-            do {
-                responseAsJSON = try NSJSONSerialization.JSONObjectWithData(responseData, options: NSJSONReadingOptions.MutableContainers)
-            }
-            catch let jsonConversionError {
-                // TODO: Log the jsonConversionError 
-            }
         }
-        return (responseAsData, responseAsText, responseAsJSON)
+        return responseAsText
     }
     
 }

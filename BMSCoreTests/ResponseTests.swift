@@ -27,7 +27,6 @@ class ResponseTests: XCTestCase {
         XCTAssertEqual(testResponse.headers as! [String: String], ["key": "value"])
         XCTAssertEqual(testResponse.responseData, responseData)
         XCTAssertEqual(testResponse.responseText, "{\"key1\": \"value1\", \"key2\": \"value2\"}")
-        XCTAssertEqual(testResponse.responseJSON as? NSDictionary, ["key1": "value1", "key2": "value2"])
         XCTAssertEqual(testResponse.httpResponse, httpURLResponse)
         XCTAssertTrue(testResponse.isSuccessful != nil && testResponse.isSuccessful!)
         XCTAssertTrue(testResponse.isRedirect != nil && testResponse.isRedirect!)
@@ -41,7 +40,6 @@ class ResponseTests: XCTestCase {
         XCTAssertNil(emptyResponse.headers)
         XCTAssertNil(emptyResponse.responseData)
         XCTAssertNil(emptyResponse.responseText)
-        XCTAssertNil(emptyResponse.responseJSON)
         XCTAssertNil(emptyResponse.httpResponse)
         XCTAssertNil(emptyResponse.isSuccessful)
         XCTAssertNil(emptyResponse.isRedirect)
@@ -51,26 +49,24 @@ class ResponseTests: XCTestCase {
     
     // MARK: buildResponseWithData()
     
-    func testInitWithInvalidJSON() {
+    func testInitWithValidString() {
         
-        let responseDataWithInvalidJSON = "INVALID JSON".dataUsingEncoding(NSUTF8StringEncoding)
+        let responseDataWithValidString = "Some random string data".dataUsingEncoding(NSUTF8StringEncoding)
         let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
-        let invalidJSONResponse = Response(responseData: responseDataWithInvalidJSON!, httpResponse: httpURLResponse, isRedirect: true)
+        let invalidStringResponse = Response(responseData: responseDataWithValidString!, httpResponse: httpURLResponse, isRedirect: true)
         
-        XCTAssertEqual(invalidJSONResponse.responseData, responseDataWithInvalidJSON)
-        XCTAssertEqual(invalidJSONResponse.responseText, "INVALID JSON")
-        XCTAssertNil(invalidJSONResponse.responseJSON)
+        XCTAssertEqual(invalidStringResponse.responseData, responseDataWithValidString)
+        XCTAssertEqual(invalidStringResponse.responseText, "Some random string data")
     }
     
-    func testInitWithInvalidJSONAndString() {
+    func testInitWithNonStringData() {
         
-        let responseDataWithInvalidJSONAndString = NSData(bytes: [0x00, 0xFF] as [UInt8], length: 2)
+        let responseDataWithNonStringData = NSData(bytes: [0x00, 0xFF] as [UInt8], length: 2)
         let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
-        let invalidStringResponse = Response(responseData: responseDataWithInvalidJSONAndString, httpResponse: httpURLResponse, isRedirect: true)
+        let invalidStringResponse = Response(responseData: responseDataWithNonStringData, httpResponse: httpURLResponse, isRedirect: true)
         
-        XCTAssertEqual(invalidStringResponse.responseData, responseDataWithInvalidJSONAndString)
+        XCTAssertEqual(invalidStringResponse.responseData, responseDataWithNonStringData)
         XCTAssertNil(invalidStringResponse.responseText)
-        XCTAssertNil(invalidStringResponse.responseJSON)
     }
     
 }
