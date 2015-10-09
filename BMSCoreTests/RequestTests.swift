@@ -21,25 +21,25 @@ class RequestTests: XCTestCase {
     
     func testInitWithAllParameters() {
         
-        let request = Request(url: NSURL(string: "http://example.com")!, method: HttpMethod.GET, timeout: 10.0, headers:["Content-Type": "text/plain"], queryParameters: ["someKey": "someValue"])
+        let request = Request(url: "http://example.com", headers:["Content-Type": "text/plain"], queryParameters: ["someKey": "someValue"], method: HttpMethod.GET, timeout: 10.0)
         
-        XCTAssertEqual(String(request.resourceUrl), "http://example.com?someKey=someValue")
+        XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, 10.0)
-        XCTAssertEqual(request.headers, ["Content-Type": "text/plain"])
+        XCTAssertEqual(request.headers!, ["Content-Type": "text/plain"])
         XCTAssertEqual(request.queryParameters!, ["someKey": "someValue"])
         XCTAssertNotNil(request.networkRequest)
     }
     
     func testInitWithDefaultParameters() {
         
-        let request = Request(url: NSURL(string: "http://example.com")!)
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: nil)
         
-        XCTAssertEqual(String(request.resourceUrl), "http://example.com")
+        XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, BMSClient.sharedInstance.defaultRequestTimeout)
-        XCTAssertEqual(request.headers, [:])
-        XCTAssertEqual(request.queryParameters!, [:])
+        XCTAssertNil(request.headers)
+        XCTAssertNil(request.headers)
         XCTAssertNotNil(request.networkRequest)
     }
     
@@ -49,36 +49,39 @@ class RequestTests: XCTestCase {
     
     func testSendString() {
         
-        let request = Request(url: NSURL(string: "http://example.com")!)
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
         request.sendString(dataString, withCompletionHandler: nil)
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], Request.TEXT_PLAIN_TYPE)
+        XCTAssertEqual(request.headers![Request.CONTENT_TYPE], Request.TEXT_PLAIN_TYPE)
+        XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
     func testSendStringWithoutOverwritingContentTypeHeader() {
         
-        let request = Request(url: NSURL(string: "http://example.com")!, headers: ["Content-Type": "media-type"])
+        let request = Request(url: "http://example.com", headers: ["Content-Type": "media-type"], queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
         request.sendString(dataString, withCompletionHandler: nil)
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], "media-type")
+        XCTAssertEqual(request.headers![Request.CONTENT_TYPE], "media-type")
+        XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
     func testSendData() {
         
-        let request = Request(url: NSURL(string: "http://example.com")!)
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
         let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
         
         request.sendData(requestData!, withCompletionHandler: nil)
         
         XCTAssertEqual(request.requestBody, requestData)
+        XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
     

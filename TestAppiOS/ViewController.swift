@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     // CODE REVIEW: Add checks for unwrapping headers and status code (print error if they are nil)
     @IBAction func getRequestButtonPressed(sender: AnyObject) {
         
-        let getRequest = Request(url: NSURL(string: "http://httpbin.org/get")!, method: HttpMethod.GET, timeout: 10.0)
+        let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
         getRequest.sendWithCompletionHandler( { (response: Response, error: ErrorType?) in
             
             var responseLabelText = ""
@@ -40,7 +40,7 @@ class ViewController: UIViewController {
 
     @IBAction func postRequestButtonPressed(sender: AnyObject) {
         
-        let getRequest = Request(url: NSURL(string: "http://httpbin.org/post")!, method: HttpMethod.POST, timeout: 10.0)
+        let getRequest = Request(url: "http://httpbin.org/post", headers: nil, queryParameters: nil, method: HttpMethod.POST, timeout: 10.0)
         getRequest.sendWithCompletionHandler( { (response: Response, error: ErrorType?) in
             
             var responseLabelText = ""

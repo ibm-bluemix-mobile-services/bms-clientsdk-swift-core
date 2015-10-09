@@ -21,7 +21,7 @@ public enum HttpMethod: String {
 
 
 // CODE REVIEW: Create custom ErrorType called "MFPError" - case for NSURL and case for appendQueryParameters
-// CODE REVIEW: Figure out how to create a message associated with the error
+// Figure out how to create a message associated with the error
 private enum MFPError: String, ErrorType {
     case test = "aadsf"
 }
@@ -54,7 +54,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     // MARK: Properties (public)
     
     /// URL that the request is being sent to
-    public private(set) var resourceUrl: NSURL
+    public private(set) var resourceUrl: String
     
     /// HTTP method (GET, POST, etc.)
     public let httpMethod: HttpMethod
@@ -63,7 +63,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     public var timeout: Double
     
     /// All request headers. The "Content-Type" header is set by the `setRequestBody` methods.
-    public private(set) var headers: [String: String]
+    public private(set) var headers: [String: String]?
     
     /// Query parameters to append to the `resourceURL`
     public var queryParameters: [String: String]?
@@ -90,18 +90,16 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         Additionally this constructor sets a custom timeout.
 
         - parameter url:             The resource URL
-        - parameter method:          The HTTP method to use.
-        - parameter timeout:         Optional timeout in seconds for this request.
+        - parameter method:          The HTTP method to use
         - parameter headers:         Optional headers to add to the request.
         - parameter queryParameters: Optional query parameters to add to the request.
+        - parameter timeout:         Timeout in seconds for this request
     */
-    // CODE REVIEW: url parameter should be String, and converted to an NSURL
-    // CODE REVIEW: Handle url String -> NSURL conversion failure in send() methods (return error in callback)
-    public init(url: NSURL,
+    public init(url: String,
+               headers: [String: String]?,
+               queryParameters: [String: String]?,
                method: HttpMethod = HttpMethod.GET,
-               timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
-               headers: [String: String] = [:],
-               queryParameters: [String: String] = [:]) {
+               timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout) {
         
         self.resourceUrl = url
         self.httpMethod = method
@@ -114,10 +112,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         configuration.timeoutIntervalForRequest = timeout
         networkSession = NSURLSession(configuration: configuration)
         networkRequest = NSMutableURLRequest()
-                
-        super.init()
-        
-        self.resourceUrl = Request.appendQueryParameters(queryParameters, toURL: url)
     }
 
     
@@ -136,10 +130,15 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
-        if let _ = headers[Request.CONTENT_TYPE] {}
-        else {
-            headers[Request.CONTENT_TYPE] = Request.TEXT_PLAIN_TYPE
+        if headers == nil {
+            headers = [Request.CONTENT_TYPE: Request.TEXT_PLAIN_TYPE]
         }
+        else {
+            if headers![Request.CONTENT_TYPE] == nil {
+                headers![Request.CONTENT_TYPE] = Request.TEXT_PLAIN_TYPE
+            }
+        }
+        
         
         self.sendWithCompletionHandler(callback)
     }
@@ -184,15 +183,24 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         }
         
         // Build request
-        networkRequest.URL = resourceUrl
-        networkRequest.HTTPMethod = httpMethod.rawValue
-        networkRequest.allHTTPHeaderFields = headers
-        networkRequest.HTTPBody = requestBody
-        
-        startTime = NSDate.timeIntervalSinceReferenceDate()
-        
-        // Send request
-        networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+        if var url = NSURL(string: self.resourceUrl) {
+            
+            url = Request.appendQueryParameters(queryParameters, toURL: url)
+            resourceUrl = String(url)
+            
+            networkRequest.URL = url
+            networkRequest.HTTPMethod = httpMethod.rawValue
+            networkRequest.allHTTPHeaderFields = headers
+            networkRequest.HTTPBody = requestBody
+            
+            startTime = NSDate.timeIntervalSinceReferenceDate()
+            
+            // Send request
+            networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+        }
+        else {
+            // CODE REVIEW: Handle error
+        }
     }
     
     
@@ -228,14 +236,14 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
         - returns: The original URL with the query parameters appended to it
     */
-    static func appendQueryParameters(parameters: [String: String], toURL originalUrl: NSURL) -> NSURL {
+    static func appendQueryParameters(parameters: [String: String]?, toURL originalUrl: NSURL) -> NSURL {
         
-        if parameters.isEmpty {
+        if parameters == nil {
             return originalUrl
         }
         
         var parametersInURLFormat = [NSURLQueryItem]()
-        for (key, value) in parameters {
+        for (key, value) in parameters! {
             parametersInURLFormat += [NSURLQueryItem(name: key, value: value)]
         }
         // CODE REVIEW: Append parameters to existing parameters
@@ -246,7 +254,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             return newUrl
         }
         else {
-            // CODE REVIEW: Like with resourceUrl, check if this works in the send() methods and pass a custom error back to completion handler
+            // CODE REVIEW: Error handling
             
             // TODO: Log a warning or error here
             return originalUrl
