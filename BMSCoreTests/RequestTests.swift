@@ -106,24 +106,14 @@ class RequestTests: XCTestCase {
         XCTAssert(finalUrl.containsString("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
     }
     
-    func testAddQueryParametersWillRemoveTrailingQuestionMarks() {
+    func testAddQueryParametersDoesNotOverwriteUrlParameters() {
         
-        let url = NSURL(string: "http://example.com???")
-        
-        let parameters = ["key1": "value1", "key2": "value2"]
-        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
-        
-        XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
-    }
-    
-    func testAddQueryParametersReplaceOriginalQueryParameters() {
-        
-        let url = NSURL(string: "http://example.com?doomedKey=doomedValue")
+        let url = NSURL(string: "http://example.com?hardCodedKey=hardCodedValue")
         
         let parameters = ["key1": "value1", "key2": "value2"]
         let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
         
-        XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
+        XCTAssertEqual(finalUrl, "http://example.com?hardCodedKey=hardCodedValue&key1=value1&key2=value2")
     }
     
     func testAddQueryParametersWithCorrectNumberOfAmpersands() {

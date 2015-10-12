@@ -246,10 +246,14 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         for (key, value) in parameters! {
             parametersInURLFormat += [NSURLQueryItem(name: key, value: value)]
         }
-        // CODE REVIEW: Append parameters to existing parameters
-        let newUrlComponents = NSURLComponents(URL: originalUrl, resolvingAgainstBaseURL: false)
-        newUrlComponents?.queryItems = parametersInURLFormat
         
+        let newUrlComponents = NSURLComponents(URL: originalUrl, resolvingAgainstBaseURL: false)
+        if newUrlComponents?.queryItems != nil {
+            newUrlComponents?.queryItems?.appendContentsOf(parametersInURLFormat)
+        }
+        else {
+            newUrlComponents?.queryItems = parametersInURLFormat
+        }
         if let newUrl = newUrlComponents?.URL {
             return newUrl
         }
@@ -262,9 +266,3 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     }
     
 }
-
-
-
-
-
-
