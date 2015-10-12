@@ -28,7 +28,8 @@ class InterfaceController: WKInterfaceController {
                 responseLabelText = "ERROR: \(responseError)"
             }
             else {
-                responseLabelText = "Status: \(response.statusCode!) \n\n"
+                let status = response.statusCode ?? 0
+                responseLabelText = "Status: \(status) \n\n"
             }
             
             dispatch_async(dispatch_get_main_queue(), {
