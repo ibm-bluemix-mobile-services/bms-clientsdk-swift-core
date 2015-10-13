@@ -41,7 +41,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
     /// The type of the completion handler parameters in the `sendString` and `sendData` methods
-    public typealias mfpCompletionHandler = (Response, ErrorType?) -> Void
+    public typealias mfpCompletionHandler = (Response?, NSError?) -> Void
 
     
     // MARK: Constants
@@ -185,7 +185,18 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         // Build request
         if var url = NSURL(string: self.resourceUrl) {
             
-            url = Request.appendQueryParameters(queryParameters, toURL: url)
+            if queryParameters != nil {
+                if let urlWithQueryParameters = Request.appendQueryParameters(queryParameters!, toURL: url) {
+                    url = urlWithQueryParameters
+                }
+                else {
+                    // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
+                    let urlErrorMessage = "Failed to append the query parameters to the resource url."
+                    let malformedUrlError = NSError(domain: Constants.BMSCoreErrorDomain, code: BMSErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
+                    callback?(nil, malformedUrlError)
+                }
+            }
+                
             resourceUrl = String(url)
             
             networkRequest.URL = url
@@ -199,7 +210,9 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
         }
         else {
-            // CODE REVIEW: Handle error
+            let urlErrorMessage = "The resource url could not be converted to an NSURL."
+            let malformedUrlError = NSError(domain: Constants.BMSCoreErrorDomain, code: BMSErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
+            callback?(nil, malformedUrlError)
         }
     }
     
@@ -236,32 +249,28 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
         - returns: The original URL with the query parameters appended to it
     */
-    static func appendQueryParameters(parameters: [String: String]?, toURL originalUrl: NSURL) -> NSURL {
+    static func appendQueryParameters(parameters: [String: String], toURL originalUrl: NSURL) -> NSURL? {
         
-        if parameters == nil {
+        if parameters.isEmpty {
             return originalUrl
         }
         
         var parametersInURLFormat = [NSURLQueryItem]()
-        for (key, value) in parameters! {
+        for (key, value) in parameters {
             parametersInURLFormat += [NSURLQueryItem(name: key, value: value)]
         }
         
-        let newUrlComponents = NSURLComponents(URL: originalUrl, resolvingAgainstBaseURL: false)
-        if newUrlComponents?.queryItems != nil {
-            newUrlComponents?.queryItems?.appendContentsOf(parametersInURLFormat)
+        if let newUrlComponents = NSURLComponents(URL: originalUrl, resolvingAgainstBaseURL: false) {
+            if newUrlComponents.queryItems != nil {
+                newUrlComponents.queryItems!.appendContentsOf(parametersInURLFormat)
+            }
+            else {
+                newUrlComponents.queryItems = parametersInURLFormat
+            }
+            return newUrlComponents.URL
         }
         else {
-            newUrlComponents?.queryItems = parametersInURLFormat
-        }
-        if let newUrl = newUrlComponents?.URL {
-            return newUrl
-        }
-        else {
-            // CODE REVIEW: Error handling
-            
-            // TODO: Log a warning or error here
-            return originalUrl
+            return nil
         }
     }
     

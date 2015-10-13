@@ -29,17 +29,17 @@ class ViewController: UIViewController {
     }
     
     
-    private func populateInterfaceWithResponseData(response: Response, error: ErrorType?) {
+    private func populateInterfaceWithResponseData(response: Response?, error: NSError?) {
         
         var responseLabelText = ""
         
         if let responseError = error {
-            responseLabelText = "ERROR: \(responseError)"
+            responseLabelText = "ERROR: \(responseError.localizedDescription)"
         }
-        else {
-            let status = response.statusCode ?? 0
-            let headers = response.headers ?? [:]
-            let responseText = response.responseText ?? ""
+        else if response != nil {
+            let status = response!.statusCode ?? 0
+            let headers = response!.headers ?? [:]
+            let responseText = response!.responseText ?? ""
             
             responseLabelText = "Status Code: \(status) \n\n"
             responseLabelText += "Headers: \(headers) \n\n"

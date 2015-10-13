@@ -20,15 +20,15 @@ class InterfaceController: WKInterfaceController {
     @IBAction func getRequestButtonPressed() {
         
         let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
-        getRequest.sendWithCompletionHandler( { (response: Response, error: ErrorType?) in
+        getRequest.sendWithCompletionHandler( { (response: Response?, error: NSError?) in
             
-            var responseLabelText: String
+            var responseLabelText = ""
             
             if let responseError = error {
-                responseLabelText = "ERROR: \(responseError)"
+                responseLabelText = "ERROR: \(responseError.localizedDescription)"
             }
-            else {
-                let status = response.statusCode ?? 0
+            else if response != nil {
+                let status = response!.statusCode ?? 0
                 responseLabelText = "Status: \(status) \n\n"
             }
             

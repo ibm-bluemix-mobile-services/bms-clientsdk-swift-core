@@ -40,9 +40,9 @@ public class Response {
     
     let httpResponse: NSHTTPURLResponse?
     
-    let isSuccessful: Bool?
+    let isSuccessful: Bool
     
-    let isRedirect: Bool?
+    let isRedirect: Bool
     
     
     
@@ -55,7 +55,7 @@ public class Response {
         - parameter httpResponse: Response object returned from the NSURLSession request
         - parameter isRedirect:   True if the response requires a redirect
     */
-    internal init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool?) {
+    internal init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool) {
         
         self.isRedirect = isRedirect
         self.httpResponse = httpResponse
@@ -69,7 +69,7 @@ public class Response {
             isSuccessful = (200..<300 ~= status)
         }
         else {
-            isSuccessful = nil
+            isSuccessful = false
         }
     }
     
@@ -79,10 +79,8 @@ public class Response {
         
         var responseAsText: String?
         
-        if let _ = responseData {
-            if let responseAsNSString = NSString(data: responseData!, encoding: NSUTF8StringEncoding) {
-                responseAsText = String(responseAsNSString)
-            }
+        if responseData != nil, let responseAsNSString = NSString(data: responseData!, encoding: NSUTF8StringEncoding) {
+            responseAsText = String(responseAsNSString)
         }
         return responseAsText
     }

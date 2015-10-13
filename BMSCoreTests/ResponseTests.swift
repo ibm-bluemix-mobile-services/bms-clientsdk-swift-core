@@ -28,21 +28,21 @@ class ResponseTests: XCTestCase {
         XCTAssertEqual(testResponse.responseData, responseData)
         XCTAssertEqual(testResponse.responseText, "{\"key1\": \"value1\", \"key2\": \"value2\"}")
         XCTAssertEqual(testResponse.httpResponse, httpURLResponse)
-        XCTAssertTrue(testResponse.isSuccessful != nil && testResponse.isSuccessful!)
-        XCTAssertTrue(testResponse.isRedirect != nil && testResponse.isRedirect!)
+        XCTAssertTrue(testResponse.isSuccessful)
+        XCTAssertTrue(testResponse.isRedirect)
     }
     
     func testInitWithNilParameters() {
         
-        let emptyResponse = Response(responseData: nil, httpResponse: nil, isRedirect: nil)
+        let emptyResponse = Response(responseData: nil, httpResponse: nil, isRedirect: false)
         
         XCTAssertNil(emptyResponse.statusCode)
         XCTAssertNil(emptyResponse.headers)
         XCTAssertNil(emptyResponse.responseData)
         XCTAssertNil(emptyResponse.responseText)
         XCTAssertNil(emptyResponse.httpResponse)
-        XCTAssertNil(emptyResponse.isSuccessful)
-        XCTAssertNil(emptyResponse.isRedirect)
+        XCTAssertFalse(emptyResponse.isSuccessful)
+        XCTAssertFalse(emptyResponse.isRedirect)
     }
     
     

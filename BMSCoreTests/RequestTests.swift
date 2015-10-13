@@ -47,6 +47,18 @@ class RequestTests: XCTestCase {
     
     // MARK: send
     
+    func testSendData() {
+        
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
+        let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
+        
+        request.sendData(requestData!, withCompletionHandler: nil)
+        
+        XCTAssertEqual(request.requestBody, requestData)
+        XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
+    }
+
+    
     func testSendString() {
         
         let request = Request(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
@@ -73,26 +85,46 @@ class RequestTests: XCTestCase {
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
-    func testSendData() {
+    func testSendWithMalformedUrl() {
         
-        let request = Request(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
-        let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
+        let responseReceivedExpectation = self.expectationWithDescription("Receive network response")
         
-        request.sendData(requestData!, withCompletionHandler: nil)
+        let badUrl = "!@#$%^&*()"
+        let request = Request(url: badUrl, headers: nil, queryParameters: nil)
+        request.sendWithCompletionHandler { (response: Response?, error: NSError?) -> Void in
+            XCTAssertNil(response)
+            XCTAssertEqual(error?.domain, Constants.BMSCoreErrorDomain)
+            XCTAssertEqual(error?.code, BMSErrorCode.MalformedUrl.rawValue)
+            
+            responseReceivedExpectation.fulfill()
+        }
         
-        XCTAssertEqual(request.requestBody, requestData)
-        XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
+        self.waitForExpectationsWithTimeout(5.0) { (error: NSError?) -> Void in
+            if error != nil {
+                XCTFail("Expectation failed with error: \(error)")
+            }
+        }
     }
     
     
     
     // MARK: addQueryParameters
     
+    func testAddQueryParametersWithEmptyParameters() {
+        
+        let url = NSURL(string: "http://example.com")
+        let parameters: [String: String] = [:]
+        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!)! )
+        
+        XCTAssertEqual(finalUrl, "http://example.com")
+    }
+    
+    
     func testAddQueryParametersWithValidParameters() {
         
         let url = NSURL(string: "http://example.com")
         let parameters = ["key1": "value1", "key2": "value2"]
-        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
+        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!)! )
         
         XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
     }
@@ -111,7 +143,7 @@ class RequestTests: XCTestCase {
         let url = NSURL(string: "http://example.com?hardCodedKey=hardCodedValue")
         
         let parameters = ["key1": "value1", "key2": "value2"]
-        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
+        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!)! )
         
         XCTAssertEqual(finalUrl, "http://example.com?hardCodedKey=hardCodedValue&key1=value1&key2=value2")
     }
