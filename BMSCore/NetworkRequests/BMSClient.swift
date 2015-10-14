@@ -13,7 +13,7 @@
 
 
 /**
-    A singleton that serve as an entry point to Bluemix client-server communication.
+    A singleton that serves as an entry point to Bluemix client-server communication.
 */
 public class BMSClient: MFPClient {
     
@@ -23,14 +23,14 @@ public class BMSClient: MFPClient {
     /// This singleton should be used for all `BMSClient` activity
     public static let sharedInstance = BMSClient()
     
-    /// Specifies the base back end URL
+    /// Specifies the base backend URL
     public private(set) var bluemixAppRoute: String?
     
-    /// Specifies the back end application id.
+    /// Specifies the backend application id.
     public private(set) var bluemixAppGUID: String?
     
     /// Specifies the default timeout (in seconds) for all BMS network requests.
-    public var defaultRequestTimeout: Double = 20.0 // seconds
+    public var defaultRequestTimeout: Double = 20.0
     
     
     

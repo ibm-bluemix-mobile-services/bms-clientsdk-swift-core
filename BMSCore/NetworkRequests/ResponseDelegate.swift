@@ -12,10 +12,11 @@
 */
 
 
+// TODO: Delete this protocol if it does not get used
+
 /**
     The delegate that will be called after the MFP request has completed or failed.
 */
-// TODO: Delete this protocol if it does not get used
 internal protocol ResponseDelegate {
     
     

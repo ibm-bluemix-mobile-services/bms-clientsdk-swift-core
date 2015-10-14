@@ -12,12 +12,15 @@
 */
 
 
-public struct Constants {
+internal struct Constants {
     
     static let BMSCoreErrorDomain = "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore"
 }
 
 
+/**
+    These error codes indicate a failure that occurred within the BMSCore framework.
+*/
 public enum BMSErrorCode: Int {
     
     case MalformedUrl

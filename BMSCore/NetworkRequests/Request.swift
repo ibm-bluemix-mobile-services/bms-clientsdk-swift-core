@@ -19,18 +19,11 @@ public enum HttpMethod: String {
     case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
 }
 
-
-// CODE REVIEW: Create custom ErrorType called "MFPError" - case for NSURL and case for appendQueryParameters
-// Figure out how to create a message associated with the error
-private enum MFPError: String, ErrorType {
-    case test = "aadsf"
-}
  
-
 /**
     Build and send HTTP network requests.
 
-    When building a Request object, all properties must be provided in the initializer, 
+    When building a Request object, all components of the HTTP request must be provided in the initializer,
         except for the `requestBody`, which can be supplied as either NSData or plain text 
         when sending the request via one of the following methods:
 
@@ -40,7 +33,8 @@ private enum MFPError: String, ErrorType {
 public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
-    /// The type of the completion handler parameters in the `sendString` and `sendData` methods
+    /// The type of the completion handler parameters in the `sendString`, `sendData`, 
+    /// and `sendWithCompletionHandler` methods
     public typealias mfpCompletionHandler = (Response?, NSError?) -> Void
 
     
@@ -62,14 +56,13 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     /// Request timeout measured in seconds
     public var timeout: Double
     
-    /// All request headers. The "Content-Type" header is set by the `setRequestBody` methods.
+    /// All request headers
     public private(set) var headers: [String: String]?
     
     /// Query parameters to append to the `resourceURL`
     public var queryParameters: [String: String]?
     
-    /// The request body can be supplied as NSData or String, but is always converted to NSData
-    ///     before sending the request.
+    /// The request body can be set when sending the request via the `sendString` or `sendData` methods.
     public private(set) var requestBody: NSData?
     
     
@@ -123,7 +116,10 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         The response received from the server is packaged into a `Response` object which is passed back
         via the completion handler parameter.
     
-        - parameter requestBody: HTTP request body as a String
+        If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler
+        will be called back with an error and a nil `Response`.
+    
+        - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
     func sendString(requestBody: String, withCompletionHandler callback: mfpCompletionHandler?) {
@@ -150,7 +146,10 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         The response received from the server is packaged into a `Response` object which is passed back
         via the completion handler parameter.
     
-        - parameter requestBody: HTTP request body as NSData
+        If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler
+        will be called back with an error and a nil `Response`.
+    
+        - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
     func sendData(requestBody: NSData, withCompletionHandler callback: mfpCompletionHandler?) {
@@ -165,12 +164,15 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
         The response received from the server is packaged into a `Response` object which is passed back
         via the completion handler parameter.
+    
+        If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler
+        will be called back with an error and a nil `Response`.
 
         - parameter completionHandler: The closure that will be called when this request finishes
     */
     public func sendWithCompletionHandler(callback: mfpCompletionHandler?) {
         
-        // Build the BMSResponse object, and pass it to the user
+        // Build the Response object and pass it to the user
         let buildAndSendResponse = {
             (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
@@ -182,7 +184,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             callback?(networkResponse as Response, error)
         }
         
-        // Build request
         if var url = NSURL(string: self.resourceUrl) {
             
             if queryParameters != nil {
@@ -196,9 +197,9 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
                     callback?(nil, malformedUrlError)
                 }
             }
-                
-            resourceUrl = String(url)
             
+            // Build request
+            resourceUrl = String(url)
             networkRequest.URL = url
             networkRequest.HTTPMethod = httpMethod.rawValue
             networkRequest.allHTTPHeaderFields = headers
@@ -210,7 +211,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
         }
         else {
-            let urlErrorMessage = "The resource url could not be converted to an NSURL."
+            let urlErrorMessage = "The supplied resource url is not a valid url."
             let malformedUrlError = NSError(domain: Constants.BMSCoreErrorDomain, code: BMSErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
             callback?(nil, malformedUrlError)
         }
@@ -244,8 +245,8 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         Returns the supplied URL with query parameters appended to it; the original URL is not modified.
         Characters in the query parameters that are not URL safe are automatically converted to percent-encoding.
     
-        - parameter parameters:  The query parameters to be appended to the end of the url string
-        - parameter originalURL: The url that the `parameters` will be appeneded to
+        - parameter parameters:  The query parameters to be appended to the end of the url
+        - parameter originalURL: The url that the parameters will be appeneded to
     
         - returns: The original URL with the query parameters appended to it
     */
