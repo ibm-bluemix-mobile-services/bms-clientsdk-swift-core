@@ -9,22 +9,40 @@
 import UIKit
 import BMSCore
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
 
     
     @IBOutlet var responseLabel: UITextView!
+    @IBOutlet var resourceUrl: UITextField!
+    @IBOutlet var httpMethod: UITextField!
     
     
-    @IBAction func getRequestButtonPressed(sender: AnyObject) {
+    @IBAction func sendRequestButtonPressed(sender: AnyObject) {
         
-        let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
-        getRequest.sendWithCompletionHandler(populateInterfaceWithResponseData)
-    }
-    
+        var method: HttpMethod
 
-    @IBAction func postRequestButtonPressed(sender: AnyObject) {
+        switch httpMethod.text!.lowercaseString {
+        case "post":
+            method = HttpMethod.POST
+        case "put":
+            method = HttpMethod.PUT
+        case "delete":
+            method = HttpMethod.DELETE
+        case "trace":
+            method = HttpMethod.TRACE
+        case "head":
+            method = HttpMethod.HEAD
+        case "options":
+            method = HttpMethod.OPTIONS
+        case "connect":
+            method = HttpMethod.CONNECT
+        case "patch":
+            method = HttpMethod.PATCH
+        default:
+            method = HttpMethod.GET
+        }
         
-        let getRequest = Request(url: "http://httpbin.org/post", headers: nil, queryParameters: nil, method: HttpMethod.POST, timeout: 10.0)
+        let getRequest = Request(url: resourceUrl.text!, headers: nil, queryParameters: nil, method: method, timeout: 10.0)
         getRequest.sendWithCompletionHandler(populateInterfaceWithResponseData)
     }
     
@@ -54,6 +72,12 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
 
 }
