@@ -31,6 +31,10 @@
 		927F4CD21BC5DD1800A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; settings = {ASSET_TAGS = (); }; };
 		927F4CD31BC5E10F00A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; settings = {ASSET_TAGS = (); }; };
 		927F4CD51BC5E1AD00A19360 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD41BC5E1AD00A19360 /* ResponseTests.swift */; settings = {ASSET_TAGS = (); }; };
+		9287F2941BDA94AF00B0E562 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2931BDA94AF00B0E562 /* Analytics.swift */; settings = {ASSET_TAGS = (); }; };
+		9287F2951BDA94AF00B0E562 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2931BDA94AF00B0E562 /* Analytics.swift */; settings = {ASSET_TAGS = (); }; };
+		9287F2971BDA94C100B0E562 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2961BDA94C100B0E562 /* Logger.swift */; settings = {ASSET_TAGS = (); }; };
+		9287F2981BDA94C100B0E562 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2961BDA94C100B0E562 /* Logger.swift */; settings = {ASSET_TAGS = (); }; };
 		92A8E4D91BBF2D9C00995FE8 /* BMSCoreWatchOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A8E4D81BBF2D9C00995FE8 /* BMSCoreWatchOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92A8E4DE1BBF2DA400995FE8 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A391BB0A711001E02E1 /* MFPClient.swift */; settings = {ASSET_TAGS = (); }; };
 		92A8E4DF1BBF2DA600995FE8 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A381BB0A711001E02E1 /* BMSClient.swift */; settings = {ASSET_TAGS = (); }; };
@@ -133,6 +137,8 @@
 		9235D0D31BC3184000946A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		927F4CD11BC5DD1800A19360 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		927F4CD41BC5E1AD00A19360 /* ResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
+		9287F2931BDA94AF00B0E562 /* Analytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
+		9287F2961BDA94C100B0E562 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCoreWatchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92A8E4D81BBF2D9C00995FE8 /* BMSCoreWatchOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BMSCoreWatchOS.h; sourceTree = "<group>"; };
 		92A8E4DA1BBF2D9C00995FE8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -228,6 +234,22 @@
 			path = "TestAppWatchOS Extension";
 			sourceTree = "<group>";
 		};
+		9287F2911BDA947400B0E562 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				9287F2961BDA94C100B0E562 /* Logger.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		9287F2921BDA948200B0E562 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				9287F2931BDA94AF00B0E562 /* Analytics.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
 		92A8E4D71BBF2D9C00995FE8 /* BMSCoreWatchOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,6 +291,8 @@
 			children = (
 				92F263FA1B94EBB50063CC1D /* BMSCore.h */,
 				9221FF811BCD958700D7F3D7 /* Error.swift */,
+				9287F2921BDA948200B0E562 /* Analytics */,
+				9287F2911BDA947400B0E562 /* Logger */,
 				92F264661B9639010063CC1D /* NetworkRequests */,
 				92F263FC1B94EBB50063CC1D /* Info.plist */,
 			);
@@ -557,11 +581,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				92A8E4E31BBF2DAF00995FE8 /* ResponseDelegate.swift in Sources */,
+				9287F2951BDA94AF00B0E562 /* Analytics.swift in Sources */,
 				92A8E4DE1BBF2DA400995FE8 /* MFPClient.swift in Sources */,
 				92A8E4E01BBF2DA800995FE8 /* Request.swift in Sources */,
 				92A8E4DF1BBF2DA600995FE8 /* BMSClient.swift in Sources */,
 				9221FF831BCD9E0E00D7F3D7 /* Error.swift in Sources */,
 				927F4CD31BC5E10F00A19360 /* Response.swift in Sources */,
+				9287F2981BDA94C100B0E562 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,11 +596,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				92304A3F1BB0A711001E02E1 /* MFPClient.swift in Sources */,
+				9287F2941BDA94AF00B0E562 /* Analytics.swift in Sources */,
 				92304A431BB0A711001E02E1 /* ResponseDelegate.swift in Sources */,
 				92304A411BB0A711001E02E1 /* Request.swift in Sources */,
 				92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */,
 				9221FF821BCD958700D7F3D7 /* Error.swift in Sources */,
 				927F4CD21BC5DD1800A19360 /* Response.swift in Sources */,
+				9287F2971BDA94C100B0E562 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
