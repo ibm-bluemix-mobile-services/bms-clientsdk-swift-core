@@ -13,11 +13,17 @@
 
 
 /**
-    The HTTP method to be used in the `Request` initializer.
+    The HTTP method to be used in the `Request` class initializer.
 */
 public enum HttpMethod: String {
     case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
 }
+ 
+ 
+/**
+    The type of callback sent with MFP network requests
+*/
+public typealias MfpCompletionHandler = (Response?, NSError?) -> Void
 
  
 /**
@@ -31,11 +37,6 @@ public enum HttpMethod: String {
         sendData(requestBody: NSData, withCompletionHandler callback: mfpCompletionHandler?)
 */
 public class Request: NSObject, NSURLSessionTaskDelegate {
-    
-    
-    /// The type of the completion handler parameters in the `sendString`, `sendData`, 
-    /// and `sendWithCompletionHandler` methods
-    public typealias mfpCompletionHandler = (Response?, NSError?) -> Void
 
     
     // MARK: Constants
@@ -76,7 +77,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
     
-    // MARK: Initializers
+    // MARK: Initializer
     
     /**
         Constructs a new request with the specified URL, using the specified HTTP method.
@@ -106,7 +107,10 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         networkSession = NSURLSession(configuration: configuration)
         networkRequest = NSMutableURLRequest()
     }
-
+    
+    
+    
+    // MARK: Methods (public)
     
     /**
         Add a request body and send the request asynchronously.
@@ -122,7 +126,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
-    func sendString(requestBody: String, withCompletionHandler callback: mfpCompletionHandler?) {
+    func sendString(requestBody: String, withCompletionHandler callback: MfpCompletionHandler?) {
         
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
@@ -152,7 +156,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
-    func sendData(requestBody: NSData, withCompletionHandler callback: mfpCompletionHandler?) {
+    func sendData(requestBody: NSData, withCompletionHandler callback: MfpCompletionHandler?) {
         
         self.requestBody = requestBody
         self.sendWithCompletionHandler(callback)
@@ -170,7 +174,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
 
         - parameter completionHandler: The closure that will be called when this request finishes
     */
-    public func sendWithCompletionHandler(callback: mfpCompletionHandler?) {
+    public func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
         
         // Build the Response object and pass it to the user
         let buildAndSendResponse = {

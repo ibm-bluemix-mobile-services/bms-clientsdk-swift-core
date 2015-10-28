@@ -12,6 +12,25 @@
 */
 
 
-class Analytics {
+public class Analytics {
+    
+    
+    // MARK: Properties
+
+    public static let sharedInstance = Analytics()
+    
+    public static var enabled: Bool = true
+    
+    
+    
+    // MARK: Methods
+    
+    public func log(metadata userMetadata: [String: AnyObject]) { }
+    
+    public func send(completionHandler callback: MfpCompletionHandler? = nil) { }
+    
+    public func startRecordingApplicationLifecycleEvents() { }
+
+    public func stopRecordingApplicationLifecycleEvents() { }
     
 }
