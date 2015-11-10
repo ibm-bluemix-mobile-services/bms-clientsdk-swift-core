@@ -28,7 +28,7 @@ public class Analytics {
     
     private static var lifecycleEvents: [String: AnyObject] = [:]
     
-    private static let analyticsLogger = Logger.getLoggerForName(MFP_ANALYTICS_PACKAGE)
+    private static let logger = Logger.getLoggerForName(MFP_ANALYTICS_PACKAGE)
     
     
     
@@ -36,12 +36,12 @@ public class Analytics {
     
     public static func log(metadata: [String: AnyObject]) {
         
-        analyticsLogger.analytics(metadata)
+        logger.analytics(metadata)
     }
     
     public static func send(completionHandler: MfpCompletionHandler? = nil) {
     
-        analyticsLogger.send(completionHandler: completionHandler)
+        logger.send(completionHandler: completionHandler)
     }
     
     
@@ -54,12 +54,12 @@ public class Analytics {
     public static func startRecordingApplicationLifecycleEvents() {
         
         // By now, the app will have already passed the "will enter foreground" event. Therefore, we must manually start the timer for the current session.
-        logAppSessionBegin()
+        logSessionStart()
     
         // TODO: These notifications are not possible for WatchOS. Need a toggle or a separate class.
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "logAppSessionBegin", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "logSessionStart", name: UIApplicationWillEnterForegroundNotification, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "logAppEnterBackground", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "logSessionEnd", name: UIApplicationDidEnterBackgroundNotification, object: nil)
     }
     
 
@@ -77,7 +77,7 @@ public class Analytics {
     
     // MARK: Methods (internal/private)
     
-    dynamic static private func logAppSessionBegin() {
+    dynamic static private func logSessionStart() {
         
         let startTime = NSDate.timeIntervalSinceReferenceDate()
         
@@ -86,7 +86,7 @@ public class Analytics {
         logMetadata[KEY_METADATA_TYPE] = TAG_SESSION
         logMetadata[KEY_EVENT_START_TIME] = startTime
         
-        analyticsLogger.analytics(logMetadata)
+        logger.analytics(logMetadata)
         
         let sessionMetadata = [TAG_SESSION_ID: NSUUID().UUIDString]
         
@@ -97,15 +97,15 @@ public class Analytics {
             Analytics.lifecycleEvents[KEY_EVENT_START_TIME] = startTime
         }
         else {
-            analyticsLogger.warn("App foreground event reached before the background event for the previous session was recorded.")
+            logger.warn("App foreground event reached before the background event for the previous session was recorded.")
         }
     }
     
     
-    dynamic static private func logAppEnterBackground() {
+    dynamic static private func logSessionEnd() {
         
         guard var eventMetadata = Analytics.lifecycleEvents[TAG_SESSION] as? [String: AnyObject] else {
-            analyticsLogger.warn("App background event reached before the foreground event of the same session was recorded.")
+            logger.warn("App background event reached before the foreground event of the same session was recorded.")
             
             return
         }
@@ -117,7 +117,7 @@ public class Analytics {
             eventMetadata[KEY_METADATA_DURATION] = eventDuration
             eventMetadata[KEY_METADATA_TYPE] = TAG_SESSION
             
-            analyticsLogger.analytics(eventMetadata)
+            logger.analytics(eventMetadata)
         }
         
         Analytics.lifecycleEvents.removeValueForKey(TAG_SESSION)
