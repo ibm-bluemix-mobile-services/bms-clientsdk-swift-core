@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "")
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
         
+        Analytics.startRecordingApplicationLifecycleEvents()
+        
         return true
     }
 
