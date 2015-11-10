@@ -24,7 +24,6 @@
 		9235D0CE1BC3184000946A32 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9235D0CD1BC3184000946A32 /* InterfaceController.swift */; };
 		9235D0D01BC3184000946A32 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9235D0CF1BC3184000946A32 /* ExtensionDelegate.swift */; };
 		9235D0D21BC3184000946A32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9235D0D11BC3184000946A32 /* Assets.xcassets */; };
-		9235D0D61BC3184000946A32 /* TestAppWatchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */; };
 		9235D0E71BC32D1B00946A32 /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		9235D0FC1BC33D5600946A32 /* BMSCoreWatchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; };
 		9235D0FD1BC33D5600946A32 /* BMSCoreWatchOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -96,7 +95,6 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				9235D0D61BC3184000946A32 /* TestAppWatchOS.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
