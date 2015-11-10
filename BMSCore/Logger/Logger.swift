@@ -64,9 +64,9 @@ public class Logger {
     
     
     
-    // MARK: Methods
+    // MARK: Initializers
     
-    public func getLoggerForName(loggerName: String) -> Logger {
+    public static func getLoggerForName(loggerName: String) -> Logger {
         if let existingLogger = Logger.loggerInstances[loggerName] {
             return existingLogger
         }
@@ -83,6 +83,10 @@ public class Logger {
         Logger.captureUncaughtExceptions()
     }
     
+    
+    
+    // MARK: Log methods
+    
     public func debug(message: String, error: ErrorType? = nil) { }
     
     public func info(message: String, error: ErrorType? = nil) { }
@@ -93,11 +97,21 @@ public class Logger {
     
     public func fatal(message: String, error: ErrorType? = nil) { }
     
+    internal func analytics(metadata: [String: AnyObject], error: ErrorType? = nil) { }
+    
+    
+    
+    // MARK: Server communication
+    
     public func send(completionHandler callback: MfpCompletionHandler? = nil) { }
     
     public func updateLogProfile(withCompletionHandler callback: MfpCompletionHandler? = nil) { }
     
-    // In documentation, explain that developer needs to call this method if they set their own uncaught exception handler
+    
+    
+    // MARK: Other methods
+    
+    // TODO: In documentation, explain that developer needs to call this method if they set their own uncaught exception handler
     public static func captureUncaughtExceptions() { }
     
 }
