@@ -34,9 +34,15 @@ public class Analytics {
     
     // MARK: Methods (public)
     
-    public static func log(metadata userMetadata: [String: AnyObject]) { }
+    public static func log(metadata: [String: AnyObject]) {
+        
+        analyticsLogger.analytics(metadata)
+    }
     
-    public static func send(completionHandler callback: MfpCompletionHandler? = nil) { }
+    public static func send(completionHandler: MfpCompletionHandler? = nil) {
+    
+        analyticsLogger.send(completionHandler: completionHandler)
+    }
     
     
     /**
