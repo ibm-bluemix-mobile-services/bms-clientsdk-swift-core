@@ -15,18 +15,19 @@
 public extension Analytics {
     
     
-    /**
-    Records the duration of the app's lifecycle from when it enters the foreground to when it goes to the background.
-    This data will be sent to the Analytics server, provided that the `Analytics.enabled` property is set to `true`.
+    // TODO: Rename these methods to something more appropriate and clear
     
-    This method should be called in the `AppDelegate didFinishLaunchingWithOptions` method.
+    /**
+        Records the duration of the app's lifecycle from when it enters the foreground to when it goes to the background.
+        This data will be sent to the Analytics server, provided that the `Analytics.enabled` property is set to `true`.
+        
+        This method should be called in the `AppDelegate didFinishLaunchingWithOptions` method.
     */
     public static func startRecordingApplicationLifecycleEvents() {
         
         // By now, the app will have already passed the "will enter foreground" event. Therefore, we must manually start the timer for the current session.
         logSessionStart()
         
-        // TODO: These notifications are not possible for WatchOS. Need a toggle or a separate class.
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "logSessionStart", name: UIApplicationWillEnterForegroundNotification, object: nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "logSessionEnd", name: UIApplicationDidEnterBackgroundNotification, object: nil)
@@ -34,7 +35,7 @@ public extension Analytics {
     
     
     /**
-    Cease recording app lifecycle events.
+        Cease recording app lifecycle events.
     */
     public static func stopRecordingApplicationLifecycleEvents() {
         

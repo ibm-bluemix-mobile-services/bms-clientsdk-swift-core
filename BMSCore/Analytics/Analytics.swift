@@ -46,8 +46,7 @@ public class Analytics {
     }
     
     
-    // TODO: Document how to use the logSession methods with WatchOS (they should not be used in iOS apps)
-    dynamic static public func logSessionStart() {
+    dynamic static internal func logSessionStart() {
         
         let startTime = NSDate.timeIntervalSinceReferenceDate()
         
@@ -72,7 +71,7 @@ public class Analytics {
     }
     
     
-    dynamic static public func logSessionEnd() {
+    dynamic static internal func logSessionEnd() {
         
         guard var eventMetadata = Analytics.lifecycleEvents[TAG_SESSION] as? [String: AnyObject] else {
             logger.warn("App background event reached before the foreground event of the same session was recorded.")
