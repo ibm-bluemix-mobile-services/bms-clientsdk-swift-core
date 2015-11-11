@@ -28,6 +28,7 @@
 		9235D0FC1BC33D5600946A32 /* BMSCoreWatchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; };
 		9235D0FD1BC33D5600946A32 /* BMSCoreWatchOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		924581E31BF2751600D665ED /* Analytics+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924581E21BF2751600D665ED /* Analytics+iOS.swift */; settings = {ASSET_TAGS = (); }; };
+		926679B91BF3D4E000F597C5 /* TestAppWatchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */; };
 		927F4CD21BC5DD1800A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; settings = {ASSET_TAGS = (); }; };
 		927F4CD31BC5E10F00A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; settings = {ASSET_TAGS = (); }; };
 		927F4CD51BC5E1AD00A19360 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD41BC5E1AD00A19360 /* ResponseTests.swift */; settings = {ASSET_TAGS = (); }; };
@@ -68,6 +69,13 @@
 			remoteGlobalIDString = 92A8E4D51BBF2D9C00995FE8;
 			remoteInfo = BMSCoreWatchOS;
 		};
+		926679B71BF3D4D900F597C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92F263EE1B94EBB50063CC1D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9235D0BB1BC3183F00946A32;
+			remoteInfo = TestAppWatchOS;
+		};
 		92F264031B94EBB60063CC1D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92F263EE1B94EBB50063CC1D /* Project object */;
@@ -95,6 +103,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
+				926679B91BF3D4E000F597C5 /* TestAppWatchOS.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,6 +366,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				926679B81BF3D4D900F597C5 /* PBXTargetDependency */,
 				9235D0E91BC32D1E00946A32 /* PBXTargetDependency */,
 			);
 			name = TestAppiOS;
@@ -635,6 +645,11 @@
 			isa = PBXTargetDependency;
 			target = 92A8E4D51BBF2D9C00995FE8 /* BMSCoreWatchOS */;
 			targetProxy = 9235D0FE1BC33D5600946A32 /* PBXContainerItemProxy */;
+		};
+		926679B81BF3D4D900F597C5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9235D0BB1BC3183F00946A32 /* TestAppWatchOS */;
+			targetProxy = 926679B71BF3D4D900F597C5 /* PBXContainerItemProxy */;
 		};
 		92F264041B94EBB60063CC1D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
