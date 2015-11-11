@@ -18,10 +18,10 @@ public extension Analytics {
     // TODO: Rename these methods to something more appropriate and clear
     
     /**
-        Records the duration of the app's lifecycle from when it enters the foreground to when it goes to the background.
-        This data will be sent to the Analytics server, provided that the `Analytics.enabled` property is set to `true`.
-        
-        This method should be called in the `AppDelegate didFinishLaunchingWithOptions` method.
+    Records the duration of the app's lifecycle from when it enters the foreground to when it goes to the background.
+    This data will be sent to the Analytics server, provided that the `Analytics.enabled` property is set to `true`.
+    
+    This method should be called in the `AppDelegate didFinishLaunchingWithOptions` method.
     */
     public static func startRecordingApplicationLifecycleEvents() {
         
@@ -35,7 +35,7 @@ public extension Analytics {
     
     
     /**
-        Cease recording app lifecycle events.
+    Cease recording app lifecycle events.
     */
     public static func stopRecordingApplicationLifecycleEvents() {
         
@@ -43,5 +43,5 @@ public extension Analytics {
         
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
     }
-
+    
 }

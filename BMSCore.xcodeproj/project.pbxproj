@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DB1BF4079A004AAFCE /* Constants.swift */; settings = {ASSET_TAGS = (); }; };
+		5F4069DD1BF407E4004AAFCE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DB1BF4079A004AAFCE /* Constants.swift */; settings = {ASSET_TAGS = (); }; };
 		9221FF821BCD958700D7F3D7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221FF811BCD958700D7F3D7 /* Error.swift */; settings = {ASSET_TAGS = (); }; };
 		9221FF831BCD9E0E00D7F3D7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221FF811BCD958700D7F3D7 /* Error.swift */; settings = {ASSET_TAGS = (); }; };
 		92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A381BB0A711001E02E1 /* BMSClient.swift */; settings = {ASSET_TAGS = (); }; };
@@ -123,6 +125,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5F4069DB1BF4079A004AAFCE /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9221FF811BCD958700D7F3D7 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		92304A381BB0A711001E02E1 /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
 		92304A391BB0A711001E02E1 /* MFPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPClient.swift; sourceTree = "<group>"; };
@@ -304,6 +307,7 @@
 			children = (
 				92F263FA1B94EBB50063CC1D /* BMSCore.h */,
 				9221FF811BCD958700D7F3D7 /* Error.swift */,
+				5F4069DB1BF4079A004AAFCE /* Constants.swift */,
 				9287F2921BDA948200B0E562 /* Analytics */,
 				9287F2911BDA947400B0E562 /* Logger */,
 				92F264661B9639010063CC1D /* NetworkRequests */,
@@ -599,6 +603,7 @@
 				92A8E4DE1BBF2DA400995FE8 /* MFPClient.swift in Sources */,
 				92A8E4E01BBF2DA800995FE8 /* Request.swift in Sources */,
 				926679BB1BF3E84800F597C5 /* Analytics+WatchOS.swift in Sources */,
+				5F4069DD1BF407E4004AAFCE /* Constants.swift in Sources */,
 				92A8E4DF1BBF2DA600995FE8 /* BMSClient.swift in Sources */,
 				9221FF831BCD9E0E00D7F3D7 /* Error.swift in Sources */,
 				927F4CD31BC5E10F00A19360 /* Response.swift in Sources */,
@@ -615,6 +620,7 @@
 				924581E31BF2751600D665ED /* Analytics+iOS.swift in Sources */,
 				92304A431BB0A711001E02E1 /* ResponseDelegate.swift in Sources */,
 				92304A411BB0A711001E02E1 /* Request.swift in Sources */,
+				5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */,
 				92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */,
 				9221FF821BCD958700D7F3D7 /* Error.swift in Sources */,
 				927F4CD21BC5DD1800A19360 /* Response.swift in Sources */,

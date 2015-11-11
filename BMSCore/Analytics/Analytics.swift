@@ -16,7 +16,7 @@ public class Analytics {
     
     
     // MARK: Properties (public)
-
+    
     // TODO: Should this class use a singleton? Static methods/properties seem to work fine.
     public static let sharedInstance = Analytics()
     
@@ -28,7 +28,7 @@ public class Analytics {
     
     internal static let logger = Logger.getLoggerForName(MFP_ANALYTICS_PACKAGE)
     
-    private static var lifecycleEvents: [String: AnyObject] = [:]
+    internal static var lifecycleEvents: [String: AnyObject] = [:]
     
     
     
@@ -41,7 +41,7 @@ public class Analytics {
     
     
     public static func send(completionHandler: MfpCompletionHandler? = nil) {
-    
+        
         logger.send(completionHandler: completionHandler)
     }
     
@@ -57,12 +57,12 @@ public class Analytics {
         
         logger.analytics(logMetadata)
         
-        let sessionMetadata = [TAG_SESSION_ID: NSUUID().UUIDString]
+        let sessionMetadata = NSUUID().UUIDString
         
         if Analytics.lifecycleEvents[TAG_SESSION] == nil {
             let startTime = NSDate.timeIntervalSinceReferenceDate() * 1000 // milliseconds
             
-            Analytics.lifecycleEvents[TAG_SESSION] = sessionMetadata ?? [:]
+            Analytics.lifecycleEvents[TAG_SESSION] = sessionMetadata
             Analytics.lifecycleEvents[KEY_EVENT_START_TIME] = startTime
         }
         else {
@@ -75,7 +75,7 @@ public class Analytics {
         
         guard var eventMetadata = Analytics.lifecycleEvents[TAG_SESSION] as? [String: AnyObject] else {
             logger.warn("App background event reached before the foreground event of the same session was recorded.")
-            
+            Analytics.lifecycleEvents.removeValueForKey(TAG_SESSION)
             return
         }
         
@@ -91,7 +91,7 @@ public class Analytics {
         
         Analytics.lifecycleEvents.removeValueForKey(TAG_SESSION)
     }
-
+    
     
     
     // Remove the observers registered in the Analytics+iOS "startRecordingApplicationLifecycleEvents" method
@@ -100,20 +100,3 @@ public class Analytics {
     }
     
 }
-
-
-
-// MARK: Constants
-
-private let MFP_ANALYTICS_PACKAGE = "mfpsdk.analytics"
-
-private let KEY_METADATA_CATEGORY = "$category"
-private let KEY_METADATA_TYPE = "$type"
-private let KEY_EVENT_START_TIME = "$startTime"
-private let KEY_METADATA_DURATION = "$duration"
-
-private let TAG_CATEGORY_EVENT = "event"
-private let TAG_SESSION = "$session"
-private let TAG_SESSION_ID = "$sessionId"
-private let TAG_APP_STARTUP = "$startup"
-
