@@ -60,7 +60,7 @@ public class Analytics {
         let sessionMetadata = NSUUID().UUIDString
         
         if Analytics.lifecycleEvents[TAG_SESSION] != nil {
-            logger.warn("App foreground event was never completed and will be overriden with a new session")
+            logger.warn("The previous session did not end properly so the session will not be recorded. This new session will override the previous session.")
         }
             
         Analytics.lifecycleEvents[TAG_SESSION] = sessionMetadata
@@ -85,6 +85,8 @@ public class Analytics {
             eventMetadata[KEY_METADATA_TYPE] = TAG_SESSION
             
             logger.analytics(eventMetadata)
+        } else {
+            logger.warn("The session ended before the timer started so the current session duration cannot be recorded")
         }
         
         Analytics.lifecycleEvents.removeValueForKey(TAG_SESSION)

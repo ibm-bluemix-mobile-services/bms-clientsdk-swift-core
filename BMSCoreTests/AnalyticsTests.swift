@@ -16,10 +16,9 @@ import XCTest
 
 class AnalyticsTests: XCTestCase {
     
-    //Test end to end session -->
-    //Test if logSessionEnd  before logSessionStart
-    //Test individually
-    /// Test if tag session gets removed after logSession is called
+    override func tearDown() {
+        Analytics.lifecycleEvents = [:]
+    }
     
     func testLogSessionStartUpdatesCorrectly(){
 
@@ -27,20 +26,63 @@ class AnalyticsTests: XCTestCase {
         
         Analytics.logSessionStart()
 
-        let oldSession = Analytics.lifecycleEvents[TAG_SESSION] as? String
-        let oldStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? Double
+        let firstSession = Analytics.lifecycleEvents[TAG_SESSION] as? String
+        let originalStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? Double
         
-        XCTAssertNotNil(oldSession)
-        XCTAssertNotNil(oldStartTime)
+        XCTAssertNotNil(firstSession)
+        XCTAssertNotNil(originalStartTime)
 
         Analytics.logSessionStart()
 
         XCTAssertNotNil(Analytics.lifecycleEvents[TAG_SESSION])
 
-        XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as! Double > oldStartTime!);
-        XCTAssertTrue(oldSession! != Analytics.lifecycleEvents[TAG_SESSION] as! String);
+        XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as! Double > originalStartTime!);
+        XCTAssertTrue(firstSession! != Analytics.lifecycleEvents[TAG_SESSION] as! String);
+    
     }
     
+    func testLogSessionAfterCompleteSession(){
+        
+        XCTAssertTrue(Analytics.lifecycleEvents.isEmpty)
+        
+        Analytics.logSessionStart()
+        
+        let firstSession = Analytics.lifecycleEvents[TAG_SESSION] as? String
+        let originalStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? Double
+        
+        XCTAssertNotNil(firstSession)
+        XCTAssertNotNil(originalStartTime)
+        
+        Analytics.logSessionEnd()
+        
+        XCTAssertNil(Analytics.lifecycleEvents[TAG_SESSION])
+        
+        Analytics.logSessionStart()
+        
+        XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as! Double > originalStartTime!);
+        XCTAssertTrue(firstSession! != Analytics.lifecycleEvents[TAG_SESSION] as! String);
+    
+    }
+    
+    func testlogSessionEndBeforeLogSessionStart(){
+        
+        XCTAssertTrue(Analytics.lifecycleEvents.isEmpty)
+        
+        Analytics.logSessionEnd()
+        
+        XCTAssertNil(Analytics.lifecycleEvents[TAG_SESSION])
+        XCTAssertNil(Analytics.lifecycleEvents[KEY_EVENT_START_TIME])
+        
+        Analytics.logSessionStart()
+    
+        let session = Analytics.lifecycleEvents[TAG_SESSION] as? String
+        let startTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? Double
+        
+        XCTAssertNotNil(session)
+        XCTAssertNotNil(startTime)
+    
+        
+    }
     
     
 

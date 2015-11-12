@@ -336,8 +336,8 @@
 				92D63D301BB468D30073A032 /* RequestTests.swift */,
 				92D63D321BB4693E0073A032 /* BMSClientTests.swift */,
 				927F4CD41BC5E1AD00A19360 /* ResponseTests.swift */,
-				92F264081B94EBB60063CC1D /* Info.plist */,
 				5F4069DE1BF409CB004AAFCE /* AnalyticsTests.swift */,
+				92F264081B94EBB60063CC1D /* Info.plist */,
 			);
 			path = BMSCoreTests;
 			sourceTree = "<group>";
