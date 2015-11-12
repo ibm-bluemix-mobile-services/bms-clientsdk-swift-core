@@ -48,7 +48,7 @@ public class Analytics {
     
     dynamic static internal func logSessionStart() {
         
-        let startTime = NSDate.timeIntervalSinceReferenceDate()
+        let startTime = NSDate.timeIntervalSinceReferenceDate() * 1000 //milliseconds
         
         var logMetadata: [String: AnyObject] = [:]
         logMetadata[KEY_METADATA_CATEGORY] = TAG_CATEGORY_EVENT
@@ -59,15 +59,13 @@ public class Analytics {
         
         let sessionMetadata = NSUUID().UUIDString
         
-        if Analytics.lifecycleEvents[TAG_SESSION] == nil {
-            let startTime = NSDate.timeIntervalSinceReferenceDate() * 1000 // milliseconds
+        if Analytics.lifecycleEvents[TAG_SESSION] != nil {
+            logger.warn("App foreground event was never completed and will be overriden with a new session")
+        }
             
-            Analytics.lifecycleEvents[TAG_SESSION] = sessionMetadata
-            Analytics.lifecycleEvents[KEY_EVENT_START_TIME] = startTime
-        }
-        else {
-            logger.warn("App foreground event reached before the background event for the previous session was recorded.")
-        }
+        Analytics.lifecycleEvents[TAG_SESSION] = sessionMetadata
+        Analytics.lifecycleEvents[KEY_EVENT_START_TIME] = startTime
+        
     }
     
     
