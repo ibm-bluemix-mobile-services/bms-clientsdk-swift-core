@@ -39,19 +39,3 @@ internal let DEFAULT_LOW_BOUND_FILE_SIZE = 10000
 
 internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"
-
-internal let LOGGER_TRACE = 600
-/** Debug level */
-internal let LOGGER_DEBUG = 500
-/** Log level */
-internal let LOGGER_LOG = 400
-/** Info level */
-internal let LOGGER_INFO = 300
-/** Warn level */
-internal let LOGGER_WARN = 200
-/** Error level */
-internal let LOGGER_ERROR = 100
-/** Fatal level */
-internal let LOGGER_FATAL = 50
-/** Analytics level */
-internal let LOGGER_ANALYTICS = 25
