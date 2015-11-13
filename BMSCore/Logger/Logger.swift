@@ -17,7 +17,7 @@ import Foundation
 
 public enum LogLevel: Int {
     
-    case Analytics, Fatal, Error, Warn, Info, Debug, None
+    case Analytics = 1, Fatal, Error, Warn, Info, Debug, None
 }
 
 
@@ -32,19 +32,25 @@ public class Logger {
     
     public static var logLevel: LogLevel {
         get {
-            return LogLevel.Debug
+            let level = NSUserDefaults.standardUserDefaults().integerForKey(TAG_LOG_LEVEL)
+            if level >= LogLevel.Analytics.rawValue && level <= LogLevel.None.rawValue {
+                return LogLevel(rawValue: level)! // The above condition guarantees a non-nil LogLevel
+            }
+            else {
+                return LogLevel.Debug
+            }
         }
         set {
-            
+            NSUserDefaults.standardUserDefaults().setInteger(newValue.rawValue, forKey: TAG_LOG_LEVEL)
         }
     }
     
     public static var maxLogStoreSize: Int {
         get {
-            return 1
+            return NSUserDefaults.standardUserDefaults().integerForKey(TAG_MAX_STORE_SIZE) ?? DEFAULT_MAX_STORE_SIZE
         }
         set {
-            
+            NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: TAG_MAX_STORE_SIZE)
         }
     }
     
@@ -70,6 +76,12 @@ public class Logger {
     // Initializers
     
     public static func getLoggerForName(loggerName: String) -> Logger {
+        
+        if Logger.loggerInstances.isEmpty {
+            // Only need to set uncaught exception handler once, when the first Logger instance is created
+            captureUncaughtExceptions()
+        }
+        
         if let existingLogger = Logger.loggerInstances[loggerName] {
             return existingLogger
         }
@@ -106,10 +118,32 @@ public class Logger {
     
     
     
-    // Configuration
+    // Uncaught Exceptions
     
-    // TODO: In documentation, explain that developer needs to call this method if they set their own uncaught exception handler
-    public static func captureUncaughtExceptions() { }
+    // TODO: Make this private, and just document it? It looks like this is not part of the API in Android anyway.
+    // TODO: In documentation, explain that developer must not set their own uncaught exception handler or this one will be overwritten
+    private static func captureUncaughtExceptions() {
+        
+        NSSetUncaughtExceptionHandler { (caughtException: NSException) -> Void in
+            
+            // Persist a flag so that when the app starts back up, we can see if an exception occurred in the last session
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: TAG_UNCAUGHT_EXCEPTION)
+            
+            Logger.logException(caughtException)
+            existingUncaughtExceptionHandler?(caughtException)
+        }
+    }
+    
+    
+    private static func logException(exception: NSException) {
+        
+        let logger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
+        var exceptionString = "Uncaught Exception: \(exception.name)."
+        if let reason = exception.reason {
+            exceptionString += " Reason: \(reason)."
+        }
+        logger.fatal(exceptionString)
+    }
     
     
     
@@ -156,10 +190,12 @@ public class Logger {
     
     private init(name: String) {
         self.name = name
-        Logger.captureUncaughtExceptions()
     }
 
 }
+
+
+let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 
 
 // MARK: FOUNDATION SDK
@@ -167,44 +203,6 @@ public class Logger {
 //
 //@implementation OCLogger
 //
-//#pragma mark - Static Methods
-//
-//+(instancetype) getInstanceWithPackage: (NSString*) package
-//{
-//    @synchronized (globalLoggerList) {
-//        
-//        OCLogger *logger = [globalLoggerList objectForKey:package];
-//        
-//        if (logger != nil) {
-//            return logger;
-//        }
-//        
-//        logger = [[OCLogger alloc] init];
-//        logger.package = package;
-//        [globalLoggerList addEntriesFromDictionary:@{package: logger}];
-//        
-//        return logger;
-//    }
-//}
-//
-///**
-//* Required to log uncaught exceptions using OCLogger.
-//*/
-//static void unCaughtExceptionHandler(NSException *e) {
-//    [OCLogger logException:e];
-//    [[WLAnalytics sharedInstance] logAppCrash];
-//}
-//
-//+(void)initialize{
-//    if (! globalLoggerList) {
-//        
-//        [OCLogger registerDefaultConfigurationValues];
-//        
-//        // register an uncaught exception handler
-//        NSSetUncaughtExceptionHandler(&unCaughtExceptionHandler);
-//        
-//    }
-//}
 //
 //+(void) sendFileToServer:(NSData*)file withRequestDelegate:(id<WLRequestDelegate>)requestDelegate andUserDelegate:(id<WLDelegate>)userDelegate
 //{
@@ -303,15 +301,6 @@ public class Logger {
 //        UpdateConfigDelegate *updateConfigDelegate = [UpdateConfigDelegate new];
 //        WLRequest *updateConfigRequest = [(WLRequest *)[WLRequest alloc] initWithDelegate:updateConfigDelegate];
 //        [updateConfigRequest makeRequestForRootUrl:CONFIG_URI_PATH withOptions:requestOptions];
-//    }
-//}
-//
-//+(void) sendIfUnCaughtExceptionDetected{
-//    @synchronized (self) {
-//        if([OCLogger isUnCaughtExceptionDetected]){
-//            [OCLogger send];
-//            [OCLogger sendAnalytics];
-//        }
 //    }
 //}
 //
@@ -482,89 +471,8 @@ public class Logger {
 //    [standardUserDefaults synchronize];
 //}
 //
-//+(void) setFilters: (NSDictionary*) filters
-//{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults setObject:filters forKey:TAG_FILTERS];
-//    [standardUserDefaults synchronize];
-//}
-//
-//+(void) setServerFilters: (NSDictionary*) filters
-//{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults setObject:filters forKey:TAG_SERVER_FILTERS];
-//    [standardUserDefaults synchronize];
-//}
-//
-//+(NSDictionary*) getFilters
-//    {
-//        if([OCLogger shouldUseServerConfig]){
-//            return [[NSUserDefaults standardUserDefaults] objectForKey:TAG_SERVER_FILTERS];
-//        }
-//        
-//        return [[NSUserDefaults standardUserDefaults] objectForKey:TAG_FILTERS];
-//}
-//
-//+(void) setMaxFileSize: (int) bytes
-//{
-//    if (bytes >= DEFAULT_LOW_BOUND_FILE_SIZE) {
-//        NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//        [standardUserDefaults setInteger:bytes forKey:TAG_MAX_FILE_SIZE];
-//        [standardUserDefaults synchronize];
-//    }
-//}
-//
-//+(int) getMaxFileSize
-//    {
-//        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:TAG_MAX_FILE_SIZE];
-//}
-//
-//+(void) setLevel: (OCLogType) level
-//{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults setInteger:level forKey:TAG_LOG_LEVEL];
-//    [standardUserDefaults synchronize];
-//}
-//
-//+(void) setServerLevel: (OCLogType) level
-//{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults setInteger:level forKey:TAG_SERVER_LOG_LEVEL];
-//    [standardUserDefaults synchronize];
-//}
-//
-//+(OCLogType) getLevel
-//    {
-//        if([OCLogger shouldUseServerConfig]){
-//            return (int)[[NSUserDefaults standardUserDefaults] integerForKey:TAG_SERVER_LOG_LEVEL];
-//        }
-//        
-//        return (int)[[NSUserDefaults standardUserDefaults] integerForKey:TAG_LOG_LEVEL];
-//}
-//
-//+(void) setUnCaughtExceptionFound: (BOOL) flag
-//{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults setBool:flag forKey:TAG_UNCAUGHT_EXCEPTION];
-//    [standardUserDefaults synchronize];
-//}
-//
-//+(BOOL) isUnCaughtExceptionDetected
-//    {
-//        return [[NSUserDefaults standardUserDefaults] boolForKey:TAG_UNCAUGHT_EXCEPTION];
-//}
 //
 //#pragma mark - Log Instance Methods - No Context
-//
-//-(void) trace: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_TRACE andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:@{}];
-//    
-//    va_end(args);
-//}
 //
 //-(void) debug: (NSString*) text, ...
 //{
@@ -572,16 +480,6 @@ public class Logger {
 //    va_start(args, text);
 //    
 //    [OCLogger logWithLevel:OCLogger_DEBUG andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:@{}];
-//    
-//    va_end(args);
-//}
-//
-//-(void) log: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_LOG andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:@{}];
 //    
 //    va_end(args);
 //}
@@ -636,87 +534,6 @@ public class Logger {
 //    va_end(args);
 //}
 //
-//#pragma mark - Log Instance Methods - With Context
-//
-//-(void) metadata:(NSDictionary*) metadata trace: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_TRACE andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:metadata];
-//    
-//    va_end(args);
-//}
-//
-//-(void) metadata:(NSDictionary*) metadata debug: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_DEBUG andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:metadata];
-//    
-//    va_end(args);
-//}
-//
-//-(void) metadata:(NSDictionary*) metadata log: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_LOG andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:metadata];
-//    
-//    va_end(args);
-//}
-//
-//-(void) metadata:(NSDictionary*) metadata info: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_INFO andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:metadata];
-//    
-//    va_end(args);
-//}
-//
-//-(void) metadata:(NSDictionary*) metadata warn: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_WARN andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:metadata];
-//    
-//    va_end(args);
-//}
-//
-//-(void) metadata:(NSDictionary*) metadata error: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_ERROR andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:metadata];
-//    
-//    va_end(args);
-//}
-//
-//-(void) metadata:(NSDictionary*) metadata fatal: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_FATAL andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:metadata];
-//    
-//    va_end(args);
-//}
-//
-//-(void) metadata:(NSDictionary*) metadata analytics: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_ANALYTICS andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:metadata];
-//    
-//    va_end(args);
-//}
 //
 //#pragma mark - Helper Functions
 //
@@ -864,25 +681,6 @@ public class Logger {
 //+(NSURL*) getWorklightPostURL
 //    {
 //        return [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OCLoggerWorklight getWorklightBaseURL], LOG_UPLOADER_PATH]];
-//}
-//
-//+(void) registerDefaultConfigurationValues
-//    {
-//        OCLogType defaultLevel = OCLogger_FATAL;
-//        
-//        #ifdef DEBUG
-//        defaultLevel = OCLogger_DEBUG;
-//#endif
-//
-//NSDictionary* defaults = @{TAG_CAPTURE: @YES,
-//    TAG_ANALYTICS_CAPTURE: @YES,
-//    TAG_MAX_FILE_SIZE: [NSNumber numberWithInt:DEFAULT_MAX_FILE_SIZE],
-//    TAG_LOG_LEVEL: @(defaultLevel),
-//    TAG_UNCAUGHT_EXCEPTION: @NO,
-//    //TAG_AUTO_SEND: @YES
-//};
-//
-//[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 //}
 //
 //
@@ -1100,15 +898,6 @@ public class Logger {
 //    } else {
 //        NSLog(@"[%@] [%@] %@", levelTag, package, msg);
 //    }
-//}
-//
-//+(void) logException: (NSException*) exception
-//{
-//    [OCLogger setUnCaughtExceptionFound:YES];
-//    
-//    [[OCLogger getInstanceWithPackage:WORKLIGHT_PACKAGE] metadata:@{KEY_METADATA_SOURCE : SOURCE_OBJECTIVE_C,
-//        KEY_METADATA_STACKTRACE : [exception callStackSymbols]}
-//    fatal:@"Uncaught Exception: %@", exception];
 //}
 //
 //@end

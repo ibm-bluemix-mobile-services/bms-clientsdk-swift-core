@@ -11,7 +11,9 @@
 *     limitations under the License.
 */
 
-internal let MFP_ANALYTICS_PACKAGE = "mfpsdk.analytics"
+internal let MFP_PACKAGE_PREFIX = "mfpsdk."
+internal let MFP_LOGGER_PACKAGE = MFP_PACKAGE_PREFIX + "logger"
+internal let MFP_ANALYTICS_PACKAGE = MFP_PACKAGE_PREFIX + "analytics"
 
 internal let KEY_METADATA_CATEGORY = "$category"
 internal let KEY_METADATA_TYPE = "$type"
@@ -23,7 +25,10 @@ internal let TAG_SESSION = "$session"
 internal let TAG_SESSION_ID = "$sessionId"
 internal let TAG_APP_STARTUP = "$startup"
 
+internal let TAG_UNCAUGHT_EXCEPTION = "loggerUncaughtExceptionDetected"
+internal let TAG_LOG_LEVEL = "loggerLevel"
+internal let TAG_MAX_STORE_SIZE = "loggerMaxFileSize"
+internal let DEFAULT_MAX_STORE_SIZE = 100000;
+
 internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"
-
-    
