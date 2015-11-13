@@ -11,7 +11,9 @@
 *     limitations under the License.
 */
 
-internal let MFP_ANALYTICS_PACKAGE = "mfpsdk.analytics"
+internal let MFP_PACKAGE_PREFIX = "mfpsdk."
+internal let MFP_LOGGER_PACKAGE = MFP_PACKAGE_PREFIX + "logger"
+internal let MFP_ANALYTICS_PACKAGE = MFP_PACKAGE_PREFIX + "analytics"
 
 internal let KEY_METADATA_CATEGORY = "$category"
 internal let KEY_METADATA_TYPE = "$type"
@@ -27,41 +29,29 @@ internal let TAG_PKG = "pkg"
 internal let TAG_TIMESTAMP = "timestamp"
 internal let TAG_LEVEL = "level"
 internal let TAG_META_DATA = "metadata"
+internal let TAG_UNCAUGHT_EXCEPTION = "loggerUncaughtExceptionDetected"
+internal let TAG_LOG_LEVEL = "loggerLevel"
+internal let TAG_MAX_STORE_SIZE = "loggerMaxFileSize"
 
-
-
+internal let DEFAULT_MAX_STORE_SIZE = 100000
+internal let DEFAULT_MAX_FILE_SIZE = 100000
+internal let DEFAULT_LOW_BOUND_FILE_SIZE = 10000
 
 internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"
 
-
-
-
 internal let LOGGER_TRACE = 600
-
 /** Debug level */
 internal let LOGGER_DEBUG = 500
-
 /** Log level */
 internal let LOGGER_LOG = 400
-
 /** Info level */
 internal let LOGGER_INFO = 300
-
 /** Warn level */
 internal let LOGGER_WARN = 200
-
 /** Error level */
 internal let LOGGER_ERROR = 100
-
 /** Fatal level */
 internal let LOGGER_FATAL = 50
-
 /** Analytics level */
 internal let LOGGER_ANALYTICS = 25
-
-internal let DEFAULT_MAX_FILE_SIZE = 100000
-
-internal let DEFAULT_LOW_BOUND_FILE_SIZE = 10000
-
-
