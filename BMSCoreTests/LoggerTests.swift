@@ -30,6 +30,14 @@ class LoggerTests: XCTestCase {
             XCTAssertTrue(level1 == LogLevel.Debug)
         }
     }
+    
+    func testGetLoggerForName(){
+        let name = "sample"
+        
+        let logger = Logger.getLoggerForName(name)
+        
+        XCTAssertTrue(logger.name == Logger.loggerInstances[name]?.name)
+    }
 
     func testSetGetMaxLogStoreSize(){
     
@@ -50,6 +58,32 @@ class LoggerTests: XCTestCase {
     
         let capture2 = Logger.logStoreEnabled
         XCTAssertFalse(capture2)
+    }
+    
+    func testLogException(){
+        let documentDirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+        let pathToFile = "\(documentDirPath)/hello.txt"
+        let e = NSException(name:"testError", reason:"This is a test error", userInfo:["user":"nana"])
+        let exceptionString = "Uncaught Exception: \(e.name). Reason: \(e.reason)."
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToFile)
+        } catch {
+            
+        }
+        
+        Logger.logException(e)
+        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+        let fileContents = "[\(formattedContents)]"
+        let logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
+        let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
+        
+        let fatalMessage = jsonDict![0]
+        XCTAssertTrue(fatalMessage[TAG_MSG] == exceptionString)
+        XCTAssertTrue(fatalMessage[TAG_PKG] == MFP_LOGGER_PACKAGE)
+        XCTAssertTrue(fatalMessage[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(fatalMessage[TAG_META_DATA]!!.count == 0)
+        
     }
     
     func testLogMethods(){
