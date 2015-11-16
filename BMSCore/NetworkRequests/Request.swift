@@ -46,6 +46,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
     
+    
     // MARK: Properties (public)
     
     /// URL that the request is being sent to
@@ -74,6 +75,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     var networkRequest: NSMutableURLRequest
     var allowRedirects: Bool = true
     private var startTime: NSTimeInterval = 0.0
+    private let logger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
     
     
     
@@ -127,7 +129,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
     func sendString(requestBody: String, withCompletionHandler callback: MfpCompletionHandler?) {
-        
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         if headers == nil {
@@ -196,6 +197,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
                 }
                 else {
                     // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
+                    logger.error("Failed to append the query parameters to the resouurce url.");
                     let urlErrorMessage = "Failed to append the query parameters to the resource url."
                     let malformedUrlError = NSError(domain: Constants.BMSCoreErrorDomain, code: BMSErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
                     callback?(nil, malformedUrlError)
@@ -211,11 +213,14 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             
             startTime = NSDate.timeIntervalSinceReferenceDate()
             
+            logger.info("Sending Request to " + resourceUrl)
+            
             // Send request
             networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
         }
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
+            logger.error("The supplied resource url is not a valid url.")
             let malformedUrlError = NSError(domain: Constants.BMSCoreErrorDomain, code: BMSErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
             callback?(nil, malformedUrlError)
         }
@@ -233,8 +238,8 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         completionHandler: ((NSURLRequest?) -> Void))
     {
         var redirectRequest: NSURLRequest?
-        
         if allowRedirects {
+            logger.info("Redirecting: " + String(session))
             redirectRequest = request
         }
         
