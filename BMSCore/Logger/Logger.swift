@@ -135,7 +135,7 @@ public class Logger {
     }
     
     
-    private static func logException(exception: NSException) {
+    internal static func logException(exception: NSException) {
         
         let logger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
         var exceptionString = "Uncaught Exception: \(exception.name)."
@@ -149,7 +149,7 @@ public class Logger {
     
     // MARK: Properties (internal/private)
     
-    private static var loggerInstances: [String: Logger] = [:]
+    internal static var loggerInstances: [String: Logger] = [:]
     
     
     
