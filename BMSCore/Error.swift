@@ -18,5 +18,5 @@
 public enum MFPErrorCode: Int {
     
     case MalformedUrl
-    case InvalidQueryParameters
+    case ClientNotInitialized
 }

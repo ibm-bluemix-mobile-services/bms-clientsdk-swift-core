@@ -42,7 +42,7 @@ public class Analytics {
     
     public static func send(completionHandler: MfpCompletionHandler? = nil) {
         
-        logger.send(completionHandler: completionHandler)
+        logger.sendAnalytics(completionHandler: completionHandler)
     }
     
     

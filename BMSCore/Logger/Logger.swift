@@ -24,7 +24,63 @@ public enum LogLevel: Int {
 public class Logger {
     
     
-    // MARK: API (properties)
+    // MARK: Class constants (private)
+    
+    // By default, the dateFormater will convert to the local time zone, but we want to send the date based on UTC
+    // so that logs from all clients in all timezones are normalized to the same GMT timezone.
+    private static let dateFormatter: NSDateFormatter = Logger.generateDateFormatter()
+    
+    private static func generateDateFormatter() -> NSDateFormatter {
+        
+        let formatter = NSDateFormatter()
+        formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        formatter.timeZone = NSTimeZone(name: "GMT")
+        formatter.dateFormat = "dd-MM-yyyy HH:mm:ss:SSS"
+        
+        return formatter
+    }
+    
+    
+    private static let logsDocumentPath: String = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+    
+    
+    
+    // MARK: Dispatch queues
+    
+    private static let loggerFileIOQueue: dispatch_queue_t = dispatch_queue_create("com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore.Logger.loggerFileIOQueue", DISPATCH_QUEUE_SERIAL)
+    
+    
+    private static let analyticsFileIOQueue: dispatch_queue_t = dispatch_queue_create("com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore.Logger.analyticsFileIOQueue", DISPATCH_QUEUE_SERIAL)
+    
+    
+    private static let sendLogsToServerQueue: dispatch_queue_t = dispatch_queue_create("com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore.Logger.sendLogsToServerQueue", DISPATCH_QUEUE_SERIAL)
+    
+    
+    private static let sendAnalyticsToServerQueue: dispatch_queue_t = dispatch_queue_create("com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore.Logger.sendAnalyticsToServerQueue", DISPATCH_QUEUE_SERIAL)
+    
+    
+    private static let updateLogProfileQueue: dispatch_queue_t = dispatch_queue_create("com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore.Logger.updateLogProfileQueue", DISPATCH_QUEUE_SERIAL)
+
+    
+    // Custom dispatch_sync that can incorporate throwable statements
+    internal func dispatch_sync(queue: dispatch_queue_t, block: () throws -> ()) throws {
+        
+        var error: ErrorType?
+        try dispatch_sync(queue) {
+            do {
+                try block()
+            }
+            catch let caughtError {
+                error = caughtError
+            }
+        }
+        if error != nil {
+            throw error!
+        }
+    }
+    
+    
+    // MARK: Properties (public)
     
     public let name: String
     
@@ -71,9 +127,15 @@ public class Logger {
     
     
     
-    // MARK: API (methods)
+    // MARK: Properties (internal/private)
     
-    // Initializers
+    internal static var loggerInstances: [String: Logger] = [:]
+    
+    internal static let internalLogger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
+    
+    
+    
+    // MARK: Initializers
     
     public static func getLoggerForName(loggerName: String) -> Logger {
         
@@ -94,7 +156,13 @@ public class Logger {
     }
     
     
-    // Log methods
+    private init(name: String) {
+        self.name = name
+    }
+    
+    
+    
+    // MARK: Log methods
     
     public func debug(message: String, error: ErrorType? = nil) { }
     
@@ -110,15 +178,160 @@ public class Logger {
     
     
     
-    // Server communication
+    // MARK: Sending logs
     
-    public func send(completionHandler callback: MfpCompletionHandler? = nil) { }
+    public func send(completionHandler userCallback: MfpCompletionHandler? = nil) {
+        
+        let logSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
+            if error != nil {
+                Logger.internalLogger.debug("Client logs successfully sent to the server.")
+                // Remove the uncaught exception flag since the logs containing the exception(s) have just been sent to the server
+                NSUserDefaults.standardUserDefaults().setBool(false, forKey: TAG_UNCAUGHT_EXCEPTION)
+                // TODO: Delete log data
+            }
+            else {
+                Logger.internalLogger.error("Request to send client logs has failed.")
+            }
+            
+            userCallback?(response, error)
+        }
+        
+        // Use a serial queue to ensure that the same logs do not get sent more than once
+        dispatch_async(Logger.sendLogsToServerQueue) { () -> Void in
+            do {
+                let logsToSend: String? = try self.getLogsFromFile(FILE_LOGGER_LOGS)
+                if logsToSend != nil {
+                    self.sendToServer(logsToSend!, withCallback: logSendCallback)
+                }
+                else {
+                    Logger.internalLogger.info("There are no logs to send.")
+                }
+            }
+            catch let error as NSError {
+                logSendCallback(nil, error)
+            }
+        }
+    }
+    
+    
+    internal func sendAnalytics(completionHandler userCallback: MfpCompletionHandler? = nil) {
+    
+        // Internal completion handler - wraps around the user supplied completion handler (if supplied)
+        let analyticsSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
+            if error != nil {
+                Analytics.logger.debug("Analytics data successfully sent to the server.")
+                // TODO: Delete analytics data
+            }
+            else {
+                Analytics.logger.error("Request to send analytics data to the server has failed.")
+            }
+            
+            userCallback?(response, error)
+        }
+        
+        // Use a serial queue to ensure that the same analytics data do not get sent more than once
+        dispatch_async(Logger.sendAnalyticsToServerQueue) { () -> Void in
+            do {
+                let logsToSend: String? = try self.getLogsFromFile(FILE_ANALYTICS_LOGS)
+                if logsToSend != nil {
+                    self.sendToServer(logsToSend!, withCallback: analyticsSendCallback)
+                }
+                else {
+                    Analytics.logger.info("There are no analytics data to send.")
+                }
+            }
+            catch let error as NSError {
+                analyticsSendCallback(nil, error)
+            }
+        }
+    }
+    
+    
+    internal func sendToServer(logs: String, withCallback callback: MfpCompletionHandler) {
+        
+        let bmsClient = BMSClient.sharedInstance
+        
+        guard var appRoute = bmsClient.bluemixAppRoute else {
+            returnClientInitializationError("bluemixAppRoute", callback: callback)
+            return
+        }
+        guard let appGuid = bmsClient.bluemixAppGUID else {
+            returnClientInitializationError("bluemixAppGUID", callback: callback)
+            return
+        }
+        
+        // Build and send the Request
+        
+        if appRoute[appRoute.endIndex.predecessor()] != "/" {
+            appRoute += "/"
+        }
+        let logUploadPath = "/imfmobileanalytics/v1/receiver/apps/"
+        let logUploaderUrl = appRoute + logUploadPath + appGuid
+        
+        var headers = ["Content-Type": "application/json"]
+        if let rewriteDomain = bmsClient.rewriteDomain {
+            headers[REWRITE_DOMAIN_HEADER_NAME] = rewriteDomain
+        }
+        
+        let logPayload = "[" + logs + "]"
+        
+        let request = Request(url: logUploaderUrl, headers: headers, queryParameters: nil, method: HttpMethod.POST)
+        request.sendString(logPayload, withCompletionHandler: callback)
+    }
+    
+    private func returnClientInitializationError(missingValue: String, callback: MfpCompletionHandler) {
+        
+        Logger.internalLogger.error("No value found for the BMSClient \(missingValue) property.")
+        let errorMessage = "Must initialize BMSClient before sending logs to the server."
+        let error = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.ClientNotInitialized.rawValue, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+        
+        callback(nil, error)
+    }
+    
+    
+    internal func deleteLogsFromFile(fileName: String) {
+        
+    }
+    
+    
+    internal func getLogsFromFile(fileName: String) throws -> String? {
+        
+        var fileContents: String?
+        
+        let logFile = Logger.logsDocumentPath + fileName
+        if NSFileManager.defaultManager().fileExistsAtPath(logFile) {
+            do {
+                // Before sending the logs, we need to read them from the file. This is done in a serial dispatch queue to prevent conflicts if the log file is simulatenously being written to.
+                switch fileName {
+                case FILE_ANALYTICS_LOGS:
+                    try dispatch_sync(Logger.analyticsFileIOQueue, block: { () -> () in
+                        fileContents = try String(contentsOfFile: logFile, encoding: NSUTF8StringEncoding)
+                    })
+                case FILE_LOGGER_LOGS:
+                    try dispatch_sync(Logger.loggerFileIOQueue, block: { () -> () in
+                        fileContents = try String(contentsOfFile: logFile, encoding: NSUTF8StringEncoding)
+                    })
+                default:
+                    Logger.internalLogger.error("Cannot send data to server. Unrecognized file: \(fileName).")
+                }
+            }
+        }
+        else {
+            Logger.internalLogger.error("Cannot send data to server. Unable to open file: \(fileName).")
+        }
+        return fileContents
+    }
+    
+    
+    
+    
+    
     
     public func updateLogProfile(withCompletionHandler callback: MfpCompletionHandler? = nil) { }
     
     
     
-    // Uncaught Exceptions
+    // MARK: Uncaught Exceptions
     
     // TODO: Make this private, and just document it? It looks like this is not part of the API in Android anyway.
     // TODO: In documentation, explain that developer must not set their own uncaught exception handler or this one will be overwritten
@@ -144,53 +357,6 @@ public class Logger {
         }
         logger.fatal(exceptionString)
     }
-    
-    
-    
-    // MARK: Properties (internal/private)
-    
-    private static var loggerInstances: [String: Logger] = [:]
-    
-    
-    
-    // MARK: Class constants
-    
-    // By default, the dateFormater will convert to the local time zone, but we want to send the date based on UTC
-    // so that logs from all clients in all timezones are normalized to the same GMT timezone.
-    private static let dateFormatter: NSDateFormatter = Logger.generateDateFormatter()
-    
-    private static func generateDateFormatter() -> NSDateFormatter {
-        
-        let formatter = NSDateFormatter()
-        formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-        formatter.timeZone = NSTimeZone(name: "GMT")
-        formatter.dateFormat = "dd-MM-yyyy HH:mm:ss:SSS"
-        
-        return formatter
-    }
-
-    
-    private static let logsDocumentPath: String = Logger.generateLogDocumentPath()
-    
-    private static func generateLogDocumentPath() -> String {
-        
-        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
-        return paths[0]
-    }
-    
-    private static let writeLogsToFileQueue: dispatch_queue_t = dispatch_queue_create("com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore.Logger.writeLogsToFileQueue", DISPATCH_QUEUE_SERIAL)
-    
-    private static let sendLogsToServerQueue: dispatch_queue_t = dispatch_queue_create("com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore.Logger.sendLogsToServerQueue", DISPATCH_QUEUE_SERIAL)
-    
-    private static let updateLogProfileQueue: dispatch_queue_t = dispatch_queue_create("com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore.Logger.updateLogProfileQueue", DISPATCH_QUEUE_SERIAL)
-
-    
-    
-    // MARK: Methods (internal/private)
-    
-    private init(name: String) {
-        self.name = name
-    }
 
 }
 
@@ -203,85 +369,6 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //
 //@implementation OCLogger
 //
-//
-//+(void) sendFileToServer:(NSData*)file withRequestDelegate:(id<WLRequestDelegate>)requestDelegate andUserDelegate:(id<WLDelegate>)userDelegate
-//{
-//    @synchronized (self) {
-//        NSString* dataString = [[NSString alloc] initWithData:file encoding:NSUTF8StringEncoding];
-//        
-//        // build request options
-//        WLRequestOptions *requestOptions = [[WLRequestOptions alloc] init];
-//        [requestOptions setMethod:POST];
-//        [requestOptions setParameters:@{@"__logdata": dataString}];
-//        requestOptions.compress = TRUE;
-//        
-//        if (userDelegate != nil) {
-//            [requestOptions setUserInfo:@{@"userSendLogsDelegate" : userDelegate}];
-//        }
-//        
-//        NSMutableDictionary* headers = [NSMutableDictionary new];
-//        
-//        NSDictionary* deviceInfo = [OCLogger getDeviceInformation];
-//        for(NSString* key in deviceInfo){
-//            NSString *headerName = [NSString stringWithFormat:@"%@%@", @"x-wl-clientlog-", key];
-//            [headers setObject:[deviceInfo valueForKey:key] forKey:headerName];
-//        }
-//        
-//        [requestOptions setHeaders:headers];
-//        
-//        WLRequest *sendFileRequest = [[WLRequest alloc] initWithDelegate:requestDelegate];
-//        [sendFileRequest makeRequestForRootUrl:@"/apps/services/loguploader" withOptions:requestOptions];
-//        
-//    }
-//}
-//
-//+(void) send{
-//    @synchronized (self) {
-//        if(!logInFlight){
-//            logInFlight = 1;
-//            NSData *dataToSend = [OCLogger getDataFromLogFile];
-//            
-//            if(dataToSend != nil){
-//                SendLogsDelegate *sendLogsDelegate = [SendLogsDelegate new];
-//                [OCLogger sendFileToServer:dataToSend withRequestDelegate:sendLogsDelegate andUserDelegate:nil];
-//            }
-//        }
-//        
-//    }
-//}
-//
-//+(void) sendWithDelegate:(id<WLDelegate>)userSendLogsDelegate{
-//    @synchronized (self) {
-//        NSData *dataToSend = [OCLogger getDataFromLogFile];
-//        
-//        if(dataToSend != nil){
-//            SendLogsDelegate *sendLogsDelegate = [SendLogsDelegate new];
-//            [OCLogger sendFileToServer:dataToSend withRequestDelegate:sendLogsDelegate andUserDelegate:userSendLogsDelegate];
-//        }
-//    }
-//}
-//
-//+(void) sendAnalytics{
-//    @synchronized (self) {
-//        NSData *dataToSend = [OCLogger getDataFromAnalyticsFile];
-//        
-//        if(dataToSend != nil){
-//            SendAnalyticsDelegate *sendAnalyticsDelegate = [SendAnalyticsDelegate new];
-//            [OCLogger sendFileToServer:dataToSend withRequestDelegate:sendAnalyticsDelegate andUserDelegate:nil];
-//        }
-//    }
-//}
-//
-//+(void) sendAnalyticsWithDelegate:(id<WLDelegate>)userSendAnalyticsDelegate{
-//    @synchronized (self) {
-//        NSData *dataToSend = [OCLogger getDataFromAnalyticsFile];
-//        
-//        if(dataToSend != nil){
-//            SendAnalyticsDelegate *sendLogsDelegate = [SendAnalyticsDelegate new];
-//            [OCLogger sendFileToServer:dataToSend withRequestDelegate:sendLogsDelegate andUserDelegate:userSendAnalyticsDelegate];
-//        }
-//    }
-//}
 //
 //+(void) updateConfigFromServer{
 //    @synchronized (self) {
@@ -639,141 +726,12 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //        }
 //}
 //
-//+(void) removeBufferLogFile
-//    {
-//        NSString* new = [OCLogger getDocumentPath:FILENAME_WL_LOG_SEND];
-//        NSError* error = nil;
-//        
-//        if ([[NSFileManager defaultManager] fileExistsAtPath:new]){
-//            [[NSFileManager defaultManager] removeItemAtPath:new error:&error];
-//            if (error) {
-//                NSLog(@"[DEBUG] [OCLogger] Error removing the buffer log file: %@", error);
-//            }
-//        }
-//}
-//
-//+(void) removeSwapLogFile
-//    {
-//        NSString* swapLogFile = [OCLogger getDocumentPath:FILENAME_WL_LOG_SWAP];
-//        NSError* error = nil;
-//        
-//        if ([[NSFileManager defaultManager] fileExistsAtPath:swapLogFile]){
-//            [[NSFileManager defaultManager] removeItemAtPath:swapLogFile error:&error];
-//            if (error) {
-//                NSLog(@"[DEBUG] [OCLogger] Error removing the swap log file: %@", error);
-//            }
-//        }
-//}
-//
-//+(void) removeAnalyticsBufferFile
-//    {
-//        NSString* currentLogFile = [OCLogger getDocumentPath:FILENAME_ANALYTICS_SEND];
-//        NSError* error = nil;
-//        
-//        if ([[NSFileManager defaultManager] fileExistsAtPath:currentLogFile]){
-//            [[NSFileManager defaultManager] removeItemAtPath:currentLogFile error:&error];
-//            if (error) {
-//                NSLog(@"[DEBUG] [OCLogger] Error removing the current log file: %@", error);
-//            }
-//        }
-//}
-//
 //+(NSURL*) getWorklightPostURL
 //    {
 //        return [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OCLoggerWorklight getWorklightBaseURL], LOG_UPLOADER_PATH]];
 //}
 //
 //
-//+(NSData*) getDataFromLogFile
-//    {
-//        NSData* data = [OCLogger getDataFromFile:FILENAME_WL_LOG withBufferFile:FILENAME_WL_LOG_SEND];
-//        NSData *swapData = [OCLogger getDataFromSwapFile];
-//        
-//        if(swapData != nil){
-//            
-//            NSMutableData* mergedData = [NSMutableData dataWithData:swapData] ;
-//            [mergedData appendData:data];
-//            
-//            return mergedData;
-//        }
-//        
-//        return data;
-//}
-//
-//+(NSData*) getDataFromAnalyticsFile
-//    {
-//        return [OCLogger getDataFromFile:FILENAME_ANALYTICS_LOG withBufferFile:FILENAME_ANALYTICS_SEND];
-//}
-//
-//+(NSData*) getDataFromFile:(NSString*)currentFile withBufferFile:(NSString*)bufferFile
-//{
-//    NSString* currentLogFile = [OCLogger getDocumentPath:currentFile];
-//    NSString* bufferLogFile = [OCLogger getDocumentPath:bufferFile];
-//    
-//    NSFileHandle *myHandle;
-//    
-//    myHandle = [NSFileHandle fileHandleForReadingAtPath:bufferLogFile];
-//    
-//    if (myHandle == nil) {
-//        
-//        NSError *error = nil;
-//        if([[NSFileManager defaultManager] fileExistsAtPath:currentLogFile]){
-//            
-//            [[NSFileManager defaultManager] moveItemAtPath:currentLogFile toPath:bufferLogFile error:&error];
-//            if (error) {
-//                NSLog(@"[DEBUG] [OCLogger] Failed to move current file to buffer file.");
-//                return nil;
-//            }
-//            
-//            myHandle = [NSFileHandle fileHandleForReadingAtPath:bufferLogFile];
-//            
-//            if (myHandle == nil) {
-//                NSLog(@"[DEBUG] [OCLogger] No file to send, could not get a file handle.");
-//                return nil;
-//            }
-//        }else{
-//            NSLog(@"[DEBUG] [OCLogger] The log file is empty. There are no persisted logs to send.");
-//            return nil;
-//        }
-//        
-//        
-//    }
-//    
-//    NSData* data = [myHandle readDataToEndOfFile];
-//    [myHandle closeFile];
-//    
-//    return data;
-//}
-//
-//+(NSData*)getDataFromSwapFile
-//    {
-//        NSString* swapLogFile = [OCLogger getDocumentPath:FILENAME_WL_LOG_SWAP];
-//        NSFileHandle *myHandle = [NSFileHandle fileHandleForReadingAtPath:swapLogFile];
-//        
-//        if(myHandle != nil){
-//            NSData* swapLogData = [myHandle readDataToEndOfFile];
-//            [myHandle closeFile];
-//            
-//            [OCLogger removeSwapLogFile];
-//            return swapLogData;
-//        }
-//        
-//        return nil;
-//}
-//
-//+(void) swapLogFile
-//    {
-//        NSString* currentLogFile = [OCLogger getDocumentPath:FILENAME_WL_LOG];
-//        NSString* logSwapFile = [OCLogger getDocumentPath:FILENAME_WL_LOG_SWAP];
-//        [OCLogger removeSwapLogFile];
-//        
-//        NSError* error = nil;
-//        [[NSFileManager defaultManager] moveItemAtPath:currentLogFile toPath:logSwapFile  error:&error];
-//        if (error) {
-//            NSLog(@"[DEBUG] [OCLogger] Error moving the current log (%@) to path (%@) file: %@",
-//                currentLogFile, logSwapFile, error);
-//        }
-//}
 //
 //+(BOOL) canLogWithLevel:(OCLogType) level withPackage:(NSString*)package {
 //    NSDictionary* filters = [OCLogger getFilters];
@@ -904,34 +862,6 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //
 //
 //#pragma mark - Delegate Implementations
-//
-//@implementation SendLogsDelegate
-//
-//-(void)onSuccessWithResponse:(WLResponse *)response userInfo:(NSDictionary *)userInfo{
-//    NSLog(@"[DEBUG] [OCLogger] Client Logs successfully sent to server.");
-//    [OCLogger removeBufferLogFile];
-//    [OCLogger setUnCaughtExceptionFound:NO];
-//    logInFlight = 0;
-//}
-//
-//-(void)onFailureWithResponse:(WLFailResponse *)response userInfo:(NSDictionary *)userInfo{
-//    NSLog(@"[DEBUG] [OCLogger] Request to send client logs has failed.");
-//}
-//@end
-//
-//
-//@implementation SendAnalyticsDelegate
-//-(void)onSuccessWithResponse:(WLResponse *)response userInfo:(NSDictionary *)userInfo{
-//    NSLog(@"[DEBUG] [OCLogger] Analytics data successfully sent to server.");
-//    [OCLogger removeAnalyticsBufferFile];
-//}
-//
-//-(void)onFailureWithResponse:(WLFailResponse *)response userInfo:(NSDictionary *)userInfo{
-//    NSLog(@"[DEBUG] [OCLogger] Request to send analytics data has failed.");
-//}
-//@end
-//
-//
 //@implementation UpdateConfigDelegate
 //
 //// TODO to be removed when piggybacker is done

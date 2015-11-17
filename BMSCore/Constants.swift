@@ -37,3 +37,5 @@ internal let DEFAULT_MAX_STORE_SIZE = 100000;
 
 internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"
+
+internal let REWRITE_DOMAIN_HEADER_NAME = "X-REWRITE-DOMAIN"
