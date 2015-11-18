@@ -46,7 +46,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
     
-    
     // MARK: Properties (public)
     
     /// URL that the request is being sent to
@@ -75,7 +74,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     var networkRequest: NSMutableURLRequest
     var allowRedirects: Bool = true
     private var startTime: NSTimeInterval = 0.0
-    private let logger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
+    private let logger = Logger.internalLogger
     
     
     
@@ -197,9 +196,9 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
                 }
                 else {
                     // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
-                    logger.error("Failed to append the query parameters to the resouurce url.");
                     let urlErrorMessage = "Failed to append the query parameters to the resource url."
-                    let malformedUrlError = NSError(domain: Constants.BMSCoreErrorDomain, code: BMSErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
+                    logger.error(urlErrorMessage)
+                    let malformedUrlError = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
                     callback?(nil, malformedUrlError)
                 }
             }
@@ -220,8 +219,8 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         }
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
-            logger.error("The supplied resource url is not a valid url.")
-            let malformedUrlError = NSError(domain: Constants.BMSCoreErrorDomain, code: BMSErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
+            logger.error(urlErrorMessage)
+            let malformedUrlError = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
             callback?(nil, malformedUrlError)
         }
     }

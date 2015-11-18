@@ -15,6 +15,11 @@ internal let MFP_PACKAGE_PREFIX = "mfpsdk."
 internal let MFP_LOGGER_PACKAGE = MFP_PACKAGE_PREFIX + "logger"
 internal let MFP_ANALYTICS_PACKAGE = MFP_PACKAGE_PREFIX + "analytics"
 
+internal let MFP_CORE_ERROR_DOMAIN = "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore"
+
+internal let FILE_LOGGER_LOGS = MFP_LOGGER_PACKAGE + ".log"
+internal let FILE_ANALYTICS_LOGS = MFP_ANALYTICS_PACKAGE + ".log"
+
 internal let KEY_METADATA_CATEGORY = "$category"
 internal let KEY_METADATA_TYPE = "$type"
 internal let KEY_EVENT_START_TIME = "$startTime"
@@ -39,3 +44,5 @@ internal let DEFAULT_LOW_BOUND_FILE_SIZE = 10000
 
 internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"
+
+internal let REWRITE_DOMAIN_HEADER_NAME = "X-REWRITE-DOMAIN"

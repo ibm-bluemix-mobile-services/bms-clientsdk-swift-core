@@ -32,6 +32,7 @@
 		9235D0FC1BC33D5600946A32 /* BMSCoreWatchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; };
 		9235D0FD1BC33D5600946A32 /* BMSCoreWatchOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		924581E31BF2751600D665ED /* Analytics+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924581E21BF2751600D665ED /* Analytics+iOS.swift */; settings = {ASSET_TAGS = (); }; };
+		92580B461BFBF5DF0037EB50 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92580B451BFBF5DF0037EB50 /* LoggerTests.swift */; settings = {ASSET_TAGS = (); }; };
 		926679B91BF3D4E000F597C5 /* TestAppWatchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */; };
 		926679BB1BF3E84800F597C5 /* Analytics+WatchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926679BA1BF3E84800F597C5 /* Analytics+WatchOS.swift */; settings = {ASSET_TAGS = (); }; };
 		926679BC1BF4FBD300F597C5 /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
@@ -166,6 +167,7 @@
 		9235D0D11BC3184000946A32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9235D0D31BC3184000946A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		924581E21BF2751600D665ED /* Analytics+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytics+iOS.swift"; sourceTree = "<group>"; };
+		92580B451BFBF5DF0037EB50 /* LoggerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		926679BA1BF3E84800F597C5 /* Analytics+WatchOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytics+WatchOS.swift"; sourceTree = "<group>"; };
 		927F4CD11BC5DD1800A19360 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		927F4CD41BC5E1AD00A19360 /* ResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
@@ -342,7 +344,7 @@
 				92D63D321BB4693E0073A032 /* BMSClientTests.swift */,
 				927F4CD41BC5E1AD00A19360 /* ResponseTests.swift */,
 				5F4069DE1BF409CB004AAFCE /* AnalyticsTests.swift */,
-				5F4069E11BF520DF004AAFCE /* LoggerTests.swift */,
+				92580B451BFBF5DF0037EB50 /* LoggerTests.swift */,
 				92F264081B94EBB60063CC1D /* Info.plist */,
 			);
 			path = BMSCoreTests;
@@ -655,7 +657,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F4069E21BF520DF004AAFCE /* LoggerTests.swift in Sources */,
+				92580B461BFBF5DF0037EB50 /* LoggerTests.swift in Sources */,
 				927F4CD51BC5E1AD00A19360 /* ResponseTests.swift in Sources */,
 				92D63D331BB4693E0073A032 /* BMSClientTests.swift in Sources */,
 				5F4069DF1BF409CB004AAFCE /* AnalyticsTests.swift in Sources */,
