@@ -18,7 +18,12 @@ internal let MFP_ANALYTICS_PACKAGE = MFP_PACKAGE_PREFIX + "analytics"
 internal let MFP_CORE_ERROR_DOMAIN = "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore"
 
 internal let FILE_LOGGER_LOGS = MFP_LOGGER_PACKAGE + ".log"
+internal let FILE_LOGGER_SEND = MFP_LOGGER_PACKAGE + ".log.send"
+internal let FILE_LOGGER_OVERFLOW = MFP_LOGGER_PACKAGE + ".log.overflow"
+
 internal let FILE_ANALYTICS_LOGS = MFP_ANALYTICS_PACKAGE + ".log"
+internal let FILE_ANALYTICS_SEND = MFP_ANALYTICS_PACKAGE + ".log.send"
+internal let FILE_ANALYTICS_OVERFLOW = MFP_ANALYTICS_PACKAGE + ".log.overflow"
 
 internal let KEY_METADATA_CATEGORY = "$category"
 internal let KEY_METADATA_TYPE = "$type"

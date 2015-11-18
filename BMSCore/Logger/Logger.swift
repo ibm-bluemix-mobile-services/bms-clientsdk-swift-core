@@ -40,8 +40,9 @@ public class Logger {
         return formatter
     }
     
-    
     private static let logsDocumentPath: String = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+    
+    private static let fileManager = NSFileManager.defaultManager()
     
     
     
@@ -166,15 +167,34 @@ public class Logger {
     
     public func debug(message: String, error: ErrorType? = nil) { }
     
+    
     public func info(message: String, error: ErrorType? = nil) { }
+    
     
     public func warn(message: String, error: ErrorType? = nil) { }
     
+    
     public func error(message: String, error: ErrorType? = nil) { }
+    
     
     public func fatal(message: String, error: ErrorType? = nil) { }
     
+    
     internal func analytics(metadata: [String: AnyObject], error: ErrorType? = nil) { }
+    
+    
+    internal func writeToFile(fileName: String, string: String) {
+        
+        let fileHandle = NSFileHandle(forReadingAtPath: fileName)
+        let data = string.dataUsingEncoding(NSUTF8StringEncoding)
+        if Logger.fileManager.isWritableFileAtPath(fileName) && fileHandle != nil && data != nil {
+            fileHandle!.seekToEndOfFile()
+            fileHandle?.writeData(data!)
+        }
+        else {
+            Logger.internalLogger.warn("Cannot write to file: \(fileName).")
+        }
+    }
     
     
     
@@ -187,7 +207,7 @@ public class Logger {
                 Logger.internalLogger.debug("Client logs successfully sent to the server.")
                 // Remove the uncaught exception flag since the logs containing the exception(s) have just been sent to the server
                 NSUserDefaults.standardUserDefaults().setBool(false, forKey: TAG_UNCAUGHT_EXCEPTION)
-                // TODO: Delete log data
+                self.deleteBufferFile(FILE_LOGGER_SEND)
             }
             else {
                 Logger.internalLogger.error("Request to send client logs has failed.")
@@ -199,7 +219,7 @@ public class Logger {
         // Use a serial queue to ensure that the same logs do not get sent more than once
         dispatch_async(Logger.sendLogsToServerQueue) { () -> Void in
             do {
-                let logsToSend: String? = try self.getLogsFromFile(FILE_LOGGER_LOGS)
+                let logsToSend: String? = try self.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
                 if logsToSend != nil {
                     self.sendToServer(logsToSend!, withCallback: logSendCallback)
                 }
@@ -220,7 +240,7 @@ public class Logger {
         let analyticsSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
             if error != nil {
                 Analytics.logger.debug("Analytics data successfully sent to the server.")
-                // TODO: Delete analytics data
+           self.deleteBufferFile(FILE_ANALYTICS_SEND)
             }
             else {
                 Analytics.logger.error("Request to send analytics data to the server has failed.")
@@ -232,7 +252,7 @@ public class Logger {
         // Use a serial queue to ensure that the same analytics data do not get sent more than once
         dispatch_async(Logger.sendAnalyticsToServerQueue) { () -> Void in
             do {
-                let logsToSend: String? = try self.getLogsFromFile(FILE_ANALYTICS_LOGS)
+                let logsToSend: String? = try self.getLogs(fileName: FILE_ANALYTICS_LOGS, overflowFileName:FILE_ANALYTICS_OVERFLOW, bufferFileName: FILE_ANALYTICS_SEND)
                 if logsToSend != nil {
                     self.sendToServer(logsToSend!, withCallback: analyticsSendCallback)
                 }
@@ -289,43 +309,74 @@ public class Logger {
     }
     
     
-    internal func deleteLogsFromFile(fileName: String) {
+    internal func getLogs(fileName fileName: String, overflowFileName: String, bufferFileName: String) throws -> String? {
         
+        let logFile = Logger.logsDocumentPath + fileName // Original log file
+        let overflowLogFile = Logger.logsDocumentPath + overflowFileName // Extra file in case original log file got full
+        let bufferLogFile = Logger.logsDocumentPath + bufferFileName // Temporary file for sending logs
+        
+        // First check if the "*.log.send" buffer file already contains logs. This will be the case if the previous attempt to send logs failed.
+        if Logger.fileManager.isReadableFileAtPath(bufferLogFile) {
+            return try readLogsFromFile(bufferLogFile)
+        }
+        else if Logger.fileManager.isReadableFileAtPath(logFile) {
+            // Merge the logs from the normal log file and the overflow log file (if necessary)
+            if Logger.fileManager.isReadableFileAtPath(overflowLogFile) {
+                let fileContents = try NSString(contentsOfFile: overflowLogFile, encoding: NSUTF8StringEncoding) as String
+                writeToFile(logFile, string: fileContents)
+            }
+            
+            // Since the buffer log is empty, we move the log file to the buffer file in preparation of sending the logs. When new logs are recorded, a new log file gets created to replace it.
+            try Logger.fileManager.moveItemAtPath(logFile, toPath: bufferLogFile)
+            return try readLogsFromFile(bufferLogFile)
+        }
+        else {
+            Logger.internalLogger.error("Cannot send data to server. Unable to read file: \(fileName).")
+            return nil
+        }
     }
     
     
-    internal func getLogsFromFile(fileName: String) throws -> String? {
+    // We should only be sending logs from a buffer file, which is a copy of the normal log file. This way, if the logs fail to get sent to the server, we can hold onto them until the send succeeds, while continuing to log to the normal log file.
+    internal func readLogsFromFile(bufferLogFile: String) throws -> String? {
         
         var fileContents: String?
         
-        let logFile = Logger.logsDocumentPath + fileName
-        if NSFileManager.defaultManager().fileExistsAtPath(logFile) {
-            do {
-                // Before sending the logs, we need to read them from the file. This is done in a serial dispatch queue to prevent conflicts if the log file is simulatenously being written to.
-                switch fileName {
-                case FILE_ANALYTICS_LOGS:
-                    try dispatch_sync(Logger.analyticsFileIOQueue, block: { () -> () in
-                        fileContents = try String(contentsOfFile: logFile, encoding: NSUTF8StringEncoding)
-                    })
-                case FILE_LOGGER_LOGS:
-                    try dispatch_sync(Logger.loggerFileIOQueue, block: { () -> () in
-                        fileContents = try String(contentsOfFile: logFile, encoding: NSUTF8StringEncoding)
-                    })
-                default:
-                    Logger.internalLogger.error("Cannot send data to server. Unrecognized file: \(fileName).")
-                }
+        do {
+            // Before sending the logs, we need to read them from the file. This is done in a serial dispatch queue to prevent conflicts if the log file is simulatenously being written to.
+            switch bufferLogFile {
+            case FILE_ANALYTICS_SEND:
+                try dispatch_sync(Logger.analyticsFileIOQueue, block: { () -> () in
+                    fileContents = try NSString(contentsOfFile: bufferLogFile, encoding: NSUTF8StringEncoding) as String
+                })
+            case FILE_LOGGER_SEND:
+                try dispatch_sync(Logger.loggerFileIOQueue, block: { () -> () in
+                    fileContents = try NSString(contentsOfFile: bufferLogFile, encoding: NSUTF8StringEncoding) as String
+                })
+            default:
+                Logger.internalLogger.error("Cannot send data to server. Unrecognized file: \(bufferLogFile).")
             }
         }
-        else {
-            Logger.internalLogger.error("Cannot send data to server. Unable to open file: \(fileName).")
-        }
+        
         return fileContents
     }
     
     
+    internal func deleteBufferFile(bufferFile: String) {
+        
+        if Logger.fileManager.isDeletableFileAtPath(bufferFile) {
+            do {
+                try Logger.fileManager.removeItemAtPath(bufferFile)
+            }
+            catch let error {
+                Logger.internalLogger.error("Failed to delete log file \(bufferFile) after sending. Error: \(error)")
+            }
+        }
+    }
     
     
     
+    // MARK: Server configuration
     
     public func updateLogProfile(withCompletionHandler callback: MfpCompletionHandler? = nil) { }
     
@@ -478,16 +529,6 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //}
 //
 //#pragma mark - Getters and Setters
-//
-//
-//+(void) setAutoUpdateConfigFromServer: (BOOL) flag
-//{
-//    // noop since 6.3.  Retained for deprecation.
-//}
-//
-//+(BOOL) getAutoUpdateConfigFromServer{
-//    return false;  // noop since 6.3.  Retained for deprecation.
-//}
 //
 //+(void) setCapture: (BOOL) flag
 //{
@@ -713,19 +754,6 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //        return deviceInfo;
 //}
 //
-//+(void) removeCurrentLogFile
-//    {
-//        NSString* currentLogFile = [OCLogger getDocumentPath:FILENAME_WL_LOG];
-//        NSError* error = nil;
-//        
-//        if ([[NSFileManager defaultManager] fileExistsAtPath:currentLogFile]){
-//            [[NSFileManager defaultManager] removeItemAtPath:currentLogFile error:&error];
-//            if (error) {
-//                NSLog(@"[DEBUG] [OCLogger] Error removing the current log file: %@", error);
-//            }
-//        }
-//}
-//
 //+(NSURL*) getWorklightPostURL
 //    {
 //        return [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OCLoggerWorklight getWorklightBaseURL], LOG_UPLOADER_PATH]];
@@ -834,17 +862,6 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //    
 //    return myHandle;
 //}
-//
-//+(void) writeString:(NSString*) dictStr toLogFile:(NSString*) logFilePath
-//{
-//    NSFileHandle* myHandle = [OCLogger getHandleAtEndOfFileWithPath:logFilePath];
-//    
-//    [myHandle writeData:[dictStr dataUsingEncoding:NSUTF8StringEncoding]];
-//    [myHandle writeData:[@"," dataUsingEncoding:NSUTF8StringEncoding]];
-//    
-//    [myHandle closeFile];
-//}
-//
 //+(void) printMessage:(NSString*) msg withMetadata:(NSDictionary*) metadata andLevelTag:(NSString*) levelTag andPackage:(NSString*) package
 //{
 //    NSString* $method = [metadata objectForKey:KEY_METADATA_METHOD];
