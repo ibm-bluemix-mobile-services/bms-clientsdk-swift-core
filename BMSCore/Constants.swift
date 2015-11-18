@@ -29,11 +29,18 @@ internal let TAG_CATEGORY_EVENT = "event"
 internal let TAG_SESSION = "$session"
 internal let TAG_SESSION_ID = "$sessionId"
 internal let TAG_APP_STARTUP = "$startup"
-
+internal let TAG_MSG = "msg"
+internal let TAG_PKG = "pkg"
+internal let TAG_TIMESTAMP = "timestamp"
+internal let TAG_LEVEL = "level"
+internal let TAG_META_DATA = "metadata"
 internal let TAG_UNCAUGHT_EXCEPTION = "loggerUncaughtExceptionDetected"
 internal let TAG_LOG_LEVEL = "loggerLevel"
 internal let TAG_MAX_STORE_SIZE = "loggerMaxFileSize"
-internal let DEFAULT_MAX_STORE_SIZE = 100000;
+
+internal let DEFAULT_MAX_STORE_SIZE = 100000
+internal let DEFAULT_MAX_FILE_SIZE = 100000
+internal let DEFAULT_LOW_BOUND_FILE_SIZE = 10000
 
 internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"
