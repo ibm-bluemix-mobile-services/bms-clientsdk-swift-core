@@ -45,12 +45,12 @@ internal extension MFPClient {
     
     
     func registerAuthenticationDelegate(delegate: Any, realm: String) {
-        // TODO: Default implementation goes here!
+
     }
     
     
     func unregisterAuthenticationDelegate(realm: String) {
-        // TODO: Default implementation goes here!
+
     }
     
 }
