@@ -17,7 +17,28 @@ import Foundation
 
 public enum LogLevel: Int {
     
-    case Analytics = 1, Fatal, Error, Warn, Info, Debug, None
+    case None, Analytics, Fatal, Error, Warn, Info, Debug
+    
+    var stringValue: String {
+        get {
+            switch self {
+            case .None:
+                return "NONE"
+            case .Analytics:
+                return "ANALYTICS"
+            case .Fatal:
+                return "FATAL"
+            case .Error:
+                return "ERROR"
+            case .Warn:
+                return "WARN"
+            case .Info:
+                return "INFO"
+            case .Debug:
+                return "DEBUG"
+            }
+        }
+    }
 }
 
 
@@ -87,10 +108,10 @@ public class Logger {
     
     public static var logStoreEnabled: Bool = true
     
-    public static var logLevel: LogLevel {
+    public static var logLevelFilter: LogLevel {
         get {
             let level = NSUserDefaults.standardUserDefaults().integerForKey(TAG_LOG_LEVEL)
-            if level >= LogLevel.Analytics.rawValue && level <= LogLevel.None.rawValue {
+            if level >= LogLevel.None.rawValue && level <= LogLevel.Debug.rawValue {
                 return LogLevel(rawValue: level)! // The above condition guarantees a non-nil LogLevel
             }
             else {
@@ -164,23 +185,83 @@ public class Logger {
     
     
     // MARK: Log methods
-    
-    public func debug(message: String, error: ErrorType? = nil) { }
-    
-    
-    public func info(message: String, error: ErrorType? = nil) { }
-    
-    
-    public func warn(message: String, error: ErrorType? = nil) { }
+    // TODO: Make use of the "error" parameter or remove it
+    public func debug(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+        
+        logMessage(message, level: LogLevel.Debug, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+    }
     
     
-    public func error(message: String, error: ErrorType? = nil) { }
+    public func info(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+    
+        logMessage(message, level: LogLevel.Info, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+    }
     
     
-    public func fatal(message: String, error: ErrorType? = nil) { }
+    public func warn(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+        
+        logMessage(message, level: LogLevel.Warn, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+    }
     
     
-    internal func analytics(metadata: [String: AnyObject], error: ErrorType? = nil) { }
+    public func error(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+        
+        logMessage(message, level: LogLevel.Error, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+    }
+    
+    
+    public func fatal(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+        
+        logMessage(message, level: LogLevel.Fatal, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+    }
+    
+    
+    internal func analytics(metadata: [String: AnyObject], error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+        
+        logMessage("", level: LogLevel.Analytics, error: error, calledFile: file, calledFunction: function, calledLineNumber: line, additionalMetadata: metadata)
+    }
+    
+    
+    internal func logMessage(message: String, level: LogLevel, error: ErrorType?, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]? = nil) {
+        
+        // TODO: dispatch_async?
+        
+        guard canLogAtLevel(level) else {
+            return
+        }
+        
+        if level != LogLevel.Analytics {
+            // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
+            print("[\(level.stringValue)] [\(self.name)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(message)")
+        }
+        
+        var logFileName: String = Logger.logsDocumentPath
+        var logOverflowFileName: String = Logger.logsDocumentPath
+        if level == LogLevel.Analytics {
+            logFileName += FILE_LOGGER_LOGS
+            logOverflowFileName += FILE_LOGGER_OVERFLOW
+        }
+        else {
+            logFileName += FILE_ANALYTICS_LOGS
+            logOverflowFileName += FILE_ANALYTICS_OVERFLOW
+        }
+        
+        
+        
+        let timeStamp = Logger.dateFormatter.stringFromDate(NSDate())
+    }
+    
+    
+    internal func canLogAtLevel(level: LogLevel) -> Bool {
+        
+        if level == LogLevel.Analytics && Analytics.enabled == false {
+            return false
+        }
+        if level.rawValue <= Logger.logLevelFilter.rawValue {
+            return false
+        }
+        return true
+    }
     
     
     internal func writeToFile(fileName: String, string: String) {
@@ -398,7 +479,6 @@ public class Logger {
         }
     }
     
-    
     private static func logException(exception: NSException) {
         
         let logger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
@@ -459,17 +539,6 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //    }
 //}
 //
-//
-//-(void) logWithLevel:(OCLogType)level message:(NSString*) message args:(va_list) arguments userInfo:(NSDictionary*) userInfo
-//{
-//    [OCLogger logWithLevel:(OCLogType)level
-//        andPackage:self.package
-//        andText:message
-//        andVariableArguments:arguments
-//        andSkipLevelCheck:NO
-//        andTimestamp:[NSDate date]
-//        andMetadata:userInfo];
-//}
 //
 //#pragma mark - Private Methods
 //
@@ -600,144 +669,8 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //}
 //
 //
-//#pragma mark - Log Instance Methods - No Context
-//
-//-(void) debug: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_DEBUG andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:@{}];
-//    
-//    va_end(args);
-//}
-//
-//-(void) info: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_INFO andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:@{}];
-//    
-//    va_end(args);
-//}
-//
-//-(void) warn: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_WARN andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:@{}];
-//    
-//    va_end(args);
-//}
-//
-//-(void) error: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_ERROR andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:@{}];
-//    
-//    va_end(args);
-//}
-//
-//-(void) fatal: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_FATAL andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:@{}];
-//    
-//    va_end(args);
-//}
-//
-//-(void) analytics: (NSString*) text, ...
-//{
-//    va_list args;
-//    va_start(args, text);
-//    
-//    [OCLogger logWithLevel:OCLogger_ANALYTICS andPackage:self.package andText:text andVariableArguments:args andSkipLevelCheck:NO andTimestamp:[NSDate date] andMetadata:@{}];
-//    
-//    va_end(args);
-//}
-//
-//
 //#pragma mark - Helper Functions
 //
-//+(OCLogType) getLevelType: (NSString*) level
-//{
-//    level = [level stringByReplacingOccurrencesOfString:@"_" withString:@""];
-//    
-//    OCLogType OCLevel;
-//    level = [level uppercaseString];
-//    
-//    if ([level isEqualToString:TAG_LABEL_LOG]) {
-//        OCLevel = OCLogger_LOG;
-//    } else if([level isEqualToString:TAG_LABEL_INFO]) {
-//        OCLevel = OCLogger_INFO;
-//    } else if([level isEqualToString:TAG_LABEL_WARN]) {
-//        OCLevel = OCLogger_WARN;
-//    } else if([level isEqualToString:TAG_LABEL_ERROR]) {
-//        OCLevel = OCLogger_ERROR;
-//    } else if([level isEqualToString:TAG_LABEL_DEBUG]) {
-//        OCLevel = OCLogger_DEBUG;
-//    } else if([level isEqualToString:TAG_LABEL_TRACE]) {
-//        OCLevel = OCLogger_TRACE;
-//    }else if([level isEqualToString:TAG_LABEL_ANALYTICS]) {
-//        OCLevel = OCLogger_ANALYTICS;
-//    }else{
-//        OCLevel = OCLogger_FATAL;
-//    }
-//    
-//    return OCLevel;
-//}
-//
-//+(NSString*) getDocumentPath:(NSString*) fileName
-//{
-//    return [globalDocumentPath stringByAppendingPathComponent:fileName];
-//}
-//
-//+(NSString*) getLevelTag:(OCLogType) level
-//{
-//    NSString* levelTag;
-//    
-//    switch (level) {
-//    case OCLogger_LOG:
-//        levelTag = TAG_LABEL_LOG;
-//        break;
-//        
-//    case OCLogger_INFO:
-//        levelTag = TAG_LABEL_INFO;
-//        break;
-//        
-//    case OCLogger_WARN:
-//        levelTag = TAG_LABEL_WARN;
-//        break;
-//        
-//    case OCLogger_ERROR:
-//        levelTag = TAG_LABEL_ERROR;
-//        break;
-//        
-//    case OCLogger_DEBUG:
-//        levelTag = TAG_LABEL_DEBUG;
-//        break;
-//        
-//    case OCLogger_TRACE:
-//        levelTag = TAG_LABEL_TRACE;
-//        break;
-//        
-//    case OCLogger_ANALYTICS:
-//        levelTag = TAG_LABEL_ANALYTICS;
-//        break;
-//        
-//    default:
-//        levelTag = TAG_LABEL_FATAL;
-//        break;
-//    }
-//    
-//    return [NSString stringWithFormat:@"%@", levelTag];
-//}
 //
 //+(NSDictionary*) getDeviceInformation
 //    {
@@ -759,61 +692,10 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //        return [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OCLoggerWorklight getWorklightBaseURL], LOG_UPLOADER_PATH]];
 //}
 //
-//
-//
-//+(BOOL) canLogWithLevel:(OCLogType) level withPackage:(NSString*)package {
-//    NSDictionary* filters = [OCLogger getFilters];
-//    
-//    if(filters != nil && [filters count] > 0 && level != OCLogger_ANALYTICS){
-//        NSObject* logLevel = [filters objectForKey:package];
-//        
-//        if(logLevel == nil){
-//            return false;
-//        }
-//        
-//        OCLogType filterLevel;
-//        
-//        if([logLevel isKindOfClass:[NSString class]]){
-//            filterLevel = [OCLogger getLevelType:(NSString*)logLevel];
-//        }else{
-//            filterLevel = (OCLogType)[(NSNumber*)logLevel integerValue];
-//        }
-//        
-//        if(level > filterLevel){
-//            return false;
-//        }
-//    } else {
-//        return [OCLogger getLevel] >= level;
-//    }
-//    
-//    return true;
-//}
-//
-//+(BOOL)shouldCaptureLog: (OCLogType)level{
-//    if(level == OCLogger_ANALYTICS){
-//        if([OCLogger getAnalyticsCapture] == NO){
-//            return false;
-//        }
-//    }
-//        
-//    else if([OCLogger getCapture] == NO){
-//        return false;
-//    }
-//    
-//    return true;
-//}
-//
 //+(BOOL) shouldUseServerConfig
 //    {
 //        NSObject *serverConfigSet = [[NSUserDefaults standardUserDefaults] objectForKey:TAG_SERVER_CAPTURE];
 //        return (serverConfigSet != NULL);
-//}
-//
-//+(NSString*) getCurrentTimestamp:(NSDate*)date
-//{
-//    NSString* dateStr = [globalFormatter stringFromDate:date];
-//    
-//    return dateStr;
 //}
 //
 //+(BOOL) isFileSize:(NSString*) filePath greaterThan:(int) max
@@ -832,20 +714,6 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //    return false;
 //}
 //
-//+(NSString*) getMessageWith:(NSString*) text andArgs:(va_list) args
-//{
-//    NSString *msg;
-//    
-//    if (args == nil) {
-//        msg = text;
-//    } else {
-//        //printf-style replacements, for example: 'hello %@', 'world' returns 'hello world'
-//        msg = [[NSString alloc] initWithFormat:text arguments:args];
-//    }
-//    
-//    return msg;
-//}
-//
 //+(NSFileHandle*) getHandleAtEndOfFileWithPath:(NSString*) path
 //{
 //    NSFileHandle *myHandle = [NSFileHandle fileHandleForWritingAtPath:path];
@@ -861,18 +729,6 @@ let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
 //    [myHandle seekToEndOfFile];
 //    
 //    return myHandle;
-//}
-//+(void) printMessage:(NSString*) msg withMetadata:(NSDictionary*) metadata andLevelTag:(NSString*) levelTag andPackage:(NSString*) package
-//{
-//    NSString* $method = [metadata objectForKey:KEY_METADATA_METHOD];
-//    NSString* $line = [metadata objectForKey:KEY_METADATA_LINE];
-//    NSString* $file = [metadata objectForKey:KEY_METADATA_FILE];
-//    
-//    if ($method != nil && $line != nil && $file != nil) {
-//        NSLog(@"[%@] [%@] %@ in %@:%@ :: %@", levelTag, package, $method, $file, $line, msg);
-//    } else {
-//        NSLog(@"[%@] [%@] %@", levelTag, package, msg);
-//    }
 //}
 //
 //@end
