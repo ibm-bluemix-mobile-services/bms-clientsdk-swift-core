@@ -380,7 +380,6 @@ public class Logger {
     
     public func updateLogProfile(withCompletionHandler callback: MfpCompletionHandler? = nil) { }
     
-    private static var exceptionHasBeenCalled = false
     
     
     // MARK: Uncaught Exceptions
@@ -392,15 +391,10 @@ public class Logger {
         NSSetUncaughtExceptionHandler { (caughtException: NSException) -> Void in
             
             // Persist a flag so that when the app starts back up, we can see if an exception occurred in the last session
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: TAG_UNCAUGHT_EXCEPTION)
             
-            if(!Logger.exceptionHasBeenCalled){
-                Logger.exceptionHasBeenCalled = true
-                Logger.logException(caughtException)
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: TAG_UNCAUGHT_EXCEPTION)
-                existingUncaughtExceptionHandler?(caughtException)
-               
-            }
-           
+            Logger.logException(caughtException)
+            existingUncaughtExceptionHandler?(caughtException)
         }
     }
     

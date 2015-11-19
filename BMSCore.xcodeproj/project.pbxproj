@@ -10,7 +10,6 @@
 		5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DB1BF4079A004AAFCE /* Constants.swift */; settings = {ASSET_TAGS = (); }; };
 		5F4069DD1BF407E4004AAFCE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DB1BF4079A004AAFCE /* Constants.swift */; settings = {ASSET_TAGS = (); }; };
 		5F4069DF1BF409CB004AAFCE /* AnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DE1BF409CB004AAFCE /* AnalyticsTests.swift */; settings = {ASSET_TAGS = (); }; };
-		5F4069E21BF520DF004AAFCE /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069E11BF520DF004AAFCE /* LoggerTests.swift */; settings = {ASSET_TAGS = (); }; };
 		5F4BC96C1BFBDC9F00025682 /* LogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4BC96B1BFBDC9F00025682 /* LogController.swift */; settings = {ASSET_TAGS = (); }; };
 		9221FF821BCD958700D7F3D7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221FF811BCD958700D7F3D7 /* Error.swift */; settings = {ASSET_TAGS = (); }; };
 		9221FF831BCD9E0E00D7F3D7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221FF811BCD958700D7F3D7 /* Error.swift */; settings = {ASSET_TAGS = (); }; };
@@ -143,7 +142,6 @@
 /* Begin PBXFileReference section */
 		5F4069DB1BF4079A004AAFCE /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		5F4069DE1BF409CB004AAFCE /* AnalyticsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsTests.swift; sourceTree = "<group>"; };
-		5F4069E11BF520DF004AAFCE /* LoggerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		5F4BC96B1BFBDC9F00025682 /* LogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogController.swift; sourceTree = "<group>"; };
 		9221FF811BCD958700D7F3D7 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		92304A381BB0A711001E02E1 /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };

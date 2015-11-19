@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eEq-sz-TuF">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Tab Bar Controller-->
+        <scene sceneID="agZ-yV-MRb">
+            <objects>
+                <tabBarController id="eEq-sz-TuF" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="8I9-d7-ihx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="nAl-Pi-9dE"/>
+                        <segue destination="ERv-bC-MVG" kind="relationship" relationship="viewControllers" id="Jlh-Ov-gF7"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Fb4-7o-5mO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1471.5" y="15.75"/>
+        </scene>
+        <!--Request Demo-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TestAppiOS" customModuleProvider="target" sceneMemberID="viewController">
@@ -94,25 +113,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wyt-MC-ZAg">
-                                <rect key="frame" x="20" y="64" width="131" height="41"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="Go to log view"/>
-                                <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="135" y="121" width="131" height="41"/>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="168" y="149" width="223" height="41"/>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="129" y="230" width="131" height="41"/>
-                                </variation>
-                                <connections>
-                                    <action selector="sendRequestButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="V9t-hA-zCL"/>
-                                    <segue destination="ERv-bC-MVG" kind="show" id="JYD-SI-BA3"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -169,23 +169,22 @@
                                 <exclude reference="IE7-PG-Fo9"/>
                                 <exclude reference="eK1-LS-mKf"/>
                                 <exclude reference="ZRh-50-yoP"/>
-                                <exclude reference="Wyt-MC-ZAg"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="Ned-Cf-2n7"/>
+                                <exclude reference="mnJ-6v-f5r"/>
+                                <exclude reference="cSr-d5-NSv"/>
+                                <exclude reference="sQQ-L6-yG7"/>
+                                <exclude reference="vsa-Ra-g4M"/>
+                                <exclude reference="7OM-0Y-liB"/>
+                                <exclude reference="Ojx-FF-F1f"/>
+                                <exclude reference="URn-6e-ugZ"/>
+                                <exclude reference="yfg-S2-Asi"/>
                                 <exclude reference="KVq-J9-4eA"/>
                                 <exclude reference="R3t-Do-Mci"/>
                                 <exclude reference="fZo-qt-xlG"/>
                                 <exclude reference="fme-aG-4NQ"/>
                                 <exclude reference="tbT-k8-2mZ"/>
-                                <exclude reference="7OM-0Y-liB"/>
-                                <exclude reference="Ojx-FF-F1f"/>
-                                <exclude reference="URn-6e-ugZ"/>
-                                <exclude reference="yfg-S2-Asi"/>
-                                <exclude reference="cSr-d5-NSv"/>
-                                <exclude reference="sQQ-L6-yG7"/>
-                                <exclude reference="vsa-Ra-g4M"/>
-                                <exclude reference="Ned-Cf-2n7"/>
-                                <exclude reference="mnJ-6v-f5r"/>
                                 <exclude reference="CEp-IX-LJS"/>
                                 <exclude reference="Gph-Qc-puo"/>
                                 <exclude reference="XNE-ST-l1K"/>
@@ -201,23 +200,22 @@
                                 <include reference="IE7-PG-Fo9"/>
                                 <include reference="eK1-LS-mKf"/>
                                 <include reference="ZRh-50-yoP"/>
-                                <include reference="Wyt-MC-ZAg"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="Ned-Cf-2n7"/>
+                                <include reference="mnJ-6v-f5r"/>
+                                <include reference="cSr-d5-NSv"/>
+                                <include reference="sQQ-L6-yG7"/>
+                                <include reference="vsa-Ra-g4M"/>
+                                <include reference="7OM-0Y-liB"/>
+                                <include reference="Ojx-FF-F1f"/>
+                                <include reference="URn-6e-ugZ"/>
+                                <include reference="yfg-S2-Asi"/>
                                 <include reference="KVq-J9-4eA"/>
                                 <include reference="R3t-Do-Mci"/>
                                 <include reference="fZo-qt-xlG"/>
                                 <include reference="fme-aG-4NQ"/>
                                 <include reference="tbT-k8-2mZ"/>
-                                <include reference="7OM-0Y-liB"/>
-                                <include reference="Ojx-FF-F1f"/>
-                                <include reference="URn-6e-ugZ"/>
-                                <include reference="yfg-S2-Asi"/>
-                                <include reference="cSr-d5-NSv"/>
-                                <include reference="sQQ-L6-yG7"/>
-                                <include reference="vsa-Ra-g4M"/>
-                                <include reference="Ned-Cf-2n7"/>
-                                <include reference="mnJ-6v-f5r"/>
                                 <include reference="CEp-IX-LJS"/>
                                 <include reference="Gph-Qc-puo"/>
                                 <include reference="XNE-ST-l1K"/>
@@ -228,6 +226,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Request Demo" id="dgU-LB-l3z"/>
                     <connections>
                         <outlet property="httpMethod" destination="IE7-PG-Fo9" id="PCc-0d-0dD"/>
                         <outlet property="resourceUrl" destination="eK1-LS-mKf" id="f5f-4n-5FN"/>
@@ -236,9 +235,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="324" y="354"/>
+            <point key="canvasLocation" x="-499.5" y="-327"/>
         </scene>
-        <!--Log Controller-->
+        <!--Logging Demo-->
         <scene sceneID="1PY-N3-ywf">
             <objects>
                 <viewController id="ERv-bC-MVG" customClass="LogController" customModule="TestAppiOS" customModuleProvider="target" sceneMemberID="viewController">
@@ -267,7 +266,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="13" y="28" width="38" height="21"/>
+                                    <rect key="frame" x="15" y="58" width="69" height="21"/>
                                 </variation>
                             </label>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="By1-cT-NKH">
@@ -277,6 +276,128 @@
                                     <rect key="frame" x="0.0" y="0.0" width="400" height="137"/>
                                 </variation>
                             </pickerView>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IMs-gF-Ilv">
+                                <rect key="frame" x="0.0" y="-216" width="320" height="216"/>
+                                <animations/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="0.0" y="135" width="400" height="137"/>
+                                </variation>
+                            </pickerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y4l-aj-jmJ">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="55" y="152" width="0.0" height="0.0"/>
+                                </variation>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wOR-dc-32g">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="8" y="346" width="69" height="21"/>
+                                </variation>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JxB-hC-dng">
+                                <rect key="frame" x="-25" y="-30" width="97" height="30"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="115" y="339" width="253" height="30"/>
+                                </variation>
+                            </textField>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Ghu-mt-jET">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="0.0" y="346" width="84" height="16"/>
+                                </variation>
+                            </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Level" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wWR-PW-TuV">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="15" y="193" width="40" height="21"/>
+                                </variation>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="--Sample Log File---" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ojk-yr-2hn">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="75" y="520" width="325" height="285"/>
+                                </variation>
+                            </textView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="S3q-mP-wrJ">
+                                <rect key="frame" x="-25" y="-30" width="97" height="30"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="138" y="289" width="253" height="30"/>
+                                </variation>
+                            </textField>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0v6-SN-z2R">
+                                <rect key="frame" x="-25" y="-15" width="51" height="31"/>
+                                <animations/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="116" y="409" width="51" height="31"/>
+                                </variation>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Capture" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lci-e8-vra">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="8" y="409" width="62" height="21"/>
+                                </variation>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVV-cN-f6d">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Send Log"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="116" y="464" width="65" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="sendLogButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="Czb-dF-yEf"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y3p-s2-Tv0">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Crash App"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="223" y="464" width="72" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="crashAppButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="JpS-DV-EZi"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Package Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZGt-WK-Ubn">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="8" y="293" width="115" height="21"/>
+                                </variation>
+                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -285,6 +406,19 @@
                                 <exclude reference="Mq2-4s-8y8"/>
                                 <exclude reference="Hct-yE-OJB"/>
                                 <exclude reference="By1-cT-NKH"/>
+                                <exclude reference="IMs-gF-Ilv"/>
+                                <exclude reference="y4l-aj-jmJ"/>
+                                <exclude reference="wOR-dc-32g"/>
+                                <exclude reference="JxB-hC-dng"/>
+                                <exclude reference="Ghu-mt-jET"/>
+                                <exclude reference="wWR-PW-TuV"/>
+                                <exclude reference="ojk-yr-2hn"/>
+                                <exclude reference="S3q-mP-wrJ"/>
+                                <exclude reference="0v6-SN-z2R"/>
+                                <exclude reference="lci-e8-vra"/>
+                                <exclude reference="eVV-cN-f6d"/>
+                                <exclude reference="y3p-s2-Tv0"/>
+                                <exclude reference="ZGt-WK-Ubn"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -292,16 +426,34 @@
                                 <include reference="Mq2-4s-8y8"/>
                                 <include reference="Hct-yE-OJB"/>
                                 <include reference="By1-cT-NKH"/>
+                                <include reference="IMs-gF-Ilv"/>
+                                <include reference="y4l-aj-jmJ"/>
+                                <include reference="wOR-dc-32g"/>
+                                <include reference="JxB-hC-dng"/>
+                                <include reference="Ghu-mt-jET"/>
+                                <include reference="wWR-PW-TuV"/>
+                                <include reference="ojk-yr-2hn"/>
+                                <include reference="S3q-mP-wrJ"/>
+                                <include reference="0v6-SN-z2R"/>
+                                <include reference="lci-e8-vra"/>
+                                <include reference="eVV-cN-f6d"/>
+                                <include reference="y3p-s2-Tv0"/>
+                                <include reference="ZGt-WK-Ubn"/>
                             </mask>
                         </variation>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Logging Demo" id="OAq-Bp-XFs"/>
                     <connections>
-                        <outlet property="picker" destination="By1-cT-NKH" id="lsU-OI-jgO"/>
+                        <outlet property="capture" destination="0v6-SN-z2R" id="Jth-YI-on9"/>
+                        <outlet property="levelPicker" destination="IMs-gF-Ilv" id="ijt-wU-Ku8"/>
+                        <outlet property="logMessage" destination="JxB-hC-dng" id="trD-uf-ZKG"/>
+                        <outlet property="packageName" destination="S3q-mP-wrJ" id="pgf-8x-BeJ"/>
+                        <outlet property="typePicker" destination="By1-cT-NKH" id="zfR-QZ-kYO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KtQ-YD-Vh7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1048.5" y="354"/>
+            <point key="canvasLocation" x="-499.5" y="390"/>
         </scene>
     </scenes>
 </document>
