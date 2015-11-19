@@ -465,17 +465,23 @@ public class Logger {
     
     // MARK: Uncaught Exceptions
     
+    private static let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
+    private static var exceptionHasBeenCalled = false
+
+    
     // TODO: Make this private, and just document it? It looks like this is not part of the API in Android anyway.
     // TODO: In documentation, explain that developer must not set their own uncaught exception handler or this one will be overwritten
     private static func captureUncaughtExceptions() {
         
         NSSetUncaughtExceptionHandler { (caughtException: NSException) -> Void in
             
-            // Persist a flag so that when the app starts back up, we can see if an exception occurred in the last session
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: TAG_UNCAUGHT_EXCEPTION)
-            
-            Logger.logException(caughtException)
-            existingUncaughtExceptionHandler?(caughtException)
+            if(!Logger.exceptionHasBeenCalled){
+                Logger.exceptionHasBeenCalled = true
+                Logger.logException(caughtException)
+                // Persist a flag so that when the app starts back up, we can see if an exception occurred in the last session
+                NSUserDefaults.standardUserDefaults().setBool(true, forKey: TAG_UNCAUGHT_EXCEPTION)
+                Logger.existingUncaughtExceptionHandler?(caughtException)
+            }
         }
     }
     
@@ -492,7 +498,7 @@ public class Logger {
 }
 
 
-let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
+
 
 
 // MARK: FOUNDATION SDK
