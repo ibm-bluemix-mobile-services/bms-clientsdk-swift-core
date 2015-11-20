@@ -86,7 +86,7 @@ public class Logger {
 
     
     // Custom dispatch_sync that can incorporate throwable statements
-    internal func dispatch_sync(queue: dispatch_queue_t, block: () throws -> ()) throws {
+    internal static func dispatch_sync(queue: dispatch_queue_t, block: () throws -> ()) throws {
         
         var error: ErrorType?
         try dispatch_sync(queue) {
@@ -134,15 +134,18 @@ public class Logger {
         }
     }
     
-    public static var uncaughtExceptionDetected: Bool {
+    public static var isUncaughtExceptionDetected: Bool {
         get {
-            return false
+            return NSUserDefaults.standardUserDefaults().boolForKey(TAG_UNCAUGHT_EXCEPTION)
+        }
+        set {
+            NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: TAG_UNCAUGHT_EXCEPTION)
         }
     }
     
     public static var internalSDKLoggingEnabled: Bool {
         get {
-            return true
+            return false
         }
         set {
             
@@ -223,10 +226,10 @@ public class Logger {
     }
     
     
-    internal func printLogToConsole(logMessage: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
+    internal static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
         
         if level != LogLevel.Analytics {
-            print("[\(level.stringValue)] [\(self.name)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
+            print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
         }
     }
     
@@ -241,7 +244,7 @@ public class Logger {
         
         // Print to console
         // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
-        printLogToConsole(message, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
+        Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
         
         // Get file names
         var logFile: String = Logger.logsDocumentPath
@@ -271,11 +274,11 @@ public class Logger {
         
         guard logAsJsonString != nil else {
             let errorMessage = "Failed to write logs to file. This is likely because the analytics metadata could not be parsed."
-            printLogToConsole(errorMessage, level: .Error, calledFunction: __FUNCTION__, calledFile: __FILE__, calledLineNumber: __LINE__)
+            Logger.printLogToConsole(errorMessage, loggerName:self.name, level: .Error, calledFunction: __FUNCTION__, calledFile: __FILE__, calledLineNumber: __LINE__)
             return
         }
         
-        writeToFile(logFile, string: logAsJsonString!)
+        Logger.writeToFile(logFile, string: logAsJsonString!, loggerName: self.name)
     }
     
     
@@ -343,7 +346,7 @@ public class Logger {
     }
     
     
-    internal func writeToFile(file: String, string: String) {
+    internal static func writeToFile(file: String, string: String, loggerName: String) {
         
         if !Logger.fileManager.fileExistsAtPath(file) {
             Logger.fileManager.createFileAtPath(file, contents: nil, attributes: nil)
@@ -357,7 +360,7 @@ public class Logger {
         }
         else {
             let errorMessage = "Cannot write to file: \(file)."
-            printLogToConsole(errorMessage, level: .Error, calledFunction: __FUNCTION__, calledFile: __FILE__, calledLineNumber: __LINE__)
+            printLogToConsole(errorMessage, loggerName: loggerName, level: LogLevel.Error, calledFunction: __FUNCTION__, calledFile: __FILE__, calledLineNumber: __LINE__)
         }
     }
     
@@ -375,11 +378,11 @@ public class Logger {
         
         NSSetUncaughtExceptionHandler { (caughtException: NSException) -> Void in
             
-            if(!Logger.exceptionHasBeenCalled){
+            if (!Logger.exceptionHasBeenCalled) {
                 Logger.exceptionHasBeenCalled = true
                 Logger.logException(caughtException)
                 // Persist a flag so that when the app starts back up, we can see if an exception occurred in the last session
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: TAG_UNCAUGHT_EXCEPTION)
+                Logger.isUncaughtExceptionDetected = true
                 Logger.existingUncaughtExceptionHandler?(caughtException)
             }
         }
@@ -399,14 +402,15 @@ public class Logger {
     
     // MARK: Sending logs
     
-    public func send(completionHandler userCallback: MfpCompletionHandler? = nil) {
+    public static func send(completionHandler userCallback: MfpCompletionHandler? = nil) {
         
         let logSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
             if error != nil {
                 Logger.internalLogger.debug("Client logs successfully sent to the server.")
                 // Remove the uncaught exception flag since the logs containing the exception(s) have just been sent to the server
                 NSUserDefaults.standardUserDefaults().setBool(false, forKey: TAG_UNCAUGHT_EXCEPTION)
-                self.deleteBufferFile(FILE_LOGGER_SEND)
+                deleteBufferFile(FILE_LOGGER_SEND)
+                Logger.isUncaughtExceptionDetected = false
             }
             else {
                 Logger.internalLogger.error("Request to send client logs has failed.")
@@ -418,9 +422,9 @@ public class Logger {
         // Use a serial queue to ensure that the same logs do not get sent more than once
         dispatch_async(Logger.sendLogsToServerQueue) { () -> Void in
             do {
-                let logsToSend: String? = try self.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
+                let logsToSend: String? = try getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
                 if logsToSend != nil {
-                    self.sendToServer(logsToSend!, withCallback: logSendCallback)
+                    sendToServer(logsToSend!, withCallback: logSendCallback)
                 }
                 else {
                     Logger.internalLogger.info("There are no logs to send.")
@@ -433,13 +437,13 @@ public class Logger {
     }
     
     
-    internal func sendAnalytics(completionHandler userCallback: MfpCompletionHandler? = nil) {
+    internal static func sendAnalytics(completionHandler userCallback: MfpCompletionHandler? = nil) {
     
         // Internal completion handler - wraps around the user supplied completion handler (if supplied)
         let analyticsSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
             if error != nil {
                 Analytics.logger.debug("Analytics data successfully sent to the server.")
-           self.deleteBufferFile(FILE_ANALYTICS_SEND)
+           deleteBufferFile(FILE_ANALYTICS_SEND)
             }
             else {
                 Analytics.logger.error("Request to send analytics data to the server has failed.")
@@ -451,9 +455,9 @@ public class Logger {
         // Use a serial queue to ensure that the same analytics data do not get sent more than once
         dispatch_async(Logger.sendAnalyticsToServerQueue) { () -> Void in
             do {
-                let logsToSend: String? = try self.getLogs(fileName: FILE_ANALYTICS_LOGS, overflowFileName:FILE_ANALYTICS_OVERFLOW, bufferFileName: FILE_ANALYTICS_SEND)
+                let logsToSend: String? = try getLogs(fileName: FILE_ANALYTICS_LOGS, overflowFileName:FILE_ANALYTICS_OVERFLOW, bufferFileName: FILE_ANALYTICS_SEND)
                 if logsToSend != nil {
-                    self.sendToServer(logsToSend!, withCallback: analyticsSendCallback)
+                    sendToServer(logsToSend!, withCallback: analyticsSendCallback)
                 }
                 else {
                     Analytics.logger.info("There are no analytics data to send.")
@@ -466,7 +470,7 @@ public class Logger {
     }
     
     
-    internal func sendToServer(logs: String, withCallback callback: MfpCompletionHandler) {
+    internal static func sendToServer(logs: String, withCallback callback: MfpCompletionHandler) {
         
         let bmsClient = BMSClient.sharedInstance
         
@@ -498,7 +502,7 @@ public class Logger {
         request.sendString(logPayload, withCompletionHandler: callback)
     }
     
-    private func returnClientInitializationError(missingValue: String, callback: MfpCompletionHandler) {
+    private static func returnClientInitializationError(missingValue: String, callback: MfpCompletionHandler) {
         
         Logger.internalLogger.error("No value found for the BMSClient \(missingValue) property.")
         let errorMessage = "Must initialize BMSClient before sending logs to the server."
@@ -508,7 +512,7 @@ public class Logger {
     }
     
     
-    internal func getLogs(fileName fileName: String, overflowFileName: String, bufferFileName: String) throws -> String? {
+    internal static func getLogs(fileName fileName: String, overflowFileName: String, bufferFileName: String) throws -> String? {
         
         let logFile = Logger.logsDocumentPath + fileName // Original log file
         let overflowLogFile = Logger.logsDocumentPath + overflowFileName // Extra file in case original log file got full
@@ -522,7 +526,7 @@ public class Logger {
             // Merge the logs from the normal log file and the overflow log file (if necessary)
             if Logger.fileManager.isReadableFileAtPath(overflowLogFile) {
                 let fileContents = try NSString(contentsOfFile: overflowLogFile, encoding: NSUTF8StringEncoding) as String
-                writeToFile(logFile, string: fileContents)
+                writeToFile(logFile, string: fileContents, loggerName: Logger.internalLogger.name)
             }
             
             // Since the buffer log is empty, we move the log file to the buffer file in preparation of sending the logs. When new logs are recorded, a new log file gets created to replace it.
@@ -537,7 +541,7 @@ public class Logger {
     
     
     // We should only be sending logs from a buffer file, which is a copy of the normal log file. This way, if the logs fail to get sent to the server, we can hold onto them until the send succeeds, while continuing to log to the normal log file.
-    internal func readLogsFromFile(bufferLogFile: String) throws -> String? {
+    internal static func readLogsFromFile(bufferLogFile: String) throws -> String? {
         
         var fileContents: String?
         
@@ -561,7 +565,7 @@ public class Logger {
     }
     
     
-    internal func deleteBufferFile(bufferFile: String) {
+    internal static func deleteBufferFile(bufferFile: String) {
         
         if Logger.fileManager.isDeletableFileAtPath(bufferFile) {
             do {
