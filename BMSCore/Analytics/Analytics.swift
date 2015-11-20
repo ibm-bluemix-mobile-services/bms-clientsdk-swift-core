@@ -17,9 +17,6 @@ public class Analytics {
     
     // MARK: Properties (public)
     
-    // TODO: Should this class use a singleton? Static methods/properties seem to work fine.
-    public static let sharedInstance = Analytics()
-    
     public static var enabled: Bool = true
     
     
