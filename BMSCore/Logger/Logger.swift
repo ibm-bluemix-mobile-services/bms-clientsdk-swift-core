@@ -41,7 +41,9 @@ public enum LogLevel: Int {
     }
 }
 
-// TODO: Log only the file name, not the whole path
+// TODO: When logging about file operations, record only the file name, not the whole path
+
+// TODO: Refactor this entire file so that it is better organized and more readable. Consider using extensions.
 
 public class Logger {
     
@@ -50,7 +52,7 @@ public class Logger {
     
     // By default, the dateFormater will convert to the local time zone, but we want to send the date based on UTC
     // so that logs from all clients in all timezones are normalized to the same GMT timezone.
-    private static let dateFormatter: NSDateFormatter = Logger.generateDateFormatter()
+    internal static let dateFormatter: NSDateFormatter = Logger.generateDateFormatter()
     
     private static func generateDateFormatter() -> NSDateFormatter {
         
@@ -103,36 +105,17 @@ public class Logger {
     }
     
     
-    // MARK: Properties (public)
+    // MARK: Properties (API)
     
     public let name: String
     
     public static var logStoreEnabled: Bool = true
     
-    public static var logLevelFilter: LogLevel {
-        get {
-            let level = NSUserDefaults.standardUserDefaults().integerForKey(TAG_LOG_LEVEL)
-            if level >= LogLevel.None.rawValue && level <= LogLevel.Debug.rawValue {
-                return LogLevel(rawValue: level)! // The above condition guarantees a non-nil LogLevel
-            }
-            else {
-                return LogLevel.Debug
-            }
-        }
-        set {
-            NSUserDefaults.standardUserDefaults().setInteger(newValue.rawValue, forKey: TAG_LOG_LEVEL)
-        }
-    }
+    public static var logLevelFilter: LogLevel = LogLevel.Debug
     
-    public static var maxLogStoreSize: UInt64 {
-        get {
-            return NSUserDefaults.standardUserDefaults().objectForKey(TAG_MAX_STORE_SIZE) as? UInt64 ?? DEFAULT_MAX_STORE_SIZE
-        }
-        set {
-            let valueAsObject = NSNumber(unsignedLongLong: newValue)
-            NSUserDefaults.standardUserDefaults().setObject(valueAsObject, forKey: TAG_MAX_STORE_SIZE)
-        }
-    }
+    public static var maxLogStoreSize: UInt64 = DEFAULT_MAX_STORE_SIZE
+    
+    public static var internalSDKLoggingEnabled: Bool = true
     
     public static var isUncaughtExceptionDetected: Bool {
         get {
@@ -140,15 +123,6 @@ public class Logger {
         }
         set {
             NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: TAG_UNCAUGHT_EXCEPTION)
-        }
-    }
-    
-    public static var internalSDKLoggingEnabled: Bool {
-        get {
-            return false
-        }
-        set {
-            
         }
     }
     
@@ -226,59 +200,81 @@ public class Logger {
     }
     
     
-    internal static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
-        
-        if level != LogLevel.Analytics {
-            print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
-        }
-    }
-    
-    
     internal func logMessage(message: String, level: LogLevel, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]? = nil) {
         
-        // TODO: dispatch_async?
-        
-        guard canLogAtLevel(level) else {
-            return
+        if canLogAtLevel(level) {
+            if self.name == MFP_LOGGER_PACKAGE && !Logger.internalSDKLoggingEnabled {
+                // Don't show our internal logs in the console
+            }
+            else {
+                // Print to console
+                // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
+                Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
+            }
         }
         
-        // Print to console
-        // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
-        Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
-        
-        // Get file names
-        var logFile: String = Logger.logsDocumentPath
-        var logOverflowFile: String = Logger.logsDocumentPath
+        // Analytics.enabled and Logger.logStoreEnabled determine whether logs will be persisted to file
         if level == LogLevel.Analytics {
-            logFile += FILE_LOGGER_LOGS
-            logOverflowFile += FILE_LOGGER_OVERFLOW
+            guard Analytics.enabled else {
+                return
+            }
         }
         else {
-            logFile += FILE_ANALYTICS_LOGS
-            logOverflowFile += FILE_ANALYTICS_OVERFLOW
-        }
-        
-        // Check if the log file is larger than the maxLogStoreSize. If so, move the log file to the "overflow" file, and start logging to a new log file. If an overflow file already exists, those logs get overwritten.
-        if fileLogIsFull(logFile) {
-            do {
-                try moveOldLogsToOverflowFile(logFile, overflowFile: logOverflowFile)
-            }
-            catch let error {
-                NSLog("Log file \(logFile) is full but the old logs could not be removed. Try sending the logs. Error: \(error)")
+            guard Logger.logStoreEnabled else {
                 return
             }
         }
         
-        let timeStampString = Logger.dateFormatter.stringFromDate(NSDate())
-        let logAsJsonString = convertLogToJson(message, level: level, timeStamp: timeStampString, additionalMetadata: additionalMetadata)
+        // Get file names and the dispatch queue needed to access those files
+        let (logFile, logOverflowFile, fileDispatchQueue) = getFilesForLogLevel(level)
         
-        guard logAsJsonString != nil else {
-            let errorMessage = "Failed to write logs to file. This is likely because the analytics metadata could not be parsed."
-            Logger.printLogToConsole(errorMessage, loggerName:self.name, level: .Error, calledFunction: __FUNCTION__, calledFile: __FILE__, calledLineNumber: __LINE__)
-            return
+        dispatch_async(fileDispatchQueue) { () -> Void in
+            
+            // Check if the log file is larger than the maxLogStoreSize. If so, move the log file to the "overflow" file, and start logging to a new log file. If an overflow file already exists, those logs get overwritten.
+            if self.fileLogIsFull(logFile) {
+                do {
+                    try self.moveOldLogsToOverflowFile(logFile, overflowFile: logOverflowFile)
+                }
+                catch let error {
+                    NSLog("Log file \(logFile) is full but the old logs could not be removed. Try sending the logs. Error: \(error)")
+                    return
+                }
+            }
+            
+            let timeStampString = Logger.dateFormatter.stringFromDate(NSDate())
+            var logAsJsonString = self.convertLogToJson(message, level: level, timeStamp: timeStampString, additionalMetadata: additionalMetadata)
+            
+            guard logAsJsonString != nil else {
+                let errorMessage = "Failed to write logs to file. This is likely because the analytics metadata could not be parsed."
+                Logger.printLogToConsole(errorMessage, loggerName:self.name, level: .Error, calledFunction: __FUNCTION__, calledFile: __FILE__, calledLineNumber: __LINE__)
+                return
+            }
+            
+            logAsJsonString! += "," // Logs must be comma-separated
+            
+            Logger.writeToFile(logFile, string: logAsJsonString!, loggerName: self.name)
+        }
+    }
+    
+    
+    internal func getFilesForLogLevel(level: LogLevel) -> (String, String, dispatch_queue_t) {
+        
+        var logFile: String = Logger.logsDocumentPath
+        var logOverflowFile: String = Logger.logsDocumentPath
+        var fileDispatchQueue: dispatch_queue_t
+        
+        if level == LogLevel.Analytics {
+            logFile += FILE_ANALYTICS_LOGS
+            logOverflowFile += FILE_ANALYTICS_OVERFLOW
+            fileDispatchQueue = Logger.analyticsFileIOQueue
+        }
+        else {
+            logFile += FILE_LOGGER_LOGS
+            logOverflowFile += FILE_LOGGER_OVERFLOW
+            fileDispatchQueue = Logger.loggerFileIOQueue
         }
         
-        Logger.writeToFile(logFile, string: logAsJsonString!, loggerName: self.name)
+        return (logFile, logOverflowFile, fileDispatchQueue)
     }
     
     
@@ -312,13 +308,13 @@ public class Logger {
     
     internal func canLogAtLevel(level: LogLevel) -> Bool {
         
-        if level == LogLevel.Analytics && Analytics.enabled == false {
+        if level == LogLevel.Analytics && !Analytics.enabled {
             return false
         }
         if level.rawValue <= Logger.logLevelFilter.rawValue {
-            return false
+            return true
         }
-        return true
+        return false
     }
     
     
@@ -357,6 +353,7 @@ public class Logger {
         if fileHandle != nil && data != nil {
             fileHandle!.seekToEndOfFile()
             fileHandle!.writeData(data!)
+            fileHandle!.closeFile()
         }
         else {
             let errorMessage = "Cannot write to file: \(file)."
@@ -365,16 +362,23 @@ public class Logger {
     }
     
     
+    internal static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
+        
+        if level != LogLevel.Analytics {
+            print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
+        }
+    }
+    
+    
     
     // MARK: Uncaught Exceptions
     
-    private static let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
+    internal static let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
     private static var exceptionHasBeenCalled = false
     
     
-    // TODO: Make this private, and just document it? It looks like this is not part of the API in Android anyway.
-    // TODO: In documentation, explain that developer must not set their own uncaught exception handler or this one will be overwritten
-    private static func captureUncaughtExceptions() {
+    // TODO: In documentation, explain that developer must set their own uncaught exception handler before using the Logger class at all
+    internal static func captureUncaughtExceptions() {
         
         NSSetUncaughtExceptionHandler { (caughtException: NSException) -> Void in
             
@@ -388,7 +392,7 @@ public class Logger {
         }
     }
     
-    private static func logException(exception: NSException) {
+    internal static func logException(exception: NSException) {
         
         let logger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
         var exceptionString = "Uncaught Exception: \(exception.name)."
@@ -502,7 +506,7 @@ public class Logger {
         request.sendString(logPayload, withCompletionHandler: callback)
     }
     
-    private static func returnClientInitializationError(missingValue: String, callback: MfpCompletionHandler) {
+    internal static func returnClientInitializationError(missingValue: String, callback: MfpCompletionHandler) {
         
         Logger.internalLogger.error("No value found for the BMSClient \(missingValue) property.")
         let errorMessage = "Must initialize BMSClient before sending logs to the server."
@@ -581,156 +585,7 @@ public class Logger {
     
     // MARK: Server configuration
     
+    // TODO: Implement once the behavior of this method has been determined
     public func updateLogProfile(withCompletionHandler callback: MfpCompletionHandler? = nil) { }
 
 }
-
-// MARK: FOUNDATION SDK
-
-//
-//@implementation OCLogger
-//
-//
-//+(void) updateConfigFromServer{
-//    @synchronized (self) {
-//        WLRequestOptions *requestOptions = [[WLRequestOptions alloc] init];
-//        [requestOptions setMethod:POST];
-//        
-//        NSMutableDictionary* headers = [NSMutableDictionary new];
-//        
-//        NSDictionary* deviceInfo = [OCLogger getDeviceInformation];
-//        for(NSString* key in deviceInfo){
-//            NSString *headerName = [NSString stringWithFormat:@"%@%@", @"x-wl-clientlog-", key];
-//            [headers setObject:[deviceInfo valueForKey:key] forKey:headerName];
-//        }
-//        
-//        [requestOptions setHeaders:headers];
-//        
-//        UpdateConfigDelegate *updateConfigDelegate = [UpdateConfigDelegate new];
-//        WLRequest *updateConfigRequest = [(WLRequest *)[WLRequest alloc] initWithDelegate:updateConfigDelegate];
-//        [updateConfigRequest makeRequestForRootUrl:CONFIG_URI_PATH withOptions:requestOptions];
-//    }
-//}
-//
-//+(void) processUpdateConfigFromServer:(int)statusCode withResponse:(NSString*)responseString
-//{
-//    @synchronized (self) {
-//        NSDictionary* parsedResponse = [OCLoggerWorklight parseWorklightServerResponse:responseString];
-//        
-//        if(statusCode == HTTP_SC_OK){
-//            NSLog(@"[DEBUG] [OCLogger] Logger configuration successfully retrieved from the server.");
-//            [OCLogger processConfigResponseFromServer:parsedResponse];
-//            
-//        }else if(statusCode == HTTP_SC_NO_CONTENT){
-//            NSLog(@"[DEBUG] [OCLogger] No matching client configuration profiles were found at the IBM MobileFirst Platform server. Logger now using local configurations.");
-//            [OCLogger clearServerConfig];
-//            
-//        }
-//    }
-//}
-//
-//
-//#pragma mark - Getters and Setters
-//
-//+(void) setCapture: (BOOL) flag
-//{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults setBool:flag forKey:TAG_CAPTURE];
-//    [standardUserDefaults synchronize];
-//}
-//
-//+(BOOL) getCapture
-//    {
-//        if([OCLogger shouldUseServerConfig]){
-//            return [[NSUserDefaults standardUserDefaults] boolForKey:TAG_SERVER_CAPTURE];
-//        }
-//        
-//        return [[NSUserDefaults standardUserDefaults] boolForKey:TAG_CAPTURE];
-//}
-//
-//+(void) setAnalyticsCapture: (BOOL) flag
-//{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults setBool:flag forKey:TAG_ANALYTICS_CAPTURE];
-//    [standardUserDefaults synchronize];
-//}
-//
-//+(BOOL) getAnalyticsCapture
-//    {
-//        return [[NSUserDefaults standardUserDefaults] boolForKey:TAG_ANALYTICS_CAPTURE];
-//}
-//
-//+(void) processConfigResponseFromServer: (NSDictionary*) logConfig
-//{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults setBool:TRUE forKey:TAG_SERVER_CAPTURE];
-//    
-//    NSDictionary* wllogger =[logConfig objectForKey:@"wllogger"];
-//    
-//    if(wllogger != nil){
-//        
-//        NSDictionary* filters = [wllogger objectForKey:@"filters"];
-//        
-//        if(filters != nil){
-//            [standardUserDefaults setObject:filters forKey:TAG_SERVER_FILTERS];
-//        }
-//        
-//        NSString* level = [wllogger objectForKey:@"level"];
-//        
-//        if(level != nil){
-//            OCLogType serverLevel = [OCLogger getLevelType:level];
-//            [standardUserDefaults setInteger:serverLevel forKey:TAG_SERVER_LOG_LEVEL];
-//        }
-//    }
-//    
-//    [standardUserDefaults synchronize];
-//}
-//
-//+(void)clearServerConfig{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults removeObjectForKey:TAG_SERVER_CAPTURE];
-//    [standardUserDefaults removeObjectForKey:TAG_SERVER_FILTERS];
-//    [standardUserDefaults removeObjectForKey:TAG_SERVER_LOG_LEVEL];
-//    [standardUserDefaults synchronize];
-//}
-//
-//
-//#pragma mark - Helper Functions
-//
-//
-//+(NSDictionary*) getDeviceInformation
-//    {
-//        UIDevice* currentDevice = [UIDevice currentDevice];
-//        
-//        NSDictionary* deviceInfo = @{KEY_DEVICEINFO_ENV : [OCLoggerWorklight getWorklightEnvironment],
-//            KEY_DEVICEINFO_OS_VERSION : [currentDevice systemVersion],
-//            KEY_DEVICEINFO_MODEL : [OCLoggerWorklight getWorklightDeviceModel],
-//            KEY_DEVICEINFO_APP_NAME : [OCLoggerWorklight getWorklightApplicationName],
-//            KEY_DEVICEINFO_APP_VERSION : [OCLoggerWorklight getWorklightApplicationVersion],
-//            KEY_DEVICEINFO_DEVICE_ID : [OCLoggerWorklight getWorklightDeviceId]
-//        };
-//        
-//        return deviceInfo;
-//}
-//
-//
-//+(BOOL) shouldUseServerConfig
-//    {
-//        NSObject *serverConfigSet = [[NSUserDefaults standardUserDefaults] objectForKey:TAG_SERVER_CAPTURE];
-//        return (serverConfigSet != NULL);
-//}
-//
-//
-//#pragma mark - Delegate Implementations
-//@implementation UpdateConfigDelegate
-//
-//-(void)onSuccessWithResponse:(WLResponse *)response userInfo:(NSDictionary *)userInfo{
-//    [OCLogger processUpdateConfigFromServer:response.status withResponse:response.responseText];
-//}
-//
-//-(void)onFailureWithResponse:(WLFailResponse *)response userInfo:(NSDictionary *)userInfo{
-//    NSLog(@"[DEBUG] [OCLogger] Request to update configuration profile has failed.");
-//}
-//@end
-//
-//
