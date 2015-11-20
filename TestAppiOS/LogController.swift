@@ -14,12 +14,14 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
     @IBOutlet weak var crashButton: UIButton!
     
     
+
     let logArray = ["debug", "info", "warn", "error", "fatal"]
     var level = "debug"
     var type = "debug"
     @IBOutlet weak var packageName: UITextField!
     @IBOutlet weak var levelPicker: UIPickerView!
     @IBOutlet weak var typePicker: UIPickerView!
+    @IBOutlet weak var logText: UITextView!
     
     @IBOutlet weak var capture: UISwitch!
 
@@ -73,11 +75,20 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         }
         
 
-//        switch level {
-//            case "debug":
-//                Logger.logLevel = LogLevel.Debug
-//            
-//        }
+        switch level {
+            case "debug":
+                Logger.logLevelFilter = LogLevel.Debug
+            case "info":
+                Logger.logLevelFilter = LogLevel.Info
+            case "warn":
+                Logger.logLevelFilter = LogLevel.Warn
+            case "error":
+                Logger.logLevelFilter = LogLevel.Error
+            case "fatal":
+                Logger.logLevelFilter = LogLevel.Fatal
+            default:
+                Logger.logLevelFilter = LogLevel.Debug
+        }
         
         switch type {
             case "debug":
@@ -94,6 +105,8 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
                 logger.debug(logMessage.text!)
             
         }
+        
+        
       
     }
     
