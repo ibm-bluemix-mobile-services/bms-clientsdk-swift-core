@@ -22,7 +22,7 @@ class LoggerTests: XCTestCase {
 // send (it should be deleting the wl.log)
     func testSetGetLevel(){
         
-        let level1 = Logger.logLevel
+        let level1 = Logger.logLevelFilter
     
         if Logger.internalSDKLoggingEnabled{
             XCTAssertTrue(level1 == LogLevel.Info)
@@ -42,7 +42,7 @@ class LoggerTests: XCTestCase {
     func testSetGetMaxLogStoreSize(){
     
         let size1 = Logger.maxLogStoreSize
-        XCTAssertTrue(size1 == DEFAULT_MAX_FILE_SIZE)
+        XCTAssertTrue(size1 == DEFAULT_MAX_STORE_SIZE)
 
         Logger.maxLogStoreSize = 12345678
         let size3 = Logger.maxLogStoreSize
@@ -78,8 +78,8 @@ class LoggerTests: XCTestCase {
 
         let loggerInstance = Logger.getLoggerForName(fakePKG)
         Logger.logStoreEnabled = true
-        Logger.logLevel = LogLevel.Debug
-        Logger.maxLogStoreSize = DEFAULT_MAX_FILE_SIZE
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
 
         loggerInstance.debug("Hello world")
         loggerInstance.info("1242342342343243242342")
@@ -144,7 +144,7 @@ class LoggerTests: XCTestCase {
         Logger.processConfigResponseFromServer(serverResponse)
 
         let newCapture = Logger.logStoreEnabled
-        let newLevel = Logger.logLevel
+        let newLevel = Logger.logLevelFilter
 
         XCTAssertTrue(newCapture)
         XCTAssertTrue(newLevel == LogLevel.Debug)
@@ -156,15 +156,15 @@ class LoggerTests: XCTestCase {
         let serverResponse = ["wllogger": ["level": serverLevel]]
 
         Logger.logStoreEnabled = false
-        Logger.logLevel = LogLevel.Warn
+        Logger.logLevelFilter = LogLevel.Warn
         
         XCTAssertFalse(Logger.logStoreEnabled)
-        XCTAssertTrue(Logger.logLevel == LogLevel.Warn)
+        XCTAssertTrue(Logger.logLevelFilter == LogLevel.Warn)
 
         Logger.processConfigResponseFromServer(serverResponse)
 
         let newCapture = Logger.logStoreEnabled
-        let newLevel = Logger.logLevel
+        let newLevel = Logger.logLevelFilter
 
         XCTAssertTrue(newCapture)
         XCTAssertTrue(newLevel == LogLevel.Error)
@@ -176,15 +176,15 @@ class LoggerTests: XCTestCase {
         let serverResponse = ["wllogger": ["filters": serverFilters, "level": serverLevel]]
 
         Logger.logStoreEnabled = false
-        Logger.logLevel = LogLevel.Warn
+        Logger.logLevelFilter = LogLevel.Warn
 
         XCTAssertFalse(Logger.logStoreEnabled)
-        XCTAssertTrue(Logger.logLevel == LogLevel.Warn)
+        XCTAssertTrue(Logger.logLevelFilter == LogLevel.Warn)
 
         Logger.processConfigResponseFromServer(serverResponse);
     
         let newCapture = Logger.logStoreEnabled
-        let newLevel = Logger.logLevel
+        let newLevel = Logger.logLevelFilter
         
         XCTAssertTrue(newCapture)
         XCTAssertTrue(newLevel == LogLevel.Error)
@@ -192,7 +192,7 @@ class LoggerTests: XCTestCase {
         Logger.clearServerConfig()
 
         XCTAssertFalse(Logger.logStoreEnabled)
-        XCTAssertTrue(Logger.logLevel == LogLevel.Warn)
+        XCTAssertTrue(Logger.logLevelFilter == LogLevel.Warn)
     }
     
 }

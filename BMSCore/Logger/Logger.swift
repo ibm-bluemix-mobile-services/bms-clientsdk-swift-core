@@ -41,6 +41,7 @@ public enum LogLevel: Int {
     }
 }
 
+// TODO: Log only the file name, not the whole path
 
 public class Logger {
     
@@ -61,7 +62,7 @@ public class Logger {
         return formatter
     }
     
-    private static let logsDocumentPath: String = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+    internal static let logsDocumentPath: String = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] + "/"
     
     private static let fileManager = NSFileManager.defaultManager()
     
@@ -85,7 +86,7 @@ public class Logger {
 
     
     // Custom dispatch_sync that can incorporate throwable statements
-    internal func dispatch_sync(queue: dispatch_queue_t, block: () throws -> ()) throws {
+    internal static func dispatch_sync(queue: dispatch_queue_t, block: () throws -> ()) throws {
         
         var error: ErrorType?
         try dispatch_sync(queue) {
@@ -123,24 +124,28 @@ public class Logger {
         }
     }
     
-    public static var maxLogStoreSize: Int {
+    public static var maxLogStoreSize: UInt64 {
         get {
-            return NSUserDefaults.standardUserDefaults().integerForKey(TAG_MAX_STORE_SIZE) ?? DEFAULT_MAX_STORE_SIZE
+            return NSUserDefaults.standardUserDefaults().objectForKey(TAG_MAX_STORE_SIZE) as? UInt64 ?? DEFAULT_MAX_STORE_SIZE
         }
         set {
-            NSUserDefaults.standardUserDefaults().setInteger(newValue, forKey: TAG_MAX_STORE_SIZE)
+            let valueAsObject = NSNumber(unsignedLongLong: newValue)
+            NSUserDefaults.standardUserDefaults().setObject(valueAsObject, forKey: TAG_MAX_STORE_SIZE)
         }
     }
     
-    public static var uncaughtExceptionDetected: Bool {
+    public static var isUncaughtExceptionDetected: Bool {
         get {
-            return false
+            return NSUserDefaults.standardUserDefaults().boolForKey(TAG_UNCAUGHT_EXCEPTION)
+        }
+        set {
+            NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: TAG_UNCAUGHT_EXCEPTION)
         }
     }
     
     public static var internalSDKLoggingEnabled: Bool {
         get {
-            return true
+            return false
         }
         set {
             
@@ -185,44 +190,51 @@ public class Logger {
     
     
     // MARK: Log methods
-    // TODO: Make use of the "error" parameter or remove it
-    public func debug(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+    public func debug(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
-        logMessage(message, level: LogLevel.Debug, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+        logMessage(message, level: LogLevel.Debug, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
     
     
-    public func info(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+    public func info(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
     
-        logMessage(message, level: LogLevel.Info, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+        logMessage(message, level: LogLevel.Info, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
     
     
-    public func warn(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+    public func warn(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
-        logMessage(message, level: LogLevel.Warn, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+        logMessage(message, level: LogLevel.Warn, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
     
     
-    public func error(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+    public func error(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
-        logMessage(message, level: LogLevel.Error, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+        logMessage(message, level: LogLevel.Error, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
     
     
-    public func fatal(message: String, error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+    public func fatal(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
-        logMessage(message, level: LogLevel.Fatal, error: error, calledFile: file, calledFunction: function, calledLineNumber: line)
+        logMessage(message, level: LogLevel.Fatal, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
     
     
-    internal func analytics(metadata: [String: AnyObject], error: ErrorType? = nil, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+    internal func analytics(metadata: [String: AnyObject], file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
-        logMessage("", level: LogLevel.Analytics, error: error, calledFile: file, calledFunction: function, calledLineNumber: line, additionalMetadata: metadata)
+        logMessage("", level: LogLevel.Analytics, calledFile: file, calledFunction: function, calledLineNumber: line, additionalMetadata: metadata)
     }
     
     
-    internal func logMessage(message: String, level: LogLevel, error: ErrorType?, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]? = nil) {
+    internal static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
+        
+        if level != LogLevel.Analytics {
+            print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
+        }
+    }
+    
+    
+    internal func logMessage(message: String, level: LogLevel, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]? = nil) {
         
         // TODO: dispatch_async?
         
@@ -230,25 +242,71 @@ public class Logger {
             return
         }
         
-        if level != LogLevel.Analytics {
-            // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
-            print("[\(level.stringValue)] [\(self.name)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(message)")
-        }
+        // Print to console
+        // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
+        Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
         
-        var logFileName: String = Logger.logsDocumentPath
-        var logOverflowFileName: String = Logger.logsDocumentPath
+        // Get file names
+        var logFile: String = Logger.logsDocumentPath
+        var logOverflowFile: String = Logger.logsDocumentPath
         if level == LogLevel.Analytics {
-            logFileName += FILE_LOGGER_LOGS
-            logOverflowFileName += FILE_LOGGER_OVERFLOW
+            logFile += FILE_LOGGER_LOGS
+            logOverflowFile += FILE_LOGGER_OVERFLOW
         }
         else {
-            logFileName += FILE_ANALYTICS_LOGS
-            logOverflowFileName += FILE_ANALYTICS_OVERFLOW
+            logFile += FILE_ANALYTICS_LOGS
+            logOverflowFile += FILE_ANALYTICS_OVERFLOW
         }
         
+        // Check if the log file is larger than the maxLogStoreSize. If so, move the log file to the "overflow" file, and start logging to a new log file. If an overflow file already exists, those logs get overwritten.
+        if fileLogIsFull(logFile) {
+            do {
+                try moveOldLogsToOverflowFile(logFile, overflowFile: logOverflowFile)
+            }
+            catch let error {
+                NSLog("Log file \(logFile) is full but the old logs could not be removed. Try sending the logs. Error: \(error)")
+                return
+            }
+        }
         
+        let timeStampString = Logger.dateFormatter.stringFromDate(NSDate())
+        let logAsJsonString = convertLogToJson(message, level: level, timeStamp: timeStampString, additionalMetadata: additionalMetadata)
         
-        let timeStamp = Logger.dateFormatter.stringFromDate(NSDate())
+        guard logAsJsonString != nil else {
+            let errorMessage = "Failed to write logs to file. This is likely because the analytics metadata could not be parsed."
+            Logger.printLogToConsole(errorMessage, loggerName:self.name, level: .Error, calledFunction: __FUNCTION__, calledFile: __FILE__, calledLineNumber: __LINE__)
+            return
+        }
+        
+        Logger.writeToFile(logFile, string: logAsJsonString!, loggerName: self.name)
+    }
+    
+    
+    internal func fileLogIsFull(logFileName: String) -> Bool {
+        
+        if (Logger.fileManager.fileExistsAtPath(logFileName)) {
+            
+            do {
+                let fileAttributes = try Logger.fileManager.attributesOfItemAtPath(logFileName)
+                if let currentLogFileSize = fileAttributes[NSFileSystemSize] as? UInt64 {
+                    return currentLogFileSize > Logger.maxLogStoreSize / 2 // Divide by 2 since the total log storage gets shared between the log file and the overflow file
+                }
+            }
+            catch let error {
+                NSLog("Cannot determine the size of file:\(logFileName) due to error: \(error). In case the file size is greater than the specified max log storage size, logs will not be written to file.")
+            }
+        }
+        
+        return false
+    }
+    
+    
+    internal func moveOldLogsToOverflowFile(logFile: String, overflowFile: String) throws {
+        
+        if Logger.fileManager.isDeletableFileAtPath(overflowFile) {
+            try Logger.fileManager.removeItemAtPath(overflowFile)
+        }
+        try Logger.fileManager.moveItemAtPath(logFile, toPath: overflowFile)
     }
     
     
@@ -264,31 +322,95 @@ public class Logger {
     }
     
     
-    internal func writeToFile(fileName: String, string: String) {
+    // Convert log message and metadata into JSON format. This is the actual string that gets written to the log files.
+    internal func convertLogToJson(logMessage: String, level: LogLevel, timeStamp: String, additionalMetadata: [String: AnyObject]?) -> String? {
         
-        let fileHandle = NSFileHandle(forReadingAtPath: fileName)
+        var logMetadata: [String: AnyObject] = [:]
+        logMetadata["timestamp"] = timeStamp
+        logMetadata["level"] = level.stringValue
+        logMetadata["pkg"] = self.name
+        logMetadata["msg"] = logMessage
+        if additionalMetadata != nil {
+            logMetadata["metadata"] = additionalMetadata!
+        }
+
+        let logData: NSData
+        do {
+            logData = try NSJSONSerialization.dataWithJSONObject(logMetadata, options: [])
+        }
+        catch {
+            return nil
+        }
+        
+        return String(data: logData, encoding: NSUTF8StringEncoding)
+    }
+    
+    
+    internal static func writeToFile(file: String, string: String, loggerName: String) {
+        
+        if !Logger.fileManager.fileExistsAtPath(file) {
+            Logger.fileManager.createFileAtPath(file, contents: nil, attributes: nil)
+        }
+        
+        let fileHandle = NSFileHandle(forWritingAtPath: file)
         let data = string.dataUsingEncoding(NSUTF8StringEncoding)
-        if Logger.fileManager.isWritableFileAtPath(fileName) && fileHandle != nil && data != nil {
+        if fileHandle != nil && data != nil {
             fileHandle!.seekToEndOfFile()
-            fileHandle?.writeData(data!)
+            fileHandle!.writeData(data!)
         }
         else {
-            Logger.internalLogger.warn("Cannot write to file: \(fileName).")
+            let errorMessage = "Cannot write to file: \(file)."
+            printLogToConsole(errorMessage, loggerName: loggerName, level: LogLevel.Error, calledFunction: __FUNCTION__, calledFile: __FILE__, calledLineNumber: __LINE__)
         }
+    }
+    
+    
+    
+    // MARK: Uncaught Exceptions
+    
+    private static let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
+    private static var exceptionHasBeenCalled = false
+    
+    
+    // TODO: Make this private, and just document it? It looks like this is not part of the API in Android anyway.
+    // TODO: In documentation, explain that developer must not set their own uncaught exception handler or this one will be overwritten
+    private static func captureUncaughtExceptions() {
+        
+        NSSetUncaughtExceptionHandler { (caughtException: NSException) -> Void in
+            
+            if (!Logger.exceptionHasBeenCalled) {
+                Logger.exceptionHasBeenCalled = true
+                Logger.logException(caughtException)
+                // Persist a flag so that when the app starts back up, we can see if an exception occurred in the last session
+                Logger.isUncaughtExceptionDetected = true
+                Logger.existingUncaughtExceptionHandler?(caughtException)
+            }
+        }
+    }
+    
+    private static func logException(exception: NSException) {
+        
+        let logger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
+        var exceptionString = "Uncaught Exception: \(exception.name)."
+        if let reason = exception.reason {
+            exceptionString += " Reason: \(reason)."
+        }
+        logger.fatal(exceptionString)
     }
     
     
     
     // MARK: Sending logs
     
-    public func send(completionHandler userCallback: MfpCompletionHandler? = nil) {
+    public static func send(completionHandler userCallback: MfpCompletionHandler? = nil) {
         
         let logSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
             if error != nil {
                 Logger.internalLogger.debug("Client logs successfully sent to the server.")
                 // Remove the uncaught exception flag since the logs containing the exception(s) have just been sent to the server
                 NSUserDefaults.standardUserDefaults().setBool(false, forKey: TAG_UNCAUGHT_EXCEPTION)
-                self.deleteBufferFile(FILE_LOGGER_SEND)
+                deleteBufferFile(FILE_LOGGER_SEND)
+                Logger.isUncaughtExceptionDetected = false
             }
             else {
                 Logger.internalLogger.error("Request to send client logs has failed.")
@@ -300,9 +422,9 @@ public class Logger {
         // Use a serial queue to ensure that the same logs do not get sent more than once
         dispatch_async(Logger.sendLogsToServerQueue) { () -> Void in
             do {
-                let logsToSend: String? = try self.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
+                let logsToSend: String? = try getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
                 if logsToSend != nil {
-                    self.sendToServer(logsToSend!, withCallback: logSendCallback)
+                    sendToServer(logsToSend!, withCallback: logSendCallback)
                 }
                 else {
                     Logger.internalLogger.info("There are no logs to send.")
@@ -315,13 +437,13 @@ public class Logger {
     }
     
     
-    internal func sendAnalytics(completionHandler userCallback: MfpCompletionHandler? = nil) {
+    internal static func sendAnalytics(completionHandler userCallback: MfpCompletionHandler? = nil) {
     
         // Internal completion handler - wraps around the user supplied completion handler (if supplied)
         let analyticsSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
             if error != nil {
                 Analytics.logger.debug("Analytics data successfully sent to the server.")
-           self.deleteBufferFile(FILE_ANALYTICS_SEND)
+           deleteBufferFile(FILE_ANALYTICS_SEND)
             }
             else {
                 Analytics.logger.error("Request to send analytics data to the server has failed.")
@@ -333,9 +455,9 @@ public class Logger {
         // Use a serial queue to ensure that the same analytics data do not get sent more than once
         dispatch_async(Logger.sendAnalyticsToServerQueue) { () -> Void in
             do {
-                let logsToSend: String? = try self.getLogs(fileName: FILE_ANALYTICS_LOGS, overflowFileName:FILE_ANALYTICS_OVERFLOW, bufferFileName: FILE_ANALYTICS_SEND)
+                let logsToSend: String? = try getLogs(fileName: FILE_ANALYTICS_LOGS, overflowFileName:FILE_ANALYTICS_OVERFLOW, bufferFileName: FILE_ANALYTICS_SEND)
                 if logsToSend != nil {
-                    self.sendToServer(logsToSend!, withCallback: analyticsSendCallback)
+                    sendToServer(logsToSend!, withCallback: analyticsSendCallback)
                 }
                 else {
                     Analytics.logger.info("There are no analytics data to send.")
@@ -348,7 +470,7 @@ public class Logger {
     }
     
     
-    internal func sendToServer(logs: String, withCallback callback: MfpCompletionHandler) {
+    internal static func sendToServer(logs: String, withCallback callback: MfpCompletionHandler) {
         
         let bmsClient = BMSClient.sharedInstance
         
@@ -380,7 +502,7 @@ public class Logger {
         request.sendString(logPayload, withCompletionHandler: callback)
     }
     
-    private func returnClientInitializationError(missingValue: String, callback: MfpCompletionHandler) {
+    private static func returnClientInitializationError(missingValue: String, callback: MfpCompletionHandler) {
         
         Logger.internalLogger.error("No value found for the BMSClient \(missingValue) property.")
         let errorMessage = "Must initialize BMSClient before sending logs to the server."
@@ -390,7 +512,7 @@ public class Logger {
     }
     
     
-    internal func getLogs(fileName fileName: String, overflowFileName: String, bufferFileName: String) throws -> String? {
+    internal static func getLogs(fileName fileName: String, overflowFileName: String, bufferFileName: String) throws -> String? {
         
         let logFile = Logger.logsDocumentPath + fileName // Original log file
         let overflowLogFile = Logger.logsDocumentPath + overflowFileName // Extra file in case original log file got full
@@ -404,7 +526,7 @@ public class Logger {
             // Merge the logs from the normal log file and the overflow log file (if necessary)
             if Logger.fileManager.isReadableFileAtPath(overflowLogFile) {
                 let fileContents = try NSString(contentsOfFile: overflowLogFile, encoding: NSUTF8StringEncoding) as String
-                writeToFile(logFile, string: fileContents)
+                writeToFile(logFile, string: fileContents, loggerName: Logger.internalLogger.name)
             }
             
             // Since the buffer log is empty, we move the log file to the buffer file in preparation of sending the logs. When new logs are recorded, a new log file gets created to replace it.
@@ -419,7 +541,7 @@ public class Logger {
     
     
     // We should only be sending logs from a buffer file, which is a copy of the normal log file. This way, if the logs fail to get sent to the server, we can hold onto them until the send succeeds, while continuing to log to the normal log file.
-    internal func readLogsFromFile(bufferLogFile: String) throws -> String? {
+    internal static func readLogsFromFile(bufferLogFile: String) throws -> String? {
         
         var fileContents: String?
         
@@ -443,7 +565,7 @@ public class Logger {
     }
     
     
-    internal func deleteBufferFile(bufferFile: String) {
+    internal static func deleteBufferFile(bufferFile: String) {
         
         if Logger.fileManager.isDeletableFileAtPath(bufferFile) {
             do {
@@ -460,46 +582,8 @@ public class Logger {
     // MARK: Server configuration
     
     public func updateLogProfile(withCompletionHandler callback: MfpCompletionHandler? = nil) { }
-    
-    
-    
-    // MARK: Uncaught Exceptions
-    
-    private static let existingUncaughtExceptionHandler = NSGetUncaughtExceptionHandler()
-    private static var exceptionHasBeenCalled = false
-
-    
-    // TODO: Make this private, and just document it? It looks like this is not part of the API in Android anyway.
-    // TODO: In documentation, explain that developer must not set their own uncaught exception handler or this one will be overwritten
-    private static func captureUncaughtExceptions() {
-        
-        NSSetUncaughtExceptionHandler { (caughtException: NSException) -> Void in
-            
-            if(!Logger.exceptionHasBeenCalled){
-                Logger.exceptionHasBeenCalled = true
-                Logger.logException(caughtException)
-                // Persist a flag so that when the app starts back up, we can see if an exception occurred in the last session
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: TAG_UNCAUGHT_EXCEPTION)
-                Logger.existingUncaughtExceptionHandler?(caughtException)
-            }
-        }
-    }
-    
-    private static func logException(exception: NSException) {
-        
-        let logger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
-        var exceptionString = "Uncaught Exception: \(exception.name)."
-        if let reason = exception.reason {
-            exceptionString += " Reason: \(reason)."
-        }
-        logger.fatal(exceptionString)
-    }
 
 }
-
-
-
-
 
 // MARK: FOUNDATION SDK
 
@@ -546,76 +630,12 @@ public class Logger {
 //}
 //
 //
-//#pragma mark - Private Methods
-//
-//+(void) logWithLevel: (OCLogType) level
-//andPackage: (NSString*) package
-//andText: (NSString*) text
-//andVariableArguments: (va_list) args
-//andSkipLevelCheck: (BOOL) skipLevelFlag
-//andTimestamp: (NSDate*) timestamp
-//andMetadata:(NSDictionary*) metadata
-//{
-//    
-//    if (![self canLogWithLevel:level withPackage:package]) {
-//        return;
-//    }
-//    
-//    // TODO just make a separate method for capturing analytics instead of all the branching
-//    dispatch_sync(globalLoggerQueue, ^{
-//        
-//        NSString* levelTag = [OCLogger getLevelTag:level];
-//        
-//        NSString *msg = [OCLogger getMessageWith:text andArgs:args];
-//        
-//        if(level != OCLogger_ANALYTICS){
-//            [OCLogger printMessage:msg withMetadata:metadata andLevelTag:levelTag andPackage:package];
-//        }
-//        
-//        if (! [OCLogger shouldCaptureLog:level]) {
-//            return;
-//        }
-//        
-//        NSString* currentLogFile;
-//        
-//        if(level == OCLogger_ANALYTICS){
-//            currentLogFile = [OCLogger getDocumentPath:FILENAME_ANALYTICS_LOG];
-//        }else{
-//            currentLogFile = [OCLogger getDocumentPath:FILENAME_WL_LOG];
-//        }
-//        
-//        if (level != OCLogger_ANALYTICS &&
-//            [[NSFileManager defaultManager] fileExistsAtPath:currentLogFile] &&
-//            [OCLogger isFileSize:currentLogFile greaterThan:[OCLogger getMaxFileSize]]) {
-//                [OCLogger swapLogFile];
-//        }
-//        
-//        NSString* timestampStr = [OCLogger getCurrentTimestamp:timestamp];
-//        
-//        NSDictionary* dict = @{TAG_PKG : package,
-//            TAG_TIMESTAMP : timestampStr,
-//            TAG_LEVEL : levelTag,
-//            TAG_MSG : msg,
-//            TAG_META_DATA: metadata
-//        };
-//        [OCLogger writeString:[dict WLJSONRepresentation] toLogFile:currentLogFile];
-//        });
-//    
-//}
-//
 //#pragma mark - Getters and Setters
 //
 //+(void) setCapture: (BOOL) flag
 //{
 //    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
 //    [standardUserDefaults setBool:flag forKey:TAG_CAPTURE];
-//    [standardUserDefaults synchronize];
-//}
-//
-//+(void) setServerCapture: (BOOL) flag
-//{
-//    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-//    [standardUserDefaults setBool:flag forKey:TAG_SERVER_CAPTURE];
 //    [standardUserDefaults synchronize];
 //}
 //
@@ -693,10 +713,6 @@ public class Logger {
 //        return deviceInfo;
 //}
 //
-//+(NSURL*) getWorklightPostURL
-//    {
-//        return [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OCLoggerWorklight getWorklightBaseURL], LOG_UPLOADER_PATH]];
-//}
 //
 //+(BOOL) shouldUseServerConfig
 //    {
@@ -704,46 +720,10 @@ public class Logger {
 //        return (serverConfigSet != NULL);
 //}
 //
-//+(BOOL) isFileSize:(NSString*) filePath greaterThan:(int) max
-//{
-//    NSError* error = nil;
-//    long long sizeAtPath = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error][NSFileSize] longLongValue];
-//    if (error) {
-//        NSLog(@"[DEBUG] [OCLogger] Failed with error: %@, getting the file size for path: %@", error, filePath);
-//    }
-//    
-//    if(sizeAtPath > max) {
-//        NSLog(@"[DEBUG] [OCLogger] Max file size exceeded for log messages.");
-//        return true;
-//    }
-//    
-//    return false;
-//}
-//
-//+(NSFileHandle*) getHandleAtEndOfFileWithPath:(NSString*) path
-//{
-//    NSFileHandle *myHandle = [NSFileHandle fileHandleForWritingAtPath:path];
-//    
-//    if (myHandle == nil) {
-//        
-//        //file not found, create it
-//        [[NSFileManager defaultManager] createFileAtPath:path contents:nil attributes:nil];
-//        myHandle = [NSFileHandle fileHandleForWritingAtPath:path];
-//        
-//    }
-//    
-//    [myHandle seekToEndOfFile];
-//    
-//    return myHandle;
-//}
-//
-//@end
-//
 //
 //#pragma mark - Delegate Implementations
 //@implementation UpdateConfigDelegate
 //
-//// TODO to be removed when piggybacker is done
 //-(void)onSuccessWithResponse:(WLResponse *)response userInfo:(NSDictionary *)userInfo{
 //    [OCLogger processUpdateConfigFromServer:response.status withResponse:response.responseText];
 //}

@@ -43,8 +43,7 @@ internal let TAG_UNCAUGHT_EXCEPTION = "loggerUncaughtExceptionDetected"
 internal let TAG_LOG_LEVEL = "loggerLevel"
 internal let TAG_MAX_STORE_SIZE = "loggerMaxFileSize"
 
-internal let DEFAULT_MAX_STORE_SIZE = 100000
-internal let DEFAULT_MAX_FILE_SIZE = 100000
+internal let DEFAULT_MAX_STORE_SIZE: UInt64 = 100000
 internal let DEFAULT_LOW_BOUND_FILE_SIZE = 10000
 
 internal let CONTENT_TYPE = "Content-Type"
