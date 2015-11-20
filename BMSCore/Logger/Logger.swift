@@ -41,7 +41,7 @@ public enum LogLevel: Int {
     }
 }
 
-// TODO: When logging about file operations, record only the file name, not the whole path
+// TODO: When logging about file operations, is it okay to display the full path to the log files?
 
 // TODO: Refactor this entire file so that it is better organized and more readable. Consider using extensions.
 
@@ -88,7 +88,7 @@ public class Logger {
 
     
     // Custom dispatch_sync that can incorporate throwable statements
-    internal static func dispatch_sync(queue: dispatch_queue_t, block: () throws -> ()) throws {
+    internal static func dispatch_sync_throwable(queue: dispatch_queue_t, block: () throws -> ()) throws {
         
         var error: ErrorType?
         try dispatch_sync(queue) {
@@ -252,7 +252,7 @@ public class Logger {
             
             logAsJsonString! += "," // Logs must be comma-separated
             
-            Logger.writeToFile(logFile, string: logAsJsonString!, loggerName: self.name)
+            Logger.writeToFile(logFile, logMessage: logAsJsonString!, loggerName: self.name)
         }
     }
     
@@ -342,14 +342,14 @@ public class Logger {
     }
     
     
-    internal static func writeToFile(file: String, string: String, loggerName: String) {
+    internal static func writeToFile(file: String, logMessage: String, loggerName: String) {
         
         if !Logger.fileManager.fileExistsAtPath(file) {
             Logger.fileManager.createFileAtPath(file, contents: nil, attributes: nil)
         }
         
         let fileHandle = NSFileHandle(forWritingAtPath: file)
-        let data = string.dataUsingEncoding(NSUTF8StringEncoding)
+        let data = logMessage.dataUsingEncoding(NSUTF8StringEncoding)
         if fileHandle != nil && data != nil {
             fileHandle!.seekToEndOfFile()
             fileHandle!.writeData(data!)
@@ -530,7 +530,7 @@ public class Logger {
             // Merge the logs from the normal log file and the overflow log file (if necessary)
             if Logger.fileManager.isReadableFileAtPath(overflowLogFile) {
                 let fileContents = try NSString(contentsOfFile: overflowLogFile, encoding: NSUTF8StringEncoding) as String
-                writeToFile(logFile, string: fileContents, loggerName: Logger.internalLogger.name)
+                writeToFile(logFile, logMessage: fileContents, loggerName: Logger.internalLogger.name)
             }
             
             // Since the buffer log is empty, we move the log file to the buffer file in preparation of sending the logs. When new logs are recorded, a new log file gets created to replace it.
@@ -553,11 +553,11 @@ public class Logger {
             // Before sending the logs, we need to read them from the file. This is done in a serial dispatch queue to prevent conflicts if the log file is simulatenously being written to.
             switch bufferLogFile {
             case FILE_ANALYTICS_SEND:
-                try dispatch_sync(Logger.analyticsFileIOQueue, block: { () -> () in
+                try dispatch_sync_throwable(Logger.analyticsFileIOQueue, block: { () -> () in
                     fileContents = try NSString(contentsOfFile: bufferLogFile, encoding: NSUTF8StringEncoding) as String
                 })
             case FILE_LOGGER_SEND:
-                try dispatch_sync(Logger.loggerFileIOQueue, block: { () -> () in
+                try dispatch_sync_throwable(Logger.loggerFileIOQueue, block: { () -> () in
                     fileContents = try NSString(contentsOfFile: bufferLogFile, encoding: NSUTF8StringEncoding) as String
                 })
             default:
