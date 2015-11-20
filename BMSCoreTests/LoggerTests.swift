@@ -81,7 +81,7 @@ class LoggerTests: XCTestCase {
         Logger.logLevel = LogLevel.Debug
         Logger.maxLogStoreSize = DEFAULT_MAX_FILE_SIZE
 
-        loggerInstance.debug("Hello word")
+        loggerInstance.debug("Hello world")
         loggerInstance.info("1242342342343243242342")
         loggerInstance.warn("Str: heyoooooo")
         loggerInstance.error("1 2 3 4")
