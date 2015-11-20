@@ -309,7 +309,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="115" y="339" width="253" height="30"/>
+                                    <rect key="frame" x="138" y="339" width="157" height="30"/>
                                 </variation>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Ghu-mt-jET">
@@ -331,24 +331,25 @@
                                     <rect key="frame" x="15" y="193" width="40" height="21"/>
                                 </variation>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="--Sample Log File---" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ojk-yr-2hn">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="75" y="520" width="325" height="285"/>
-                                </variation>
-                            </textView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="S3q-mP-wrJ">
                                 <rect key="frame" x="-25" y="-30" width="97" height="30"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="138" y="289" width="253" height="30"/>
+                                    <rect key="frame" x="138" y="289" width="157" height="30"/>
                                 </variation>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Package Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZGt-WK-Ubn">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="8" y="293" width="115" height="21"/>
+                                </variation>
+                            </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0v6-SN-z2R">
                                 <rect key="frame" x="-25" y="-15" width="51" height="31"/>
                                 <animations/>
@@ -388,16 +389,15 @@
                                     <action selector="crashAppButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="JpS-DV-EZi"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Package Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZGt-WK-Ubn">
-                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="--Sample Log File---" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ojk-yr-2hn">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="8" y="293" width="115" height="21"/>
+                                    <rect key="frame" x="15" y="532" width="325" height="205"/>
                                 </variation>
-                            </label>
+                            </textView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -412,13 +412,13 @@
                                 <exclude reference="JxB-hC-dng"/>
                                 <exclude reference="Ghu-mt-jET"/>
                                 <exclude reference="wWR-PW-TuV"/>
-                                <exclude reference="ojk-yr-2hn"/>
                                 <exclude reference="S3q-mP-wrJ"/>
+                                <exclude reference="ZGt-WK-Ubn"/>
                                 <exclude reference="0v6-SN-z2R"/>
                                 <exclude reference="lci-e8-vra"/>
                                 <exclude reference="eVV-cN-f6d"/>
                                 <exclude reference="y3p-s2-Tv0"/>
-                                <exclude reference="ZGt-WK-Ubn"/>
+                                <exclude reference="ojk-yr-2hn"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -432,13 +432,13 @@
                                 <include reference="JxB-hC-dng"/>
                                 <include reference="Ghu-mt-jET"/>
                                 <include reference="wWR-PW-TuV"/>
-                                <include reference="ojk-yr-2hn"/>
                                 <include reference="S3q-mP-wrJ"/>
+                                <include reference="ZGt-WK-Ubn"/>
                                 <include reference="0v6-SN-z2R"/>
                                 <include reference="lci-e8-vra"/>
                                 <include reference="eVV-cN-f6d"/>
                                 <include reference="y3p-s2-Tv0"/>
-                                <include reference="ZGt-WK-Ubn"/>
+                                <include reference="ojk-yr-2hn"/>
                             </mask>
                         </variation>
                     </view>
@@ -447,6 +447,7 @@
                         <outlet property="capture" destination="0v6-SN-z2R" id="Jth-YI-on9"/>
                         <outlet property="levelPicker" destination="IMs-gF-Ilv" id="ijt-wU-Ku8"/>
                         <outlet property="logMessage" destination="JxB-hC-dng" id="trD-uf-ZKG"/>
+                        <outlet property="logText" destination="ojk-yr-2hn" id="tZl-WG-hNM"/>
                         <outlet property="packageName" destination="S3q-mP-wrJ" id="pgf-8x-BeJ"/>
                         <outlet property="typePicker" destination="By1-cT-NKH" id="zfR-QZ-kYO"/>
                     </connections>
