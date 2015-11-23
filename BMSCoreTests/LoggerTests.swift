@@ -20,16 +20,6 @@ class LoggerTests: XCTestCase {
 
 //TODO: test for getLoggerForName, uncaughtExceptionDetected (check if default to false)
 // send (it should be deleting the wl.log)
-    func testSetGetLevel(){
-        
-        let level1 = Logger.logLevelFilter
-    
-        if Logger.internalSDKLoggingEnabled{
-            XCTAssertTrue(level1 == LogLevel.Info)
-        } else {
-            XCTAssertTrue(level1 == LogLevel.Debug)
-        }
-    }
     
     func testGetLoggerForName(){
         let name = "sample"
@@ -38,7 +28,8 @@ class LoggerTests: XCTestCase {
         
         XCTAssertTrue(logger.name == Logger.loggerInstances[name]?.name)
     }
-
+    
+//TODO:  Need to figure out why you can't set maxLogStoreSize
 //    func testSetGetMaxLogStoreSize(){
 //    
 //        let size1 = Logger.maxLogStoreSize
@@ -60,96 +51,102 @@ class LoggerTests: XCTestCase {
         XCTAssertFalse(capture2)
     }
     
-    func testAnalyticsLog(){
-        let fakePKG = "MYPKG"
-        let pathToFile = Logger.logsDocumentPath + FILE_ANALYTICS_LOGS
-        
-        do {
-            try NSFileManager().removeItemAtPath(pathToFile)
-        } catch {
-            print("Could not delete " + pathToFile)
-        }
-        
-        let loggerInstance = Logger.getLoggerForName(fakePKG)
-        Logger.logStoreEnabled = true
-        Logger.logLevelFilter = LogLevel.Analytics
-        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
-        let meta = ["hello": 1]
-        
-        loggerInstance.analytics(meta)
-        
-        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
-        let fileContents = "[\(formattedContents)]"
-        let logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
-        let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
-        
-        let debugMessage = jsonDict![0]
-        XCTAssertTrue(debugMessage[TAG_MSG] == "")
-        XCTAssertTrue(debugMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(debugMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(debugMessage[TAG_LEVEL] == "ANALYTICS")
-        print(debugMessage[TAG_META_DATA])
-        XCTAssertTrue(debugMessage[TAG_META_DATA] == meta)
-        
+    func testGetFilesForLogLevel(){
+    
+        let (logFile, logOverflowFile, fileDispatchQueue) = getFilesForLogLevel(level)
+
     }
+    
+//    func testAnalyticsLog(){
+//        let fakePKG = "MYPKG"
+//        let pathToFile = Logger.logsDocumentPath + FILE_ANALYTICS_LOGS
+//        
+//        do {
+//            try NSFileManager().removeItemAtPath(pathToFile)
+//        } catch {
+//            print("Could not delete " + pathToFile)
+//        }
+//        
+//        let loggerInstance = Logger.getLoggerForName(fakePKG)
+//        Logger.logStoreEnabled = true
+//        Logger.logLevelFilter = LogLevel.Analytics
+//        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
+//        let meta = ["hello": 1]
+//        
+//        loggerInstance.analytics(meta)
+//        
+//        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+//        let fileContents = "[\(formattedContents)]"
+//        let logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
+//        let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
+//        
+//        let debugMessage = jsonDict![0]
+//        XCTAssertTrue(debugMessage[TAG_MSG] == "")
+//        XCTAssertTrue(debugMessage[TAG_PKG] == fakePKG)
+//        XCTAssertTrue(debugMessage[TAG_TIMESTAMP] != nil)
+//        XCTAssertTrue(debugMessage[TAG_LEVEL] == "ANALYTICS")
+//        print(debugMessage[TAG_META_DATA])
+//        XCTAssertTrue(debugMessage[TAG_META_DATA] == meta)
+//        
+//    }
 
     
-    func testLogMethods(){
-        let fakePKG = "MYPKG"
-        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
-        
-        do {
-            try NSFileManager().removeItemAtPath(pathToFile)
-        } catch {
-            
-        }
-        
-        let loggerInstance = Logger.getLoggerForName(fakePKG)
-        Logger.logStoreEnabled = true
-        Logger.logLevelFilter = LogLevel.Debug
-        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
-
-        loggerInstance.debug("Hello world")
-        loggerInstance.info("1242342342343243242342")
-        loggerInstance.warn("Str: heyoooooo")
-        loggerInstance.error("1 2 3 4")
-        loggerInstance.fatal("StephenColbert")
-    
-        
-        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
-        let fileContents = "[\(formattedContents)]"
-        let logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
-        let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
-
-        let debugMessage = jsonDict![0]
-        XCTAssertTrue(debugMessage[TAG_MSG] == "Hello world")
-        XCTAssertTrue(debugMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(debugMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(debugMessage[TAG_LEVEL] == "DEBUG")
-
-        let infoMessage = jsonDict![1]
-        XCTAssertTrue(infoMessage[TAG_MSG] == "1242342342343243242342")
-        XCTAssertTrue(infoMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(infoMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(infoMessage[TAG_LEVEL] == "INFO")
-
-        let warnMessage = jsonDict![2]
-        XCTAssertTrue(warnMessage[TAG_MSG] == "Str: heyoooooo")
-        XCTAssertTrue(warnMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(warnMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(warnMessage[TAG_LEVEL] == "WARN")
-
-        let errorMessage = jsonDict![3]
-        XCTAssertTrue(errorMessage[TAG_MSG] == "1 2 3 4")
-        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
-
-        let fatalMessage = jsonDict![4]
-        XCTAssertTrue(fatalMessage[TAG_MSG] == "StephenColbert")
-        XCTAssertTrue(fatalMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(fatalMessage[TAG_TIMESTAMP] != nil)
-    }
+//    func testLogMethods(){
+//        let fakePKG = "MYPKG"
+//        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
+//        
+//        do {
+//            try NSFileManager().removeItemAtPath(pathToFile)
+//        } catch {
+//            
+//        }
+//        
+//        let loggerInstance = Logger.getLoggerForName(fakePKG)
+//        Logger.logStoreEnabled = true
+//        Logger.logLevelFilter = LogLevel.Debug
+//        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
+//
+//        loggerInstance.debug("Hello world")
+//        loggerInstance.info("1242342342343243242342")
+//        loggerInstance.warn("Str: heyoooooo")
+//        loggerInstance.error("1 2 3 4")
+//        loggerInstance.fatal("StephenColbert")
+//    
+//        
+//        let formattedContents = try! Logger.readLogsFromFile(FILE_LOGGER_SEND)// try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+//        let fileContents = "[\(formattedContents)]"
+//        let logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
+//        let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
+//
+//        let debugMessage = jsonDict![0]
+//        XCTAssertTrue(debugMessage[TAG_MSG] == "Hello world")
+//        XCTAssertTrue(debugMessage[TAG_PKG] == fakePKG)
+//        XCTAssertTrue(debugMessage[TAG_TIMESTAMP] != nil)
+//        XCTAssertTrue(debugMessage[TAG_LEVEL] == "DEBUG")
+//
+//        let infoMessage = jsonDict![1]
+//        XCTAssertTrue(infoMessage[TAG_MSG] == "1242342342343243242342")
+//        XCTAssertTrue(infoMessage[TAG_PKG] == fakePKG)
+//        XCTAssertTrue(infoMessage[TAG_TIMESTAMP] != nil)
+//        XCTAssertTrue(infoMessage[TAG_LEVEL] == "INFO")
+//
+//        let warnMessage = jsonDict![2]
+//        XCTAssertTrue(warnMessage[TAG_MSG] == "Str: heyoooooo")
+//        XCTAssertTrue(warnMessage[TAG_PKG] == fakePKG)
+//        XCTAssertTrue(warnMessage[TAG_TIMESTAMP] != nil)
+//        XCTAssertTrue(warnMessage[TAG_LEVEL] == "WARN")
+//
+//        let errorMessage = jsonDict![3]
+//        XCTAssertTrue(errorMessage[TAG_MSG] == "1 2 3 4")
+//        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
+//        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
+//        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
+//
+//        let fatalMessage = jsonDict![4]
+//        XCTAssertTrue(fatalMessage[TAG_MSG] == "StephenColbert")
+//        XCTAssertTrue(fatalMessage[TAG_PKG] == fakePKG)
+//        XCTAssertTrue(fatalMessage[TAG_TIMESTAMP] != nil)
+//    }
 
 //    
 //    func testProcessResponseFromServer(){
