@@ -156,10 +156,6 @@ public class Logger {
         }
     }
     
-    internal static func getMockLoggerForName(loggerName: String, request: RequestMock) -> Logger{
-        
-    }
-    
     
     private init(name: String) {
         self.name = name
@@ -287,8 +283,9 @@ public class Logger {
         if (Logger.fileManager.fileExistsAtPath(logFileName)) {
             
             do {
-                let fileAttributes = try Logger.fileManager.attributesOfItemAtPath(logFileName)
-                if let currentLogFileSize = fileAttributes[NSFileSystemSize] as? UInt64 {
+               // let fileAttributes = try Logger.fileManager.attributesOfItemAtPath(logFileName)
+                let attr : NSDictionary? = try NSFileManager.defaultManager().attributesOfItemAtPath(logFileName)
+                if let currentLogFileSize = attr?.fileSize() {
                     return currentLogFileSize > Logger.maxLogStoreSize / 2 // Divide by 2 since the total log storage gets shared between the log file and the overflow file
                 }
             }
@@ -303,7 +300,7 @@ public class Logger {
     
     internal func moveOldLogsToOverflowFile(logFile: String, overflowFile: String) throws {
         
-        if Logger.fileManager.isDeletableFileAtPath(overflowFile) {
+        if Logger.fileManager.fileExistsAtPath(overflowFile) && Logger.fileManager.isDeletableFileAtPath(overflowFile) {
             try Logger.fileManager.removeItemAtPath(overflowFile)
         }
         try Logger.fileManager.moveItemAtPath(logFile, toPath: overflowFile)
@@ -552,16 +549,20 @@ public class Logger {
     // We should only be sending logs from a buffer file, which is a copy of the normal log file. This way, if the logs fail to get sent to the server, we can hold onto them until the send succeeds, while continuing to log to the normal log file.
     internal static func readLogsFromFile(bufferLogFile: String) throws -> String? {
         
+        let ANALYTICS_SEND = Logger.logsDocumentPath + FILE_ANALYTICS_SEND
+        let LOGGER_SEND = Logger.logsDocumentPath + FILE_LOGGER_SEND
+        
+
         var fileContents: String?
         
         do {
             // Before sending the logs, we need to read them from the file. This is done in a serial dispatch queue to prevent conflicts if the log file is simulatenously being written to.
             switch bufferLogFile {
-            case FILE_ANALYTICS_SEND:
+            case ANALYTICS_SEND:
                 try dispatch_sync_throwable(Logger.analyticsFileIOQueue, block: { () -> () in
                     fileContents = try NSString(contentsOfFile: bufferLogFile, encoding: NSUTF8StringEncoding) as String
                 })
-            case FILE_LOGGER_SEND:
+            case LOGGER_SEND:
                 try dispatch_sync_throwable(Logger.loggerFileIOQueue, block: { () -> () in
                     fileContents = try NSString(contentsOfFile: bufferLogFile, encoding: NSUTF8StringEncoding) as String
                 })
