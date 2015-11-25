@@ -1,10 +1,15 @@
-//
-//  LogController.swift
-//  BMSCore
-//
-//  Created by Nana on 11/17/15.
-//  Copyright © 2015 IBM. All rights reserved.
-//
+/*
+*     Copyright 2015 IBM Corp.
+*     Licensed under the Apache License, Version 2.0 (the "License");
+*     you may not use this file except in compliance with the License.
+*     You may obtain a copy of the License at
+*     http://www.apache.org/licenses/LICENSE-2.0
+*     Unless required by applicable law or agreed to in writing, software
+*     distributed under the License is distributed on an "AS IS" BASIS,
+*     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*     See the License for the specific language governing permissions and
+*     limitations under the License.
+*/
 
 import UIKit
 import BMSCore
@@ -42,9 +47,59 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         return logArray.count
     }
     
+    @IBAction func clearLogButton(sender: AnyObject) {
+        let FILE = "mfpsdk.logger.log"
+        let PATH = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] + "/"
+        let pathToFile = PATH + FILE
+        do {
+            try NSFileManager().removeItemAtPath(pathToFile)
+        } catch {
+            
+        }
+    }
+    @IBAction func updateLogText(sender: AnyObject) {
+        let FILE = "mfpsdk.logger.log"
+        let PATH = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] + "/"
+        let pathToFile = PATH + FILE
+        var formattedContents:String?
+        
+        do {
+            formattedContents = try String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+            if(formattedContents != nil){
+                formattedContents = formattedContents!
+                let fileContents = "[\(formattedContents)]"
+                logText.text = fileContents
+            } else {
+                logText.text = "Empty Log"
+            }
+            
+        } catch {
+                logText.text = "Empty Log"
+        }
+//        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+        
+//        let fileContents = "[\(formattedContents)]"
+  //      logText.text = fileContents
+        
+    }
     // The data to return for the row and component (column) that's being passed in
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return logArray[row]
+    }
+    
+    func JSONString(var str: String) -> String {
+        // \b = \u{8}
+        // \f = \u{12}
+        let insensitive = NSStringCompareOptions.CaseInsensitiveSearch
+        str = str
+            .stringByReplacingOccurrencesOfString("\"", withString: "\\\"", options: insensitive)
+            .stringByReplacingOccurrencesOfString("/", withString: "\\/", options: insensitive)
+            .stringByReplacingOccurrencesOfString("\n", withString: "\\n", options: insensitive)
+            .stringByReplacingOccurrencesOfString("\u{8}", withString: "\\b", options: insensitive)
+            .stringByReplacingOccurrencesOfString("\u{12}", withString: "\\f", options: insensitive)
+            .stringByReplacingOccurrencesOfString("\r", withString: "\\r", options: insensitive)
+            .stringByReplacingOccurrencesOfString("\t", withString: "\\t", options: insensitive)
+        return str;
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -110,6 +165,9 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
       
     }
     
+    
+    
+    
     @IBAction func crashAppButton(sender: AnyObject){
         let e = NSException(name:"crashApp", reason:"No reason at all just doing it for fun", userInfo:["user":"nana"])
         e.raise()
@@ -126,6 +184,8 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         self.levelPicker.tag = 1
         self.levelPicker.dataSource = self
     }
+    
+    
     
     
 
