@@ -171,20 +171,20 @@
                                 <exclude reference="ZRh-50-yoP"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="Ned-Cf-2n7"/>
-                                <exclude reference="mnJ-6v-f5r"/>
-                                <exclude reference="cSr-d5-NSv"/>
-                                <exclude reference="sQQ-L6-yG7"/>
-                                <exclude reference="vsa-Ra-g4M"/>
-                                <exclude reference="7OM-0Y-liB"/>
-                                <exclude reference="Ojx-FF-F1f"/>
-                                <exclude reference="URn-6e-ugZ"/>
-                                <exclude reference="yfg-S2-Asi"/>
                                 <exclude reference="KVq-J9-4eA"/>
                                 <exclude reference="R3t-Do-Mci"/>
                                 <exclude reference="fZo-qt-xlG"/>
                                 <exclude reference="fme-aG-4NQ"/>
                                 <exclude reference="tbT-k8-2mZ"/>
+                                <exclude reference="7OM-0Y-liB"/>
+                                <exclude reference="Ojx-FF-F1f"/>
+                                <exclude reference="URn-6e-ugZ"/>
+                                <exclude reference="yfg-S2-Asi"/>
+                                <exclude reference="cSr-d5-NSv"/>
+                                <exclude reference="sQQ-L6-yG7"/>
+                                <exclude reference="vsa-Ra-g4M"/>
+                                <exclude reference="Ned-Cf-2n7"/>
+                                <exclude reference="mnJ-6v-f5r"/>
                                 <exclude reference="CEp-IX-LJS"/>
                                 <exclude reference="Gph-Qc-puo"/>
                                 <exclude reference="XNE-ST-l1K"/>
@@ -202,20 +202,20 @@
                                 <include reference="ZRh-50-yoP"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="Ned-Cf-2n7"/>
-                                <include reference="mnJ-6v-f5r"/>
-                                <include reference="cSr-d5-NSv"/>
-                                <include reference="sQQ-L6-yG7"/>
-                                <include reference="vsa-Ra-g4M"/>
-                                <include reference="7OM-0Y-liB"/>
-                                <include reference="Ojx-FF-F1f"/>
-                                <include reference="URn-6e-ugZ"/>
-                                <include reference="yfg-S2-Asi"/>
                                 <include reference="KVq-J9-4eA"/>
                                 <include reference="R3t-Do-Mci"/>
                                 <include reference="fZo-qt-xlG"/>
                                 <include reference="fme-aG-4NQ"/>
                                 <include reference="tbT-k8-2mZ"/>
+                                <include reference="7OM-0Y-liB"/>
+                                <include reference="Ojx-FF-F1f"/>
+                                <include reference="URn-6e-ugZ"/>
+                                <include reference="yfg-S2-Asi"/>
+                                <include reference="cSr-d5-NSv"/>
+                                <include reference="sQQ-L6-yG7"/>
+                                <include reference="vsa-Ra-g4M"/>
+                                <include reference="Ned-Cf-2n7"/>
+                                <include reference="mnJ-6v-f5r"/>
                                 <include reference="CEp-IX-LJS"/>
                                 <include reference="Gph-Qc-puo"/>
                                 <include reference="XNE-ST-l1K"/>
@@ -253,7 +253,7 @@
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="165" y="173" width="0.0" height="0.0"/>
@@ -263,7 +263,7 @@
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="15" y="58" width="69" height="21"/>
@@ -287,7 +287,7 @@
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="55" y="152" width="0.0" height="0.0"/>
@@ -297,7 +297,7 @@
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="8" y="346" width="69" height="21"/>
@@ -325,7 +325,7 @@
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="15" y="193" width="40" height="21"/>
@@ -344,7 +344,7 @@
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="8" y="293" width="115" height="21"/>
@@ -361,7 +361,7 @@
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="8" y="409" width="62" height="21"/>
@@ -372,7 +372,7 @@
                                 <animations/>
                                 <state key="normal" title="Send Log"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="116" y="464" width="65" height="30"/>
+                                    <rect key="frame" x="17" y="464" width="65" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="sendLogButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="Czb-dF-yEf"/>
@@ -383,7 +383,7 @@
                                 <animations/>
                                 <state key="normal" title="Crash App"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="223" y="464" width="72" height="30"/>
+                                    <rect key="frame" x="122" y="464" width="72" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="crashAppButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="JpS-DV-EZi"/>
@@ -398,6 +398,28 @@
                                     <rect key="frame" x="15" y="532" width="325" height="205"/>
                                 </variation>
                             </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zGi-FV-3FD">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Update"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="234" y="464" width="51" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="updateLogText:" destination="ERv-bC-MVG" eventType="touchUpInside" id="j4Z-vt-qyt"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MWz-3B-gyK">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Clear"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="317" y="464" width="36" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="clearLogButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="EKv-PA-x2I"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -419,6 +441,8 @@
                                 <exclude reference="eVV-cN-f6d"/>
                                 <exclude reference="y3p-s2-Tv0"/>
                                 <exclude reference="ojk-yr-2hn"/>
+                                <exclude reference="zGi-FV-3FD"/>
+                                <exclude reference="MWz-3B-gyK"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -439,6 +463,8 @@
                                 <include reference="eVV-cN-f6d"/>
                                 <include reference="y3p-s2-Tv0"/>
                                 <include reference="ojk-yr-2hn"/>
+                                <include reference="zGi-FV-3FD"/>
+                                <include reference="MWz-3B-gyK"/>
                             </mask>
                         </variation>
                     </view>
