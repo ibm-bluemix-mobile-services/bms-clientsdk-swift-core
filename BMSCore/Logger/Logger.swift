@@ -430,7 +430,10 @@ public class Logger {
             do {
                 let logsToSend: String? = try getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
                 if logsToSend != nil {
-                    sendToServer(logsToSend!, withCallback: logSendCallback)
+                    if let (request, logPayload) = buildLogSendRequest(logsToSend!, withCallback: logSendCallback){
+                        request.sendString(logPayload, withCompletionHandler: logSendCallback)
+                    }
+                    
                 }
                 else {
                     Logger.internalLogger.info("There are no logs to send.")
@@ -463,7 +466,10 @@ public class Logger {
             do {
                 let logsToSend: String? = try getLogs(fileName: FILE_ANALYTICS_LOGS, overflowFileName:FILE_ANALYTICS_OVERFLOW, bufferFileName: FILE_ANALYTICS_SEND)
                 if logsToSend != nil {
-                    sendToServer(logsToSend!, withCallback: analyticsSendCallback)
+                    if let (request, logPayload) = buildLogSendRequest(logsToSend!, withCallback: analyticsSendCallback){
+                        request.sendString(logPayload, withCompletionHandler: analyticsSendCallback)
+                    }
+
                 }
                 else {
                     Analytics.logger.info("There are no analytics data to send.")
@@ -475,18 +481,17 @@ public class Logger {
         }
     }
     
-    
-    internal static func sendToServer(logs: String, withCallback callback: MfpCompletionHandler) {
+    internal static func buildLogSendRequest(logs: String, withCallback callback: MfpCompletionHandler) -> (Request, String)?{
         
         let bmsClient = BMSClient.sharedInstance
         
         guard var appRoute = bmsClient.bluemixAppRoute else {
             returnClientInitializationError("bluemixAppRoute", callback: callback)
-            return
+            return nil
         }
         guard let appGuid = bmsClient.bluemixAppGUID else {
             returnClientInitializationError("bluemixAppGUID", callback: callback)
-            return
+            return nil
         }
         
         // Build and send the Request
@@ -505,7 +510,7 @@ public class Logger {
         let logPayload = "[" + logs + "]"
         
         let request = Request(url: logUploaderUrl, headers: headers, queryParameters: nil, method: HttpMethod.POST)
-        request.sendString(logPayload, withCompletionHandler: callback)
+        return (request, logPayload)
     }
     
     internal static func returnClientInitializationError(missingValue: String, callback: MfpCompletionHandler) {
