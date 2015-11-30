@@ -354,25 +354,25 @@
                                 <rect key="frame" x="-25" y="-15" width="51" height="31"/>
                                 <animations/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="116" y="409" width="51" height="31"/>
+                                    <rect key="frame" x="215" y="409" width="51" height="31"/>
                                 </variation>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Capture" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lci-e8-vra">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Internal Logging Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lci-e8-vra">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="8" y="409" width="62" height="21"/>
+                                    <rect key="frame" x="8" y="409" width="190" height="21"/>
                                 </variation>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVV-cN-f6d">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <animations/>
-                                <state key="normal" title="Send Log"/>
+                                <state key="normal" title="Log"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="17" y="464" width="65" height="30"/>
+                                    <rect key="frame" x="15" y="464" width="30" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="sendLogButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="Czb-dF-yEf"/>
@@ -383,13 +383,13 @@
                                 <animations/>
                                 <state key="normal" title="Crash App"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="122" y="464" width="72" height="30"/>
+                                    <rect key="frame" x="73" y="464" width="72" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="crashAppButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="JpS-DV-EZi"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="--Sample Log File---" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ojk-yr-2hn">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ojk-yr-2hn">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -401,9 +401,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zGi-FV-3FD">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <animations/>
-                                <state key="normal" title="Update"/>
+                                <state key="normal" title="Show Logs"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="234" y="464" width="51" height="30"/>
+                                    <rect key="frame" x="163" y="464" width="75" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="updateLogText:" destination="ERv-bC-MVG" eventType="touchUpInside" id="j4Z-vt-qyt"/>
@@ -412,9 +412,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MWz-3B-gyK">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <animations/>
-                                <state key="normal" title="Clear"/>
+                                <state key="normal" title="Remove Logs"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="317" y="464" width="36" height="30"/>
+                                    <rect key="frame" x="256" y="464" width="92" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="clearLogButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="EKv-PA-x2I"/>

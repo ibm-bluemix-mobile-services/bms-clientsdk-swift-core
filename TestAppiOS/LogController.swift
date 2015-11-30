@@ -18,9 +18,12 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
 
     @IBOutlet weak var crashButton: UIButton!
     
+    //TODO: add logStoreEnabled
+    // add maxLogStoreSize
     
+    // add isUncaughtExcpetionDetected
 
-    let logArray = ["debug", "info", "warn", "error", "fatal"]
+    let logArray = ["none", "debug", "info", "warn", "error", "fatal"]
     var level = "debug"
     var type = "debug"
     @IBOutlet weak var packageName: UITextField!
@@ -61,18 +64,12 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         let FILE = "mfpsdk.logger.log"
         let PATH = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] + "/"
         let pathToFile = PATH + FILE
-        var formattedContents:String?
+        var formattedContents:String
         
         do {
             formattedContents = try String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
-            if(formattedContents != nil){
-                formattedContents = formattedContents!
-                let fileContents = "[\(formattedContents)]"
-                logText.text = fileContents
-            } else {
-                logText.text = "Empty Log"
-            }
-            
+            let fileContents = "[\(formattedContents)]"
+            logText.text = fileContents.stringByReplacingOccurrencesOfString("\\\"", withString: "\"")
         } catch {
                 logText.text = "Empty Log"
         }
@@ -131,6 +128,8 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         
 
         switch level {
+            case "none":
+                Logger.logLevelFilter = LogLevel.None
             case "debug":
                 Logger.logLevelFilter = LogLevel.Debug
             case "info":
@@ -146,6 +145,8 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         }
         
         switch type {
+            case "none":
+             print("Do nothing")
             case "debug":
                 logger.debug(logMessage.text!)
             case "info":
