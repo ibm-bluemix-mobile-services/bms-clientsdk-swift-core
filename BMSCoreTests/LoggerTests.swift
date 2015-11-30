@@ -341,13 +341,13 @@ class LoggerTests: XCTestCase {
         
         let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
         let fileContents = "[\(formattedContents)]"
-        //let reason = e.reason!
-        //let errorMessage = "Uncaught Exception: \(e.name)." + " Reason: \(reason)."
+        let reason = e.reason!
+        let errorMessage = "Uncaught Exception: \(e.name)." + " Reason: \(reason)."
         let logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
         let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
         
         let exceptionMessage = jsonDict![0]
-       // XCTAssertTrue(exceptionMessage[TAG_MSG] == errorMessage) TODO: Figure out why this string is not what is expected
+        XCTAssertTrue(exceptionMessage[TAG_MSG] == errorMessage) //TODO: Figure out why this string is not what is expected
         XCTAssertTrue(exceptionMessage[TAG_PKG] == MFP_LOGGER_PACKAGE)
         XCTAssertTrue(exceptionMessage[TAG_TIMESTAMP] != nil)
         XCTAssertTrue(exceptionMessage[TAG_LEVEL] == "FATAL")
@@ -502,10 +502,7 @@ class LoggerTests: XCTestCase {
         loggerInstance.error("1 2 3 4")
         loggerInstance.fatal("StephenColbert")
         
-        
-        let overflowFile = NSFileManager().fileExistsAtPath(pathToOverflow)
-        
-        XCTAssertTrue(overflowFile)
+        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToOverflow))
         
         var formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
         var fileContents = "[\(formattedContents)]"
@@ -549,6 +546,11 @@ class LoggerTests: XCTestCase {
         XCTAssertTrue(overflowMessage[TAG_LEVEL] == "DEBUG")
         
     }
+    
+    func testUpdateLogProfile(){
+        //TODO:
+    }
+    
 //    
 //    func testFailOverflowLogging(){
 //        let fakePKG = "MYPKG"
