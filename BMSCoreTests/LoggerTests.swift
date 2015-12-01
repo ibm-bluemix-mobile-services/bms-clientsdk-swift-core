@@ -14,12 +14,7 @@
 import XCTest
 @testable import BMSCore
 
-
-//OCLogger , IMFLogger, BMSCoreAndroidLogger
 class LoggerTests: XCTestCase {
-
-//TODO: test for getLoggerForName, uncaughtExceptionDetected (check if default to false)
-// send (it should be deleting the wl.log)
     
     func testGetLoggerForName(){
         let name = "sample"
@@ -29,17 +24,25 @@ class LoggerTests: XCTestCase {
         XCTAssertTrue(logger.name == Logger.loggerInstances[name]?.name)
     }
     
-//TODO:  Need to figure out why you can't set maxLogStoreSize
-//    func testSetGetMaxLogStoreSize(){
-//    
-//        let size1 = Logger.maxLogStoreSize
-//        XCTAssertTrue(size1 == DEFAULT_MAX_STORE_SIZE)
-//
-//        Logger.maxLogStoreSize = 12345678 as UInt64
-//        let size3 = Logger.maxLogStoreSize
-//        XCTAssertTrue(size3 == 12345678)
-//    }
-//
+    func testIsUncaughtException(){
+
+        Logger.isUncaughtExceptionDetected = false
+        XCTAssertFalse(Logger.isUncaughtExceptionDetected)
+        Logger.isUncaughtExceptionDetected = true
+        XCTAssertTrue(Logger.isUncaughtExceptionDetected)
+        
+    }
+
+    func testSetGetMaxLogStoreSize(){
+    
+        let size1 = Logger.maxLogStoreSize
+        XCTAssertTrue(size1 == DEFAULT_MAX_STORE_SIZE)
+
+        Logger.maxLogStoreSize = 12345678 as UInt64
+        let size3 = Logger.maxLogStoreSize
+        XCTAssertTrue(size3 == 12345678)
+    }
+
     func testlogStoreEnabled(){
         
         let capture1 = Logger.logStoreEnabled
@@ -486,6 +489,12 @@ class LoggerTests: XCTestCase {
             
         }
         
+        do {
+            try NSFileManager().removeItemAtPath(pathToOverflow)
+        } catch {
+            
+        }
+        
         let bundle = NSBundle(forClass: self.dynamicType)
         let path = bundle.pathForResource("largeData", ofType: "txt")
         let largeData = try! String(contentsOfFile: path!)
@@ -547,9 +556,190 @@ class LoggerTests: XCTestCase {
         
     }
     
+    
     func testUpdateLogProfile(){
         //TODO:
     }
+    
+    func testLogSendRequest(){
+        let fakePKG = "MYPKG"
+        let REWRITE_DOMAIN_HEADER_NAME = "X-REWRITE-DOMAIN"
+        let UPLOAD_PATH = "/imfmobileanalytics/v1/receiver/apps/"
+        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
+        let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
+        let bmsClient = BMSClient.sharedInstance
+        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1")
+        let url = bmsClient.bluemixAppRoute! + UPLOAD_PATH + bmsClient.bluemixAppGUID!
+        
+        let headers = ["Content-Type": "application/json", REWRITE_DOMAIN_HEADER_NAME : bmsClient.rewriteDomain!]
+
+        
+
+        do {
+            try NSFileManager().removeItemAtPath(pathToFile)
+            
+        } catch {
+            
+        }
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToBuffer)
+            
+        } catch {
+            
+        }
+        
+        let loggerInstance = Logger.getLoggerForName(fakePKG)
+        Logger.logStoreEnabled = true
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
+        
+        loggerInstance.debug("Hello world")
+        loggerInstance.info("1242342342343243242342")
+        loggerInstance.warn("Str: heyoooooo")
+        loggerInstance.error("1 2 3 4")
+        loggerInstance.fatal("StephenColbert")
+        
+        let logs: String! =  try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
+        
+        let formattedLogs = "[\(logs)]"
+        
+        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
+        
+        XCTAssertTrue(bufferFile)
+        
+        let (request, payload) = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
+        }!
+        
+        XCTAssertTrue(request.resourceUrl == url)
+        XCTAssertTrue(request.headers! == headers)
+        XCTAssertNil(request.queryParameters)
+        XCTAssertTrue(request.httpMethod == HttpMethod.POST)
+        
+        XCTAssertTrue(payload == formattedLogs)
+    }
+    
+    func testLogSendRequestFail(){
+        let fakePKG = "MYPKG"
+        let missingValue = "bluemixAppRoute"
+        let msg = "No value found for the BMSClient \(missingValue) property."
+        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
+        let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToFile)
+            
+        } catch {
+            
+        }
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToBuffer)
+            
+        } catch {
+            
+        }
+        
+        let loggerInstance = Logger.getLoggerForName(fakePKG)
+        Logger.logStoreEnabled = true
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
+        
+        loggerInstance.debug("Hello world")
+        loggerInstance.info("1242342342343243242342")
+        loggerInstance.warn("Str: heyoooooo")
+        loggerInstance.error("1 2 3 4")
+        loggerInstance.fatal("StephenColbert")
+        
+        let logs: String! = try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
+        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
+        
+        XCTAssertTrue(bufferFile)
+        
+        let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
+                XCTAssertNil(response)
+                XCTAssertNotNil(error)
+        }!
+        
+        XCTAssertNil(request)
+        
+        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+        let fileContents = "[\(formattedContents)]"
+        let logDict  = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
+        let jsonDict = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
+        
+        
+        let errorMessage = jsonDict[0]
+        XCTAssertTrue(errorMessage[TAG_MSG] == msg)
+        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
+        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
+        
+    }
+    
+    func testReturnClientInitializationError(){
+        let errorMessage = "Error"
+        Logger.returnClientInitializationError(errorMessage) { (response, error) -> Void in
+            XCTAssertNil(response)
+            XCTAssertNotNil(error)
+        }
+    }
+    
+    func testDeleteBufferFileFail(){
+        let fakePKG = "mfpsdk.logger"
+        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
+        let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
+        do {
+            try NSFileManager().removeItemAtPath(pathToFile)
+            
+        } catch {
+            
+        }
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToBuffer)
+            
+        } catch {
+            
+        }
+        
+        let loggerInstance = Logger.getLoggerForName(fakePKG)
+        Logger.logStoreEnabled = true
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
+        
+        loggerInstance.debug("Hello world")
+    
+        let logs: String! =  try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
+        
+        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
+        
+        XCTAssertTrue(bufferFile)
+        XCTAssertNotNil(logs)
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToBuffer)
+        } catch {
+            
+        }
+        
+        Logger.deleteBufferFile(pathToBuffer)
+        
+        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+        let fileContents = "[\(formattedContents)]"
+        let logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
+        let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
+        
+    
+        let errorMessage = jsonDict![0]
+        XCTAssertNotNil(errorMessage[TAG_MSG])
+        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
+        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
+        
+    }
+    
+    
     
 //    
 //    func testFailOverflowLogging(){
@@ -598,6 +788,9 @@ class LoggerTests: XCTestCase {
 //        
 //    }
     
+
+
+    
     func testDeleteBufferFile(){
         let fakePKG = "MYPKG"
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
@@ -640,65 +833,5 @@ class LoggerTests: XCTestCase {
         
         XCTAssertFalse(bufferFile)
     }
-
-//    
-//    func testProcessResponseFromServer(){
-//        let level = "DEBUG"
-//        let filters = ["package": "WARN"]
-//        let serverResponse = ["wllogger": ["level": level]]
-//
-//        Logger.processConfigResponseFromServer(serverResponse)
-//
-//        let newCapture = Logger.logStoreEnabled
-//        let newLevel = Logger.logLevelFilter
-//
-//        XCTAssertTrue(newCapture)
-//        XCTAssertTrue(newLevel == LogLevel.Debug)
-//    }
-//        
-//    func testServerConfigOverridesLocalConfig(){
-//        let serverLevel = "ERROR"
-//        let serverFilters = ["JSONStore": "INFO"]
-//        let serverResponse = ["wllogger": ["level": serverLevel]]
-//
-//        Logger.logStoreEnabled = false
-//        Logger.logLevelFilter = LogLevel.Warn
-//        
-//        XCTAssertFalse(Logger.logStoreEnabled)
-//        XCTAssertTrue(Logger.logLevelFilter == LogLevel.Warn)
-//
-//        Logger.processConfigResponseFromServer(serverResponse)
-//
-//        let newCapture = Logger.logStoreEnabled
-//        let newLevel = Logger.logLevelFilter
-//
-//        XCTAssertTrue(newCapture)
-//        XCTAssertTrue(newLevel == LogLevel.Error)
-//    }
-//    
-//    func testLocalSettingsRestoredOnClear(){
-//        let serverLevel = "ERROR"
-//        let serverFilters = ["JSONStore": "INFO"]
-//        let serverResponse = ["wllogger": ["filters": serverFilters, "level": serverLevel]]
-//
-//        Logger.logStoreEnabled = false
-//        Logger.logLevelFilter = LogLevel.Warn
-//
-//        XCTAssertFalse(Logger.logStoreEnabled)
-//        XCTAssertTrue(Logger.logLevelFilter == LogLevel.Warn)
-//
-//        Logger.processConfigResponseFromServer(serverResponse);
-//    
-//        let newCapture = Logger.logStoreEnabled
-//        let newLevel = Logger.logLevelFilter
-//        
-//        XCTAssertTrue(newCapture)
-//        XCTAssertTrue(newLevel == LogLevel.Error)
-//
-//        Logger.clearServerConfig()
-//
-//        XCTAssertFalse(Logger.logStoreEnabled)
-//        XCTAssertTrue(Logger.logLevelFilter == LogLevel.Warn)
-//    }
     
 }
