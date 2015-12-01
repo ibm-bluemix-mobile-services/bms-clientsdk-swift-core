@@ -45,48 +45,39 @@ public class Analytics {
     
     dynamic static internal func logSessionStart() {
         
-        let startTime = NSDate.timeIntervalSinceReferenceDate() * 1000 //milliseconds
-        
-        var logMetadata: [String: AnyObject] = [:]
-        logMetadata[KEY_METADATA_CATEGORY] = TAG_CATEGORY_EVENT
-        logMetadata[KEY_METADATA_TYPE] = TAG_SESSION
-        logMetadata[KEY_EVENT_START_TIME] = startTime
-        
-        logger.analytics(logMetadata)
-        
-        let sessionMetadata = NSUUID().UUIDString
-        
-        if Analytics.lifecycleEvents[TAG_SESSION] != nil {
+        if !lifecycleEvents.isEmpty {
             logger.warn("The previous session did not end properly so the session will not be recorded. This new session will override the previous session.")
         }
-            
-        Analytics.lifecycleEvents[TAG_SESSION] = sessionMetadata
-        Analytics.lifecycleEvents[KEY_EVENT_START_TIME] = startTime
         
+        let startTime = NSDate.timeIntervalSinceReferenceDate() * 1000 // milliseconds
+        
+        lifecycleEvents[KEY_METADATA_CATEGORY] = TAG_CATEGORY_EVENT
+        lifecycleEvents[KEY_METADATA_TYPE] = TAG_SESSION
+        lifecycleEvents[KEY_EVENT_START_TIME] = startTime
+        
+        // CODE REVIEW: Is there a reason this key/value pair is set after logging in the Android SDK?
+        lifecycleEvents[KEY_SESSION_ID] = NSUUID().UUIDString
+    
+        logger.analytics(Analytics.lifecycleEvents)
     }
     
     
     dynamic static internal func logSessionEnd() {
         
-        guard var eventMetadata = Analytics.lifecycleEvents[TAG_SESSION] as? [String: AnyObject] else {
-            logger.warn("App background event reached before the foreground event of the same session was recorded.")
-            Analytics.lifecycleEvents.removeValueForKey(TAG_SESSION)
+        guard !lifecycleEvents.isEmpty else {
+            logger.warn("The current app session ended before the start event was triggered, so the session cannot be recorded.")
             return
         }
         
-        if let startTime = eventMetadata[KEY_EVENT_START_TIME] as? NSTimeInterval {
+        if let startTime = lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval {
             let eventDuration = NSDate.timeIntervalSinceReferenceDate() - startTime
+            lifecycleEvents[KEY_METADATA_DURATION] = eventDuration
+            lifecycleEvents.removeValueForKey(KEY_EVENT_START_TIME)
             
-            eventMetadata[KEY_METADATA_CATEGORY] = TAG_CATEGORY_EVENT
-            eventMetadata[KEY_METADATA_DURATION] = eventDuration
-            eventMetadata[KEY_METADATA_TYPE] = TAG_SESSION
-            
-            logger.analytics(eventMetadata)
-        } else {
-            logger.warn("The session ended before the timer started so the current session duration cannot be recorded")
+            logger.analytics(lifecycleEvents)
         }
         
-        Analytics.lifecycleEvents.removeValueForKey(TAG_SESSION)
+        lifecycleEvents = [:]
     }
     
     

@@ -20,38 +20,52 @@ class AnalyticsTests: XCTestCase {
         Analytics.lifecycleEvents = [:]
     }
     
-    func testLogSessionStartUpdatesCorrectly(){
+    /**
+        1) Call logSessionStart(), which should update Analytics.lifecycleEvents.
+        2) Call logSessionStart() again. This should cause Analytics.lifecycleEvents to be updated:
+            - The original start time (KEY_EVENT_START_TIME) should be replaced with the new start time.
+            - The session (TAG_SESSION) is a unique ID that should contain a different value each time logSessionStart()
+                is called.
+    */
+    func testLogSessionStartUpdatesCorrectly() {
 
         XCTAssertTrue(Analytics.lifecycleEvents.isEmpty)
         
         Analytics.logSessionStart()
 
-        let firstSession = Analytics.lifecycleEvents[TAG_SESSION] as? String
-        let originalStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? Double
+        let firstSessionID = Analytics.lifecycleEvents[KEY_SESSION_ID] as? String
+        let firstSessionStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval
         
-        XCTAssertNotNil(firstSession)
-        XCTAssertNotNil(originalStartTime)
+        XCTAssertNotNil(firstSessionID)
+        XCTAssertNotNil(firstSessionStartTime)
 
         Analytics.logSessionStart()
 
-        XCTAssertNotNil(Analytics.lifecycleEvents[TAG_SESSION])
+        XCTAssertNotNil(Analytics.lifecycleEvents)
 
-        XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as! Double > originalStartTime!);
-        XCTAssertTrue(firstSession! != Analytics.lifecycleEvents[TAG_SESSION] as! String);
-    
+        XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval > firstSessionStartTime);
+        XCTAssertTrue(firstSessionID! != Analytics.lifecycleEvents[KEY_SESSION_ID] as! String);
     }
     
-    func testLogSessionAfterCompleteSession(){
+    /**
+        1) Call logSessionStart(), which should update Analytics.lifecycleEvents.
+        2) Call logSessionEnd(). This should reset Analytics.lifecycleEvents by removing the session ID.
+        3) Call logSessionStart() again. This should cause Analytics.lifecycleEvents to be updated:
+            - The original start time (KEY_EVENT_START_TIME) should be replaced with the new start time.
+            - The session (TAG_SESSION) is a unique ID that should contain a different value each time logSessionStart()
+                is called.
+    */
+    func testLogSessionAfterCompleteSession() {
         
         XCTAssertTrue(Analytics.lifecycleEvents.isEmpty)
         
         Analytics.logSessionStart()
         
-        let firstSession = Analytics.lifecycleEvents[TAG_SESSION] as? String
-        let originalStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? Double
+        let firstSessionID = Analytics.lifecycleEvents[KEY_SESSION_ID] as? String
+        let firstSessionStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval
         
-        XCTAssertNotNil(firstSession)
-        XCTAssertNotNil(originalStartTime)
+        XCTAssertNotNil(firstSessionID)
+        XCTAssertNotNil(firstSessionStartTime)
         
         Analytics.logSessionEnd()
         
@@ -59,27 +73,32 @@ class AnalyticsTests: XCTestCase {
         
         Analytics.logSessionStart()
         
-        XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as! Double > originalStartTime!);
-        XCTAssertTrue(firstSession! != Analytics.lifecycleEvents[TAG_SESSION] as! String);
-    
+        XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval > firstSessionStartTime);
+        XCTAssertTrue(firstSessionID! != Analytics.lifecycleEvents[KEY_SESSION_ID] as! String);
     }
     
-    func testlogSessionEndBeforeLogSessionStart(){
+    /**
+        1) Call logSessionEnd(). This should have no effect since logSessionStart() was never called.
+        2) Call logSessionStart() again. This should cause Analytics.lifecycleEvents to be updated,
+            - The original start time (KEY_EVENT_START_TIME) should be replaced with the new start time.
+            - The session (TAG_SESSION) is a unique ID that should contain a different value each time logSessionStart()
+                is called.
+    */
+    func testlogSessionEndBeforeLogSessionStart() {
         
         XCTAssertTrue(Analytics.lifecycleEvents.isEmpty)
         
         Analytics.logSessionEnd()
         
-        XCTAssertNil(Analytics.lifecycleEvents[TAG_SESSION])
-        XCTAssertNil(Analytics.lifecycleEvents[KEY_EVENT_START_TIME])
+        XCTAssertTrue(Analytics.lifecycleEvents.isEmpty)
         
         Analytics.logSessionStart()
     
-        let session = Analytics.lifecycleEvents[TAG_SESSION] as? String
-        let startTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? Double
+        let sessionID = Analytics.lifecycleEvents[KEY_SESSION_ID] as? String
+        let sessionStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval
         
-        XCTAssertNotNil(session)
-        XCTAssertNotNil(startTime)
+        XCTAssertNotNil(sessionID)
+        XCTAssertNotNil(sessionStartTime)
     
         
     }

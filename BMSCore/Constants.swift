@@ -14,6 +14,7 @@
 internal let MFP_PACKAGE_PREFIX = "mfpsdk."
 internal let MFP_LOGGER_PACKAGE = MFP_PACKAGE_PREFIX + "logger"
 internal let MFP_ANALYTICS_PACKAGE = MFP_PACKAGE_PREFIX + "analytics"
+internal let MFP_REQUEST_PACKAGE = MFP_PACKAGE_PREFIX + "request"
 
 internal let MFP_CORE_ERROR_DOMAIN = "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore"
 
@@ -29,10 +30,10 @@ internal let KEY_METADATA_CATEGORY = "$category"
 internal let KEY_METADATA_TYPE = "$type"
 internal let KEY_EVENT_START_TIME = "$startTime"
 internal let KEY_METADATA_DURATION = "$duration"
+internal let KEY_SESSION_ID = "$sessionId"
 
 internal let TAG_CATEGORY_EVENT = "event"
 internal let TAG_SESSION = "$session"
-internal let TAG_SESSION_ID = "$sessionId"
 internal let TAG_APP_STARTUP = "$startup"
 internal let TAG_MSG = "msg"
 internal let TAG_PKG = "pkg"
