@@ -60,3 +60,12 @@ public class BMSClient: MFPClient {
     }
     
 }
+
+internal extension BMSClient {
+    internal func uninitializeBluemixAppRoute() {
+        self.bluemixAppRoute = nil
+    }
+    internal func uninitalizeBluemixAppGUID(){
+        self.bluemixAppGUID = nil
+    }
+}
