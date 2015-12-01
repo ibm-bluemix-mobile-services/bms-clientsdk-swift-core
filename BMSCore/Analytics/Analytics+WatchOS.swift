@@ -14,28 +14,25 @@
 
 public extension Analytics {
     
-    
-    // TODO: Rename these methods to something more appropriate and clear
-    
     /**
-    Starts a timer to record the length of time the WatchOS app is being used before becoming inactive.
-    This event will be recorded and sent to the Analytics console, provided that the `Analytics.enabled` property is set to `true`.
-    
-    This should be called in the `ExtensionDelegate applicationDidBecomeActive` method.
+        Starts a timer to record the length of time the WatchOS app is being used before becoming inactive.
+        This event will be recorded and sent to the Analytics console, provided that the `Analytics.enabled` property is set to `true`.
+        
+        This should be called in the `ExtensionDelegate applicationDidBecomeActive` method.
     */
-    public static func startRecordingApplicationLifecycleEvents() {
+    public static func recordApplicationDidBecomeActive() {
         
         Analytics.logSessionStart()
     }
     
     
     /**
-    Ends the timer started by the `Analytics startRecordingApplicationLifecycleEvents` method.
-    This event will be recorded and sent to the Analytics console, provided that the `Analytics.enabled` property is set to `true`.
-    
-    This should be called in the `ExtensionDelegate applicationWillResignActive` method.
+        Ends the timer started by the `Analytics startRecordingApplicationLifecycleEvents` method.
+        This event will be recorded and sent to the Analytics console, provided that the `Analytics.enabled` property is set to `true`.
+        
+        This should be called in the `ExtensionDelegate applicationWillResignActive` method.
     */
-    public static func stopRecordingApplicationLifecycleEvents() {
+    public static func recordApplicationWillResignActive() {
         
         Analytics.logSessionEnd()
     }
