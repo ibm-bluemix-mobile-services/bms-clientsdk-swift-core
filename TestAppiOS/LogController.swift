@@ -15,13 +15,8 @@ import UIKit
 import BMSCore
 
 class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
-
+    
     @IBOutlet weak var crashButton: UIButton!
-    
-    //TODO: add logStoreEnabled
-    // add maxLogStoreSize
-    
-    // add isUncaughtExcpetionDetected
 
     let logArray = ["none", "debug", "info", "warn", "error", "fatal"]
     var level = "debug"
@@ -30,7 +25,11 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
     @IBOutlet weak var levelPicker: UIPickerView!
     @IBOutlet weak var typePicker: UIPickerView!
     @IBOutlet weak var logText: UITextView!
-    
+    @IBOutlet weak var maxLogStoreSize: UITextField!
+
+  
+    @IBOutlet weak var storeLogEnabled: UITextField!
+    @IBOutlet weak var isUncaughtExceptionDetection: UISwitch!
     @IBOutlet weak var capture: UISwitch!
 
     @IBOutlet weak var logMessage: UITextField!
@@ -125,6 +124,26 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         } else {
             Logger.internalSDKLoggingEnabled = false
         }
+        
+        if(isUncaughtExceptionDetection.enabled){
+            Logger.isUncaughtExceptionDetected = true
+        } else {
+            Logger.isUncaughtExceptionDetected = false
+        }
+        
+        if(!maxLogStoreSize.text!.isEmpty){
+            Logger.maxLogStoreSize = Int(maxLogStoreSize.text)
+        }
+        
+        
+        if(storeLogEnabled.enabled){
+                Logger.logStoreEnabled = true
+        } else {
+            Logger.logStoreEnabled = false
+        }
+        
+        
+        
         
 
         switch level {
