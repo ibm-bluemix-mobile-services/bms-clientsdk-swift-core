@@ -372,7 +372,7 @@
                                 <animations/>
                                 <state key="normal" title="Log"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="15" y="464" width="30" height="30"/>
+                                    <rect key="frame" x="15" y="574" width="30" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="sendLogButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="Czb-dF-yEf"/>
@@ -383,7 +383,7 @@
                                 <animations/>
                                 <state key="normal" title="Crash App"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="73" y="464" width="72" height="30"/>
+                                    <rect key="frame" x="65" y="574" width="72" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="crashAppButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="JpS-DV-EZi"/>
@@ -395,15 +395,34 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="15" y="532" width="325" height="205"/>
+                                    <rect key="frame" x="15" y="625" width="375" height="118"/>
                                 </variation>
                             </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="isUncaughtExcpetionDetected" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ST3-gE-RoP">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="8" y="537" width="233" height="21"/>
+                                </variation>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ka2-uZ-skm">
+                                <rect key="frame" x="-25" y="-30" width="97" height="30"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="153" y="488" width="157" height="30"/>
+                                </variation>
+                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zGi-FV-3FD">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Show Logs"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="163" y="464" width="75" height="30"/>
+                                    <rect key="frame" x="166" y="574" width="75" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="updateLogText:" destination="ERv-bC-MVG" eventType="touchUpInside" id="j4Z-vt-qyt"/>
@@ -414,12 +433,49 @@
                                 <animations/>
                                 <state key="normal" title="Remove Logs"/>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="256" y="464" width="92" height="30"/>
+                                    <rect key="frame" x="263" y="574" width="92" height="30"/>
                                 </variation>
                                 <connections>
                                     <action selector="clearLogButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="EKv-PA-x2I"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="storeLogEnabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XjL-eq-a9a">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="8" y="446" width="129" height="21"/>
+                                </variation>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tgP-bR-MR4">
+                                <rect key="frame" x="-25" y="-15" width="51" height="31"/>
+                                <animations/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="153" y="441" width="51" height="31"/>
+                                </variation>
+                                <connections>
+                                    <action selector="storeLogEnabled:" destination="ERv-bC-MVG" eventType="touchUpInside" id="rPE-e6-8lJ"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="maxLogStoreSize" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qOY-jQ-ZW9">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="8" y="491" width="134" height="21"/>
+                                </variation>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="feY-JE-xhA">
+                                <rect key="frame" x="-25" y="-15" width="51" height="31"/>
+                                <animations/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="263" y="535" width="51" height="31"/>
+                                </variation>
+                            </switch>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -441,8 +497,14 @@
                                 <exclude reference="eVV-cN-f6d"/>
                                 <exclude reference="y3p-s2-Tv0"/>
                                 <exclude reference="ojk-yr-2hn"/>
+                                <exclude reference="ST3-gE-RoP"/>
+                                <exclude reference="ka2-uZ-skm"/>
                                 <exclude reference="zGi-FV-3FD"/>
                                 <exclude reference="MWz-3B-gyK"/>
+                                <exclude reference="XjL-eq-a9a"/>
+                                <exclude reference="tgP-bR-MR4"/>
+                                <exclude reference="qOY-jQ-ZW9"/>
+                                <exclude reference="feY-JE-xhA"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -463,18 +525,27 @@
                                 <include reference="eVV-cN-f6d"/>
                                 <include reference="y3p-s2-Tv0"/>
                                 <include reference="ojk-yr-2hn"/>
+                                <include reference="ST3-gE-RoP"/>
+                                <include reference="ka2-uZ-skm"/>
                                 <include reference="zGi-FV-3FD"/>
                                 <include reference="MWz-3B-gyK"/>
+                                <include reference="XjL-eq-a9a"/>
+                                <include reference="tgP-bR-MR4"/>
+                                <include reference="qOY-jQ-ZW9"/>
+                                <include reference="feY-JE-xhA"/>
                             </mask>
                         </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="Logging Demo" id="OAq-Bp-XFs"/>
                     <connections>
                         <outlet property="capture" destination="0v6-SN-z2R" id="Jth-YI-on9"/>
+                        <outlet property="isUncaughtExceptionDetection" destination="feY-JE-xhA" id="5yb-vN-Xc0"/>
                         <outlet property="levelPicker" destination="IMs-gF-Ilv" id="ijt-wU-Ku8"/>
                         <outlet property="logMessage" destination="JxB-hC-dng" id="trD-uf-ZKG"/>
                         <outlet property="logText" destination="ojk-yr-2hn" id="tZl-WG-hNM"/>
+                        <outlet property="maxLogStoreSize" destination="ka2-uZ-skm" id="Xqc-5H-YP7"/>
                         <outlet property="packageName" destination="S3q-mP-wrJ" id="pgf-8x-BeJ"/>
+                        <outlet property="storeLogEnabled" destination="ka2-uZ-skm" id="LbR-uh-xHr"/>
                         <outlet property="typePicker" destination="By1-cT-NKH" id="zfR-QZ-kYO"/>
                     </connections>
                 </viewController>
