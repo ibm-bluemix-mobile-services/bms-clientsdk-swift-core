@@ -619,12 +619,16 @@ class LoggerTests: XCTestCase {
         XCTAssertTrue(payload == formattedLogs)
     }
     
-    func testLogSendRequestFail(){
-        let fakePKG = "MYPKG"
+    func testBuildLogSendRequestFail(){
+        let fakePKG = MFP_LOGGER_PACKAGE
         let missingValue = "bluemixAppRoute"
+        let bmsClient = BMSClient.sharedInstance
+        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1")
+        bmsClient.uninitializeBluemixAppRoute()
         let msg = "No value found for the BMSClient \(missingValue) property."
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
+        let pathToOverflow = Logger.logsDocumentPath + FILE_LOGGER_OVERFLOW
         
         do {
             try NSFileManager().removeItemAtPath(pathToFile)
@@ -636,6 +640,12 @@ class LoggerTests: XCTestCase {
         do {
             try NSFileManager().removeItemAtPath(pathToBuffer)
             
+        } catch {
+            
+        }
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToOverflow)
         } catch {
             
         }
@@ -659,7 +669,75 @@ class LoggerTests: XCTestCase {
         let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
                 XCTAssertNil(response)
                 XCTAssertNotNil(error)
-        }!
+        }
+        
+        XCTAssertNil(request)
+        
+        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+        let fileContents = "[\(formattedContents)]"
+        let logDict  = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
+        let jsonDict = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
+        
+        
+        let errorMessage = jsonDict[0]
+        XCTAssertTrue(errorMessage[TAG_MSG] == msg)
+        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
+        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
+        
+    }
+    
+    func testBuildLogSendRequestGUIDFail(){
+        let fakePKG = MFP_LOGGER_PACKAGE
+        let missingValue = "bluemixAppGUID"
+        let bmsClient = BMSClient.sharedInstance
+        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1")
+        bmsClient.uninitalizeBluemixAppGUID()
+        let msg = "No value found for the BMSClient \(missingValue) property."
+        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
+        let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
+        let pathToOverflow = Logger.logsDocumentPath + FILE_LOGGER_OVERFLOW
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToFile)
+            
+        } catch {
+            
+        }
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToBuffer)
+            
+        } catch {
+            
+        }
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToOverflow)
+        } catch {
+            
+        }
+        
+        let loggerInstance = Logger.getLoggerForName(fakePKG)
+        Logger.logStoreEnabled = true
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
+        
+        loggerInstance.debug("Hello world")
+        loggerInstance.info("1242342342343243242342")
+        loggerInstance.warn("Str: heyoooooo")
+        loggerInstance.error("1 2 3 4")
+        loggerInstance.fatal("StephenColbert")
+        
+        let logs: String! = try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
+        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
+        
+        XCTAssertTrue(bufferFile)
+        
+        let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
+            XCTAssertNil(response)
+            XCTAssertNotNil(error)
+        }
         
         XCTAssertNil(request)
         
