@@ -139,7 +139,6 @@ public class Logger {
     // MARK: Initializers
     
     public static func getLoggerForName(loggerName: String) -> Logger {
-        
         if Logger.loggerInstances.isEmpty {
             // Only need to set uncaught exception handler once, when the first Logger instance is created
             captureUncaughtExceptions()
@@ -283,7 +282,6 @@ public class Logger {
         if (Logger.fileManager.fileExistsAtPath(logFileName)) {
             
             do {
-               // let fileAttributes = try Logger.fileManager.attributesOfItemAtPath(logFileName)
                 let attr : NSDictionary? = try NSFileManager.defaultManager().attributesOfItemAtPath(logFileName)
                 if let currentLogFileSize = attr?.fileSize() {
                     return currentLogFileSize > Logger.maxLogStoreSize / 2 // Divide by 2 since the total log storage gets shared between the log file and the overflow file
@@ -499,7 +497,7 @@ public class Logger {
         if appRoute[appRoute.endIndex.predecessor()] != "/" {
             appRoute += "/"
         }
-        let logUploadPath = "/imfmobileanalytics/v1/receiver/apps/"
+        let logUploadPath = UPLOAD_PATH
         let logUploaderUrl = appRoute + logUploadPath + appGuid
         
         var headers = ["Content-Type": "application/json"]
