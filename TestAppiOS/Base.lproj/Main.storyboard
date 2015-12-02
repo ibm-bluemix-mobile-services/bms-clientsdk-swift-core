@@ -389,15 +389,6 @@
                                     <action selector="crashAppButton:" destination="ERv-bC-MVG" eventType="touchUpInside" id="JpS-DV-EZi"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ojk-yr-2hn">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="15" y="625" width="375" height="118"/>
-                                </variation>
-                            </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="isUncaughtExcpetionDetected" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ST3-gE-RoP">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <animations/>
@@ -455,9 +446,6 @@
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="153" y="441" width="51" height="31"/>
                                 </variation>
-                                <connections>
-                                    <action selector="storeLogEnabled:" destination="ERv-bC-MVG" eventType="touchUpInside" id="rPE-e6-8lJ"/>
-                                </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="maxLogStoreSize" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qOY-jQ-ZW9">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
@@ -496,7 +484,6 @@
                                 <exclude reference="lci-e8-vra"/>
                                 <exclude reference="eVV-cN-f6d"/>
                                 <exclude reference="y3p-s2-Tv0"/>
-                                <exclude reference="ojk-yr-2hn"/>
                                 <exclude reference="ST3-gE-RoP"/>
                                 <exclude reference="ka2-uZ-skm"/>
                                 <exclude reference="zGi-FV-3FD"/>
@@ -524,7 +511,6 @@
                                 <include reference="lci-e8-vra"/>
                                 <include reference="eVV-cN-f6d"/>
                                 <include reference="y3p-s2-Tv0"/>
-                                <include reference="ojk-yr-2hn"/>
                                 <include reference="ST3-gE-RoP"/>
                                 <include reference="ka2-uZ-skm"/>
                                 <include reference="zGi-FV-3FD"/>
@@ -542,16 +528,72 @@
                         <outlet property="isUncaughtExceptionDetection" destination="feY-JE-xhA" id="5yb-vN-Xc0"/>
                         <outlet property="levelPicker" destination="IMs-gF-Ilv" id="ijt-wU-Ku8"/>
                         <outlet property="logMessage" destination="JxB-hC-dng" id="trD-uf-ZKG"/>
-                        <outlet property="logText" destination="ojk-yr-2hn" id="tZl-WG-hNM"/>
                         <outlet property="maxLogStoreSize" destination="ka2-uZ-skm" id="Xqc-5H-YP7"/>
                         <outlet property="packageName" destination="S3q-mP-wrJ" id="pgf-8x-BeJ"/>
-                        <outlet property="storeLogEnabled" destination="ka2-uZ-skm" id="LbR-uh-xHr"/>
+                        <outlet property="storeLogEnabled" destination="tgP-bR-MR4" id="AhU-wK-yTj"/>
                         <outlet property="typePicker" destination="By1-cT-NKH" id="zfR-QZ-kYO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KtQ-YD-Vh7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-499.5" y="390"/>
+        </scene>
+        <!--Text Controller-->
+        <scene sceneID="cJ0-r9-UTn">
+            <objects>
+                <viewController id="iZE-WH-g1r" customClass="TextController" customModule="TestAppiOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="lkt-Nl-cfa"/>
+                        <viewControllerLayoutGuide type="bottom" id="1eK-Si-Lj1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aRT-v9-Tsi">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="hCL-tI-RN6">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <animations/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="68" y="38" width="240" height="324"/>
+                                </variation>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EMB-Na-3pq">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Button"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="157" y="468" width="46" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="dismiss:" destination="iZE-WH-g1r" eventType="touchUpInside" id="VEv-b8-SHa"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="hCL-tI-RN6"/>
+                                <exclude reference="EMB-Na-3pq"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="hCL-tI-RN6"/>
+                                <include reference="EMB-Na-3pq"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="logText" destination="hCL-tI-RN6" id="ofk-F7-Ys9"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XiL-0b-Pl0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1471.5" y="684.75"/>
         </scene>
     </scenes>
 </document>

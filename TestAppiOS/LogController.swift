@@ -17,17 +17,13 @@ import BMSCore
 class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
     
     @IBOutlet weak var crashButton: UIButton!
-
     let logArray = ["none", "debug", "info", "warn", "error", "fatal"]
     var level = "debug"
     var type = "debug"
     @IBOutlet weak var packageName: UITextField!
     @IBOutlet weak var levelPicker: UIPickerView!
     @IBOutlet weak var typePicker: UIPickerView!
-    @IBOutlet weak var logText: UITextView!
     @IBOutlet weak var maxLogStoreSize: UITextField!
-
-  
     @IBOutlet weak var storeLogEnabled: UITextField!
     @IBOutlet weak var isUncaughtExceptionDetection: UISwitch!
     @IBOutlet weak var capture: UISwitch!
@@ -60,42 +56,14 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         }
     }
     @IBAction func updateLogText(sender: AnyObject) {
-        let FILE = "mfpsdk.logger.log"
-        let PATH = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] + "/"
-        let pathToFile = PATH + FILE
-        var formattedContents:String
         
-        do {
-            formattedContents = try String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
-            let fileContents = "[\(formattedContents)]"
-            logText.text = fileContents.stringByReplacingOccurrencesOfString("\\\"", withString: "\"")
-        } catch {
-                logText.text = "Empty Log"
-        }
-//        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
-        
-//        let fileContents = "[\(formattedContents)]"
-  //      logText.text = fileContents
+        let textContrl = TextController()
+        self.presentViewController(textContrl, animated: true, completion: nil)
         
     }
     // The data to return for the row and component (column) that's being passed in
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return logArray[row]
-    }
-    
-    func JSONString(var str: String) -> String {
-        // \b = \u{8}
-        // \f = \u{12}
-        let insensitive = NSStringCompareOptions.CaseInsensitiveSearch
-        str = str
-            .stringByReplacingOccurrencesOfString("\"", withString: "\\\"", options: insensitive)
-            .stringByReplacingOccurrencesOfString("/", withString: "\\/", options: insensitive)
-            .stringByReplacingOccurrencesOfString("\n", withString: "\\n", options: insensitive)
-            .stringByReplacingOccurrencesOfString("\u{8}", withString: "\\b", options: insensitive)
-            .stringByReplacingOccurrencesOfString("\u{12}", withString: "\\f", options: insensitive)
-            .stringByReplacingOccurrencesOfString("\r", withString: "\\r", options: insensitive)
-            .stringByReplacingOccurrencesOfString("\t", withString: "\\t", options: insensitive)
-        return str;
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -132,7 +100,7 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         }
         
         if(!maxLogStoreSize.text!.isEmpty){
-            Logger.maxLogStoreSize = Int(maxLogStoreSize.text)
+            Logger.maxLogStoreSize = UInt64(maxLogStoreSize.text!)!
         }
         
         
@@ -141,10 +109,6 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         } else {
             Logger.logStoreEnabled = false
         }
-        
-        
-        
-        
 
         switch level {
             case "none":
@@ -205,9 +169,43 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         self.levelPicker.dataSource = self
     }
     
-    
-    
-    
+}
 
+class TextController : UIViewController{
+
+    
+    @IBOutlet weak var logText: UITextView!
+
+    override func viewDidLoad(){
+        super.viewDidLoad()
+          }
+    
+    @IBAction func dismiss(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true) { () -> Void in
+            print("Dismissing Text Controller")
+        }
+        
+    }
+    
+    
+    override func viewDidAppear(animated: Bool) {
+//        let FILE = "mfpsdk.logger.log"
+//        let PATH = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] + "/"
+//        let pathToFile = PATH + FILE
+//        var formattedContents:String
+//        
+//        do {
+//            formattedContents = try String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+//            let fileContents = "[\(formattedContents)]"
+//            logText.text = fileContents
+//        } catch {
+//            logText.text = "Empty Log"
+//        }
+        
+
+    }
+
+    
+    
 }
 
