@@ -41,7 +41,7 @@ public enum LogLevel: Int {
     }
 }
 
-// TODO: When logging about file operations, is it okay to display the full path to the log files?
+// CODE REVIEW: When logging about file operations, is it okay to display the full path to the log files?
 
 // TODO: Refactor this entire file so that it is better organized and more readable. Consider using extensions.
 
@@ -91,7 +91,7 @@ public class Logger {
     internal static func dispatch_sync_throwable(queue: dispatch_queue_t, block: () throws -> ()) throws {
         
         var error: ErrorType?
-        try dispatch_sync(queue) {
+        dispatch_sync(queue) {
             do {
                 try block()
             }
@@ -209,7 +209,7 @@ public class Logger {
             }
             else {
                 // Print to console
-                // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
+                // Example - [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
                 Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
             }
         } else {
@@ -232,7 +232,7 @@ public class Logger {
                     try self.moveOldLogsToOverflowFile(logFile, overflowFile: logOverflowFile)
                 }
                 catch let error {
-                    NSLog("Log file \(logFile) is full but the old logs could not be removed. Try sending the logs. Error: \(error)")
+                    print("Log file \(logFile) is full but the old logs could not be removed. Try sending the logs. Error: \(error)")
                     return
                 }
             }
@@ -288,7 +288,7 @@ public class Logger {
                 }
             }
             catch let error {
-                NSLog("Cannot determine the size of file:\(logFileName) due to error: \(error). In case the file size is greater than the specified max log storage size, logs will not be written to file.")
+                print("Cannot determine the size of file:\(logFileName) due to error: \(error). In case the file size is greater than the specified max log storage size, logs will not be written to file.")
             }
         }
         
