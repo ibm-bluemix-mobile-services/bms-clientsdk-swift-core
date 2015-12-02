@@ -16,6 +16,7 @@ import BMSCore
 
 class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
     
+    @IBOutlet weak var storeLogEnabled: UISwitch!
     @IBOutlet weak var crashButton: UIButton!
     let logArray = ["none", "debug", "info", "warn", "error", "fatal"]
     var level = "debug"
@@ -24,7 +25,6 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
     @IBOutlet weak var levelPicker: UIPickerView!
     @IBOutlet weak var typePicker: UIPickerView!
     @IBOutlet weak var maxLogStoreSize: UITextField!
-    @IBOutlet weak var storeLogEnabled: UITextField!
     @IBOutlet weak var isUncaughtExceptionDetection: UISwitch!
     @IBOutlet weak var capture: UISwitch!
 
@@ -55,12 +55,7 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
             
         }
     }
-    @IBAction func updateLogText(sender: AnyObject) {
-        
-        let textContrl = TextController()
-        self.presentViewController(textContrl, animated: true, completion: nil)
-        
-    }
+
     // The data to return for the row and component (column) that's being passed in
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return logArray[row]
@@ -87,13 +82,13 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
             logger = Logger.getLoggerForName(packageName.text!)
         }
         
-        if(capture.enabled){
+        if(capture.on){
                 Logger.internalSDKLoggingEnabled = true
         } else {
             Logger.internalSDKLoggingEnabled = false
         }
         
-        if(isUncaughtExceptionDetection.enabled){
+        if(isUncaughtExceptionDetection.on){
             Logger.isUncaughtExceptionDetected = true
         } else {
             Logger.isUncaughtExceptionDetected = false
@@ -104,7 +99,7 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         }
         
         
-        if(storeLogEnabled.enabled){
+        if(storeLogEnabled.on){
                 Logger.logStoreEnabled = true
         } else {
             Logger.logStoreEnabled = false
@@ -174,6 +169,7 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
 class TextController : UIViewController{
 
     
+  
     @IBOutlet weak var logText: UITextView!
 
     override func viewDidLoad(){
@@ -189,18 +185,18 @@ class TextController : UIViewController{
     
     
     override func viewDidAppear(animated: Bool) {
-//        let FILE = "mfpsdk.logger.log"
-//        let PATH = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] + "/"
-//        let pathToFile = PATH + FILE
-//        var formattedContents:String
-//        
-//        do {
-//            formattedContents = try String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
-//            let fileContents = "[\(formattedContents)]"
-//            logText.text = fileContents
-//        } catch {
-//            logText.text = "Empty Log"
-//        }
+        let FILE = "mfpsdk.logger.log"
+        let PATH = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] + "/"
+        let pathToFile = PATH + FILE
+        var formattedContents:String
+        
+        do {
+            formattedContents = try String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
+            let fileContents = "[\(formattedContents)]"
+            logText.text = fileContents
+        } catch {
+            logText.text = "Empty Log"
+        }
         
 
     }
