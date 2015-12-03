@@ -26,6 +26,9 @@ public class BMSClient: MFPClient {
     /// Specifies the base backend URL
     public private(set) var bluemixAppRoute: String?
     
+    // Specifies the bluemix region suffix
+    public private(set) var bluemixRegionSuffix: String?
+    
     /// Specifies the backend application id.
     public private(set) var bluemixAppGUID: String?
     
@@ -33,10 +36,21 @@ public class BMSClient: MFPClient {
     public var defaultRequestTimeout: Double = 20.0
     
     
+    // Regions
+    public static let REGION_US_SOUTH = ".ng.bluemix.net"
+    public static let REGION_UK = ".eu-gb.bluemix.net"
+    public static let REGION_SYDNEY = ".au-syd.bluemix.net"
+    
+    
     
     // MARK: Properties (internal/private)
     
     internal private(set) var rewriteDomain: String?
+    
+    internal private(set) var tenantId: String?
+    
+    // Mark: Properties (internal/public)
+    internal var defaultProtocol: String?  = "https"
     
     
     
@@ -51,13 +65,24 @@ public class BMSClient: MFPClient {
         - parameter backendRoute: Specifies the base URL for the authorization server
         - parameter backendGUID:  Specifies the GUID of the Bluemix application
      */
-    public func initializeWithBluemixAppRoute(bluemixAppRoute: String, bluemixAppGUID: String) {
+    public func initializeWithBluemixAppRoute(bluemixAppRoute: String, bluemixAppGUID: String, bluemixRegionSuffix: String) {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
+        self.bluemixRegionSuffix = bluemixRegionSuffix
         
         // TDOO: Generate rewriteDomain
         rewriteDomain = ""
     }
+    
+    public func setDefaultProtocol(defaultProtocol: String){
+        self.defaultProtocol = defaultProtocol
+    }
+    
+    public func setBluemixTenantId(id: String){
+        self.tenantId = id
+    }
+
+    
     
 }
 
