@@ -53,3 +53,5 @@ internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"
 
 internal let REWRITE_DOMAIN_HEADER_NAME = "X-REWRITE-DOMAIN"
+internal let TENANT_ID_HEADER = "x-mfp-analytics-api-key"
+

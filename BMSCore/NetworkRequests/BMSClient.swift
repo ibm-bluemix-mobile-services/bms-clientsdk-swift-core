@@ -38,6 +38,8 @@ public class BMSClient: MFPClient {
     
     internal private(set) var rewriteDomain: String?
     
+    internal private(set) var tenantId: String?
+    
     
     
     // MARK: Initializers
@@ -57,6 +59,10 @@ public class BMSClient: MFPClient {
         
         // TDOO: Generate rewriteDomain
         rewriteDomain = ""
+    }
+    
+    public func setBluemixTenantId(id: String){
+        self.tenantId = id
     }
     
 }
