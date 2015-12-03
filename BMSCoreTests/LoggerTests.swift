@@ -646,12 +646,13 @@ class LoggerTests: XCTestCase {
     func testLogSendRequest(){
         let fakePKG = "MYPKG"
         let REWRITE_DOMAIN_HEADER_NAME = "X-REWRITE-DOMAIN"
+        let HOST_NAME = "imfmobileanalytics"
         let UPLOAD_PATH = "/imfmobileanalytics/v1/receiver/apps/"
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
         let bmsClient = BMSClient.sharedInstance
-        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1")
-        let url = bmsClient.bluemixAppRoute! + UPLOAD_PATH + bmsClient.bluemixAppGUID!
+        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: BMSClient.REGION_US_SOUTH)
+        let url = "https://" + HOST_NAME + BMSClient.REGION_US_SOUTH + UPLOAD_PATH + bmsClient.bluemixAppGUID!
         
         let headers = ["Content-Type": "application/json", REWRITE_DOMAIN_HEADER_NAME : bmsClient.rewriteDomain!]
 
@@ -703,10 +704,10 @@ class LoggerTests: XCTestCase {
     
     func testBuildLogSendRequestFail(){
         let fakePKG = MFP_LOGGER_PACKAGE
-        let missingValue = "bluemixAppRoute"
+        let missingValue = "bluemixAppGUID"
         let bmsClient = BMSClient.sharedInstance
-        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1")
-        bmsClient.uninitializeBluemixAppRoute()
+        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: BMSClient.REGION_US_SOUTH)
+        bmsClient.uninitalizeBluemixAppGUID()
         let msg = "No value found for the BMSClient \(missingValue) property."
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
@@ -773,7 +774,7 @@ class LoggerTests: XCTestCase {
         let fakePKG = MFP_LOGGER_PACKAGE
         let missingValue = "bluemixAppGUID"
         let bmsClient = BMSClient.sharedInstance
-        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1")
+        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: BMSClient.REGION_US_SOUTH)
         bmsClient.uninitalizeBluemixAppGUID()
         let msg = "No value found for the BMSClient \(missingValue) property."
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
