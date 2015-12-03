@@ -277,6 +277,31 @@ class LoggerTests: XCTestCase {
         XCTAssertTrue(fatalMessage[TAG_TIMESTAMP] != nil)
     }
     
+    func testLogWithNone(){
+        let fakePKG = "MYPKG"
+        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToFile)
+        } catch {
+            
+        }
+        
+        let loggerInstance = Logger.getLoggerForName(fakePKG)
+        Logger.logStoreEnabled = true
+        Logger.logLevelFilter = LogLevel.None
+        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
+        
+        loggerInstance.debug("Hello world")
+        loggerInstance.info("1242342342343243242342")
+        loggerInstance.warn("Str: heyoooooo")
+        loggerInstance.error("1 2 3 4")
+        loggerInstance.fatal("StephenColbert")
+        
+        XCTAssertFalse(NSFileManager().fileExistsAtPath(pathToFile))
+
+    }
+    
     func testIncorrectLogLevel(){
         let fakePKG = "MYPKG"
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
@@ -556,6 +581,63 @@ class LoggerTests: XCTestCase {
         
     }
     
+    func testExistingOverflowFile(){
+        let fakePKG = "MYPKG"
+        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
+        let pathToOverflow = Logger.logsDocumentPath + FILE_LOGGER_OVERFLOW
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToFile)
+            
+        } catch {
+            
+        }
+        
+        do {
+            try NSFileManager().removeItemAtPath(pathToOverflow)
+        } catch {
+            
+        }
+        
+        let bundle = NSBundle(forClass: self.dynamicType)
+        let path = bundle.pathForResource("largeData", ofType: "txt")
+        let largeData = try! String(contentsOfFile: path!)
+        
+        let loggerInstance = Logger.getLoggerForName(fakePKG)
+        Logger.logStoreEnabled = true
+        Logger.internalSDKLoggingEnabled = false
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
+        
+        loggerInstance.debug(largeData)
+        loggerInstance.info(largeData)
+        loggerInstance.warn(largeData)
+        loggerInstance.error(largeData)
+        loggerInstance.fatal(largeData)
+        
+        
+        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToOverflow))
+        
+        var formattedContents = try! String(contentsOfFile: pathToOverflow, encoding: NSUTF8StringEncoding)
+        var fileContents = "[\(formattedContents)]"
+        var logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
+        var jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
+        
+        XCTAssertTrue(jsonDict!.count == 1)
+        
+        loggerInstance.debug(largeData)
+        
+     
+        formattedContents = try! String(contentsOfFile: pathToOverflow, encoding: NSUTF8StringEncoding)
+        fileContents = "[\(formattedContents)]"
+        logDict  = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
+        jsonDict = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
+        
+        
+        XCTAssertTrue(jsonDict!.count == 1)
+
+    }
+    
     
     func testUpdateLogProfile(){
         //TODO:
@@ -819,7 +901,7 @@ class LoggerTests: XCTestCase {
     
     
     
-//    
+//TODO: need to figure out how to throw exception when trying to read file size
 //    func testFailOverflowLogging(){
 //        let fakePKG = "MYPKG"
 //        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
@@ -853,7 +935,7 @@ class LoggerTests: XCTestCase {
 //        
 //        XCTAssertTrue(overflowFile)
 //        
-//        let permission: Int16 = 0o744
+//        let permission: Int16 = 0o000
 //        
 //        let attributes: [String:AnyObject] = [NSFilePosixPermissions: NSNumber(short: permission)]
 //        try! NSFileManager().setAttributes(attributes, ofItemAtPath: pathToFile)
