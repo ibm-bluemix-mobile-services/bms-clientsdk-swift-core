@@ -375,7 +375,7 @@ class LoggerTests: XCTestCase {
         let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
         
         let exceptionMessage = jsonDict![0]
-        XCTAssertTrue(exceptionMessage[TAG_MSG] == errorMessage) //TODO: Figure out why this string is not what is expected
+        XCTAssertTrue(exceptionMessage[TAG_MSG] == errorMessage)
         XCTAssertTrue(exceptionMessage[TAG_PKG] == MFP_LOGGER_PACKAGE)
         XCTAssertTrue(exceptionMessage[TAG_TIMESTAMP] != nil)
         XCTAssertTrue(exceptionMessage[TAG_LEVEL] == "FATAL")
@@ -899,58 +899,6 @@ class LoggerTests: XCTestCase {
         XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
         
     }
-    
-    
-    
-//TODO: need to figure out how to throw exception when trying to read file size
-//    func testFailOverflowLogging(){
-//        let fakePKG = "MYPKG"
-//        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
-//        let pathToOverflow = Logger.logsDocumentPath + FILE_LOGGER_OVERFLOW
-//        
-//        do {
-//            try NSFileManager().removeItemAtPath(pathToFile)
-//            
-//        } catch {
-//            
-//        }
-//        
-//        let bundle = NSBundle(forClass: self.dynamicType)
-//        let path = bundle.pathForResource("largeData", ofType: "txt")
-//        let largeData = try! String(contentsOfFile: path!)
-//        
-//        let loggerInstance = Logger.getLoggerForName(fakePKG)
-//        Logger.logStoreEnabled = true
-//        Logger.internalSDKLoggingEnabled = false
-//        Logger.logLevelFilter = LogLevel.Debug
-//        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
-//        
-//        loggerInstance.debug(largeData)
-//        loggerInstance.info("1242342342343243242342")
-//        loggerInstance.warn("Str: heyoooooo")
-//        loggerInstance.error("1 2 3 4")
-//        loggerInstance.fatal("StephenColbert")
-//        
-//        
-//        let overflowFile = NSFileManager().fileExistsAtPath(pathToOverflow)
-//        
-//        XCTAssertTrue(overflowFile)
-//        
-//        let permission: Int16 = 0o000
-//        
-//        let attributes: [String:AnyObject] = [NSFilePosixPermissions: NSNumber(short: permission)]
-//        try! NSFileManager().setAttributes(attributes, ofItemAtPath: pathToFile)
-//        
-//        loggerInstance.debug(largeData)
-//        
-//
-//        
-//        
-//        
-//    }
-    
-
-
     
     func testDeleteBufferFile(){
         let fakePKG = "MYPKG"
