@@ -482,11 +482,7 @@ public class Logger {
     internal static func buildLogSendRequest(logs: String, withCallback callback: MfpCompletionHandler) -> (Request, String)?{
         
         let bmsClient = BMSClient.sharedInstance
-        
-        guard var appRoute = bmsClient.bluemixAppRoute else {
-            returnClientInitializationError("bluemixAppRoute", callback: callback)
-            return nil
-        }
+    
         guard let appGuid = bmsClient.bluemixAppGUID else {
             returnClientInitializationError("bluemixAppGUID", callback: callback)
             return nil
@@ -494,11 +490,8 @@ public class Logger {
         
         // Build and send the Request
         
-        if appRoute[appRoute.endIndex.predecessor()] != "/" {
-            appRoute += "/"
-        }
         let logUploadPath = UPLOAD_PATH
-        let logUploaderUrl = appRoute + logUploadPath + appGuid
+        let logUploaderUrl = bmsClient.defaultProtocol! + "://" + HOST_NAME + bmsClient.bluemixRegionSuffix! + logUploadPath + appGuid
         
         var headers = ["Content-Type": "application/json"]
         if let rewriteDomain = bmsClient.rewriteDomain {
