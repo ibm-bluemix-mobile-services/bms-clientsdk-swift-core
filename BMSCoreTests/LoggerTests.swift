@@ -172,7 +172,7 @@ class LoggerTests: XCTestCase {
         Logger.logStoreEnabled = true
         Logger.logLevelFilter = LogLevel.Debug
         Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
-        Logger.internalSDKLoggingEnabled = false
+        Logger.sdkDebugLoggingEnabled = false
         
         loggerInstance.debug("Hello world")
         loggerInstance.info("1242342342343243242342")
@@ -526,7 +526,7 @@ class LoggerTests: XCTestCase {
         
         let loggerInstance = Logger.getLoggerForName(fakePKG)
         Logger.logStoreEnabled = true
-        Logger.internalSDKLoggingEnabled = false
+        Logger.sdkDebugLoggingEnabled = false
         Logger.logLevelFilter = LogLevel.Debug
         Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
         
@@ -605,7 +605,7 @@ class LoggerTests: XCTestCase {
         
         let loggerInstance = Logger.getLoggerForName(fakePKG)
         Logger.logStoreEnabled = true
-        Logger.internalSDKLoggingEnabled = false
+        Logger.sdkDebugLoggingEnabled = false
         Logger.logLevelFilter = LogLevel.Debug
         Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
         

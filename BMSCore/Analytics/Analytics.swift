@@ -13,21 +13,7 @@
 
 
 /**
-    `Analytics` provides a means of capturing analytics data and sending the data to the Bluemix server.
-
-    When this class's `enabled` property is set to `true` (which is the default value), all analytics data will be persisted to a file on the client device in the following JSON format:
-
-        {
-            "timestamp"    : "17-02-2013 13:54:27:123",     // "dd-MM-yyyy hh:mm:ss:S"
-            "level"        : "ANALYTICS",
-            "pkg"          : "mfpsdk.analytics",
-            "msg"          : "",                            // Always an empty string for Analytics logs
-            "metadata"     : {"some key": "some value"}     // Analytics data
-        }
-
-    Analytics data are accumulated persistently to the log file until the file size is greater than the `Logger.maxLogStoreSize` property. At this point, half of the old logs will be deleted to make room for new log data.
-
-    Log file data is sent to the Bluemix server when this class's send() method is called, provided that the file is not empty and the BMSClient was initialized via the `initializeWithBluemixAppRoute()` method. When the log data is successfully uploaded, the persisted local log data is deleted.
+    `Analytics` provides a means of capturing analytics data and sending the data to the mobile analytics service.
 */
 public class Analytics {
     
@@ -94,9 +80,6 @@ public class Analytics {
         lifecycleEvents[KEY_METADATA_CATEGORY] = TAG_CATEGORY_EVENT
         lifecycleEvents[KEY_METADATA_TYPE] = TAG_SESSION
         lifecycleEvents[KEY_EVENT_START_TIME] = startTime
-        
-        // CODE REVIEW: Is there a reason this key/value pair is set after logging in the Android SDK?
-        lifecycleEvents[KEY_SESSION_ID] = NSUUID().UUIDString
     
         logger.analytics(Analytics.lifecycleEvents)
     }

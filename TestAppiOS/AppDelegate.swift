@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         let myBMSClient = BMSClient.sharedInstance
-        myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "")
+        myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "", bluemixRegionSuffix: BMSClient.REGION_US_SOUTH)
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
         
         Analytics.startRecordingApplicationLifecycle()
