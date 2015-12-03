@@ -33,10 +33,8 @@ class AnalyticsTests: XCTestCase {
         
         Analytics.logSessionStart()
 
-        let firstSessionID = Analytics.lifecycleEvents[KEY_SESSION_ID] as? String
         let firstSessionStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval
         
-        XCTAssertNotNil(firstSessionID)
         XCTAssertNotNil(firstSessionStartTime)
 
         Analytics.logSessionStart()
@@ -44,7 +42,6 @@ class AnalyticsTests: XCTestCase {
         XCTAssertNotNil(Analytics.lifecycleEvents)
 
         XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval > firstSessionStartTime);
-        XCTAssertTrue(firstSessionID! != Analytics.lifecycleEvents[KEY_SESSION_ID] as! String);
     }
     
     /**
@@ -61,10 +58,8 @@ class AnalyticsTests: XCTestCase {
         
         Analytics.logSessionStart()
         
-        let firstSessionID = Analytics.lifecycleEvents[KEY_SESSION_ID] as? String
         let firstSessionStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval
         
-        XCTAssertNotNil(firstSessionID)
         XCTAssertNotNil(firstSessionStartTime)
         
         Analytics.logSessionEnd()
@@ -74,7 +69,6 @@ class AnalyticsTests: XCTestCase {
         Analytics.logSessionStart()
         
         XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval > firstSessionStartTime);
-        XCTAssertTrue(firstSessionID! != Analytics.lifecycleEvents[KEY_SESSION_ID] as! String);
     }
     
     /**
@@ -94,10 +88,8 @@ class AnalyticsTests: XCTestCase {
         
         Analytics.logSessionStart()
     
-        let sessionID = Analytics.lifecycleEvents[KEY_SESSION_ID] as? String
         let sessionStartTime = Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval
         
-        XCTAssertNotNil(sessionID)
         XCTAssertNotNil(sessionStartTime)
     
         

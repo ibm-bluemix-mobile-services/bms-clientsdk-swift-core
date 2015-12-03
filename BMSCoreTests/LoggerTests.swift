@@ -172,7 +172,7 @@ class LoggerTests: XCTestCase {
         Logger.logStoreEnabled = true
         Logger.logLevelFilter = LogLevel.Debug
         Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
-        Logger.internalSDKLoggingEnabled = false
+        Logger.sdkDebugLoggingEnabled = false
         
         loggerInstance.debug("Hello world")
         loggerInstance.info("1242342342343243242342")
@@ -526,7 +526,7 @@ class LoggerTests: XCTestCase {
         
         let loggerInstance = Logger.getLoggerForName(fakePKG)
         Logger.logStoreEnabled = true
-        Logger.internalSDKLoggingEnabled = false
+        Logger.sdkDebugLoggingEnabled = false
         Logger.logLevelFilter = LogLevel.Debug
         Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
         
@@ -605,7 +605,7 @@ class LoggerTests: XCTestCase {
         
         let loggerInstance = Logger.getLoggerForName(fakePKG)
         Logger.logStoreEnabled = true
-        Logger.internalSDKLoggingEnabled = false
+        Logger.sdkDebugLoggingEnabled = false
         Logger.logLevelFilter = LogLevel.Debug
         Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
         
@@ -920,7 +920,7 @@ class LoggerTests: XCTestCase {
 //        
 //        let loggerInstance = Logger.getLoggerForName(fakePKG)
 //        Logger.logStoreEnabled = true
-//        Logger.internalSDKLoggingEnabled = false
+//        Logger.sdkDebugLoggingEnabled = false
 //        Logger.logLevelFilter = LogLevel.Debug
 //        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
 //        
@@ -992,6 +992,22 @@ class LoggerTests: XCTestCase {
         bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
         
         XCTAssertFalse(bufferFile)
+    }
+    
+    func testExtractFileNameFromPath() {
+        
+        let logFile1 = "some/path/to/file.txt"
+        let logFile2 = "path//with///extra///slashes.log.txt"
+        let logFile3 = "/////"
+        let logFile4 = ""
+        let logFile5 = "sdajfasldkfjalksfdj"
+        
+        
+        XCTAssertEqual(Logger.extractFileNameFromPath(logFile1), "file.txt")
+        XCTAssertEqual(Logger.extractFileNameFromPath(logFile2), "slashes.log.txt")
+        XCTAssertEqual(Logger.extractFileNameFromPath(logFile3), "[Unknown]")
+        XCTAssertEqual(Logger.extractFileNameFromPath(logFile4), "[Unknown]")
+        XCTAssertEqual(Logger.extractFileNameFromPath(logFile5), "[Unknown]")
     }
     
 }

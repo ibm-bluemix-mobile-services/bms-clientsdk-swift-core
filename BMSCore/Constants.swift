@@ -30,7 +30,6 @@ internal let KEY_METADATA_CATEGORY = "$category"
 internal let KEY_METADATA_TYPE = "$type"
 internal let KEY_EVENT_START_TIME = "$startTime"
 internal let KEY_METADATA_DURATION = "$duration"
-internal let KEY_SESSION_ID = "$sessionId"
 
 internal let TAG_CATEGORY_EVENT = "event"
 internal let TAG_SESSION = "$session"

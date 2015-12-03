@@ -91,8 +91,8 @@ public class Logger {
     /// Both the Analytics and Logger log files are limited by `maxLogStoreSize`.
     public static var maxLogStoreSize: UInt64 = DEFAULT_MAX_STORE_SIZE
     
-    /// If set to `false`, the internal BMSCore logs will not be displayed on the console. 
-    /// However, the internal logs will continue to be written to file provided that `logStoreEnabled` is `true` and the log level surpasses the `logLevelFilter`.
+    /// If set to `false`, the internal BMSCore debug logs will not be displayed on the console.
+    /// However, the logs will continue to be written to file provided that `logStoreEnabled` is `true` and the `logLevelFilter` property is at the `Debug` level.
     public static var sdkDebugLoggingEnabled: Bool = true
     
     /// True if the app crashed recently due to an uncaught exception.
@@ -114,7 +114,6 @@ public class Logger {
     internal static var loggerInstances: [String: Logger] = [:]
     
     // Internal instrumentation for troubleshooting issues in BMSCore
-    // If Logger.sdkDebugLoggingEnabled is `false`, these logs will still be written to file but will not appear in the console.
     internal static let internalLogger = Logger.getLoggerForName(MFP_LOGGER_PACKAGE)
     
     
@@ -300,23 +299,18 @@ public class Logger {
         
         let group :dispatch_group_t = dispatch_group_create()
         
-        
-        // TODO: This should be a guard statement
         // The level must exceed the Logger.logLevelFilter, or we do nothing
-        if canLogAtLevel(level) {
-            // CODE REVIEW: sdkDebugLoggingEnabled should only prevent logging at Debug level
-            // CODE REVIEW: self.name should check if it contains the package prefix
-            if self.name == MFP_LOGGER_PACKAGE && !Logger.sdkDebugLoggingEnabled {
-                // Don't show our internal logs in the console
-            }
-            else {
-                // Print to console
-                // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
-                Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
-            }
+        guard canLogAtLevel(level) else {
+            return
+        }
+        
+        if self.name.hasPrefix(MFP_PACKAGE_PREFIX) && !Logger.sdkDebugLoggingEnabled && level == LogLevel.Debug {
+            // Don't show our internal logs in the console
         }
         else {
-            return 
+            // Print to console
+            // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
+            Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
         }
         
         
@@ -339,7 +333,8 @@ public class Logger {
                 }
                 catch let error {
                     // CODE REVIEW: When logging about file operations, do not show full path, but only the file name
-                    print("Log file \(logFile) is full but the old logs could not be removed. Try sending the logs. Error: \(error)")
+                    let logFileName = Logger.extractFileNameFromPath(logFile)
+                    print("Log file \(logFileName) is full but the old logs could not be removed. Try sending the logs. Error: \(error)")
                     return
                 }
             }
@@ -399,7 +394,8 @@ public class Logger {
                 }
             }
             catch let error {
-                print("Cannot determine the size of file:\(logFileName) due to error: \(error). In case the file size is greater than the specified max log storage size, logs will not be written to file.")
+                let logFile = Logger.extractFileNameFromPath(logFileName)
+                print("Cannot determine the size of file:\(logFile) due to error: \(error). In case the file size is greater than the specified max log storage size, logs will not be written to file.")
             }
         }
         
@@ -482,6 +478,21 @@ public class Logger {
         if level != LogLevel.Analytics {
             print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
         }
+    }
+    
+    
+    // When logging messages to the user, make sure to only mention the log file name, not the full path since it may contain sensitive data unique to the device.
+    internal static func extractFileNameFromPath(filePath: String) -> String {
+        
+        var logFileName = "[Unknown]"
+        
+        let logFileNameRange = filePath.rangeOfString("/", options:NSStringCompareOptions.BackwardsSearch)
+        if let fileNameStartIndex = logFileNameRange?.startIndex.successor() {
+            if fileNameStartIndex < filePath.endIndex {
+                logFileName = filePath[fileNameStartIndex..<filePath.endIndex]
+            }
+        }
+        return logFileName
     }
     
     

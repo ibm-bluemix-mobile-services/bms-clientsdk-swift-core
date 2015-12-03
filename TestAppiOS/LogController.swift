@@ -83,9 +83,9 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         }
         
         if(capture.on){
-                Logger.internalSDKLoggingEnabled = true
+                Logger.sdkDebugLoggingEnabled = true
         } else {
-            Logger.internalSDKLoggingEnabled = false
+            Logger.sdkDebugLoggingEnabled = false
         }
         
         if(isUncaughtExceptionDetection.on){
