@@ -18,10 +18,13 @@
 public class Analytics {
     
     
+    //TODO: create tenanid (should be called apiKey) and make it non optional; only
     // MARK: Properties (public)
     
     /// Determines whether analytics logs will be persisted to file.
     public static var enabled: Bool = true
+    
+    public static var apiKey:String? = nil
     
     
     
