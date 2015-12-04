@@ -35,24 +35,13 @@ public class BMSClient: MFPClient {
     /// Specifies the default timeout (in seconds) for all BMS network requests.
     public var defaultRequestTimeout: Double = 20.0
     
+    // Specifies the default protocol
+    public static var defaultProtocol: String  = "https"
+    
     
     // Regions
-    public static let REGION_US_SOUTH = ".ng.bluemix.net"
-    public static let REGION_UK = ".eu-gb.bluemix.net"
-    public static let REGION_SYDNEY = ".au-syd.bluemix.net"
-    
-    
-    
-    // MARK: Properties (internal/private)
-    
-    internal private(set) var rewriteDomain: String?
-    
-    internal private(set) var tenantId: String?
-    
-    // Mark: Properties (internal/public)
-    internal var defaultProtocol: String?  = "https"
-    
-    
+    //Add to Constants file
+   
     
     // MARK: Initializers
     
@@ -69,18 +58,8 @@ public class BMSClient: MFPClient {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
         self.bluemixRegionSuffix = bluemixRegionSuffix
-        
-        // TDOO: Generate rewriteDomain
-        rewriteDomain = ""
     }
-    
-    public func setDefaultProtocol(defaultProtocol: String){
-        self.defaultProtocol = defaultProtocol
-    }
-    
-    public func setBluemixTenantId(id: String){
-        self.tenantId = id
-    }
+
 
     
     

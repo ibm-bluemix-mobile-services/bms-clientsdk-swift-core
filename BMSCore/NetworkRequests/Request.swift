@@ -130,8 +130,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     */
     func sendString(requestBody: String, withCompletionHandler callback: MfpCompletionHandler?) {
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
-        let bmsClient = BMSClient.sharedInstance
-        
         if headers == nil {
             headers = [Request.CONTENT_TYPE: Request.TEXT_PLAIN_TYPE]
         }
@@ -176,7 +174,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         - parameter completionHandler: The closure that will be called when this request finishes
     */
     public func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
-        let bmsClient = BMSClient.sharedInstance
         // Build the Response object and pass it to the user
         let buildAndSendResponse = {
             (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
@@ -202,10 +199,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
                     let malformedUrlError = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
                     callback?(nil, malformedUrlError)
                 }
-            }
-            
-            if bmsClient.tenantId != nil{
-                headers![TENANT_ID_HEADER] = bmsClient.tenantId
             }
             
             // Build request
