@@ -55,9 +55,9 @@ internal let TEXT_PLAIN_TYPE = "text/plain"
 internal let REWRITE_DOMAIN_HEADER_NAME = "X-REWRITE-DOMAIN"
 internal let API_ID_HEADER = "x-mfp-analytics-api-key"
 
-internal let REGION_US_SOUTH = ".ng.bluemix.net"
-internal let REGION_UK = ".eu-gb.bluemix.net"
-internal let REGION_SYDNEY = ".au-syd.bluemix.net"
+public let REGION_US_SOUTH = ".ng.bluemix.net"
+public let REGION_UK = ".eu-gb.bluemix.net"
+public let REGION_SYDNEY = ".au-syd.bluemix.net"
 
 
 
