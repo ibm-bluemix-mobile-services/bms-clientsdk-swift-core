@@ -620,20 +620,24 @@ public class Logger {
     
     // Build the Request object that will be used to send the logs to the server
     internal static func buildLogSendRequest(logs: String, withCallback callback: MfpCompletionHandler) -> (Request, String)?{
-        
         let bmsClient = BMSClient.sharedInstance
+        let logger = Logger.internalLogger
     
         guard let appGuid = bmsClient.bluemixAppGUID else {
             returnClientInitializationError("bluemixAppGUID", callback: callback)
             return nil
         }
-        
-        let logUploadPath = UPLOAD_PATH
-        let logUploaderUrl = bmsClient.defaultProtocol! + "://" + HOST_NAME + bmsClient.bluemixRegionSuffix! + logUploadPath + appGuid
+    
+        let logUploaderUrl = BMSClient.defaultProtocol + "://" + HOST_NAME + bmsClient.bluemixRegionSuffix! + UPLOAD_PATH + appGuid
         
         var headers = ["Content-Type": "application/json"]
-        if let rewriteDomain = bmsClient.rewriteDomain {
-            headers[REWRITE_DOMAIN_HEADER_NAME] = rewriteDomain
+        
+        
+        if Analytics.apiKey != nil && Analytics.apiKey != "" {
+            headers[API_ID_HEADER] = Analytics.apiKey
+        } else {
+            logger.error("API key has not been set.")
+            return nil
         }
         
         let logPayload = "[" + logs + "]"
