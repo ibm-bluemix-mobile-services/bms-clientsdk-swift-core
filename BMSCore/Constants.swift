@@ -46,14 +46,19 @@ internal let TAG_MAX_STORE_SIZE = "loggerMaxFileSize"
 internal let DEFAULT_MAX_STORE_SIZE: UInt64 = 100000
 internal let DEFAULT_LOW_BOUND_FILE_SIZE = 10000
 
-internal let HOST_NAME = "imfmobileanalytics"
+internal let HOST_NAME = "mfp-analytics-server" 
 internal let UPLOAD_PATH =  "/imfmobileanalytics/v1/receiver/apps/"
 
 internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"
 
 internal let REWRITE_DOMAIN_HEADER_NAME = "X-REWRITE-DOMAIN"
-internal let TENANT_ID_HEADER = "x-mfp-analytics-api-key"
+internal let API_ID_HEADER = "x-mfp-analytics-api-key"
+
+internal let REGION_US_SOUTH = ".ng.bluemix.net"
+internal let REGION_UK = ".eu-gb.bluemix.net"
+internal let REGION_SYDNEY = ".au-syd.bluemix.net"
+
 
 
 
