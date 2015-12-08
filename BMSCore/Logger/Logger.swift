@@ -621,7 +621,6 @@ public class Logger {
     // Build the Request object that will be used to send the logs to the server
     internal static func buildLogSendRequest(logs: String, withCallback callback: MfpCompletionHandler) -> (Request, String)?{
         let bmsClient = BMSClient.sharedInstance
-        let logger = Logger.internalLogger
     
         guard let appGuid = bmsClient.bluemixAppGUID else {
             returnClientInitializationError("bluemixAppGUID", callback: callback)
@@ -636,7 +635,7 @@ public class Logger {
         if Analytics.apiKey != nil && Analytics.apiKey != "" {
             headers[API_ID_HEADER] = Analytics.apiKey
         } else {
-            logger.error("API key has not been set.")
+           returnClientInitializationError("apiKey", callback: callback)
             return nil
         }
         

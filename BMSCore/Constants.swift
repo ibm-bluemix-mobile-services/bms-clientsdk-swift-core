@@ -52,7 +52,6 @@ internal let UPLOAD_PATH =  "/imfmobileanalytics/v1/receiver/apps/"
 internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"
 
-internal let REWRITE_DOMAIN_HEADER_NAME = "X-REWRITE-DOMAIN"
 internal let API_ID_HEADER = "x-mfp-analytics-api-key"
 
 public let REGION_US_SOUTH = ".ng.bluemix.net"

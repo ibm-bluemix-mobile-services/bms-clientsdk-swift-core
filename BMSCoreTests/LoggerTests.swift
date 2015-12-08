@@ -705,7 +705,8 @@ class LoggerTests: XCTestCase {
     
     func testBuildLogSendRequestAPIKeyNilFail(){
         let fakePKG = MFP_LOGGER_PACKAGE
-        let msg = "API key has not been set."
+        let missingValue = "apiKey"
+        let msg = "No value found for the BMSClient \(missingValue) property."
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
         let bmsClient = BMSClient.sharedInstance
@@ -763,7 +764,8 @@ class LoggerTests: XCTestCase {
     
     func testBuildLogSendRequestAPIKeyEmptyStringFail(){
         let fakePKG = MFP_LOGGER_PACKAGE
-        let msg = "API key has not been set."
+        let missingValue = "apiKey"
+        let msg = "No value found for the BMSClient \(missingValue) property."
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
         let bmsClient = BMSClient.sharedInstance
