@@ -245,7 +245,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     internal func addAnalyticsMetadataToRequest() {
         
-        Logger.internalLogger.debug("Recording request analytics")
+        Analytics.logger.debug("Network request outbound")
         
         // The analytics server needs this ID to match each request with its corresponding response
         self.trackingId = NSUUID().UUIDString
@@ -255,6 +255,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
 
         // Build the analytics metadata header
         
+        // Device info
         var osVersion = ""
         var model = ""
         var deviceId = ""
@@ -269,27 +270,28 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             deviceId = device.identifierForVendor?.UUIDString as String
             model = device.modelName
         #endif
-
         
-        var requestAnalytics: [String: String] = [:]
+        // All of this data will go in a header for the request
+        var requestMetadata: [String: String] = [:]
         
-        requestAnalytics["os"] = "ios"
-        requestAnalytics["brand"] = "Apple"
-        requestAnalytics["osVersion"] = osVersion
-        requestAnalytics["model"] = model
-        requestAnalytics["deviceID"] = deviceId
-        requestAnalytics["mfpAppName"] = "" // TODO: Get from Analytics or Logger initializer
-        requestAnalytics["appStoreLabel"] = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String ?? ""
-        requestAnalytics["appStoreId"] = NSBundle.mainBundle().bundleIdentifier ?? ""
-        requestAnalytics["appVersionCode"] = NSBundle.mainBundle().objectForInfoDictionaryKey(kCFBundleVersionKey as String) as? String ?? ""
-        requestAnalytics["appVersionDisplay"] = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?? ""
+        requestMetadata["os"] = "ios"
+        requestMetadata["brand"] = "Apple"
+        requestMetadata["osVersion"] = osVersion
+        requestMetadata["model"] = model
+        requestMetadata["deviceID"] = deviceId
+        requestMetadata["mfpAppName"] = "" // TODO: Get from Analytics or Logger initializer
+        requestMetadata["appStoreLabel"] = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String ?? ""
+        requestMetadata["appStoreId"] = NSBundle.mainBundle().bundleIdentifier ?? ""
+        requestMetadata["appVersionCode"] = NSBundle.mainBundle().objectForInfoDictionaryKey(kCFBundleVersionKey as String) as? String ?? ""
+        requestMetadata["appVersionDisplay"] = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?? ""
 
         do {
-            let requestAnalyticsJson = try NSJSONSerialization.dataWithJSONObject(requestAnalytics, options: [])
-            let requestAnalyticsString = String(data: requestAnalyticsJson, encoding: NSUTF8StringEncoding)
-            if requestAnalyticsString != nil {
-                self.headers["x-mfp-analytics-metadata"] = requestAnalyticsString
+            let requestMetadataJson = try NSJSONSerialization.dataWithJSONObject(requestMetadata, options: [])
+            let requestMetadataString = String(data: requestMetadataJson, encoding: NSUTF8StringEncoding)
+            if requestMetadataString != nil {
+                self.headers["x-mfp-analytics-metadata"] = requestMetadataString
             }
+            Analytics.logger.analytics(requestMetadata)
         }
         catch let error {
             Analytics.logger.error("Failed to append analytics metadata to request. Error: \(error)")
@@ -315,24 +317,28 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     internal func logInboundResponse(response: Response, url: String) {
         
+        Analytics.logger.debug("Network response inbound")
+        
         let endTime = NSDate.timeIntervalSinceReferenceDate()
         let roundTripTime = endTime - startTime
         let bytesSent = self.requestBody?.length ?? 0
         
-        var responseAnalytics: [String: AnyObject] = [:]
-        responseAnalytics["$category"] = "network"
-        responseAnalytics["$url"] = url
-        responseAnalytics["$trackingId"] = self.trackingId
-        responseAnalytics["$outboundTimestamp"] = startTime
-        responseAnalytics["$inboundTimestamp"] = endTime
-        responseAnalytics["$duration"] = roundTripTime
-        responseAnalytics["$statusCode"] = response.statusCode
-        responseAnalytics["$bytesSent"] = bytesSent
+        // Data for analytics logging
+        var responseMetadata: [String: AnyObject] = [:]
+        
+        responseMetadata["$category"] = "network"
+        responseMetadata["$path"] = url
+        responseMetadata["$trackingId"] = self.trackingId
+        responseMetadata["$outboundTimestamp"] = startTime
+        responseMetadata["$inboundTimestamp"] = endTime
+        responseMetadata["$roundTripTime"] = roundTripTime
+        responseMetadata["$responseCode"] = response.statusCode
+        responseMetadata["$bytesSent"] = bytesSent
         
         if (response.responseText != nil && !response.responseText!.isEmpty) {
-            responseAnalytics["$bytesReceived"] = response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
+            responseMetadata["$bytesReceived"] = response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
         }
-        Analytics.logger.analytics(responseAnalytics)
+        Analytics.logger.analytics(responseMetadata)
     }
     
     
