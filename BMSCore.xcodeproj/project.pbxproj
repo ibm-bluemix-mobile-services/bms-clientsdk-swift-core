@@ -30,6 +30,7 @@
 		9235D0D21BC3184000946A32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9235D0D11BC3184000946A32 /* Assets.xcassets */; };
 		9235D0FC1BC33D5600946A32 /* BMSCoreWatchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; };
 		9235D0FD1BC33D5600946A32 /* BMSCoreWatchOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		923F7DA71C174958007DC785 /* Request+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923F7DA61C174958007DC785 /* Request+iOS.swift */; settings = {ASSET_TAGS = (); }; };
 		924581E31BF2751600D665ED /* Analytics+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924581E21BF2751600D665ED /* Analytics+iOS.swift */; settings = {ASSET_TAGS = (); }; };
 		92580B461BFBF5DF0037EB50 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92580B451BFBF5DF0037EB50 /* LoggerTests.swift */; settings = {ASSET_TAGS = (); }; };
 		926679B91BF3D4E000F597C5 /* TestAppWatchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */; };
@@ -163,6 +164,7 @@
 		9235D0CF1BC3184000946A32 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		9235D0D11BC3184000946A32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9235D0D31BC3184000946A32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		923F7DA61C174958007DC785 /* Request+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Request+iOS.swift"; sourceTree = "<group>"; };
 		924581E21BF2751600D665ED /* Analytics+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytics+iOS.swift"; sourceTree = "<group>"; };
 		92580B451BFBF5DF0037EB50 /* LoggerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		926679BA1BF3E84800F597C5 /* Analytics+WatchOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytics+WatchOS.swift"; sourceTree = "<group>"; };
@@ -362,6 +364,7 @@
 				92304A391BB0A711001E02E1 /* MFPClient.swift */,
 				92304A381BB0A711001E02E1 /* BMSClient.swift */,
 				92304A3B1BB0A711001E02E1 /* Request.swift */,
+				923F7DA61C174958007DC785 /* Request+iOS.swift */,
 				927F4CD11BC5DD1800A19360 /* Response.swift */,
 			);
 			path = NetworkRequests;
@@ -652,6 +655,7 @@
 				5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */,
 				92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */,
 				9221FF821BCD958700D7F3D7 /* Error.swift in Sources */,
+				923F7DA71C174958007DC785 /* Request+iOS.swift in Sources */,
 				927F4CD21BC5DD1800A19360 /* Response.swift in Sources */,
 				9287F2971BDA94C100B0E562 /* Logger.swift in Sources */,
 			);

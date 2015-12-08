@@ -696,7 +696,7 @@ class LoggerTests: XCTestCase {
         }!
         
         XCTAssertTrue(request.resourceUrl == url)
-        XCTAssertTrue(request.headers! == headers)
+        XCTAssertTrue(request.headers == headers)
         XCTAssertNil(request.queryParameters)
         XCTAssertTrue(request.httpMethod == HttpMethod.POST)
         

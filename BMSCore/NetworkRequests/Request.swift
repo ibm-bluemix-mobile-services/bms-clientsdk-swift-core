@@ -1,4 +1,4 @@
- /*
+/*
 *     Copyright 2015 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
@@ -11,6 +11,9 @@
 *     limitations under the License.
 */
 
+
+import WatchKit
+ 
 
 /**
     The HTTP method to be used in the `Request` class initializer.
@@ -29,9 +32,7 @@ public typealias MfpCompletionHandler = (Response?, NSError?) -> Void
 /**
     Build and send HTTP network requests.
 
-    When building a Request object, all components of the HTTP request must be provided in the initializer,
-        except for the `requestBody`, which can be supplied as either NSData or plain text 
-        when sending the request via one of the following methods:
+    When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as either NSData or plain text when sending the request via one of the following methods:
 
         sendString(requestBody: String, withCompletionHandler callback: mfpCompletionHandler?)
         sendData(requestBody: NSData, withCompletionHandler callback: mfpCompletionHandler?)
@@ -43,8 +44,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     static let CONTENT_TYPE = "Content-Type"
     static let TEXT_PLAIN_TYPE = "text/plain"
-    
-    
     
     // MARK: Properties (public)
     
@@ -58,7 +57,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     public var timeout: Double
     
     /// All request headers
-    public private(set) var headers: [String: String]?
+    public private(set) var headers: [String: String] = [:]
     
     /// Query parameters to append to the `resourceURL`
     public var queryParameters: [String: String]?
@@ -75,6 +74,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     var networkRequest: NSMutableURLRequest
     var allowRedirects: Bool = true
     private var startTime: NSTimeInterval = 0.0
+    private var trackingId: String = ""
     private let logger = Logger.internalLogger
     
     
@@ -99,7 +99,9 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         
         self.resourceUrl = url
         self.httpMethod = method
-        self.headers = headers
+        if headers != nil {
+            self.headers = headers!
+        }
         self.timeout = timeout
         self.queryParameters = queryParameters
         
@@ -119,24 +121,19 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
         If the Content-Type header is not already set, it will be set to "text/plain".
     
-        The response received from the server is packaged into a `Response` object which is passed back
-        via the completion handler parameter.
+        The response received from the server is packaged into a `Response` object which is passed back via the completion handler parameter.
     
-        If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler
-        will be called back with an error and a nil `Response`.
+        If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler will be called back with an error and a nil `Response`.
     
         - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
     func sendString(requestBody: String, withCompletionHandler callback: MfpCompletionHandler?) {
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
-        if headers == nil {
-            headers = [Request.CONTENT_TYPE: Request.TEXT_PLAIN_TYPE]
-        }
-        else {
-            if headers![Request.CONTENT_TYPE] == nil {
-                headers![Request.CONTENT_TYPE] = Request.TEXT_PLAIN_TYPE
-            }
+        
+        // Don't want to overwrite content type if it has already been specified as something else
+        if headers[Request.CONTENT_TYPE] == nil {
+            headers[Request.CONTENT_TYPE] = Request.TEXT_PLAIN_TYPE
         }
         
         self.sendWithCompletionHandler(callback)
@@ -146,11 +143,9 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     /**
         Add a request body and send the request asynchronously.
         
-        The response received from the server is packaged into a `Response` object which is passed back
-        via the completion handler parameter.
+        The response received from the server is packaged into a `Response` object which is passed back via the completion handler parameter.
     
-        If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler
-        will be called back with an error and a nil `Response`.
+        If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler will be called back with an error and a nil `Response`.
     
         - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
@@ -165,40 +160,43 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     /**
         Send the request asynchronously.
     
-        The response received from the server is packaged into a `Response` object which is passed back
-        via the completion handler parameter.
+        The response received from the server is packaged into a `Response` object which is passed back via the completion handler parameter.
     
-        If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler
-        will be called back with an error and a nil `Response`.
+        If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler will be called back with an error and a nil `Response`.
 
         - parameter completionHandler: The closure that will be called when this request finishes
     */
     public func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
         // Build the Response object and pass it to the user
+        let originalUrl = self.resourceUrl // Copy the url before query parameters get added to it
         let buildAndSendResponse = {
             (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
-            // TODO: Make use of the round trip time with Analytics
-            let roundTripTime = NSDate.timeIntervalSinceReferenceDate() - self.startTime
-            
             let networkResponse = Response(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
+            
+            self.logInboundResponse(networkResponse, url: originalUrl)
             
             callback?(networkResponse as Response, error)
         }
         
+        // Add metadata to the request header so that analytics data can be obtained for ALL mfp network requests
+        // Must be called before query parameters are added to self.resourceUrl
+        addAnalyticsMetadataToRequest()
+        
+        self.startTime = NSDate.timeIntervalSinceReferenceDate()
+        
         if var url = NSURL(string: self.resourceUrl) {
             
             if queryParameters != nil {
-                if let urlWithQueryParameters = Request.appendQueryParameters(queryParameters!, toURL: url) {
-                    url = urlWithQueryParameters
-                }
-                else {
+                guard let urlWithQueryParameters = Request.appendQueryParameters(queryParameters!, toURL: url) else {
                     // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
                     let urlErrorMessage = "Failed to append the query parameters to the resource url."
                     logger.error(urlErrorMessage)
                     let malformedUrlError = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
                     callback?(nil, malformedUrlError)
+                    return
                 }
+                url = urlWithQueryParameters
             }
             
             // Build request
@@ -207,8 +205,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             networkRequest.HTTPMethod = httpMethod.rawValue
             networkRequest.allHTTPHeaderFields = headers
             networkRequest.HTTPBody = requestBody
-            
-            startTime = NSDate.timeIntervalSinceReferenceDate()
             
             logger.info("Sending Request to " + resourceUrl)
             
@@ -246,6 +242,99 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
     // MARK: Methods (internal/private)
+    
+    internal func addAnalyticsMetadataToRequest() {
+        
+        Logger.internalLogger.debug("Recording request analytics")
+        
+        // The analytics server needs this ID to match each request with its corresponding response
+        self.trackingId = NSUUID().UUIDString
+        headers["x-wl-analytics-tracking-id"] = self.trackingId
+        
+        // CODE REVIEW: Should I log an warning/error if certain header fields are nil?
+
+        // Build the analytics metadata header
+        
+        var osVersion = ""
+        var model = ""
+        var deviceId = ""
+        #if TARGET_OS_WATCH
+            let device = WKInterfaceDevice.currentDevice()
+            osVersion = device.systemVersion
+            deviceId = Request.getUniqueDeviceId() // No "identifierForVendor" property for Apple Watch
+            model = "Apple Watch"
+        #elseif TARGET_OS_IOS
+            let device = UIDevice.currentDevice()
+            osVersion = device.systemVersion
+            deviceId = device.identifierForVendor?.UUIDString as String
+            model = device.modelName
+        #endif
+
+        
+        var requestAnalytics: [String: String] = [:]
+        
+        requestAnalytics["os"] = "ios"
+        requestAnalytics["brand"] = "Apple"
+        requestAnalytics["osVersion"] = osVersion
+        requestAnalytics["model"] = model
+        requestAnalytics["deviceID"] = deviceId
+        requestAnalytics["mfpAppName"] = "" // TODO: Get from Analytics or Logger initializer
+        requestAnalytics["appStoreLabel"] = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String ?? ""
+        requestAnalytics["appStoreId"] = NSBundle.mainBundle().bundleIdentifier ?? ""
+        requestAnalytics["appVersionCode"] = NSBundle.mainBundle().objectForInfoDictionaryKey(kCFBundleVersionKey as String) as? String ?? ""
+        requestAnalytics["appVersionDisplay"] = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?? ""
+
+        do {
+            let requestAnalyticsJson = try NSJSONSerialization.dataWithJSONObject(requestAnalytics, options: [])
+            let requestAnalyticsString = String(data: requestAnalyticsJson, encoding: NSUTF8StringEncoding)
+            if requestAnalyticsString != nil {
+                self.headers["x-mfp-analytics-metadata"] = requestAnalyticsString
+            }
+        }
+        catch let error {
+            Analytics.logger.error("Failed to append analytics metadata to request. Error: \(error)")
+        }
+    }
+    
+    
+    // Create a UUID for the current device and save it to the keychain
+    // Currently only used for Apple Watch devices
+    internal func getUniqueDeviceId() -> String {
+        
+        // TODO: Store in keychain so that all BMX apps can share it
+        
+        // First, check if a UUID was already created
+        var deviceId = NSUserDefaults.standardUserDefaults().stringForKey("deviceId")
+        if deviceId == nil {
+            deviceId = NSUUID().UUIDString
+            NSUserDefaults.standardUserDefaults().setValue(deviceId, forKey: "deviceId")
+        }
+        return deviceId!
+    }
+    
+    
+    internal func logInboundResponse(response: Response, url: String) {
+        
+        let endTime = NSDate.timeIntervalSinceReferenceDate()
+        let roundTripTime = endTime - startTime
+        let bytesSent = self.requestBody?.length ?? 0
+        
+        var responseAnalytics: [String: AnyObject] = [:]
+        responseAnalytics["$category"] = "network"
+        responseAnalytics["$url"] = url
+        responseAnalytics["$trackingId"] = self.trackingId
+        responseAnalytics["$outboundTimestamp"] = startTime
+        responseAnalytics["$inboundTimestamp"] = endTime
+        responseAnalytics["$duration"] = roundTripTime
+        responseAnalytics["$statusCode"] = response.statusCode
+        responseAnalytics["$bytesSent"] = bytesSent
+        
+        if (response.responseText != nil && !response.responseText!.isEmpty) {
+            responseAnalytics["$bytesReceived"] = response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
+        }
+        Analytics.logger.analytics(responseAnalytics)
+    }
+    
     
     /**
         Returns the supplied URL with query parameters appended to it; the original URL is not modified.

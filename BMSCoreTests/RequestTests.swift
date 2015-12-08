@@ -26,7 +26,7 @@ class RequestTests: XCTestCase {
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, 10.0)
-        XCTAssertEqual(request.headers!, ["Content-Type": "text/plain"])
+        XCTAssertEqual(request.headers, ["Content-Type": "text/plain"])
         XCTAssertEqual(request.queryParameters!, ["someKey": "someValue"])
         XCTAssertNotNil(request.networkRequest)
     }
@@ -38,8 +38,8 @@ class RequestTests: XCTestCase {
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, BMSClient.sharedInstance.defaultRequestTimeout)
-        XCTAssertNil(request.headers)
-        XCTAssertNil(request.headers)
+        XCTAssertTrue(request.headers.isEmpty)
+        XCTAssertTrue(request.headers.isEmpty)
         XCTAssertNotNil(request.networkRequest)
     }
     
@@ -68,7 +68,7 @@ class RequestTests: XCTestCase {
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers![Request.CONTENT_TYPE], Request.TEXT_PLAIN_TYPE)
+        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], Request.TEXT_PLAIN_TYPE)
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
@@ -81,7 +81,7 @@ class RequestTests: XCTestCase {
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers![Request.CONTENT_TYPE], "media-type")
+        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], "media-type")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
