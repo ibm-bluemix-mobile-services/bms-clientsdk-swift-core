@@ -75,7 +75,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     var allowRedirects: Bool = true
     private var startTime: NSTimeInterval = 0.0
     private var trackingId: String = ""
-    private let logger = Logger.internalLogger
+    private let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
     
     
     
@@ -245,7 +245,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     internal func addAnalyticsMetadataToRequest() {
         
-        Analytics.logger.debug("Network request outbound")
+        logger.debug("Network request outbound")
         
         // The analytics server needs this ID to match each request with its corresponding response
         self.trackingId = NSUUID().UUIDString
@@ -291,10 +291,10 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             if requestMetadataString != nil {
                 self.headers["x-mfp-analytics-metadata"] = requestMetadataString
             }
-            Analytics.logger.analytics(requestMetadata)
+            logger.analytics(requestMetadata)
         }
         catch let error {
-            Analytics.logger.error("Failed to append analytics metadata to request. Error: \(error)")
+            logger.error("Failed to append analytics metadata to request. Error: \(error)")
         }
     }
     
@@ -303,13 +303,17 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     // Currently only used for Apple Watch devices
     internal func getUniqueDeviceId() -> String {
         
-        // TODO: Store in keychain so that all BMX apps can share it
-        
         // First, check if a UUID was already created
-        var deviceId = NSUserDefaults.standardUserDefaults().stringForKey("deviceId")
+        let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore")
+        guard mfpUserDefaults != nil else {
+            logger.error("Failed to get an ID for this device.")
+            return ""
+        }
+        
+        var deviceId = mfpUserDefaults!.stringForKey("deviceId")
         if deviceId == nil {
             deviceId = NSUUID().UUIDString
-            NSUserDefaults.standardUserDefaults().setValue(deviceId, forKey: "deviceId")
+            mfpUserDefaults!.setValue(deviceId, forKey: "deviceId")
         }
         return deviceId!
     }
@@ -317,7 +321,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     internal func logInboundResponse(response: Response, url: String) {
         
-        Analytics.logger.debug("Network response inbound")
+        logger.debug("Network response inbound")
         
         let endTime = NSDate.timeIntervalSinceReferenceDate()
         let roundTripTime = endTime - startTime
@@ -338,7 +342,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         if (response.responseText != nil && !response.responseText!.isEmpty) {
             responseMetadata["$bytesReceived"] = response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
         }
-        Analytics.logger.analytics(responseMetadata)
+        logger.analytics(responseMetadata)
     }
     
     

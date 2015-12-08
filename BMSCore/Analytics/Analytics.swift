@@ -19,10 +19,10 @@ public class Analytics {
     
     // MARK: Properties (public)
     
-    // Determines whether analytics logs will be persisted to file.
+    /// Determines whether analytics logs will be persisted to file.
     public static var enabled: Bool = true
     
-    // Determines the tenant id / api key
+    /// Determines the tenant id / api key
     public static var apiKey: String? = nil
     
     
