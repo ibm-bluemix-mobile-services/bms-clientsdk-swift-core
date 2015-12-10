@@ -39,16 +39,15 @@ public class BMSClient: MFPClient {
     public static var defaultProtocol: String  = "https"
     
     
-    // Regions
-    //Add to Constants file
-   
     
     // MARK: Initializers
     
-    private init() {} // Required for sharedInstance to create an empty BMSClient
+    private init() {} // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
     
     
     /**
+        The required intializer for the `BMSClient` class.
+    
         Sets the base URL for the authorization server.
 
         - parameter backendRoute: Specifies the base URL for the authorization server
@@ -59,9 +58,6 @@ public class BMSClient: MFPClient {
         self.bluemixAppGUID = bluemixAppGUID
         self.bluemixRegionSuffix = bluemixRegionSuffix
     }
-
-
-    
     
 }
 
