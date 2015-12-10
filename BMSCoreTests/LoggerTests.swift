@@ -374,11 +374,11 @@ class LoggerTests: XCTestCase {
         let logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
         let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
         
-        let exceptionMessage = jsonDict![0]
-        XCTAssertTrue(exceptionMessage[TAG_MSG] == errorMessage)
-        XCTAssertTrue(exceptionMessage[TAG_PKG] == MFP_LOGGER_PACKAGE)
-        XCTAssertTrue(exceptionMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(exceptionMessage[TAG_LEVEL] == "FATAL")
+        let exception = jsonDict![0]
+        XCTAssertTrue(exception[TAG_MSG] == errorMessage)
+        XCTAssertTrue(exception[TAG_PKG] == MFP_LOGGER_PACKAGE)
+        XCTAssertTrue(exception[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(exception[TAG_LEVEL] == "FATAL")
         
     }
     
@@ -414,9 +414,7 @@ class LoggerTests: XCTestCase {
         
         let logs: String! =  try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
         
-        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
-        
-        XCTAssertTrue(bufferFile)
+        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
         let fileContents = "[\(logs)]"
         
@@ -639,8 +637,9 @@ class LoggerTests: XCTestCase {
     }
     
     
+    //TODO:
     func testUpdateLogProfile(){
-        //TODO:
+        
     }
     
     func testLogSendRequest(){
@@ -653,6 +652,7 @@ class LoggerTests: XCTestCase {
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
         let bmsClient = BMSClient.sharedInstance
         bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: REGION_US_SOUTH)
+        Analytics.initializeWithAppName("testAppName", apiKey: "testApiKey")
         let url = "https://" + HOST_NAME + REGION_US_SOUTH + UPLOAD_PATH + bmsClient.bluemixAppGUID!
         
         Analytics.initializeWithAppName(APP_NAME, apiKey: API_KEY)
@@ -690,9 +690,7 @@ class LoggerTests: XCTestCase {
         
         let formattedLogs = "[\(logs)]"
         
-        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
-        
-        XCTAssertTrue(bufferFile)
+        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
         let (request, payload) = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
         }!
@@ -705,69 +703,13 @@ class LoggerTests: XCTestCase {
         XCTAssertTrue(payload == formattedLogs)
     }
     
-    func testBuildLogSendRequestAPIKeyNilFail(){
-        let fakePKG = MFP_LOGGER_PACKAGE
-        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
-        let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
-        let bmsClient = BMSClient.sharedInstance
-        bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: REGION_US_SOUTH)
-        
-        do {
-            try NSFileManager().removeItemAtPath(pathToFile)
-            
-        } catch {
-            
-        }
-        
-        do {
-            try NSFileManager().removeItemAtPath(pathToBuffer)
-            
-        } catch {
-            
-        }
-        
-        let loggerInstance = Logger.getLoggerForName(fakePKG)
-        Logger.logStoreEnabled = true
-        Logger.logLevelFilter = LogLevel.Debug
-        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
-        
-        loggerInstance.debug("Hello world")
-        loggerInstance.info("1242342342343243242342")
-        loggerInstance.warn("Str: heyoooooo")
-        loggerInstance.error("1 2 3 4")
-        loggerInstance.fatal("StephenColbert")
-        
-        let logs: String! =  try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
-        
-        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
-        
-        XCTAssertTrue(bufferFile)
-        
-        let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
-            }
-        
-        XCTAssertNil(request)
-        
-        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
-        let fileContents = "[\(formattedContents)]"
-        let logDict  = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
-        let jsonDict = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
-        
-        
-        let error = jsonDict[0]
-        XCTAssertTrue(error[TAG_MSG] != nil)
-        XCTAssertTrue(error[TAG_PKG] == fakePKG)
-        XCTAssertTrue(error[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(error[TAG_LEVEL] == "ERROR")
-
-    }
-    
     func testBuildLogSendRequestAPIKeyEmptyStringFail(){
         let fakePKG = MFP_LOGGER_PACKAGE
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
         let bmsClient = BMSClient.sharedInstance
         bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: REGION_US_SOUTH)
+        Analytics.initializeWithAppName("testAppName", apiKey: "")
         
         do {
             try NSFileManager().removeItemAtPath(pathToFile)
@@ -796,9 +738,7 @@ class LoggerTests: XCTestCase {
         
         let logs: String! =  try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
         
-        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
-        
-        XCTAssertTrue(bufferFile)
+        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
         let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
         }
@@ -824,6 +764,7 @@ class LoggerTests: XCTestCase {
         let bmsClient = BMSClient.sharedInstance
         bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: REGION_US_SOUTH)
         bmsClient.uninitalizeBluemixAppGUID()
+        Analytics.initializeWithAppName("testAppName", apiKey: "testApiKey")
         let msg = "No value found for the BMSClient \(missingValue) property."
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
@@ -861,9 +802,7 @@ class LoggerTests: XCTestCase {
         loggerInstance.fatal("StephenColbert")
         
         let logs: String! = try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
-        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
-        
-        XCTAssertTrue(bufferFile)
+        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
         let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
                 XCTAssertNil(response)
@@ -878,11 +817,11 @@ class LoggerTests: XCTestCase {
         let jsonDict = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
         
         
-        let errorMessage = jsonDict[0]
-        XCTAssertTrue(errorMessage[TAG_MSG] == msg)
-        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
+        let error = jsonDict[0]
+        XCTAssertTrue(error[TAG_MSG] == msg)
+        XCTAssertTrue(error[TAG_PKG] == fakePKG)
+        XCTAssertTrue(error[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(error[TAG_LEVEL] == "ERROR")
         
     }
     
@@ -892,6 +831,7 @@ class LoggerTests: XCTestCase {
         let bmsClient = BMSClient.sharedInstance
         bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: REGION_US_SOUTH)
         bmsClient.uninitalizeBluemixAppGUID()
+        Analytics.initializeWithAppName("testAppName", apiKey: "testApiKey")
         let msg = "No value found for the BMSClient \(missingValue) property."
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
@@ -929,9 +869,7 @@ class LoggerTests: XCTestCase {
         loggerInstance.fatal("StephenColbert")
         
         let logs: String! = try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
-        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
-        
-        XCTAssertTrue(bufferFile)
+        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
         let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
             XCTAssertNil(response)
@@ -946,19 +884,38 @@ class LoggerTests: XCTestCase {
         let jsonDict = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
         
         
-        let errorMessage = jsonDict[0]
-        XCTAssertTrue(errorMessage[TAG_MSG] == msg)
-        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
+        let error = jsonDict[0]
+        XCTAssertTrue(error[TAG_MSG] == msg)
+        XCTAssertTrue(error[TAG_PKG] == fakePKG)
+        XCTAssertTrue(error[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(error[TAG_LEVEL] == "ERROR")
         
     }
     
     // TODO: Expand this test to include all 3 cases (Analytics, BMSClient, and other)
     func testReturnInitializationError(){
+        // BMSClient initialization
         Logger.returnInitializationError("BMSClient", missingValue:"test") { (response, error) -> Void in
             XCTAssertNil(response)
             XCTAssertNotNil(error)
+            XCTAssertEqual(error!.code, MFPErrorCode.ClientNotInitialized.rawValue)
+            XCTAssertEqual(error!.domain, MFP_CORE_ERROR_DOMAIN)
+        }
+        
+        // Analytics initialization
+        Logger.returnInitializationError("Analytics", missingValue:"test") { (response, error) -> Void in
+            XCTAssertNil(response)
+            XCTAssertNotNil(error)
+            XCTAssertEqual(error!.code, MFPErrorCode.AnalyticsNotInitialized.rawValue)
+            XCTAssertEqual(error!.domain, MFP_CORE_ERROR_DOMAIN)
+        }
+        
+        // Unknown initialization
+        Logger.returnInitializationError("Unknown class", missingValue:"test") { (response, error) -> Void in
+            XCTAssertNil(response)
+            XCTAssertNotNil(error)
+            XCTAssertEqual(error!.code, -1)
+            XCTAssertEqual(error!.domain, MFP_CORE_ERROR_DOMAIN)
         }
     }
     
@@ -989,9 +946,8 @@ class LoggerTests: XCTestCase {
     
         let logs: String! =  try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
         
-        let bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
+        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
-        XCTAssertTrue(bufferFile)
         XCTAssertNotNil(logs)
         
         do {
@@ -1008,11 +964,11 @@ class LoggerTests: XCTestCase {
         let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
         
     
-        let errorMessage = jsonDict![0]
-        XCTAssertNotNil(errorMessage[TAG_MSG])
-        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
+        let error = jsonDict![0]
+        XCTAssertNotNil(error[TAG_MSG])
+        XCTAssertTrue(error[TAG_PKG] == fakePKG)
+        XCTAssertTrue(error[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(error[TAG_LEVEL] == "ERROR")
         
     }
     
@@ -1048,15 +1004,11 @@ class LoggerTests: XCTestCase {
         
         try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
         
-        var bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
-        
-        XCTAssertTrue(bufferFile)
+        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
         Logger.deleteBufferFile(pathToBuffer)
         
-        bufferFile = NSFileManager().fileExistsAtPath(pathToBuffer)
-        
-        XCTAssertFalse(bufferFile)
+        XCTAssertFalse(NSFileManager().fileExistsAtPath(pathToBuffer))
     }
     
     func testExtractFileNameFromPath() {

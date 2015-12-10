@@ -18,7 +18,31 @@ class AnalyticsTests: XCTestCase {
     
     override func tearDown() {
         Analytics.lifecycleEvents = [:]
+        Analytics.uninitialize()
     }
+    
+    
+    /**
+        1) Check Analytics properties prior to initialization
+        2) Initialize Analytics with empty strings
+        3) Confirm that Analytics properties (apiKey, appName) are not yet initialized
+        4) Initialize Analytics with real values
+        5) Confirm that properties have been updated properly
+    */
+    func testInitializeWithAppName() {
+     
+        XCTAssertNil(Analytics.apiKey)
+        XCTAssertEqual(Analytics.appName, NSBundle.mainBundle().bundleIdentifier)
+        
+        Analytics.initializeWithAppName("", apiKey: "")
+        XCTAssertNil(Analytics.apiKey)
+        XCTAssertEqual(Analytics.appName, NSBundle.mainBundle().bundleIdentifier)
+        
+        Analytics.initializeWithAppName("testAppName", apiKey: "testApiKey")
+        XCTAssertEqual(Analytics.apiKey, "testApiKey")
+        XCTAssertEqual(Analytics.appName, "testAppName")
+    }
+    
     
     /**
         1) Call logSessionStart(), which should update Analytics.lifecycleEvents.
@@ -43,6 +67,7 @@ class AnalyticsTests: XCTestCase {
 
         XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval > firstSessionStartTime);
     }
+    
     
     /**
         1) Call logSessionStart(), which should update Analytics.lifecycleEvents.
@@ -70,6 +95,7 @@ class AnalyticsTests: XCTestCase {
         
         XCTAssertTrue(Analytics.lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval > firstSessionStartTime);
     }
+    
     
     /**
         1) Call logSessionEnd(). This should have no effect since logSessionStart() was never called.

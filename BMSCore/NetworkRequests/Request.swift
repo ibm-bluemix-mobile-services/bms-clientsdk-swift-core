@@ -75,7 +75,25 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     var allowRedirects: Bool = true
     private var startTime: NSTimeInterval = 0.0
     private var trackingId: String = ""
-    private let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
+    private static let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
+    
+    // Create a UUID for the current device and save it to the keychain
+    // Currently only used for Apple Watch devices
+    internal static var uniqueDeviceId: String {
+        // First, check if a UUID was already created
+        let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore")
+        guard mfpUserDefaults != nil else {
+            Request.logger.error("Failed to get an ID for this device.")
+            return ""
+        }
+        
+        var deviceId = mfpUserDefaults!.stringForKey("deviceId")
+        if deviceId == nil {
+            deviceId = NSUUID().UUIDString
+            mfpUserDefaults!.setValue(deviceId, forKey: "deviceId")
+        }
+        return deviceId!
+    }
     
     
     
@@ -174,7 +192,8 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             
             let networkResponse = Response(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
             
-            self.logInboundResponse(networkResponse, url: originalUrl)
+            let responseMetadata = self.generateInboundResponseMetadata(networkResponse, url: originalUrl)
+            Request.logger.analytics(responseMetadata)
             
             callback?(networkResponse as Response, error)
         }
@@ -191,7 +210,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
                 guard let urlWithQueryParameters = Request.appendQueryParameters(queryParameters!, toURL: url) else {
                     // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
                     let urlErrorMessage = "Failed to append the query parameters to the resource url."
-                    logger.error(urlErrorMessage)
+                    Request.logger.error(urlErrorMessage)
                     let malformedUrlError = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
                     callback?(nil, malformedUrlError)
                     return
@@ -206,14 +225,14 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             networkRequest.allHTTPHeaderFields = headers
             networkRequest.HTTPBody = requestBody
             
-            logger.info("Sending Request to " + resourceUrl)
+            Request.logger.info("Sending Request to " + resourceUrl)
             
             // Send request
             networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
         }
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
-            logger.error(urlErrorMessage)
+            Request.logger.error(urlErrorMessage)
             let malformedUrlError = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
             callback?(nil, malformedUrlError)
         }
@@ -232,7 +251,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     {
         var redirectRequest: NSURLRequest?
         if allowRedirects {
-            logger.info("Redirecting: " + String(session))
+            Request.logger.info("Redirecting: " + String(session))
             redirectRequest = request
         }
         
@@ -245,7 +264,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     internal func addAnalyticsMetadataToRequest() {
         
-        logger.debug("Network request outbound")
+        Request.logger.debug("Network request outbound")
         
         // The analytics server needs this ID to match each request with its corresponding response
         self.trackingId = NSUUID().UUIDString
@@ -262,7 +281,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         #if TARGET_OS_WATCH
             let device = WKInterfaceDevice.currentDevice()
             osVersion = device.systemVersion
-            deviceId = Request.getUniqueDeviceId() // No "identifierForVendor" property for Apple Watch
+            deviceId = Request.uniqueDeviceId() // No "identifierForVendor" property for Apple Watch
             model = "Apple Watch"
         #elseif TARGET_OS_IOS
             let device = UIDevice.currentDevice()
@@ -291,37 +310,16 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             if requestMetadataString != nil {
                 self.headers["x-mfp-analytics-metadata"] = requestMetadataString
             }
-            logger.analytics(requestMetadata)
         }
         catch let error {
-            logger.error("Failed to append analytics metadata to request. Error: \(error)")
+            Request.logger.error("Failed to append analytics metadata to request. Error: \(error)")
         }
     }
+
     
-    
-    // Create a UUID for the current device and save it to the keychain
-    // Currently only used for Apple Watch devices
-    internal func getUniqueDeviceId() -> String {
+    internal func generateInboundResponseMetadata(response: Response, url: String) -> [String: AnyObject] {
         
-        // First, check if a UUID was already created
-        let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore")
-        guard mfpUserDefaults != nil else {
-            logger.error("Failed to get an ID for this device.")
-            return ""
-        }
-        
-        var deviceId = mfpUserDefaults!.stringForKey("deviceId")
-        if deviceId == nil {
-            deviceId = NSUUID().UUIDString
-            mfpUserDefaults!.setValue(deviceId, forKey: "deviceId")
-        }
-        return deviceId!
-    }
-    
-    
-    internal func logInboundResponse(response: Response, url: String) {
-        
-        logger.debug("Network response inbound")
+        Request.logger.debug("Network response inbound")
         
         let endTime = NSDate.timeIntervalSinceReferenceDate()
         let roundTripTime = endTime - startTime
@@ -340,9 +338,11 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         responseMetadata["$bytesSent"] = bytesSent
         
         if (response.responseText != nil && !response.responseText!.isEmpty) {
+            print(response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
             responseMetadata["$bytesReceived"] = response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
         }
-        logger.analytics(responseMetadata)
+        
+        return responseMetadata
     }
     
     

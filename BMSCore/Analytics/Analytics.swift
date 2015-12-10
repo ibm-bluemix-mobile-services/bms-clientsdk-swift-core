@@ -56,7 +56,9 @@ public class Analytics {
         if !appName.isEmpty {
             Analytics.appName = appName
         }
-        Analytics.apiKey = apiKey
+        if !apiKey.isEmpty {
+            Analytics.apiKey = apiKey
+        }
     }
     
     
@@ -138,4 +140,14 @@ public class Analytics {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+}
+
+
+// For unit testing only
+internal extension Analytics {
+    
+    internal static func uninitialize() {
+        Analytics.apiKey = nil
+        Analytics.appName = nil
+    }
 }

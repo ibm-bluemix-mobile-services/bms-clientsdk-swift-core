@@ -45,6 +45,88 @@ class RequestTests: XCTestCase {
     
     
     
+    // MARK: request analytics
+    
+    func testAddAnalyticsMetadataToRequestWithoutAnalyticsAppName() {
+        
+        let request = Request(url: "http://example.com", headers: ["test key": "test value"], queryParameters: nil)
+        
+        XCTAssertEqual(request.headers.count, 1)
+        
+        Analytics.uninitialize()
+        
+        request.addAnalyticsMetadataToRequest()
+        
+        XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
+        
+        let requestMetadata: String? = request.headers["x-mfp-analytics-metadata"]
+        XCTAssertNotNil(requestMetadata)
+        // Since Analytics has not been initialized, there will be no app name. 
+        // In a real app, this should default to the bundle ID. Unit tests have no bundle ID.
+        XCTAssert(!requestMetadata!.containsString("mfpAppName"))
+    }
+    
+    func testAddAnalyticsMetadataToRequestWithAnalyticsAppName() {
+        
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: nil)
+        
+        Analytics.initializeWithAppName("Test app", apiKey: "asdfjasdfj")
+        
+        request.addAnalyticsMetadataToRequest()
+        
+        XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
+        
+        let requestMetadata: String? = request.headers["x-mfp-analytics-metadata"]
+        XCTAssertNotNil(requestMetadata)
+        // Since Analytics has not been initialized, there will be no app name.
+        // In a real app, this should default to the bundle ID. Unit tests have no bundle ID.
+        XCTAssert(requestMetadata!.containsString("\"mfpAppName\":\"Test app\""))
+    }
+    
+    func testUniqueDeviceId() {
+        
+        let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore")
+        mfpUserDefaults?.removeObjectForKey("deviceId")
+        
+        // Generate new ID
+        let generatedId = Request.uniqueDeviceId
+        
+        // Since an ID was already created, this method should keep returning the same one
+        let retrievedId = Request.uniqueDeviceId
+        XCTAssertEqual(retrievedId, generatedId)
+        let retrievedId2 = Request.uniqueDeviceId
+        XCTAssertEqual(retrievedId2, generatedId)
+    }
+    
+    func testGenerateInboundResponseMetadata() {
+        
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: nil)
+        request.sendWithCompletionHandler(nil)
+        
+        let responseData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
+        let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        let response = Response(responseData: responseData!, httpResponse: httpURLResponse, isRedirect: true)
+        
+        let responseMetadata = request.generateInboundResponseMetadata(response, url: "http://example.com")
+        
+        let outboundTime = responseMetadata["$outboundTimestamp"] as? NSTimeInterval
+        let inboundTime = responseMetadata["$inboundTimestamp"] as? NSTimeInterval
+        let roundTripTime = responseMetadata["$roundTripTime"] as? NSTimeInterval
+        
+        XCTAssertNotNil(outboundTime)
+        XCTAssertNotNil(inboundTime)
+        XCTAssertNotNil(roundTripTime)
+        
+        XCTAssert(inboundTime > outboundTime)
+        XCTAssert(roundTripTime > 0)
+        
+        let responseBytes = responseMetadata["$bytesReceived"] as? Int
+        XCTAssertNotNil(responseBytes)
+        XCTAssert(responseBytes == 36)
+    }
+    
+    
+    
     // MARK: send
     
     func testSendData() {
