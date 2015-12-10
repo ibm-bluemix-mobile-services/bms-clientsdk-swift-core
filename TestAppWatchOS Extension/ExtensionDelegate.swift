@@ -16,6 +16,17 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
         let myBMSClient = BMSClient.sharedInstance
         myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "", bluemixRegionSuffix: REGION_US_SOUTH)
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
+        
+        // TODO: Get a real apiKey from Bluemix app
+        Analytics.initializeWithAppName("TestAppWatchOS", apiKey: "REPLACE WITH ACTUAL API KEY")
+    }
+    
+    func applicationDidBecomeActive() {
+        Analytics.recordApplicationDidBecomeActive()
+    }
+    
+    func applicationWillResignActive() {
+        Analytics.recordApplicationWillResignActive()
     }
 
 }

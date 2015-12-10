@@ -46,6 +46,10 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
     }
     
     @IBAction func clearLogButton(sender: AnyObject) {
+        
+        Analytics.log(["buttonPressed": "clearLog"])
+        Analytics.send()
+        
         let FILE = "mfpsdk.logger.log"
         let PATH = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] + "/"
         let pathToFile = PATH + FILE
@@ -77,6 +81,10 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
     }
     
     @IBAction func sendLogButton(sender: AnyObject) {
+        
+        Analytics.log(["buttonPressed": "sendLog"])
+        Analytics.send()
+        
         var logger = Logger.getLoggerForName("SampleLogger")
         if(!packageName.text!.isEmpty){
             logger = Logger.getLoggerForName(packageName.text!)

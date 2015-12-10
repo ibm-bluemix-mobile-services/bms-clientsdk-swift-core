@@ -338,7 +338,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         responseMetadata["$bytesSent"] = bytesSent
         
         if (response.responseText != nil && !response.responseText!.isEmpty) {
-            print(response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
             responseMetadata["$bytesReceived"] = response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
         }
         

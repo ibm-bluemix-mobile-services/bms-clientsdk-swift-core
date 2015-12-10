@@ -21,6 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "", bluemixRegionSuffix: REGION_US_SOUTH)
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
         
+        // TODO: Get a real apiKey from Bluemix app
+        Analytics.initializeWithAppName("TestAppiOS", apiKey: "REPLACE WITH ACTUAL API KEY")
+        
         Analytics.startRecordingApplicationLifecycle()
         
         return true

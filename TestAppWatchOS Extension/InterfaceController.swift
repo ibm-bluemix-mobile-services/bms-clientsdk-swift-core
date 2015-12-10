@@ -19,6 +19,9 @@ class InterfaceController: WKInterfaceController {
     
     @IBAction func getRequestButtonPressed() {
         
+        Analytics.log(["buttonPressed": "getRequest"])
+        Analytics.send()
+        
         let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
         getRequest.sendWithCompletionHandler( { (response: Response?, error: NSError?) in
             

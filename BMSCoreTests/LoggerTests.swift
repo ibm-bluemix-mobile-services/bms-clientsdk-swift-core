@@ -892,7 +892,6 @@ class LoggerTests: XCTestCase {
         
     }
     
-    // TODO: Expand this test to include all 3 cases (Analytics, BMSClient, and other)
     func testReturnInitializationError(){
         // BMSClient initialization
         Logger.returnInitializationError("BMSClient", missingValue:"test") { (response, error) -> Void in

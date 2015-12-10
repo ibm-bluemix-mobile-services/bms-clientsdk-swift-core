@@ -9,6 +9,8 @@
 import UIKit
 import BMSCore
 
+// TODO: Fix the storyboard so that the view fits in all iOS screen sizes
+
 class ViewController: UIViewController, UITextFieldDelegate {
 
     
@@ -18,6 +20,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     
     @IBAction func sendRequestButtonPressed(sender: AnyObject) {
+        
+        Analytics.log(["buttonPressed": "sendRequest"])
+        Analytics.send()
         
         var method: HttpMethod
 
