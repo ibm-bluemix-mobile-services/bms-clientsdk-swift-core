@@ -22,8 +22,11 @@ public class Analytics {
     /// Determines whether analytics logs will be persisted to file.
     public static var enabled: Bool = true
     
-    /// Determines the tenant id / api key
-    public static var apiKey: String? = nil
+    /// The unique ID used to send logs to the Analytics server
+    public private(set) static var apiKey: String?
+    
+    /// The name of the iOS/WatchOS app
+    public private(set) static var appName: String? = NSBundle.mainBundle().bundleIdentifier
     
     
     
@@ -38,6 +41,24 @@ public class Analytics {
     
     
     // MARK: Methods (public)
+    
+    /**
+        The required initializer for the `Analytics` class. 
+    
+        This method must be called before sending `Analytics` or `Logger` logs.
+        
+        - parameter appName:  The analytics data
+        - parameter apiKey:   A unique ID used to authenticate with the MFP analytics server
+    */
+    public static func initializeWithAppName(appName: String, apiKey: String) {
+        
+        // Any required properties here should be checked for initialization in the private initializer
+        if !appName.isEmpty {
+            Analytics.appName = appName
+        }
+        Analytics.apiKey = apiKey
+    }
+    
     
     /**
         Write analytics data to file. 
@@ -110,7 +131,6 @@ public class Analytics {
         
         lifecycleEvents = [:]
     }
-    
     
     
     // Remove the observers registered in the Analytics+iOS "startRecordingApplicationLifecycleEvents" method

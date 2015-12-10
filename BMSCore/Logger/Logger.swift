@@ -620,24 +620,23 @@ public class Logger {
     
     // Build the Request object that will be used to send the logs to the server
     internal static func buildLogSendRequest(logs: String, withCallback callback: MfpCompletionHandler) -> (Request, String)?{
+        
         let bmsClient = BMSClient.sharedInstance
+        var headers = ["Content-Type": "application/json"]
     
         guard let appGuid = bmsClient.bluemixAppGUID else {
-            returnClientInitializationError("bluemixAppGUID", callback: callback)
+            returnInitializationError("BMSClient", missingValue: "bluemixAppGUID", callback: callback)
             return nil
         }
+        
+        guard Analytics.apiKey != nil && Analytics.apiKey != "" else {
+            returnInitializationError("Analytics", missingValue: "apiKey", callback: callback)
+            return nil
+        }
+        
+        headers[API_ID_HEADER] = Analytics.apiKey!
     
         let logUploaderUrl = BMSClient.defaultProtocol + "://" + HOST_NAME + bmsClient.bluemixRegionSuffix! + UPLOAD_PATH + appGuid
-        
-        var headers = ["Content-Type": "application/json"]
-        
-        
-        if Analytics.apiKey != nil && Analytics.apiKey != "" {
-            headers[API_ID_HEADER] = Analytics.apiKey
-        } else {
-           returnClientInitializationError("apiKey", callback: callback)
-            return nil
-        }
         
         let logPayload = "[" + logs + "]"
         
@@ -646,12 +645,23 @@ public class Logger {
     }
     
     
-    // If this is reached, the user most likely did not call BMSClient.initializeWithBluemixAppRoute() method
-    internal static func returnClientInitializationError(missingValue: String, callback: MfpCompletionHandler) {
+    // If this is reached, the user most likely failed to initialize BMSClient or Analytics
+    internal static func returnInitializationError(uninitializedClass: String, missingValue: String, callback: MfpCompletionHandler) {
         
-        Logger.internalLogger.error("No value found for the BMSClient \(missingValue) property.")
-        let errorMessage = "Must initialize BMSClient before sending logs to the server."
-        let error = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.ClientNotInitialized.rawValue, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+        Logger.internalLogger.error("No value found for the \(uninitializedClass) \(missingValue) property.")
+        let errorMessage = "Must initialize \(uninitializedClass) before sending logs to the server."
+        
+        var errorCode: Int
+        switch uninitializedClass {
+        case "Analytics":
+            errorCode = MFPErrorCode.AnalyticsNotInitialized.rawValue
+        case "BMSClient":
+            errorCode = MFPErrorCode.ClientNotInitialized.rawValue
+        default:
+            errorCode = -1
+        }
+        
+        let error = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: errorCode, userInfo: [NSLocalizedDescriptionKey: errorMessage])
         
         callback(nil, error)
     }

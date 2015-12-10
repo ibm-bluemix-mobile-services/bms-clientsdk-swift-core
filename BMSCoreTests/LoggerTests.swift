@@ -646,6 +646,7 @@ class LoggerTests: XCTestCase {
     func testLogSendRequest(){
         let fakePKG = "MYPKG"
         let API_KEY = "apikey"
+        let APP_NAME = "myApp"
         let HOST_NAME = "mfp-analytics-server"
         let UPLOAD_PATH = "/imfmobileanalytics/v1/receiver/apps/"
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
@@ -654,7 +655,8 @@ class LoggerTests: XCTestCase {
         bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: REGION_US_SOUTH)
         let url = "https://" + HOST_NAME + REGION_US_SOUTH + UPLOAD_PATH + bmsClient.bluemixAppGUID!
         
-        Analytics.apiKey = API_KEY
+        Analytics.initializeWithAppName(APP_NAME, apiKey: API_KEY)
+        
         let headers = ["Content-Type": "application/json", API_ID_HEADER: API_KEY]
 
         
@@ -705,8 +707,6 @@ class LoggerTests: XCTestCase {
     
     func testBuildLogSendRequestAPIKeyNilFail(){
         let fakePKG = MFP_LOGGER_PACKAGE
-        let missingValue = "apiKey"
-        let msg = "No value found for the BMSClient \(missingValue) property."
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
         let bmsClient = BMSClient.sharedInstance
@@ -754,24 +754,20 @@ class LoggerTests: XCTestCase {
         let jsonDict = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
         
         
-        let errorMessage = jsonDict[0]
-        XCTAssertTrue(errorMessage[TAG_MSG] == msg)
-        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
+        let error = jsonDict[0]
+        XCTAssertTrue(error[TAG_MSG] != nil)
+        XCTAssertTrue(error[TAG_PKG] == fakePKG)
+        XCTAssertTrue(error[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(error[TAG_LEVEL] == "ERROR")
 
     }
     
     func testBuildLogSendRequestAPIKeyEmptyStringFail(){
         let fakePKG = MFP_LOGGER_PACKAGE
-        let missingValue = "apiKey"
-        let msg = "No value found for the BMSClient \(missingValue) property."
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
         let bmsClient = BMSClient.sharedInstance
         bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: REGION_US_SOUTH)
-        
-        Analytics.apiKey = "" //will fail even if using empty string
         
         do {
             try NSFileManager().removeItemAtPath(pathToFile)
@@ -815,11 +811,11 @@ class LoggerTests: XCTestCase {
         let jsonDict = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
         
         
-        let errorMessage = jsonDict[0]
-        XCTAssertTrue(errorMessage[TAG_MSG] == msg)
-        XCTAssertTrue(errorMessage[TAG_PKG] == fakePKG)
-        XCTAssertTrue(errorMessage[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(errorMessage[TAG_LEVEL] == "ERROR")
+        let error = jsonDict[0]
+        XCTAssertTrue(error[TAG_MSG] != nil)
+        XCTAssertTrue(error[TAG_PKG] == fakePKG)
+        XCTAssertTrue(error[TAG_TIMESTAMP] != nil)
+        XCTAssertTrue(error[TAG_LEVEL] == "ERROR")
     }
     
     func testBuildLogSendRequestFail(){
@@ -958,9 +954,9 @@ class LoggerTests: XCTestCase {
         
     }
     
-    func testReturnClientInitializationError(){
-        let errorMessage = "Error"
-        Logger.returnClientInitializationError(errorMessage) { (response, error) -> Void in
+    // TODO: Expand this test to include all 3 cases (Analytics, BMSClient, and other)
+    func testReturnInitializationError(){
+        Logger.returnInitializationError("BMSClient", missingValue:"test") { (response, error) -> Void in
             XCTAssertNil(response)
             XCTAssertNotNil(error)
         }

@@ -279,7 +279,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         requestMetadata["osVersion"] = osVersion
         requestMetadata["model"] = model
         requestMetadata["deviceID"] = deviceId
-        requestMetadata["mfpAppName"] = "" // TODO: Get from Analytics or Logger initializer
+        requestMetadata["mfpAppName"] = Analytics.appName
         requestMetadata["appStoreLabel"] = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String ?? ""
         requestMetadata["appStoreId"] = NSBundle.mainBundle().bundleIdentifier ?? ""
         requestMetadata["appVersionCode"] = NSBundle.mainBundle().objectForInfoDictionaryKey(kCFBundleVersionKey as String) as? String ?? ""

@@ -19,4 +19,5 @@ public enum MFPErrorCode: Int {
     
     case MalformedUrl
     case ClientNotInitialized
+    case AnalyticsNotInitialized
 }
