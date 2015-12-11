@@ -11,6 +11,8 @@ import BMSCore
 
 // TODO: Fix the storyboard so that the view fits in all iOS screen sizes
 
+// TODO: Rename this controller to something more descriptive, like "RequestViewController"
+
 class ViewController: UIViewController, UITextFieldDelegate {
 
     

@@ -332,7 +332,6 @@ public class Logger {
                     try self.moveOldLogsToOverflowFile(logFile, overflowFile: logOverflowFile)
                 }
                 catch let error {
-                    // CODE REVIEW: When logging about file operations, do not show full path, but only the file name
                     let logFileName = Logger.extractFileNameFromPath(logFile)
                     print("Log file \(logFileName) is full but the old logs could not be removed. Try sending the logs. Error: \(error)")
                     return
@@ -743,6 +742,6 @@ public class Logger {
     // MARK: Server configuration
     
     // TODO: Implement once the behavior of this method has been determined
-    public func updateLogProfile(withCompletionHandler callback: MfpCompletionHandler? = nil) { }
+    internal func updateLogProfile(withCompletionHandler callback: MfpCompletionHandler? = nil) { }
 
 }

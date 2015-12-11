@@ -636,12 +636,6 @@ class LoggerTests: XCTestCase {
 
     }
     
-    
-    //TODO:
-    func testUpdateLogProfile(){
-        
-    }
-    
     func testLogSendRequest(){
         let fakePKG = "MYPKG"
         let API_KEY = "apikey"

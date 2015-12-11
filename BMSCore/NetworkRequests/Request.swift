@@ -73,15 +73,15 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     var networkSession: NSURLSession
     var networkRequest: NSMutableURLRequest
     var allowRedirects: Bool = true
-    private var startTime: NSTimeInterval = 0.0
-    private var trackingId: String = ""
+    internal var startTime: NSTimeInterval = 0.0
+    internal var trackingId: String = ""
     private static let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
     
     // Create a UUID for the current device and save it to the keychain
     // Currently only used for Apple Watch devices
     internal static var uniqueDeviceId: String {
         // First, check if a UUID was already created
-        let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore")
+        let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.Analytics")
         guard mfpUserDefaults != nil else {
             Request.logger.error("Failed to get an ID for this device.")
             return ""
@@ -174,6 +174,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         self.sendWithCompletionHandler(callback)
     }
     
+    // TODO: Refactor sendWithCompletionHandler - split into more methods
     
     /**
         Send the request asynchronously.
@@ -186,21 +187,31 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     */
     public func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
         // Build the Response object and pass it to the user
-        let originalUrl = self.resourceUrl // Copy the url before query parameters get added to it
+//        let originalUrl = self.resourceUrl // Copy the url before query parameters get added to it
         let buildAndSendResponse = {
             (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
             let networkResponse = Response(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
             
-            let responseMetadata = self.generateInboundResponseMetadata(networkResponse, url: originalUrl)
-            Request.logger.analytics(responseMetadata)
+            // TODO: Add back in when the Analytics server supports this functionality (estimated for May 2016)
+//            let responseMetadata = Analytics.generateInboundResponseMetadata(self, response: networkResponse, url: originalUrl)
+//            Request.logger.analytics(responseMetadata)
             
             callback?(networkResponse as Response, error)
         }
         
         // Add metadata to the request header so that analytics data can be obtained for ALL mfp network requests
         // Must be called before query parameters are added to self.resourceUrl
-        addAnalyticsMetadataToRequest()
+        
+        Request.logger.debug("Network request outbound")
+        
+        // The analytics server needs this ID to match each request with its corresponding response
+        self.trackingId = NSUUID().UUIDString
+        headers["x-wl-analytics-tracking-id"] = self.trackingId
+        
+        if let requestMetadata = Analytics.generateOutboundRequestMetadata() {
+            self.headers["x-mfp-analytics-metadata"] = requestMetadata
+        }
         
         self.startTime = NSDate.timeIntervalSinceReferenceDate()
         
@@ -261,89 +272,6 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     
     
     // MARK: Methods (internal/private)
-    
-    internal func addAnalyticsMetadataToRequest() {
-        
-        Request.logger.debug("Network request outbound")
-        
-        // The analytics server needs this ID to match each request with its corresponding response
-        self.trackingId = NSUUID().UUIDString
-        headers["x-wl-analytics-tracking-id"] = self.trackingId
-        
-        // CODE REVIEW: Should I log an warning/error if certain header fields are nil?
-
-        // Build the analytics metadata header
-        
-        // Device info
-        var osVersion = ""
-        var model = ""
-        var deviceId = ""
-        #if TARGET_OS_WATCH
-            let device = WKInterfaceDevice.currentDevice()
-            osVersion = device.systemVersion
-            deviceId = Request.uniqueDeviceId() // No "identifierForVendor" property for Apple Watch
-            model = "Apple Watch"
-        #elseif TARGET_OS_IOS
-            let device = UIDevice.currentDevice()
-            osVersion = device.systemVersion
-            deviceId = device.identifierForVendor?.UUIDString as String
-            model = device.modelName
-        #endif
-        
-        // All of this data will go in a header for the request
-        var requestMetadata: [String: String] = [:]
-        
-        requestMetadata["os"] = "ios"
-        requestMetadata["brand"] = "Apple"
-        requestMetadata["osVersion"] = osVersion
-        requestMetadata["model"] = model
-        requestMetadata["deviceID"] = deviceId
-        requestMetadata["mfpAppName"] = Analytics.appName
-        requestMetadata["appStoreLabel"] = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String ?? ""
-        requestMetadata["appStoreId"] = NSBundle.mainBundle().bundleIdentifier ?? ""
-        requestMetadata["appVersionCode"] = NSBundle.mainBundle().objectForInfoDictionaryKey(kCFBundleVersionKey as String) as? String ?? ""
-        requestMetadata["appVersionDisplay"] = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?? ""
-
-        do {
-            let requestMetadataJson = try NSJSONSerialization.dataWithJSONObject(requestMetadata, options: [])
-            let requestMetadataString = String(data: requestMetadataJson, encoding: NSUTF8StringEncoding)
-            if requestMetadataString != nil {
-                self.headers["x-mfp-analytics-metadata"] = requestMetadataString
-            }
-        }
-        catch let error {
-            Request.logger.error("Failed to append analytics metadata to request. Error: \(error)")
-        }
-    }
-
-    
-    internal func generateInboundResponseMetadata(response: Response, url: String) -> [String: AnyObject] {
-        
-        Request.logger.debug("Network response inbound")
-        
-        let endTime = NSDate.timeIntervalSinceReferenceDate()
-        let roundTripTime = endTime - startTime
-        let bytesSent = self.requestBody?.length ?? 0
-        
-        // Data for analytics logging
-        var responseMetadata: [String: AnyObject] = [:]
-        
-        responseMetadata["$category"] = "network"
-        responseMetadata["$path"] = url
-        responseMetadata["$trackingId"] = self.trackingId
-        responseMetadata["$outboundTimestamp"] = startTime
-        responseMetadata["$inboundTimestamp"] = endTime
-        responseMetadata["$roundTripTime"] = roundTripTime
-        responseMetadata["$responseCode"] = response.statusCode
-        responseMetadata["$bytesSent"] = bytesSent
-        
-        if (response.responseText != nil && !response.responseText!.isEmpty) {
-            responseMetadata["$bytesReceived"] = response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
-        }
-        
-        return responseMetadata
-    }
-    
     
     /**
         Returns the supplied URL with query parameters appended to it; the original URL is not modified.

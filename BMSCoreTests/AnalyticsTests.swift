@@ -32,10 +32,12 @@ class AnalyticsTests: XCTestCase {
     func testInitializeWithAppName() {
      
         XCTAssertNil(Analytics.apiKey)
+        XCTAssertNil(Analytics.appName)
         XCTAssertEqual(Analytics.appName, NSBundle.mainBundle().bundleIdentifier)
         
         Analytics.initializeWithAppName("", apiKey: "")
         XCTAssertNil(Analytics.apiKey)
+        XCTAssertNil(Analytics.appName)
         XCTAssertEqual(Analytics.appName, NSBundle.mainBundle().bundleIdentifier)
         
         Analytics.initializeWithAppName("testAppName", apiKey: "testApiKey")
@@ -121,6 +123,58 @@ class AnalyticsTests: XCTestCase {
         
     }
     
+    func testGenerateOutboundRequestMetadataWithoutAnalyticsAppName() {
+        
+        Analytics.uninitialize()
+        
+        let requestMetadata = Analytics.generateOutboundRequestMetadata()
+        
+        XCTAssertNotNil(requestMetadata)
+        // Since Analytics has not been initialized, there will be no app name.
+        // In a real app, this should default to the bundle ID. Unit tests have no bundle ID.
+        XCTAssert(!requestMetadata!.containsString("mfpAppName"))
+    }
     
+    func testAddAnalyticsMetadataToRequestWithAnalyticsAppName() {
+        
+        Analytics.initializeWithAppName("Test app", apiKey: "asdfjasdfj")
+        
+        let requestMetadata = Analytics.generateOutboundRequestMetadata()
+        
+        XCTAssertNotNil(requestMetadata)
+        // Since Analytics has not been initialized, there will be no app name.
+        // In a real app, this should default to the bundle ID. Unit tests have no bundle ID.
+        XCTAssert(requestMetadata!.containsString("\"mfpAppName\":\"Test app\""))
+    }
 
+    func testGenerateInboundResponseMetadata() {
+        
+        let requestUrl = "http://example.com"
+        let request = Request(url: requestUrl, headers: nil, queryParameters: nil)
+        request.startTime = NSDate.timeIntervalSinceReferenceDate()
+        request.trackingId = NSUUID().UUIDString
+        request.sendWithCompletionHandler(nil)
+        
+        let responseData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
+        let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        let response = Response(responseData: responseData!, httpResponse: httpURLResponse, isRedirect: true)
+        
+        let responseMetadata = Analytics.generateInboundResponseMetadata(request, response: response, url: requestUrl)
+        
+        let outboundTime = responseMetadata["$outboundTimestamp"] as? NSTimeInterval
+        let inboundTime = responseMetadata["$inboundTimestamp"] as? NSTimeInterval
+        let roundTripTime = responseMetadata["$roundTripTime"] as? NSTimeInterval
+        
+        XCTAssertNotNil(outboundTime)
+        XCTAssertNotNil(inboundTime)
+        XCTAssertNotNil(roundTripTime)
+        
+        XCTAssert(inboundTime > outboundTime)
+        XCTAssert(roundTripTime > 0)
+        
+        let responseBytes = responseMetadata["$bytesReceived"] as? Int
+        XCTAssertNotNil(responseBytes)
+        XCTAssert(responseBytes == 36)
+    }
+    
 }

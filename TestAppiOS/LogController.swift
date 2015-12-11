@@ -96,6 +96,8 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
             Logger.sdkDebugLoggingEnabled = false
         }
         
+        // TODO: This should not be a toggle - Should instead be a text field that displays true or false
+        
         if(isUncaughtExceptionDetection.on){
             Logger.isUncaughtExceptionDetected = true
         } else {

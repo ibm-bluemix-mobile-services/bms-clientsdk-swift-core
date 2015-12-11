@@ -26,7 +26,7 @@ public class Analytics {
     public private(set) static var apiKey: String?
     
     /// The name of the iOS/WatchOS app
-    public private(set) static var appName: String? = NSBundle.mainBundle().bundleIdentifier
+    public private(set) static var appName: String?
     
     
     
@@ -50,6 +50,7 @@ public class Analytics {
         - parameter appName:  The analytics data
         - parameter apiKey:   A unique ID used to authenticate with the MFP analytics server
     */
+    // TODO: Add parameter for analytics events
     public static func initializeWithAppName(appName: String, apiKey: String) {
         
         // Any required properties here should be checked for initialization in the private initializer
@@ -138,6 +139,86 @@ public class Analytics {
     // Remove the observers registered in the Analytics+iOS "startRecordingApplicationLifecycleEvents" method
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    
+    
+    // MARK: Request analytics
+    
+    // Create a JSON string containing device/app data for the Analytics server to use
+    // This data gets added to a Request header
+    internal static func generateOutboundRequestMetadata() -> String? {
+        
+        // Device info
+        var osVersion = ""
+        var model = ""
+        var deviceId = ""
+        #if TARGET_OS_WATCH
+            let device = WKInterfaceDevice.currentDevice()
+            osVersion = device.systemVersion
+            // There is no "identifierForVendor" property for Apple Watch, so we generate a random ID
+            deviceId = Request.uniqueDeviceId
+            model = "Apple Watch"
+            #elseif TARGET_OS_IOS
+            let device = UIDevice.currentDevice()
+            osVersion = device.systemVersion
+            deviceId = device.identifierForVendor?.UUIDString as String
+            model = device.modelName
+        #endif
+        
+        // All of this data will go in a header for the request
+        var requestMetadata: [String: String] = [:]
+        
+        requestMetadata["os"] = "ios"
+        requestMetadata["brand"] = "Apple"
+        requestMetadata["osVersion"] = osVersion
+        requestMetadata["model"] = model
+        requestMetadata["deviceID"] = deviceId
+        requestMetadata["mfpAppName"] = Analytics.appName
+        requestMetadata["appStoreLabel"] = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String ?? ""
+        requestMetadata["appStoreId"] = NSBundle.mainBundle().bundleIdentifier ?? ""
+        requestMetadata["appVersionCode"] = NSBundle.mainBundle().objectForInfoDictionaryKey(kCFBundleVersionKey as String) as? String ?? ""
+        requestMetadata["appVersionDisplay"] = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?? ""
+        
+        var requestMetadataString: String?
+        do {
+            let requestMetadataJson = try NSJSONSerialization.dataWithJSONObject(requestMetadata, options: [])
+            requestMetadataString = String(data: requestMetadataJson, encoding: NSUTF8StringEncoding)
+        }
+        catch let error {
+            Analytics.logger.error("Failed to append analytics metadata to request. Error: \(error)")
+        }
+        
+        return requestMetadataString
+    }
+    
+    
+    // Gather response data as JSON to be recorded in an analytics log
+    internal static func generateInboundResponseMetadata(request: Request, response: Response, url: String) -> [String: AnyObject] {
+        
+        Analytics.logger.debug("Network response inbound")
+        
+        let endTime = NSDate.timeIntervalSinceReferenceDate()
+        let roundTripTime = endTime - request.startTime
+        let bytesSent = request.requestBody?.length ?? 0
+        
+        // Data for analytics logging
+        var responseMetadata: [String: AnyObject] = [:]
+        
+        responseMetadata["$category"] = "network"
+        responseMetadata["$path"] = url
+        responseMetadata["$trackingId"] = request.trackingId
+        responseMetadata["$outboundTimestamp"] = request.startTime
+        responseMetadata["$inboundTimestamp"] = endTime
+        responseMetadata["$roundTripTime"] = roundTripTime
+        responseMetadata["$responseCode"] = response.statusCode
+        responseMetadata["$bytesSent"] = bytesSent
+        
+        if (response.responseText != nil && !response.responseText!.isEmpty) {
+            responseMetadata["$bytesReceived"] = response.responseText?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
+        }
+        
+        return responseMetadata
     }
     
 }
