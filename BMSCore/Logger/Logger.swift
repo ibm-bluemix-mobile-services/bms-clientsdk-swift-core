@@ -618,7 +618,7 @@ public class Logger {
     
     
     // Build the Request object that will be used to send the logs to the server
-    internal static func buildLogSendRequest(logs: String, withCallback callback: MfpCompletionHandler) -> (Request, String)?{
+    internal static func buildLogSendRequest(logs: String, withCallback callback: MfpCompletionHandler) -> (MFPRequest, String)? {
         
         let bmsClient = BMSClient.sharedInstance
         var headers = ["Content-Type": "application/json"]
@@ -639,7 +639,7 @@ public class Logger {
         
         let logPayload = "[" + logs + "]"
         
-        let request = Request(url: logUploaderUrl, headers: headers, queryParameters: nil, method: HttpMethod.POST)
+        let request = MFPRequest(url: logUploaderUrl, headers: headers, queryParameters: nil, method: HttpMethod.POST)
         return (request, logPayload)
     }
     

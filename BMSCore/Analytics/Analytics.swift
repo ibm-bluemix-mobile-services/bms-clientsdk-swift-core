@@ -194,7 +194,7 @@ public class Analytics {
     
     
     // Gather response data as JSON to be recorded in an analytics log
-    internal static func generateInboundResponseMetadata(request: Request, response: Response, url: String) -> [String: AnyObject] {
+    internal static func generateInboundResponseMetadata(request: MFPRequest, response: Response, url: String) -> [String: AnyObject] {
         
         Analytics.logger.debug("Network response inbound")
         

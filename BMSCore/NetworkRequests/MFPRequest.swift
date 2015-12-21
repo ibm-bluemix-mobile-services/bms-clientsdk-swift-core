@@ -37,7 +37,7 @@ public typealias MfpCompletionHandler = (Response?, NSError?) -> Void
         sendString(requestBody: String, withCompletionHandler callback: mfpCompletionHandler?)
         sendData(requestBody: NSData, withCompletionHandler callback: mfpCompletionHandler?)
 */
-public class Request: NSObject, NSURLSessionTaskDelegate {
+public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
 
     
     // MARK: Constants
@@ -83,7 +83,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         // First, check if a UUID was already created
         let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.Analytics")
         guard mfpUserDefaults != nil else {
-            Request.logger.error("Failed to get an ID for this device.")
+            MFPRequest.logger.error("Failed to get an ID for this device.")
             return ""
         }
         
@@ -150,8 +150,8 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         // Don't want to overwrite content type if it has already been specified as something else
-        if headers[Request.CONTENT_TYPE] == nil {
-            headers[Request.CONTENT_TYPE] = Request.TEXT_PLAIN_TYPE
+        if headers[MFPRequest.CONTENT_TYPE] == nil {
+            headers[MFPRequest.CONTENT_TYPE] = MFPRequest.TEXT_PLAIN_TYPE
         }
         
         self.sendWithCompletionHandler(callback)
@@ -203,7 +203,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         // Add metadata to the request header so that analytics data can be obtained for ALL mfp network requests
         // Must be called before query parameters are added to self.resourceUrl
         
-        Request.logger.debug("Network request outbound")
+        MFPRequest.logger.debug("Network request outbound")
         
         // The analytics server needs this ID to match each request with its corresponding response
         self.trackingId = NSUUID().UUIDString
@@ -218,10 +218,10 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
         if var url = NSURL(string: self.resourceUrl) {
             
             if queryParameters != nil {
-                guard let urlWithQueryParameters = Request.appendQueryParameters(queryParameters!, toURL: url) else {
+                guard let urlWithQueryParameters = MFPRequest.appendQueryParameters(queryParameters!, toURL: url) else {
                     // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
                     let urlErrorMessage = "Failed to append the query parameters to the resource url."
-                    Request.logger.error(urlErrorMessage)
+                    MFPRequest.logger.error(urlErrorMessage)
                     let malformedUrlError = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
                     callback?(nil, malformedUrlError)
                     return
@@ -236,14 +236,14 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
             networkRequest.allHTTPHeaderFields = headers
             networkRequest.HTTPBody = requestBody
             
-            Request.logger.info("Sending Request to " + resourceUrl)
+            MFPRequest.logger.info("Sending Request to " + resourceUrl)
             
             // Send request
             networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
         }
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
-            Request.logger.error(urlErrorMessage)
+            MFPRequest.logger.error(urlErrorMessage)
             let malformedUrlError = NSError(domain: MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
             callback?(nil, malformedUrlError)
         }
@@ -262,7 +262,7 @@ public class Request: NSObject, NSURLSessionTaskDelegate {
     {
         var redirectRequest: NSURLRequest?
         if allowRedirects {
-            Request.logger.info("Redirecting: " + String(session))
+            MFPRequest.logger.info("Redirecting: " + String(session))
             redirectRequest = request
         }
         
