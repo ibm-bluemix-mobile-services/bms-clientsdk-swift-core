@@ -17,7 +17,7 @@
 */
 public class BMSClient: MFPClient {
     
-    
+    private var registeredAuthorizationManager: AuthorizationManager?
     // MARK: Properties (public)
     
     /// This singleton should be used for all `BMSClient` activity
@@ -38,7 +38,19 @@ public class BMSClient: MFPClient {
     // Specifies the default protocol
     public static var defaultProtocol: String  = "https"
     
-    
+    public var sharedAuthorizationManager: AuthorizationManager {
+        get {
+            if registeredAuthorizationManager == nil {
+                return AuthorizationManager()
+            }
+            
+            return registeredAuthorizationManager!
+        }
+        
+        set(newAuthorizationManager) {
+            registeredAuthorizationManager = newAuthorizationManager
+        }
+    }
     
     // MARK: Initializers
     

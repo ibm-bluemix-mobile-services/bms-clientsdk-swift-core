@@ -27,6 +27,10 @@ public enum PersistensePolicy: Int {
 
 public class AuthorizationManager {
     
+    internal init() {
+        
+    }
+    
     func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool {
         return false;
     }
