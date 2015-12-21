@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DB1BF4079A004AAFCE /* Constants.swift */; settings = {ASSET_TAGS = (); }; };
-		5F4069DD1BF407E4004AAFCE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DB1BF4079A004AAFCE /* Constants.swift */; settings = {ASSET_TAGS = (); }; };
-		5F4069DF1BF409CB004AAFCE /* AnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DE1BF409CB004AAFCE /* AnalyticsTests.swift */; settings = {ASSET_TAGS = (); }; };
-		5F4BC96C1BFBDC9F00025682 /* LogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4BC96B1BFBDC9F00025682 /* LogController.swift */; settings = {ASSET_TAGS = (); }; };
-		5F8EA8D01C04D11700A06F20 /* largeData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5F8EA8CF1C04D11700A06F20 /* largeData.txt */; settings = {ASSET_TAGS = (); }; };
-		9221FF821BCD958700D7F3D7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221FF811BCD958700D7F3D7 /* Error.swift */; settings = {ASSET_TAGS = (); }; };
-		9221FF831BCD9E0E00D7F3D7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221FF811BCD958700D7F3D7 /* Error.swift */; settings = {ASSET_TAGS = (); }; };
-		92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A381BB0A711001E02E1 /* BMSClient.swift */; settings = {ASSET_TAGS = (); }; };
-		92304A3F1BB0A711001E02E1 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A391BB0A711001E02E1 /* MFPClient.swift */; settings = {ASSET_TAGS = (); }; };
-		92304A411BB0A711001E02E1 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3B1BB0A711001E02E1 /* Request.swift */; settings = {ASSET_TAGS = (); }; };
+		5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DB1BF4079A004AAFCE /* Constants.swift */; };
+		5F4069DD1BF407E4004AAFCE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DB1BF4079A004AAFCE /* Constants.swift */; };
+		5F4069DF1BF409CB004AAFCE /* AnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4069DE1BF409CB004AAFCE /* AnalyticsTests.swift */; };
+		5F4BC96C1BFBDC9F00025682 /* LogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4BC96B1BFBDC9F00025682 /* LogController.swift */; };
+		5F8EA8D01C04D11700A06F20 /* largeData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5F8EA8CF1C04D11700A06F20 /* largeData.txt */; };
+		9221FF821BCD958700D7F3D7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221FF811BCD958700D7F3D7 /* Error.swift */; };
+		9221FF831BCD9E0E00D7F3D7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221FF811BCD958700D7F3D7 /* Error.swift */; };
+		92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A381BB0A711001E02E1 /* BMSClient.swift */; };
+		92304A3F1BB0A711001E02E1 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A391BB0A711001E02E1 /* MFPClient.swift */; };
+		92304A411BB0A711001E02E1 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3B1BB0A711001E02E1 /* Request.swift */; };
 		9235D0AB1BC3181900946A32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9235D0AA1BC3181900946A32 /* AppDelegate.swift */; };
 		9235D0AD1BC3181900946A32 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9235D0AC1BC3181900946A32 /* ViewController.swift */; };
 		9235D0B01BC3181900946A32 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9235D0AE1BC3181900946A32 /* Main.storyboard */; };
@@ -30,28 +30,29 @@
 		9235D0D21BC3184000946A32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9235D0D11BC3184000946A32 /* Assets.xcassets */; };
 		9235D0FC1BC33D5600946A32 /* BMSCoreWatchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; };
 		9235D0FD1BC33D5600946A32 /* BMSCoreWatchOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		923F7DA71C174958007DC785 /* Request+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923F7DA61C174958007DC785 /* Request+iOS.swift */; settings = {ASSET_TAGS = (); }; };
-		924581E31BF2751600D665ED /* Analytics+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924581E21BF2751600D665ED /* Analytics+iOS.swift */; settings = {ASSET_TAGS = (); }; };
-		92580B461BFBF5DF0037EB50 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92580B451BFBF5DF0037EB50 /* LoggerTests.swift */; settings = {ASSET_TAGS = (); }; };
+		923F7DA71C174958007DC785 /* Request+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923F7DA61C174958007DC785 /* Request+iOS.swift */; };
+		924581E31BF2751600D665ED /* Analytics+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924581E21BF2751600D665ED /* Analytics+iOS.swift */; };
+		92580B461BFBF5DF0037EB50 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92580B451BFBF5DF0037EB50 /* LoggerTests.swift */; };
 		926679B91BF3D4E000F597C5 /* TestAppWatchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */; };
-		926679BB1BF3E84800F597C5 /* Analytics+WatchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926679BA1BF3E84800F597C5 /* Analytics+WatchOS.swift */; settings = {ASSET_TAGS = (); }; };
+		926679BB1BF3E84800F597C5 /* Analytics+WatchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926679BA1BF3E84800F597C5 /* Analytics+WatchOS.swift */; };
 		926679BC1BF4FBD300F597C5 /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		926679BD1BF4FBD300F597C5 /* BMSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		927F4CD21BC5DD1800A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; settings = {ASSET_TAGS = (); }; };
-		927F4CD31BC5E10F00A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; settings = {ASSET_TAGS = (); }; };
-		927F4CD51BC5E1AD00A19360 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD41BC5E1AD00A19360 /* ResponseTests.swift */; settings = {ASSET_TAGS = (); }; };
-		9287F2941BDA94AF00B0E562 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2931BDA94AF00B0E562 /* Analytics.swift */; settings = {ASSET_TAGS = (); }; };
-		9287F2951BDA94AF00B0E562 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2931BDA94AF00B0E562 /* Analytics.swift */; settings = {ASSET_TAGS = (); }; };
-		9287F2971BDA94C100B0E562 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2961BDA94C100B0E562 /* Logger.swift */; settings = {ASSET_TAGS = (); }; };
-		9287F2981BDA94C100B0E562 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2961BDA94C100B0E562 /* Logger.swift */; settings = {ASSET_TAGS = (); }; };
+		927F4CD21BC5DD1800A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; };
+		927F4CD31BC5E10F00A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; };
+		927F4CD51BC5E1AD00A19360 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD41BC5E1AD00A19360 /* ResponseTests.swift */; };
+		9287F2941BDA94AF00B0E562 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2931BDA94AF00B0E562 /* Analytics.swift */; };
+		9287F2951BDA94AF00B0E562 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2931BDA94AF00B0E562 /* Analytics.swift */; };
+		9287F2971BDA94C100B0E562 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2961BDA94C100B0E562 /* Logger.swift */; };
+		9287F2981BDA94C100B0E562 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9287F2961BDA94C100B0E562 /* Logger.swift */; };
 		92A8E4D91BBF2D9C00995FE8 /* BMSCoreWatchOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A8E4D81BBF2D9C00995FE8 /* BMSCoreWatchOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		92A8E4DE1BBF2DA400995FE8 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A391BB0A711001E02E1 /* MFPClient.swift */; settings = {ASSET_TAGS = (); }; };
-		92A8E4DF1BBF2DA600995FE8 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A381BB0A711001E02E1 /* BMSClient.swift */; settings = {ASSET_TAGS = (); }; };
-		92A8E4E01BBF2DA800995FE8 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3B1BB0A711001E02E1 /* Request.swift */; settings = {ASSET_TAGS = (); }; };
-		92D63D311BB468D30073A032 /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D63D301BB468D30073A032 /* RequestTests.swift */; settings = {ASSET_TAGS = (); }; };
-		92D63D331BB4693E0073A032 /* BMSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D63D321BB4693E0073A032 /* BMSClientTests.swift */; settings = {ASSET_TAGS = (); }; };
+		92A8E4DE1BBF2DA400995FE8 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A391BB0A711001E02E1 /* MFPClient.swift */; };
+		92A8E4DF1BBF2DA600995FE8 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A381BB0A711001E02E1 /* BMSClient.swift */; };
+		92A8E4E01BBF2DA800995FE8 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92304A3B1BB0A711001E02E1 /* Request.swift */; };
+		92D63D311BB468D30073A032 /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D63D301BB468D30073A032 /* RequestTests.swift */; };
+		92D63D331BB4693E0073A032 /* BMSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D63D321BB4693E0073A032 /* BMSClientTests.swift */; };
 		92F263FB1B94EBB50063CC1D /* BMSCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F263FA1B94EBB50063CC1D /* BMSCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92F264021B94EBB60063CC1D /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
+		DB2BCFB01C2816CA0063A673 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFAF1C2816CA0063A673 /* AuthorizationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -182,6 +183,7 @@
 		92F263FC1B94EBB50063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92F264011B94EBB60063CC1D /* BMSCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BMSCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F264081B94EBB60063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DB2BCFAF1C2816CA0063A673 /* AuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthorizationManager.swift; path = BMSCore/Security/AuthorizationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -339,6 +341,7 @@
 				9287F2921BDA948200B0E562 /* Analytics */,
 				9287F2911BDA947400B0E562 /* Logger */,
 				92F264661B9639010063CC1D /* NetworkRequests */,
+				DB2BCFAE1C2816660063A673 /* Security */,
 				92F263FC1B94EBB50063CC1D /* Info.plist */,
 			);
 			path = BMSCore;
@@ -368,6 +371,15 @@
 				927F4CD11BC5DD1800A19360 /* Response.swift */,
 			);
 			path = NetworkRequests;
+			sourceTree = "<group>";
+		};
+		DB2BCFAE1C2816660063A673 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				DB2BCFAF1C2816CA0063A673 /* AuthorizationManager.swift */,
+			);
+			name = Security;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -654,6 +666,7 @@
 				92304A411BB0A711001E02E1 /* Request.swift in Sources */,
 				5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */,
 				92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */,
+				DB2BCFB01C2816CA0063A673 /* AuthorizationManager.swift in Sources */,
 				9221FF821BCD958700D7F3D7 /* Error.swift in Sources */,
 				923F7DA71C174958007DC785 /* Request+iOS.swift in Sources */,
 				927F4CD21BC5DD1800A19360 /* Response.swift in Sources */,
