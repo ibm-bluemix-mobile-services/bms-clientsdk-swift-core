@@ -57,7 +57,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     public var timeout: Double
     
     /// All request headers
-    public private(set) var headers: [String: String] = [:]
+    public var headers: [String: String] = [:]
     
     /// Query parameters to append to the `resourceURL`
     public var queryParameters: [String: String]?

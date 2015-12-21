@@ -31,6 +31,10 @@ public class AuthorizationManager {
         
     }
     
+    func isOAuthError(response: Response?) -> Bool {
+        return false;
+    }
+    
     func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool {
         return false;
     }
@@ -47,8 +51,12 @@ public class AuthorizationManager {
         
     }
     
-    func getCachedAuthorizationHeader() -> String {
-        return "";
+    func getCachedAuthorizationHeader() -> String? {
+        return nil;
+    }
+    
+    func obtainAuthorizationHeader(completionHandler: MfpCompletionHandler) {
+        completionHandler(nil, nil)
     }
     
     func getUserIdentity() -> AnyObject? {
@@ -63,7 +71,7 @@ public class AuthorizationManager {
         return nil;
     }
     
-    func getAuthrizationPersistencePolicy() -> PersistensePolicy {
+    func getAuthorizationPersistencePolicy() -> PersistensePolicy {
         return PersistensePolicy.Never
     }
     

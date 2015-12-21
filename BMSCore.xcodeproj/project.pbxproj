@@ -53,6 +53,7 @@
 		92F263FB1B94EBB50063CC1D /* BMSCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F263FA1B94EBB50063CC1D /* BMSCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92F264021B94EBB60063CC1D /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		DB2BCFB01C2816CA0063A673 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFAF1C2816CA0063A673 /* AuthorizationManager.swift */; };
+		DB2BCFB31C2861450063A673 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFB21C2861450063A673 /* Request.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,6 +185,7 @@
 		92F264011B94EBB60063CC1D /* BMSCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BMSCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F264081B94EBB60063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DB2BCFAF1C2816CA0063A673 /* AuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthorizationManager.swift; path = BMSCore/Security/AuthorizationManager.swift; sourceTree = "<group>"; };
+		DB2BCFB21C2861450063A673 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -369,6 +371,7 @@
 				92304A3B1BB0A711001E02E1 /* MFPRequest.swift */,
 				923F7DA61C174958007DC785 /* MFPRequest+iOS.swift */,
 				927F4CD11BC5DD1800A19360 /* Response.swift */,
+				DB2BCFB21C2861450063A673 /* Request.swift */,
 			);
 			path = NetworkRequests;
 			sourceTree = "<group>";
@@ -661,6 +664,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92304A3F1BB0A711001E02E1 /* MFPClient.swift in Sources */,
+				DB2BCFB31C2861450063A673 /* Request.swift in Sources */,
 				9287F2941BDA94AF00B0E562 /* Analytics.swift in Sources */,
 				924581E31BF2751600D665ED /* Analytics+iOS.swift in Sources */,
 				92304A411BB0A711001E02E1 /* MFPRequest.swift in Sources */,
