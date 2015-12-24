@@ -25,7 +25,8 @@ public enum PersistensePolicy: Int {
     case Never, Always
 }
 
-public class AuthorizationManager {
+
+public class AuthorizationManager : AuthorizationManagerProtocol {
     
     internal init() {
         
@@ -35,11 +36,11 @@ public class AuthorizationManager {
         return false;
     }
     
-    func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool {
+    public func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool {
         return false;
     }
     
-    func isAuthorizationRequired(httpResponse: NSHTTPURLResponse) -> Bool {
+    public func isAuthorizationRequired(httpResponse: NSHTTPURLResponse) -> Bool {
         return false;
     }
     
