@@ -65,14 +65,30 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     /// The request body can be set when sending the request via the `sendString` or `sendData` methods.
     public private(set) var requestBody: NSData?
     
+    private static var networkSession: NSURLSession!
     
+//    var allowRedirectsInternal : Bool = true
+//    
+    public var allowRedirects : Bool{
+        get{
+            return true
+        }
+    }
     
+//    //The network session that sends the data
+//    public class var networkSession: NSURLSession {
+//        get {
+//            return networkSessionInternal
+//        }
+//        set(newVal) {
+//            networkSessionInternal = newVal
+//        }
+//    }
     
     // MARK: Properties (internal/private)
     
-    var networkSession: NSURLSession
     var networkRequest: NSMutableURLRequest
-    var allowRedirects: Bool = true
+    
     internal var startTime: NSTimeInterval = 0.0
     internal var trackingId: String = ""
     private static let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
@@ -94,8 +110,6 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         }
         return deviceId!
     }
-    
-    
     
     // MARK: Initializer
     
@@ -122,15 +136,19 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         }
         self.timeout = timeout
         self.queryParameters = queryParameters
-        
+                
         // Set timeout and initialize network session and request
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = timeout
-        networkSession = NSURLSession(configuration: configuration)
+//        networkSession = NSURLSession(configuration: configuration)
         networkRequest = NSMutableURLRequest()
+        super.init()
+        MFPRequest.networkSession = NSURLSession(configuration: configuration)
     }
     
-    
+    public func getNetworkSession() -> NSURLSession {
+        return MFPRequest.networkSession
+    }
     
     // MARK: Methods (public)
     
@@ -238,8 +256,9 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
             
             MFPRequest.logger.info("Sending Request to " + resourceUrl)
             
-            // Send request
-            networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+            // Send request            
+            getNetworkSession().dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+           
         }
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."

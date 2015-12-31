@@ -52,9 +52,14 @@
 		92D63D331BB4693E0073A032 /* BMSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D63D321BB4693E0073A032 /* BMSClientTests.swift */; };
 		92F263FB1B94EBB50063CC1D /* BMSCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 92F263FA1B94EBB50063CC1D /* BMSCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92F264021B94EBB60063CC1D /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
-		DB2BCFB01C2816CA0063A673 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFAF1C2816CA0063A673 /* AuthorizationManager.swift */; };
+		DB2BCFB01C2816CA0063A673 /* DefaultAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFAF1C2816CA0063A673 /* DefaultAuthorizationManager.swift */; };
 		DB2BCFB31C2861450063A673 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFB21C2861450063A673 /* Request.swift */; };
-		FDBDF70F1C2C22F500185039 /* AuthorizationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDBDF70E1C2C22F500185039 /* AuthorizationManagerProtocol.swift */; };
+		FD1CDA981C32EBC700DBBA4E /* RequestOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDA971C32EBC700DBBA4E /* RequestOptions.swift */; };
+		FD1CDA9A1C3515A800DBBA4E /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDA991C3515A800DBBA4E /* Queue.swift */; };
+		FD1CDA9E1C35164800DBBA4E /* StringEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDA9D1C35164800DBBA4E /* StringEncryption.swift */; };
+		FD1CDAAA1C35183400DBBA4E /* UserDataUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDAA91C35183400DBBA4E /* UserDataUtils.swift */; };
+		FD1CDAAC1C35186900DBBA4E /* ResponseListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDAAB1C35186900DBBA4E /* ResponseListener.swift */; };
+		FD7F51791C328F9100947D17 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7F51781C328F9100947D17 /* AuthorizationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -185,9 +190,14 @@
 		92F263FC1B94EBB50063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92F264011B94EBB60063CC1D /* BMSCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BMSCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F264081B94EBB60063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DB2BCFAF1C2816CA0063A673 /* AuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthorizationManager.swift; path = BMSCore/Security/AuthorizationManager.swift; sourceTree = "<group>"; };
+		DB2BCFAF1C2816CA0063A673 /* DefaultAuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DefaultAuthorizationManager.swift; path = BMSCore/Security/DefaultAuthorizationManager.swift; sourceTree = "<group>"; };
 		DB2BCFB21C2861450063A673 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
-		FDBDF70E1C2C22F500185039 /* AuthorizationManagerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AuthorizationManagerProtocol.swift; path = BMSCore/Security/AuthorizationManagerProtocol.swift; sourceTree = "<group>"; };
+		FD1CDA971C32EBC700DBBA4E /* RequestOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestOptions.swift; sourceTree = "<group>"; };
+		FD1CDA991C3515A800DBBA4E /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
+		FD1CDA9D1C35164800DBBA4E /* StringEncryption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringEncryption.swift; sourceTree = "<group>"; };
+		FD1CDAA91C35183400DBBA4E /* UserDataUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDataUtils.swift; sourceTree = "<group>"; };
+		FD1CDAAB1C35186900DBBA4E /* ResponseListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseListener.swift; sourceTree = "<group>"; };
+		FD7F51781C328F9100947D17 /* AuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -339,6 +349,9 @@
 		92F263F91B94EBB50063CC1D /* BMSCore */ = {
 			isa = PBXGroup;
 			children = (
+				FD1CDAA81C35183400DBBA4E /* UserData */,
+				FD1CDA9C1C35164800DBBA4E /* Encryption */,
+				FD1CDA991C3515A800DBBA4E /* Queue.swift */,
 				92F263FA1B94EBB50063CC1D /* BMSCore.h */,
 				9221FF811BCD958700D7F3D7 /* Error.swift */,
 				5F4069DB1BF4079A004AAFCE /* Constants.swift */,
@@ -368,12 +381,14 @@
 		92F264661B9639010063CC1D /* NetworkRequests */ = {
 			isa = PBXGroup;
 			children = (
+				FD1CDAAB1C35186900DBBA4E /* ResponseListener.swift */,
 				92304A391BB0A711001E02E1 /* MFPClient.swift */,
 				92304A381BB0A711001E02E1 /* BMSClient.swift */,
 				92304A3B1BB0A711001E02E1 /* MFPRequest.swift */,
 				923F7DA61C174958007DC785 /* MFPRequest+iOS.swift */,
 				927F4CD11BC5DD1800A19360 /* Response.swift */,
 				DB2BCFB21C2861450063A673 /* Request.swift */,
+				FD1CDA971C32EBC700DBBA4E /* RequestOptions.swift */,
 			);
 			path = NetworkRequests;
 			sourceTree = "<group>";
@@ -381,11 +396,27 @@
 		DB2BCFAE1C2816660063A673 /* Security */ = {
 			isa = PBXGroup;
 			children = (
-				DB2BCFAF1C2816CA0063A673 /* AuthorizationManager.swift */,
-				FDBDF70E1C2C22F500185039 /* AuthorizationManagerProtocol.swift */,
+				FD7F51781C328F9100947D17 /* AuthorizationManager.swift */,
+				DB2BCFAF1C2816CA0063A673 /* DefaultAuthorizationManager.swift */,
 			);
 			name = Security;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		FD1CDA9C1C35164800DBBA4E /* Encryption */ = {
+			isa = PBXGroup;
+			children = (
+				FD1CDA9D1C35164800DBBA4E /* StringEncryption.swift */,
+			);
+			path = Encryption;
+			sourceTree = "<group>";
+		};
+		FD1CDAA81C35183400DBBA4E /* UserData */ = {
+			isa = PBXGroup;
+			children = (
+				FD1CDAA91C35183400DBBA4E /* UserDataUtils.swift */,
+			);
+			path = UserData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -668,13 +699,18 @@
 			files = (
 				92304A3F1BB0A711001E02E1 /* MFPClient.swift in Sources */,
 				DB2BCFB31C2861450063A673 /* Request.swift in Sources */,
-				FDBDF70F1C2C22F500185039 /* AuthorizationManagerProtocol.swift in Sources */,
 				9287F2941BDA94AF00B0E562 /* Analytics.swift in Sources */,
+				FD1CDA9E1C35164800DBBA4E /* StringEncryption.swift in Sources */,
 				924581E31BF2751600D665ED /* Analytics+iOS.swift in Sources */,
+				FD1CDA981C32EBC700DBBA4E /* RequestOptions.swift in Sources */,
 				92304A411BB0A711001E02E1 /* MFPRequest.swift in Sources */,
 				5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */,
 				92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */,
-				DB2BCFB01C2816CA0063A673 /* AuthorizationManager.swift in Sources */,
+				DB2BCFB01C2816CA0063A673 /* DefaultAuthorizationManager.swift in Sources */,
+				FD1CDAAC1C35186900DBBA4E /* ResponseListener.swift in Sources */,
+				FD7F51791C328F9100947D17 /* AuthorizationManager.swift in Sources */,
+				FD1CDA9A1C3515A800DBBA4E /* Queue.swift in Sources */,
+				FD1CDAAA1C35183400DBBA4E /* UserDataUtils.swift in Sources */,
 				9221FF821BCD958700D7F3D7 /* Error.swift in Sources */,
 				923F7DA71C174958007DC785 /* MFPRequest+iOS.swift in Sources */,
 				927F4CD21BC5DD1800A19360 /* Response.swift in Sources */,

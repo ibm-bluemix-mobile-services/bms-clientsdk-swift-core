@@ -41,7 +41,7 @@ public class BMSClient: MFPClient {
     public var sharedAuthorizationManager: AuthorizationManager {
         get {
             if registeredAuthorizationManager == nil {
-                return AuthorizationManager()
+                return DefaultAuthorizationManager()
             }
             
             return registeredAuthorizationManager!

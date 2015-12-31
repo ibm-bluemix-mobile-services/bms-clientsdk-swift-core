@@ -26,7 +26,7 @@ public enum PersistensePolicy: Int {
 }
 
 
-public class AuthorizationManager : AuthorizationManagerProtocol {
+internal class DefaultAuthorizationManager : AuthorizationManager {
     
     internal init() {
         
@@ -36,11 +36,11 @@ public class AuthorizationManager : AuthorizationManagerProtocol {
         return false;
     }
     
-    public func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool {
+    func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool {
         return false;
     }
     
-    public func isAuthorizationRequired(httpResponse: NSHTTPURLResponse) -> Bool {
+    func isAuthorizationRequired(httpResponse: NSHTTPURLResponse) -> Bool {
         return false;
     }
     
@@ -72,11 +72,11 @@ public class AuthorizationManager : AuthorizationManagerProtocol {
         return nil;
     }
     
-    func getAuthorizationPersistencePolicy() -> PersistensePolicy {
-        return PersistensePolicy.Never
+    func getAuthorizationPersistencePolicy() -> PersistencePolicy {
+        return PersistencePolicy.NEVER
     }
     
-    func setAuthorizationPersistensePolicy(policy: PersistensePolicy) {
+    func setAuthorizationPersistensePolicy(policy: PersistencePolicy) {
         
     }
- }
+}
