@@ -25,7 +25,7 @@ public protocol AuthorizationManager {
     func clearAuthorizationData()
     func addCachedAuthorizationHeader(request: NSMutableURLRequest)
     func getCachedAuthorizationHeader() -> String?
-    func obtainAuthorizationHeader(completionHandler: MfpCompletionHandler)
+    func obtainAuthorizationHeader(listener: ResponseListener)
     func getUserIdentity() -> AnyObject?
     func getDeviceIdentity() -> AnyObject?
     func getAppIdentity() -> AnyObject?

@@ -7,7 +7,7 @@
 //
 import BMSCore
 public protocol ResponseListener {
-    func onSuccess(response:Response)
+    func onSuccess(response: Response)
     
     //not sure which params onFailure should take. leaving it commented out for now
     //func onFailure()

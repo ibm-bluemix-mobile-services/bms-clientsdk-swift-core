@@ -17,14 +17,15 @@ public class Request: MFPRequest {
             self.headers["Authorization"] = authHeader
         }
         
+        //TODO: ilan - fix
         func processResponse(response: Response?, error: NSError?) {
-            if (authManager.isOAuthError(response)) {
-                authManager.obtainAuthorizationHeader({
-                    (response: Response?, error: NSError?) in (response != nil) ? self.sendWithCompletionHandler(callback) : callback?(response, error)
-                });
-            } else {
-                callback?(response, error)
-            }
+//            if (authManager.isOAuthError(response)) {
+//                authManager.obtainAuthorizationHeader({
+//                    (response: Response?, error: NSError?) in (response != nil) ? self.sendWithCompletionHandler(callback) : callback?(response, error)
+//                });
+//            } else {
+//                callback?(response, error)
+//            }
         }
         
         super.sendWithCompletionHandler(processResponse)

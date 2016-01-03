@@ -54,11 +54,11 @@
 		92F264021B94EBB60063CC1D /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		DB2BCFB01C2816CA0063A673 /* DefaultAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFAF1C2816CA0063A673 /* DefaultAuthorizationManager.swift */; };
 		DB2BCFB31C2861450063A673 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFB21C2861450063A673 /* Request.swift */; };
-		FD1CDA981C32EBC700DBBA4E /* RequestOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDA971C32EBC700DBBA4E /* RequestOptions.swift */; };
 		FD1CDA9A1C3515A800DBBA4E /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDA991C3515A800DBBA4E /* Queue.swift */; };
-		FD1CDA9E1C35164800DBBA4E /* StringEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDA9D1C35164800DBBA4E /* StringEncryption.swift */; };
-		FD1CDAAA1C35183400DBBA4E /* UserDataUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDAA91C35183400DBBA4E /* UserDataUtils.swift */; };
 		FD1CDAAC1C35186900DBBA4E /* ResponseListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDAAB1C35186900DBBA4E /* ResponseListener.swift */; };
+		FD1CDAB51C355EDA00DBBA4E /* BMSPlaygroundTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = FD1CDAB41C355EDA00DBBA4E /* BMSPlaygroundTarget.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FD1CDAB91C355EDA00DBBA4E /* BMSPlaygroundTarget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD1CDAB21C355EDA00DBBA4E /* BMSPlaygroundTarget.framework */; };
+		FD1CDABA1C355EDA00DBBA4E /* BMSPlaygroundTarget.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FD1CDAB21C355EDA00DBBA4E /* BMSPlaygroundTarget.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FD7F51791C328F9100947D17 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7F51781C328F9100947D17 /* AuthorizationManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +97,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 92F263F61B94EBB50063CC1D;
 			remoteInfo = BMSCore;
+		};
+		FD1CDAB71C355EDA00DBBA4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92F263EE1B94EBB50063CC1D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FD1CDAB11C355EDA00DBBA4E;
+			remoteInfo = BMSPlaygroundTarget;
+		};
+		FDE912D41C390B8F00D7CF26 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDE912CF1C390B8F00D7CF26 /* BMSSecurity.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB2BCF931C22FB2E0063A673;
+			remoteInfo = BMSSecurity;
+		};
+		FDE912D61C390B8F00D7CF26 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDE912CF1C390B8F00D7CF26 /* BMSSecurity.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB2BCF9D1C22FB2F0063A673;
+			remoteInfo = BMSSecurityTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -141,6 +162,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				926679BD1BF4FBD300F597C5 /* BMSCore.framework in Embed Frameworks */,
+				FD1CDABA1C355EDA00DBBA4E /* BMSPlaygroundTarget.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -192,12 +214,13 @@
 		92F264081B94EBB60063CC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DB2BCFAF1C2816CA0063A673 /* DefaultAuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DefaultAuthorizationManager.swift; path = BMSCore/Security/DefaultAuthorizationManager.swift; sourceTree = "<group>"; };
 		DB2BCFB21C2861450063A673 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
-		FD1CDA971C32EBC700DBBA4E /* RequestOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestOptions.swift; sourceTree = "<group>"; };
 		FD1CDA991C3515A800DBBA4E /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
-		FD1CDA9D1C35164800DBBA4E /* StringEncryption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringEncryption.swift; sourceTree = "<group>"; };
-		FD1CDAA91C35183400DBBA4E /* UserDataUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDataUtils.swift; sourceTree = "<group>"; };
 		FD1CDAAB1C35186900DBBA4E /* ResponseListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseListener.swift; sourceTree = "<group>"; };
+		FD1CDAB21C355EDA00DBBA4E /* BMSPlaygroundTarget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSPlaygroundTarget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD1CDAB41C355EDA00DBBA4E /* BMSPlaygroundTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BMSPlaygroundTarget.h; sourceTree = "<group>"; };
+		FD1CDAB61C355EDA00DBBA4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FD7F51781C328F9100947D17 /* AuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationManager.swift; sourceTree = "<group>"; };
+		FDE912CF1C390B8F00D7CF26 /* BMSSecurity.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BMSSecurity.xcodeproj; path = "../bms-clientsdk-swift-security/BMSSecurity/BMSSecurity.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +229,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				926679BC1BF4FBD300F597C5 /* BMSCore.framework in Frameworks */,
+				FD1CDAB91C355EDA00DBBA4E /* BMSPlaygroundTarget.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +260,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				92F264021B94EBB60063CC1D /* BMSCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FD1CDAAE1C355EDA00DBBA4E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,12 +353,14 @@
 		92F263ED1B94EBB50063CC1D = {
 			isa = PBXGroup;
 			children = (
+				FDE912CF1C390B8F00D7CF26 /* BMSSecurity.xcodeproj */,
 				92F263F91B94EBB50063CC1D /* BMSCore */,
 				92F264051B94EBB60063CC1D /* BMSCoreTests */,
 				92A8E4D71BBF2D9C00995FE8 /* BMSCoreWatchOS */,
 				9235D0A91BC3181900946A32 /* TestAppiOS */,
 				9235D0BD1BC3183F00946A32 /* TestAppWatchOS */,
 				9235D0CC1BC3184000946A32 /* TestAppWatchOS Extension */,
+				FD1CDAB31C355EDA00DBBA4E /* BMSPlaygroundTarget */,
 				92F263F81B94EBB50063CC1D /* Products */,
 				1572E599B96D6D094EC36397 /* Frameworks */,
 			);
@@ -342,6 +375,7 @@
 				9235D0A81BC3181900946A32 /* TestAppiOS.app */,
 				9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */,
 				9235D0C81BC3183F00946A32 /* TestAppWatchOS Extension.appex */,
+				FD1CDAB21C355EDA00DBBA4E /* BMSPlaygroundTarget.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -349,8 +383,6 @@
 		92F263F91B94EBB50063CC1D /* BMSCore */ = {
 			isa = PBXGroup;
 			children = (
-				FD1CDAA81C35183400DBBA4E /* UserData */,
-				FD1CDA9C1C35164800DBBA4E /* Encryption */,
 				FD1CDA991C3515A800DBBA4E /* Queue.swift */,
 				92F263FA1B94EBB50063CC1D /* BMSCore.h */,
 				9221FF811BCD958700D7F3D7 /* Error.swift */,
@@ -388,7 +420,6 @@
 				923F7DA61C174958007DC785 /* MFPRequest+iOS.swift */,
 				927F4CD11BC5DD1800A19360 /* Response.swift */,
 				DB2BCFB21C2861450063A673 /* Request.swift */,
-				FD1CDA971C32EBC700DBBA4E /* RequestOptions.swift */,
 			);
 			path = NetworkRequests;
 			sourceTree = "<group>";
@@ -403,20 +434,22 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
-		FD1CDA9C1C35164800DBBA4E /* Encryption */ = {
+		FD1CDAB31C355EDA00DBBA4E /* BMSPlaygroundTarget */ = {
 			isa = PBXGroup;
 			children = (
-				FD1CDA9D1C35164800DBBA4E /* StringEncryption.swift */,
+				FD1CDAB41C355EDA00DBBA4E /* BMSPlaygroundTarget.h */,
+				FD1CDAB61C355EDA00DBBA4E /* Info.plist */,
 			);
-			path = Encryption;
+			path = BMSPlaygroundTarget;
 			sourceTree = "<group>";
 		};
-		FD1CDAA81C35183400DBBA4E /* UserData */ = {
+		FDE912D01C390B8F00D7CF26 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FD1CDAA91C35183400DBBA4E /* UserDataUtils.swift */,
+				FDE912D51C390B8F00D7CF26 /* BMSSecurity.framework */,
+				FDE912D71C390B8F00D7CF26 /* BMSSecurityTests.xctest */,
 			);
-			path = UserData;
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -438,6 +471,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FD1CDAAF1C355EDA00DBBA4E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD1CDAB51C355EDA00DBBA4E /* BMSPlaygroundTarget.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -456,6 +497,7 @@
 			dependencies = (
 				926679B81BF3D4D900F597C5 /* PBXTargetDependency */,
 				9235D0E91BC32D1E00946A32 /* PBXTargetDependency */,
+				FD1CDAB81C355EDA00DBBA4E /* PBXTargetDependency */,
 			);
 			name = TestAppiOS;
 			productName = TestAppiOS;
@@ -552,6 +594,24 @@
 			productReference = 92F264011B94EBB60063CC1D /* BMSCoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		FD1CDAB11C355EDA00DBBA4E /* BMSPlaygroundTarget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FD1CDABB1C355EDA00DBBA4E /* Build configuration list for PBXNativeTarget "BMSPlaygroundTarget" */;
+			buildPhases = (
+				FD1CDAAD1C355EDA00DBBA4E /* Sources */,
+				FD1CDAAE1C355EDA00DBBA4E /* Frameworks */,
+				FD1CDAAF1C355EDA00DBBA4E /* Headers */,
+				FD1CDAB01C355EDA00DBBA4E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BMSPlaygroundTarget;
+			productName = BMSPlaygroundTarget;
+			productReference = FD1CDAB21C355EDA00DBBA4E /* BMSPlaygroundTarget.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -580,6 +640,9 @@
 					92F264001B94EBB50063CC1D = {
 						CreatedOnToolsVersion = 7.0;
 					};
+					FD1CDAB11C355EDA00DBBA4E = {
+						CreatedOnToolsVersion = 7.2;
+					};
 				};
 			};
 			buildConfigurationList = 92F263F11B94EBB50063CC1D /* Build configuration list for PBXProject "BMSCore" */;
@@ -593,6 +656,12 @@
 			mainGroup = 92F263ED1B94EBB50063CC1D;
 			productRefGroup = 92F263F81B94EBB50063CC1D /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = FDE912D01C390B8F00D7CF26 /* Products */;
+					ProjectRef = FDE912CF1C390B8F00D7CF26 /* BMSSecurity.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				92F263F61B94EBB50063CC1D /* BMSCore */,
@@ -601,9 +670,27 @@
 				9235D0A71BC3181900946A32 /* TestAppiOS */,
 				9235D0BB1BC3183F00946A32 /* TestAppWatchOS */,
 				9235D0C71BC3183F00946A32 /* TestAppWatchOS Extension */,
+				FD1CDAB11C355EDA00DBBA4E /* BMSPlaygroundTarget */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		FDE912D51C390B8F00D7CF26 /* BMSSecurity.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = BMSSecurity.framework;
+			remoteRef = FDE912D41C390B8F00D7CF26 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FDE912D71C390B8F00D7CF26 /* BMSSecurityTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BMSSecurityTests.xctest;
+			remoteRef = FDE912D61C390B8F00D7CF26 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9235D0A61BC3181900946A32 /* Resources */ = {
@@ -655,6 +742,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FD1CDAB01C355EDA00DBBA4E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -700,9 +794,7 @@
 				92304A3F1BB0A711001E02E1 /* MFPClient.swift in Sources */,
 				DB2BCFB31C2861450063A673 /* Request.swift in Sources */,
 				9287F2941BDA94AF00B0E562 /* Analytics.swift in Sources */,
-				FD1CDA9E1C35164800DBBA4E /* StringEncryption.swift in Sources */,
 				924581E31BF2751600D665ED /* Analytics+iOS.swift in Sources */,
-				FD1CDA981C32EBC700DBBA4E /* RequestOptions.swift in Sources */,
 				92304A411BB0A711001E02E1 /* MFPRequest.swift in Sources */,
 				5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */,
 				92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */,
@@ -710,7 +802,6 @@
 				FD1CDAAC1C35186900DBBA4E /* ResponseListener.swift in Sources */,
 				FD7F51791C328F9100947D17 /* AuthorizationManager.swift in Sources */,
 				FD1CDA9A1C3515A800DBBA4E /* Queue.swift in Sources */,
-				FD1CDAAA1C35183400DBBA4E /* UserDataUtils.swift in Sources */,
 				9221FF821BCD958700D7F3D7 /* Error.swift in Sources */,
 				923F7DA71C174958007DC785 /* MFPRequest+iOS.swift in Sources */,
 				927F4CD21BC5DD1800A19360 /* Response.swift in Sources */,
@@ -727,6 +818,13 @@
 				92D63D331BB4693E0073A032 /* BMSClientTests.swift in Sources */,
 				5F4069DF1BF409CB004AAFCE /* AnalyticsTests.swift in Sources */,
 				92D63D311BB468D30073A032 /* RequestTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FD1CDAAD1C355EDA00DBBA4E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -757,6 +855,11 @@
 			isa = PBXTargetDependency;
 			target = 92F263F61B94EBB50063CC1D /* BMSCore */;
 			targetProxy = 92F264031B94EBB60063CC1D /* PBXContainerItemProxy */;
+		};
+		FD1CDAB81C355EDA00DBBA4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FD1CDAB11C355EDA00DBBA4E /* BMSPlaygroundTarget */;
+			targetProxy = FD1CDAB71C355EDA00DBBA4E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1025,6 +1128,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = BMSCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1043,6 +1147,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = BMSCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1069,6 +1174,40 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ibm.mobilefirstplatform.clientsdk.swift.BMSCoreTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		FD1CDABC1C355EDA00DBBA4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = BMSPlaygroundTarget/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ibm.test.BMSPlaygroundTarget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		FD1CDABD1C355EDA00DBBA4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = BMSPlaygroundTarget/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ibm.test.BMSPlaygroundTarget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -1134,6 +1273,15 @@
 			buildConfigurations = (
 				92F2640F1B94EBB60063CC1D /* Debug */,
 				92F264101B94EBB60063CC1D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FD1CDABB1C355EDA00DBBA4E /* Build configuration list for PBXNativeTarget "BMSPlaygroundTarget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FD1CDABC1C355EDA00DBBA4E /* Debug */,
+				FD1CDABD1C355EDA00DBBA4E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

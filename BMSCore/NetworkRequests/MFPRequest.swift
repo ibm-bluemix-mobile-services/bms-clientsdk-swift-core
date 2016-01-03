@@ -67,23 +67,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     
     private static var networkSession: NSURLSession!
     
-//    var allowRedirectsInternal : Bool = true
-//    
-    public var allowRedirects : Bool{
-        get{
-            return true
-        }
-    }
-    
-//    //The network session that sends the data
-//    public class var networkSession: NSURLSession {
-//        get {
-//            return networkSessionInternal
-//        }
-//        set(newVal) {
-//            networkSessionInternal = newVal
-//        }
-//    }
+    public var allowRedirects : Bool = true
     
     // MARK: Properties (internal/private)
     
@@ -287,8 +271,13 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         
         completionHandler(redirectRequest)
     }
-
     
+    //Add new headers
+    public func addHeaders(newHeaders: [String:String]) {
+        for (key,value) in newHeaders {
+            headers[key] = value
+        }
+    }
     
     // MARK: Methods (internal/private)
     

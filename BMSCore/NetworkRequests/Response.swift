@@ -34,13 +34,12 @@ public class Response {
     /// Returns nil if there is no body or if the response is not valid NSData.
     public let responseData: NSData?
     
-    
+    //is this response a success response
+    public let isSuccessful: Bool
     
     // MARK: Properties (internal/private)
     
     let httpResponse: NSHTTPURLResponse?
-    
-    let isSuccessful: Bool
     
     let isRedirect: Bool
     

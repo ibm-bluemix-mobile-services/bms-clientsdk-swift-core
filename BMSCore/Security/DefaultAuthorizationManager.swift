@@ -56,8 +56,8 @@ internal class DefaultAuthorizationManager : AuthorizationManager {
         return nil;
     }
     
-    func obtainAuthorizationHeader(completionHandler: MfpCompletionHandler) {
-        completionHandler(nil, nil)
+    func obtainAuthorizationHeader(listener: ResponseListener) {
+//        completionHandler(nil, nil)
     }
     
     func getUserIdentity() -> AnyObject? {

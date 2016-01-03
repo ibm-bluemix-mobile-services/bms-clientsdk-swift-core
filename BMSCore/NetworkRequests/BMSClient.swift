@@ -17,6 +17,15 @@
 */
 public class BMSClient: MFPClient {
     
+    public static let REGION_US_SOUTH = "ng.bluemix.net"
+    public static let REGION_UK = "eu-gb.bluemix.net"
+    public static let REGION_SYDNEY = "au-syd.bluemix.net"
+    
+    public static let HTTP_SCHEME = "http"
+    public static let HTTPS_SCHEME = "https"
+    
+    static let QUERY_PARAM_SUBZONE = "subzone"
+    
     private var registeredAuthorizationManager: AuthorizationManager?
     // MARK: Properties (public)
     
@@ -32,11 +41,13 @@ public class BMSClient: MFPClient {
     /// Specifies the backend application id.
     public private(set) var bluemixAppGUID: String?
     
+//    public var rewriteDomain : String?
+    
     /// Specifies the default timeout (in seconds) for all BMS network requests.
     public var defaultRequestTimeout: Double = 20.0
     
     // Specifies the default protocol
-    public static var defaultProtocol: String  = "https"
+    public static var defaultProtocol: String  = BMSClient.HTTPS_SCHEME
     
     public var sharedAuthorizationManager: AuthorizationManager {
         get {
@@ -69,6 +80,7 @@ public class BMSClient: MFPClient {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
         self.bluemixRegionSuffix = bluemixRegionSuffix
+//        self.rewriteDomain = nil
     }
     
 }
