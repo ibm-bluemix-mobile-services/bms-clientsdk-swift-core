@@ -55,7 +55,6 @@
 		DB2BCFB01C2816CA0063A673 /* DefaultAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFAF1C2816CA0063A673 /* DefaultAuthorizationManager.swift */; };
 		DB2BCFB31C2861450063A673 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFB21C2861450063A673 /* Request.swift */; };
 		FD1CDA9A1C3515A800DBBA4E /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDA991C3515A800DBBA4E /* Queue.swift */; };
-		FD1CDAAC1C35186900DBBA4E /* ResponseListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDAAB1C35186900DBBA4E /* ResponseListener.swift */; };
 		FD1CDAB51C355EDA00DBBA4E /* BMSPlaygroundTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = FD1CDAB41C355EDA00DBBA4E /* BMSPlaygroundTarget.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FD1CDAB91C355EDA00DBBA4E /* BMSPlaygroundTarget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD1CDAB21C355EDA00DBBA4E /* BMSPlaygroundTarget.framework */; };
 		FD1CDABA1C355EDA00DBBA4E /* BMSPlaygroundTarget.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FD1CDAB21C355EDA00DBBA4E /* BMSPlaygroundTarget.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -215,7 +214,6 @@
 		DB2BCFAF1C2816CA0063A673 /* DefaultAuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DefaultAuthorizationManager.swift; path = BMSCore/Security/DefaultAuthorizationManager.swift; sourceTree = "<group>"; };
 		DB2BCFB21C2861450063A673 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		FD1CDA991C3515A800DBBA4E /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
-		FD1CDAAB1C35186900DBBA4E /* ResponseListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseListener.swift; sourceTree = "<group>"; };
 		FD1CDAB21C355EDA00DBBA4E /* BMSPlaygroundTarget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSPlaygroundTarget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD1CDAB41C355EDA00DBBA4E /* BMSPlaygroundTarget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BMSPlaygroundTarget.h; sourceTree = "<group>"; };
 		FD1CDAB61C355EDA00DBBA4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -413,7 +411,6 @@
 		92F264661B9639010063CC1D /* NetworkRequests */ = {
 			isa = PBXGroup;
 			children = (
-				FD1CDAAB1C35186900DBBA4E /* ResponseListener.swift */,
 				92304A391BB0A711001E02E1 /* MFPClient.swift */,
 				92304A381BB0A711001E02E1 /* BMSClient.swift */,
 				92304A3B1BB0A711001E02E1 /* MFPRequest.swift */,
@@ -799,7 +796,6 @@
 				5F4069DC1BF4079A004AAFCE /* Constants.swift in Sources */,
 				92304A3E1BB0A711001E02E1 /* BMSClient.swift in Sources */,
 				DB2BCFB01C2816CA0063A673 /* DefaultAuthorizationManager.swift in Sources */,
-				FD1CDAAC1C35186900DBBA4E /* ResponseListener.swift in Sources */,
 				FD7F51791C328F9100947D17 /* AuthorizationManager.swift in Sources */,
 				FD1CDA9A1C3515A800DBBA4E /* Queue.swift in Sources */,
 				9221FF821BCD958700D7F3D7 /* Error.swift in Sources */,

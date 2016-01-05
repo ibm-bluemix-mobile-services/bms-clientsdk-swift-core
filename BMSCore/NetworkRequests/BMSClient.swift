@@ -40,9 +40,7 @@ public class BMSClient: MFPClient {
     
     /// Specifies the backend application id.
     public private(set) var bluemixAppGUID: String?
-    
-//    public var rewriteDomain : String?
-    
+        
     /// Specifies the default timeout (in seconds) for all BMS network requests.
     public var defaultRequestTimeout: Double = 20.0
     
@@ -80,7 +78,6 @@ public class BMSClient: MFPClient {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
         self.bluemixRegionSuffix = bluemixRegionSuffix
-//        self.rewriteDomain = nil
     }
     
 }

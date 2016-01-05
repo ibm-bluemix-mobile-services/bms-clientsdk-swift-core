@@ -272,10 +272,15 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         completionHandler(redirectRequest)
     }
     
-    //Add new headers
+    //Add new header
+    public func addHeader(key:String, val:String) {
+        headers[key] = val
+    }
+    
+    //Iterate and add all new headers
     public func addHeaders(newHeaders: [String:String]) {
         for (key,value) in newHeaders {
-            headers[key] = value
+            addHeader(key, val: value)
         }
     }
     
