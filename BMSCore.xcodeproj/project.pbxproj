@@ -37,6 +37,10 @@
 		926679BB1BF3E84800F597C5 /* Analytics+WatchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926679BA1BF3E84800F597C5 /* Analytics+WatchOS.swift */; };
 		926679BC1BF4FBD300F597C5 /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		926679BD1BF4FBD300F597C5 /* BMSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		92702A851C3F23FA0006E7E0 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7F51781C328F9100947D17 /* AuthorizationManager.swift */; settings = {ASSET_TAGS = (); }; };
+		92702A861C3F23FC0006E7E0 /* DefaultAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFAF1C2816CA0063A673 /* DefaultAuthorizationManager.swift */; settings = {ASSET_TAGS = (); }; };
+		92702A871C3F24180006E7E0 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2BCFB21C2861450063A673 /* Request.swift */; settings = {ASSET_TAGS = (); }; };
+		92702A881C3F24570006E7E0 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1CDA991C3515A800DBBA4E /* Queue.swift */; settings = {ASSET_TAGS = (); }; };
 		927F4CD21BC5DD1800A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; };
 		927F4CD31BC5E10F00A19360 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD11BC5DD1800A19360 /* Response.swift */; };
 		927F4CD51BC5E1AD00A19360 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927F4CD41BC5E1AD00A19360 /* ResponseTests.swift */; };
@@ -773,12 +777,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				9287F2951BDA94AF00B0E562 /* Analytics.swift in Sources */,
+				92702A871C3F24180006E7E0 /* Request.swift in Sources */,
 				92A8E4DE1BBF2DA400995FE8 /* MFPClient.swift in Sources */,
 				92A8E4E01BBF2DA800995FE8 /* MFPRequest.swift in Sources */,
+				92702A881C3F24570006E7E0 /* Queue.swift in Sources */,
 				926679BB1BF3E84800F597C5 /* Analytics+WatchOS.swift in Sources */,
 				5F4069DD1BF407E4004AAFCE /* Constants.swift in Sources */,
 				92A8E4DF1BBF2DA600995FE8 /* BMSClient.swift in Sources */,
+				92702A861C3F23FC0006E7E0 /* DefaultAuthorizationManager.swift in Sources */,
 				9221FF831BCD9E0E00D7F3D7 /* Error.swift in Sources */,
+				92702A851C3F23FA0006E7E0 /* AuthorizationManager.swift in Sources */,
 				927F4CD31BC5E10F00A19360 /* Response.swift in Sources */,
 				9287F2981BDA94C100B0E562 /* Logger.swift in Sources */,
 			);
