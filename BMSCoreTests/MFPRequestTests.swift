@@ -14,14 +14,14 @@
 import XCTest
 @testable import BMSCore
 
-class RequestTests: XCTestCase {
+class MFPRequestTests: XCTestCase {
     
     
     // MARK: init
     
     func testInitWithAllParameters() {
         
-        let request = Request(url: "http://example.com", headers:["Content-Type": "text/plain"], queryParameters: ["someKey": "someValue"], method: HttpMethod.GET, timeout: 10.0)
+        let request = MFPRequest(url: "http://example.com", headers:["Content-Type": "text/plain"], queryParameters: ["someKey": "someValue"], method: HttpMethod.GET, timeout: 10.0)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
@@ -33,7 +33,7 @@ class RequestTests: XCTestCase {
     
     func testInitWithDefaultParameters() {
         
-        let request = Request(url: "http://example.com", headers: nil, queryParameters: nil)
+        let request = MFPRequest(url: "http://example.com", headers: nil, queryParameters: nil)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
@@ -49,12 +49,12 @@ class RequestTests: XCTestCase {
         mfpUserDefaults?.removeObjectForKey("deviceId")
         
         // Generate new ID
-        let generatedId = Request.uniqueDeviceId
+        let generatedId = MFPRequest.uniqueDeviceId
         
         // Since an ID was already created, this method should keep returning the same one
-        let retrievedId = Request.uniqueDeviceId
+        let retrievedId = MFPRequest.uniqueDeviceId
         XCTAssertEqual(retrievedId, generatedId)
-        let retrievedId2 = Request.uniqueDeviceId
+        let retrievedId2 = MFPRequest.uniqueDeviceId
         XCTAssertEqual(retrievedId2, generatedId)
     }
     
@@ -64,7 +64,7 @@ class RequestTests: XCTestCase {
     
     func testSendData() {
         
-        let request = Request(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
+        let request = MFPRequest(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
         let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
         
         request.sendData(requestData!, withCompletionHandler: nil)
@@ -79,7 +79,7 @@ class RequestTests: XCTestCase {
     
     func testSendString() {
         
-        let request = Request(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
+        let request = MFPRequest(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
         request.sendString(dataString, withCompletionHandler: nil)
@@ -89,13 +89,13 @@ class RequestTests: XCTestCase {
         XCTAssertNotNil(request.headers["x-mfp-analytics-metadata"])
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], Request.TEXT_PLAIN_TYPE)
+        XCTAssertEqual(request.headers[MFPRequest.CONTENT_TYPE], MFPRequest.TEXT_PLAIN_TYPE)
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
     func testSendStringWithoutOverwritingContentTypeHeader() {
         
-        let request = Request(url: "http://example.com", headers: ["Content-Type": "media-type"], queryParameters: ["someKey": "someValue"])
+        let request = MFPRequest(url: "http://example.com", headers: ["Content-Type": "media-type"], queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
         request.sendString(dataString, withCompletionHandler: nil)
@@ -105,7 +105,7 @@ class RequestTests: XCTestCase {
         XCTAssertNotNil(request.headers["x-mfp-analytics-metadata"])
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[Request.CONTENT_TYPE], "media-type")
+        XCTAssertEqual(request.headers[MFPRequest.CONTENT_TYPE], "media-type")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
@@ -114,7 +114,7 @@ class RequestTests: XCTestCase {
         let responseReceivedExpectation = self.expectationWithDescription("Receive network response")
         
         let badUrl = "!@#$%^&*()"
-        let request = Request(url: badUrl, headers: nil, queryParameters: nil)
+        let request = MFPRequest(url: badUrl, headers: nil, queryParameters: nil)
         request.sendWithCompletionHandler { (response: Response?, error: NSError?) -> Void in
             XCTAssertNil(response)
             XCTAssertEqual(error?.domain, MFP_CORE_ERROR_DOMAIN)
@@ -138,7 +138,7 @@ class RequestTests: XCTestCase {
         
         let url = NSURL(string: "http://example.com")
         let parameters: [String: String] = [:]
-        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!)! )
+        let finalUrl = String( MFPRequest.appendQueryParameters(parameters, toURL: url!)! )
         
         XCTAssertEqual(finalUrl, "http://example.com")
     }
@@ -148,7 +148,7 @@ class RequestTests: XCTestCase {
         
         let url = NSURL(string: "http://example.com")
         let parameters = ["key1": "value1", "key2": "value2"]
-        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!)! )
+        let finalUrl = String( MFPRequest.appendQueryParameters(parameters, toURL: url!)! )
         
         XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
     }
@@ -157,7 +157,7 @@ class RequestTests: XCTestCase {
         
         let url = NSURL(string: "http://example.com")
         let parameters = ["Reserved_characters": "\"#%<>[\\]^`{|}"]
-        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
+        let finalUrl = String( MFPRequest.appendQueryParameters(parameters, toURL: url!) )
         
         XCTAssert(finalUrl.containsString("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
     }
@@ -167,7 +167,7 @@ class RequestTests: XCTestCase {
         let url = NSURL(string: "http://example.com?hardCodedKey=hardCodedValue")
         
         let parameters = ["key1": "value1", "key2": "value2"]
-        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!)! )
+        let finalUrl = String( MFPRequest.appendQueryParameters(parameters, toURL: url!)! )
         
         XCTAssertEqual(finalUrl, "http://example.com?hardCodedKey=hardCodedValue&key1=value1&key2=value2")
     }
@@ -176,7 +176,7 @@ class RequestTests: XCTestCase {
         
         let url = NSURL(string: "http://example.com")
         let parameters = ["k1": "v1", "k2": "v2", "k3": "v3", "k4": "v4"]
-        let finalUrl = String( Request.appendQueryParameters(parameters, toURL: url!) )
+        let finalUrl = String( MFPRequest.appendQueryParameters(parameters, toURL: url!) )
         
         let numberOfAmpersands = finalUrl.componentsSeparatedByString("&")
         
