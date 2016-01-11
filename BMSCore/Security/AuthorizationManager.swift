@@ -11,7 +11,6 @@
 *     limitations under the License.
 */
 
-//  Created by Ilan Klein on 12/24/2015.
 
 public enum PersistencePolicy: String {
     case NEVER = "NEVER"

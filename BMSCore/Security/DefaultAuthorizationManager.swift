@@ -11,13 +11,6 @@
 *     limitations under the License.
 */
 
-//
-//  AuthorizationManager.swift
-//  BMSCore
-//
-//  Created by Vitaly Meytin on 12/21/15.
-//  Copyright © 2015 IBM. All rights reserved.
-//
 
 import Foundation
 

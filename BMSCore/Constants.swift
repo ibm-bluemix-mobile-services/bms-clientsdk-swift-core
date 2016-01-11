@@ -11,6 +11,9 @@
 *     limitations under the License.
 */
 
+
+// TODO: Put these constants in their relevant files and remove this file
+
 internal let MFP_PACKAGE_PREFIX = "mfpsdk."
 internal let MFP_LOGGER_PACKAGE = MFP_PACKAGE_PREFIX + "logger"
 internal let MFP_ANALYTICS_PACKAGE = MFP_PACKAGE_PREFIX + "analytics"
