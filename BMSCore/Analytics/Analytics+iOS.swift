@@ -12,6 +12,9 @@
 */
 
 
+import UIKit
+
+
 public extension Analytics {
     
     /**
