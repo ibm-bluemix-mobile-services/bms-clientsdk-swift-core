@@ -9,6 +9,9 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => 'https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.git', :tag => "v#{s.version}" }
   s.source_files = 'BMSCore/**/*.swift'
+  s.ios.exclude_files = 'BMSCore/**/*WatchOS*.swift'
+  s.watchos.exclude_files = 'BMSCore/**/*iOS*.swift'
+
   s.requires_arc = true
 
   s.ios.deployment_target = '8.0'
