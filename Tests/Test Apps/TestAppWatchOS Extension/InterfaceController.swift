@@ -28,7 +28,7 @@ class InterfaceController: WKInterfaceController {
         Analytics.log(["buttonPressed": "getRequest"])
         Analytics.send()
         
-        let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
+        let getRequest = MFPRequest(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
         getRequest.sendWithCompletionHandler( { (response: Response?, error: NSError?) in
             
             var responseLabelText = ""

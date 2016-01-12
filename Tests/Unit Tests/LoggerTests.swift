@@ -519,7 +519,7 @@ class LoggerTests: XCTestCase {
         }
         
         let bundle = NSBundle(forClass: self.dynamicType)
-        let path = bundle.pathForResource("largeData", ofType: "txt")
+        let path = bundle.pathForResource("LargeData", ofType: "txt")
         let largeData = try! String(contentsOfFile: path!)
         
         let loggerInstance = Logger.getLoggerForName(fakePKG)
@@ -598,7 +598,7 @@ class LoggerTests: XCTestCase {
         }
         
         let bundle = NSBundle(forClass: self.dynamicType)
-        let path = bundle.pathForResource("largeData", ofType: "txt")
+        let path = bundle.pathForResource("LargeData", ofType: "txt")
         let largeData = try! String(contentsOfFile: path!)
         
         let loggerInstance = Logger.getLoggerForName(fakePKG)
