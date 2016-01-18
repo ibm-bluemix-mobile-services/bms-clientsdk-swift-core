@@ -50,6 +50,8 @@
 		926679B91BF3D4E000F597C5 /* TestAppWatchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */; };
 		926679BC1BF4FBD300F597C5 /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		926679BD1BF4FBD300F597C5 /* BMSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		926CF6921C4D51760084355B /* MFPLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* MFPLogger.swift */; };
+		926CF6931C4D51760084355B /* MFPLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* MFPLogger.swift */; };
 		92ED06FD1C45AEC900E0BA1D /* LargeData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 92018A7C1C45AC380031C893 /* LargeData.txt */; };
 		92ED070C1C45AFD900E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070A1C45AFD900E0BA1D /* Assets.xcassets */; };
 		92ED07111C45B01F00E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070F1C45B01F00E0BA1D /* Assets.xcassets */; };
@@ -182,6 +184,7 @@
 		9235D0A81BC3181900946A32 /* TestAppiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestAppiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestAppWatchOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0C81BC3183F00946A32 /* TestAppWatchOS Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TestAppWatchOS Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		926CF6911C4D51760084355B /* MFPLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPLogger.swift; sourceTree = "<group>"; };
 		92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCoreWatchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92ED070A1C45AFD900E0BA1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		92ED070B1C45AFD900E0BA1D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -269,6 +272,7 @@
 		92018A191C45A7720031C893 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
+				926CF6911C4D51760084355B /* MFPLogger.swift */,
 				92018A1A1C45A7720031C893 /* Logger.swift */,
 			);
 			path = Logger;
@@ -705,6 +709,7 @@
 				92018A581C45AAC70031C893 /* Response.swift in Sources */,
 				92018A561C45AAC20031C893 /* DefaultAuthorizationManager.swift in Sources */,
 				92018A5A1C45AACC0031C893 /* MFPRequest.swift in Sources */,
+				926CF6931C4D51760084355B /* MFPLogger.swift in Sources */,
 				92018A5E1C45AAD80031C893 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -714,6 +719,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92018A2C1C45A7720031C893 /* Logger.swift in Sources */,
+				926CF6921C4D51760084355B /* MFPLogger.swift in Sources */,
 				92018A511C45AA890031C893 /* Request.swift in Sources */,
 				92018A4F1C45AA890031C893 /* MFPRequest+iOS.swift in Sources */,
 				92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */,
