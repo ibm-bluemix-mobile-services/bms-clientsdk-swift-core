@@ -1,4 +1,4 @@
-/*
+	/*
 *     Copyright 2015 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
@@ -127,7 +127,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
 //        networkSession = NSURLSession(configuration: configuration)
         networkRequest = NSMutableURLRequest()
         super.init()
-        MFPRequest.networkSession = NSURLSession(configuration: configuration)
+        MFPRequest.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
     
     public func getNetworkSession() -> NSURLSession {
