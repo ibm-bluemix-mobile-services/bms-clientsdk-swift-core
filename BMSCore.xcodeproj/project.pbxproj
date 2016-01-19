@@ -52,6 +52,7 @@
 		926679BD1BF4FBD300F597C5 /* BMSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		926CF6921C4D51760084355B /* MFPLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* MFPLogger.swift */; };
 		926CF6931C4D51760084355B /* MFPLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* MFPLogger.swift */; };
+		926CF6971C4EADCA0084355B /* MFPLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6961C4EADCA0084355B /* MFPLoggerTests.swift */; };
 		92ED06FD1C45AEC900E0BA1D /* LargeData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 92018A7C1C45AC380031C893 /* LargeData.txt */; };
 		92ED070C1C45AFD900E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070A1C45AFD900E0BA1D /* Assets.xcassets */; };
 		92ED07111C45B01F00E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070F1C45B01F00E0BA1D /* Assets.xcassets */; };
@@ -185,6 +186,7 @@
 		9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestAppWatchOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0C81BC3183F00946A32 /* TestAppWatchOS Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TestAppWatchOS Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		926CF6911C4D51760084355B /* MFPLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPLogger.swift; sourceTree = "<group>"; };
+		926CF6961C4EADCA0084355B /* MFPLoggerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPLoggerTests.swift; sourceTree = "<group>"; };
 		92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCoreWatchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92ED070A1C45AFD900E0BA1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		92ED070B1C45AFD900E0BA1D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -371,6 +373,7 @@
 				92018A791C45AC380031C893 /* MFPRequestTests.swift */,
 				92018A7D1C45AC380031C893 /* ResponseTests.swift */,
 				92018A761C45AC380031C893 /* AnalyticsTests.swift */,
+				926CF6961C4EADCA0084355B /* MFPLoggerTests.swift */,
 				92018A781C45AC380031C893 /* LoggerTests.swift */,
 				92018A7A1C45AC380031C893 /* Resources */,
 			);
@@ -740,6 +743,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92018A921C45AC380031C893 /* ResponseTests.swift in Sources */,
+				926CF6971C4EADCA0084355B /* MFPLoggerTests.swift in Sources */,
 				92018A8C1C45AC380031C893 /* AnalyticsTests.swift in Sources */,
 				92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */,
 				92018A8F1C45AC380031C893 /* MFPRequestTests.swift in Sources */,

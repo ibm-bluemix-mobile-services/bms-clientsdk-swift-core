@@ -16,14 +16,6 @@ import XCTest
 
 class LoggerTests: XCTestCase {
     
-    func testGetLoggerForName(){
-        let name = "sample"
-        
-        let logger = Logger.getLoggerForName(name)
-        
-        XCTAssertTrue(logger.name == Logger.loggerInstances[name]?.name)
-    }
-    
     func testIsUncaughtException(){
 
         Logger.isUncaughtExceptionDetected = false
