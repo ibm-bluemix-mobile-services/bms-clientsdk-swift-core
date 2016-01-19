@@ -27,7 +27,7 @@ To install, add the `BMSCore` pod to your `Podfile`.
 ```ruby
 use_frameworks!
 
-target 'My iOS App' do
+target 'MyApp' do
     platform :ios, '8.0'
     pod 'BMSCore'
 end
@@ -37,12 +37,12 @@ end
 ```ruby
 use_frameworks!
 
-target 'My watchOS App WatchKit App' do
+target 'MyApp WatchKit App' do
     platform :ios, '8.0'
     pod 'BMSCore'
 end
 
-target 'My watchOS App WatchKit Extension' do
+target 'MyApp WatchKit Extension' do
     platform :watchos, '2.0'
     pod 'BMSCore'
 end
