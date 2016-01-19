@@ -1,4 +1,4 @@
-/*
+	/*
 *     Copyright 2015 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     
     // MARK: Constants
     
-    static let CONTENT_TYPE = "Content-Type"
-    static let TEXT_PLAIN_TYPE = "text/plain"
+    public static let CONTENT_TYPE = "Content-Type"
+    public static let TEXT_PLAIN_TYPE = "text/plain"
     
     // MARK: Properties (public)
     
@@ -127,7 +127,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
 //        networkSession = NSURLSession(configuration: configuration)
         networkRequest = NSMutableURLRequest()
         super.init()
-        MFPRequest.networkSession = NSURLSession(configuration: configuration)
+        MFPRequest.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
     
     public func getNetworkSession() -> NSURLSession {
@@ -148,7 +148,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
-    func sendString(requestBody: String, withCompletionHandler callback: MfpCompletionHandler?) {
+    public func sendString(requestBody: String, withCompletionHandler callback: MfpCompletionHandler?) {
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         // Don't want to overwrite content type if it has already been specified as something else
@@ -176,7 +176,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         self.sendWithCompletionHandler(callback)
     }
     
-    // TODO: Refactor sendWithCompletionHandler - split into more methods
+    // TODO: Refactor sendWithCompletionHandler - slit into more methods
     
     /**
         Send the request asynchronously.
