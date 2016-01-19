@@ -37,7 +37,7 @@ end
 ```ruby
 use_frameworks!
 
-target 'My watchOS App' do
+target 'My watchOS App WatchKit App' do
     platform :ios, '8.0'
     pod 'BMSCore'
 end
