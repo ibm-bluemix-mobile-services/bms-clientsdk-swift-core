@@ -12,6 +12,8 @@
 */
 
 
+// TODO: Rename error code type
+
 /**
     These error codes indicate a failure that occurred within the BMSCore framework.
 */
@@ -19,5 +21,4 @@ public enum MFPErrorCode: Int {
     
     case MalformedUrl
     case ClientNotInitialized
-    case AnalyticsNotInitialized
 }

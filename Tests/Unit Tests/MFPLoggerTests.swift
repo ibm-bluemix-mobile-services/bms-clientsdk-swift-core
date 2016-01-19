@@ -58,18 +58,8 @@ class MFPLoggerTests: XCTestCase {
     
     func testLogWithNone(){
         let fakePKG = "MYPKG"
-        let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
-        
-        do {
-            try NSFileManager().removeItemAtPath(pathToFile)
-        } catch {
-            
-        }
-        
         let loggerInstance = Logger.getLoggerForName(fakePKG)
-        Logger.logStoreEnabled = true
         Logger.logLevelFilter = LogLevel.None
-        Logger.maxLogStoreSize = DEFAULT_MAX_STORE_SIZE
         
         loggerInstance.debug("Hello world")
         loggerInstance.info("1242342342343243242342")

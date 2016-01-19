@@ -211,9 +211,10 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         self.trackingId = NSUUID().UUIDString
         headers["x-wl-analytics-tracking-id"] = self.trackingId
         
-        if let requestMetadata = Analytics.generateOutboundRequestMetadata() {
-            self.headers["x-mfp-analytics-metadata"] = requestMetadata
-        }
+        // TODO: Conditional check for Analytics framework
+//        if let requestMetadata = Analytics.generateOutboundRequestMetadata() {
+//            self.headers["x-mfp-analytics-metadata"] = requestMetadata
+//        }
         
         self.startTime = NSDate.timeIntervalSinceReferenceDate()
         
