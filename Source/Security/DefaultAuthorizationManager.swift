@@ -33,7 +33,7 @@ internal class DefaultAuthorizationManager : AuthorizationManager {
         return false;
     }
     
-    func isAuthorizationRequired(httpResponse: NSHTTPURLResponse) -> Bool {
+    func isAuthorizationRequired(httpResponse: Response?) -> Bool {
         return false;
     }
     

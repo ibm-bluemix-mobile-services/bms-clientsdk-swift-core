@@ -19,7 +19,7 @@ public enum PersistencePolicy: String {
 
 public protocol AuthorizationManager {
     func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool
-    func isAuthorizationRequired(httpResponse: NSHTTPURLResponse) -> Bool
+    func isAuthorizationRequired(httpResponse: Response?) -> Bool
     func isOAuthError(response: Response?) -> Bool
     func clearAuthorizationData()
     func addCachedAuthorizationHeader(request: NSMutableURLRequest)
