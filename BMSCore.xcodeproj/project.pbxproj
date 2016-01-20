@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		92018A291C45A7720031C893 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A161C45A7720031C893 /* Constants.swift */; };
 		92018A2A1C45A7720031C893 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A171C45A7720031C893 /* Error.swift */; };
 		92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A231C45A7720031C893 /* AuthorizationManager.swift */; };
 		92018A341C45A7720031C893 /* DefaultAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A241C45A7720031C893 /* DefaultAuthorizationManager.swift */; };
@@ -27,7 +26,6 @@
 		92018A5B1C45AAD00031C893 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A481C45AA890031C893 /* MFPClient.swift */; };
 		92018A5C1C45AAD30031C893 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A471C45AA890031C893 /* BMSClient.swift */; };
 		92018A5D1C45AAD60031C893 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A171C45A7720031C893 /* Error.swift */; };
-		92018A5E1C45AAD80031C893 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A161C45A7720031C893 /* Constants.swift */; };
 		92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A771C45AC380031C893 /* BMSClientTests.swift */; };
 		92018A8F1C45AC380031C893 /* MFPRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A791C45AC380031C893 /* MFPRequestTests.swift */; };
 		92018A921C45AC380031C893 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A7D1C45AC380031C893 /* ResponseTests.swift */; };
@@ -141,7 +139,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		92018A161C45A7720031C893 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		92018A171C45A7720031C893 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		92018A231C45A7720031C893 /* AuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationManager.swift; sourceTree = "<group>"; };
 		92018A241C45A7720031C893 /* DefaultAuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultAuthorizationManager.swift; sourceTree = "<group>"; };
@@ -236,7 +233,6 @@
 		92018A101C45A7720031C893 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				92018A161C45A7720031C893 /* Constants.swift */,
 				92018A171C45A7720031C893 /* Error.swift */,
 				92018A461C45AA890031C893 /* Network Requests */,
 				92018A221C45A7720031C893 /* Security */,
@@ -682,7 +678,6 @@
 				92018A561C45AAC20031C893 /* DefaultAuthorizationManager.swift in Sources */,
 				92018A5A1C45AACC0031C893 /* MFPRequest.swift in Sources */,
 				926CF6931C4D51760084355B /* MFPLogger.swift in Sources */,
-				92018A5E1C45AAD80031C893 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,7 +691,6 @@
 				92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */,
 				92018A501C45AA890031C893 /* MFPRequest.swift in Sources */,
 				92018A521C45AA890031C893 /* Response.swift in Sources */,
-				92018A291C45A7720031C893 /* Constants.swift in Sources */,
 				92018A4E1C45AA890031C893 /* MFPClient.swift in Sources */,
 				92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */,
 				92018A2A1C45A7720031C893 /* Error.swift in Sources */,

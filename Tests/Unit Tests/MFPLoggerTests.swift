@@ -27,7 +27,7 @@ class MFPLoggerTests: XCTestCase {
     }
     
     func testNoInternalLogging(){
-        let fakePKG = MFP_LOGGER_PACKAGE
+        let fakePKG = "MYPKG"
         let loggerInstance = Logger.getLoggerForName(fakePKG)
         Logger.logLevelFilter = LogLevel.Debug
         Logger.sdkDebugLoggingEnabled = false
