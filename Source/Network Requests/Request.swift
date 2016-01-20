@@ -12,9 +12,9 @@
 */
 
 
-import Foundation
-
 public class Request: MFPRequest {
+    
+    
     public override func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
         
         let authManager: AuthorizationManager = BMSClient.sharedInstance.sharedAuthorizationManager

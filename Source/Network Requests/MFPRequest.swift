@@ -45,6 +45,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     public static let CONTENT_TYPE = "Content-Type"
     public static let TEXT_PLAIN_TYPE = "text/plain"
     
+    
+    
     // MARK: Properties (public)
     
     /// URL that the request is being sent to
@@ -69,12 +71,16 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     
     public var allowRedirects : Bool = true
     
+    
+    
     // MARK: Properties (internal/private)
     
     var networkRequest: NSMutableURLRequest
     
     internal var startTime: NSTimeInterval = 0.0
+    
     internal var trackingId: String = ""
+    
     private static let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
     
     // Create a UUID for the current device and save it to the keychain
@@ -94,6 +100,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         }
         return deviceId!
     }
+    
+    
     
     // MARK: Initializer
     
@@ -158,7 +166,6 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         
         self.sendWithCompletionHandler(callback)
     }
-    
     
     /**
         Add a request body and send the request asynchronously.
@@ -284,6 +291,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
             addHeader(key, val: value)
         }
     }
+    
+    
     
     // MARK: Methods (internal/private)
     

@@ -17,6 +17,7 @@
 */
 public class BMSClient: MFPClient {
     
+    
     public static let REGION_US_SOUTH = "ng.bluemix.net"
     public static let REGION_UK = "eu-gb.bluemix.net"
     public static let REGION_SYDNEY = "au-syd.bluemix.net"
@@ -27,6 +28,9 @@ public class BMSClient: MFPClient {
     static let QUERY_PARAM_SUBZONE = "subzone"
     
     private var registeredAuthorizationManager: AuthorizationManager?
+    
+    
+    
     // MARK: Properties (public)
     
     /// This singleton should be used for all `BMSClient` activity
@@ -61,10 +65,9 @@ public class BMSClient: MFPClient {
         }
     }
     
+    
+    
     // MARK: Initializers
-    
-    private init() {} // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
-    
     
     /**
         The required intializer for the `BMSClient` class.
@@ -80,11 +83,14 @@ public class BMSClient: MFPClient {
         self.bluemixRegionSuffix = bluemixRegionSuffix
     }
     
+    private init() {} // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
+    
 }
 
 
 // For unit testing only
 internal extension BMSClient {
+    
     
     internal func uninitializeBluemixAppRoute() {
         self.bluemixAppRoute = nil
@@ -93,4 +99,5 @@ internal extension BMSClient {
     internal func uninitalizeBluemixAppGUID(){
         self.bluemixAppGUID = nil
     }
+    
 }

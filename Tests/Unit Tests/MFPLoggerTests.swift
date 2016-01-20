@@ -41,7 +41,6 @@ class MFPLoggerTests: XCTestCase {
         
     }
     
-    
     func testLogMethods(){
         let fakePKG = "MYPKG"
         let loggerInstance = Logger.getLoggerForName(fakePKG)

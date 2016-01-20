@@ -37,6 +37,8 @@ public class Response {
     //is this response a success response
     public let isSuccessful: Bool
     
+    
+    
     // MARK: Properties (internal/private)
     
     let httpResponse: NSHTTPURLResponse?
@@ -71,7 +73,6 @@ public class Response {
             isSuccessful = false
         }
     }
-    
     
     // Try to convert response NSData to String
     static private func buildResponseStringWithData(responseData: NSData?) -> String? {

@@ -21,7 +21,6 @@ internal protocol MFPClient {
     /// Specifies the default timeout (in seconds) for all network requests.
     var defaultRequestTimeout: Double { get set }
     
-    
     /**
         Registers a delegate that will handle authentication for the specified realm.
         
@@ -29,7 +28,6 @@ internal protocol MFPClient {
         - parameter forRealm: The realm name
      */
     func registerAuthenticationDelegate(delegate: Any, realm: String)
-    
     
     /**
         Unregisters the authentication delegate for the specified realm.
@@ -47,7 +45,6 @@ internal extension MFPClient {
     func registerAuthenticationDelegate(delegate: Any, realm: String) {
 
     }
-    
     
     func unregisterAuthenticationDelegate(realm: String) {
 

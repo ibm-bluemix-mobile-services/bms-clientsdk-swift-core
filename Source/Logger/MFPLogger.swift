@@ -99,7 +99,6 @@ public class Logger {
         }
     }
     
-    
     private init(name: String) {
         self.name = name
     }
@@ -120,7 +119,6 @@ public class Logger {
         logMessage(message, level: LogLevel.Debug, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
     
-    
     /**
      Log at the Info LogLevel.
      
@@ -132,7 +130,6 @@ public class Logger {
         
         logMessage(message, level: LogLevel.Info, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
-    
     
     /**
      Log at the Warn LogLevel.
@@ -146,7 +143,6 @@ public class Logger {
         logMessage(message, level: LogLevel.Warn, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
     
-    
     /**
      Log at the Error LogLevel.
      
@@ -158,7 +154,6 @@ public class Logger {
         
         logMessage(message, level: LogLevel.Error, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
-    
     
     /**
      Log at the Fatal LogLevel.
@@ -195,7 +190,6 @@ public class Logger {
             Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
         }
     }
-    
     
     // Format: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
     public static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
