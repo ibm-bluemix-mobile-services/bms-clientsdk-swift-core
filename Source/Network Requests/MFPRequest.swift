@@ -47,6 +47,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     
     public static let CONTENT_TYPE = "Content-Type"
     public static let TEXT_PLAIN_TYPE = "text/plain"
+    
     internal static let MFP_CORE_ERROR_DOMAIN = "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore"
     internal static let MFP_REQUEST_PACKAGE = MFP_PACKAGE_PREFIX + "request"
     
@@ -72,9 +73,14 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     /// The request body can be set when sending the request via the `sendString` or `sendData` methods.
     public private(set) var requestBody: NSData?
     
-    private static var networkSession: NSURLSession!
-    
+    // TODO: How is this actually used?
     public var allowRedirects : Bool = true
+    
+    // Public access required by BMSAnalytics framework
+    public internal(set) var startTime: NSTimeInterval = 0.0
+    
+    // Public access required by BMSAnalytics framework
+    public internal(set) var trackingId: String = ""
     
     
     
@@ -82,11 +88,9 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     
     var networkRequest: NSMutableURLRequest
     
-    internal var startTime: NSTimeInterval = 0.0
-    
-    internal var trackingId: String = ""
-    
     private static let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
+    
+    private static var networkSession: NSURLSession!
     
     // Create a UUID for the current device and save it to the keychain
     // Currently only used for Apple Watch devices
@@ -146,6 +150,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     public func getNetworkSession() -> NSURLSession {
         return MFPRequest.networkSession
     }
+    
+    
     
     // MARK: Methods (public)
     
@@ -219,11 +225,12 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         
         MFPRequest.logger.debug("Network request outbound")
         
-        // The analytics server needs this ID to match each request with its corresponding response
-        self.trackingId = NSUUID().UUIDString
-        headers["x-wl-analytics-tracking-id"] = self.trackingId
-        
         // TODO: Conditional check for Analytics framework
+        
+        // The analytics server needs this ID to match each request with its corresponding response
+//        self.trackingId = NSUUID().UUIDString
+//        headers["x-wl-analytics-tracking-id"] = self.trackingId
+        
 //        if let requestMetadata = Analytics.generateOutboundRequestMetadata() {
 //            self.headers["x-mfp-analytics-metadata"] = requestMetadata
 //        }
@@ -283,18 +290,6 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         }
         
         completionHandler(redirectRequest)
-    }
-    
-    //Add new header
-    public func addHeader(key:String, val:String) {
-        headers[key] = val
-    }
-    
-    //Iterate and add all new headers
-    public func addHeaders(newHeaders: [String:String]) {
-        for (key,value) in newHeaders {
-            addHeader(key, val: value)
-        }
     }
     
     

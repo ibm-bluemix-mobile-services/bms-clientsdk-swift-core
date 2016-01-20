@@ -18,16 +18,13 @@
 public class BMSClient: MFPClient {
     
     
+    // TODO: Turn into an enum and DOCUMENT
+    
+    // MARK: Constants
+    
     public static let REGION_US_SOUTH = "ng.bluemix.net"
     public static let REGION_UK = "eu-gb.bluemix.net"
     public static let REGION_SYDNEY = "au-syd.bluemix.net"
-    
-    public static let HTTP_SCHEME = "http"
-    public static let HTTPS_SCHEME = "https"
-    
-    static let QUERY_PARAM_SUBZONE = "subzone"
-    
-    private var registeredAuthorizationManager: AuthorizationManager?
     
     
     
@@ -47,11 +44,12 @@ public class BMSClient: MFPClient {
         
     /// Specifies the default timeout (in seconds) for all BMS network requests.
     public var defaultRequestTimeout: Double = 20.0
+
     
-    // Specifies the default protocol
-    public static var defaultProtocol: String  = BMSClient.HTTPS_SCHEME
     
-    public var sharedAuthorizationManager: AuthorizationManager {
+    // MARK: Properties (internal/private)
+    
+    internal var sharedAuthorizationManager: AuthorizationManager {
         get {
             if registeredAuthorizationManager == nil {
                 return DefaultAuthorizationManager()
@@ -64,6 +62,8 @@ public class BMSClient: MFPClient {
             registeredAuthorizationManager = newAuthorizationManager
         }
     }
+    
+    private var registeredAuthorizationManager: AuthorizationManager?
     
     
     

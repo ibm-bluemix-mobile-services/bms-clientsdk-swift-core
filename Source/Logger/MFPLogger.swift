@@ -23,7 +23,7 @@ public enum LogLevel: Int {
     
     case None, Analytics, Fatal, Error, Warn, Info, Debug
     
-    var stringValue: String {
+    public var stringValue: String {
         get {
             switch self {
             case .None:
