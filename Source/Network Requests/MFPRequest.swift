@@ -48,7 +48,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     public static let CONTENT_TYPE = "Content-Type"
     public static let TEXT_PLAIN_TYPE = "text/plain"
     
-    internal static let MFP_CORE_ERROR_DOMAIN = "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore"
+    public static let MFP_CORE_ERROR_DOMAIN = "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore"
+    
     internal static let MFP_REQUEST_PACKAGE = MFP_PACKAGE_PREFIX + "request"
     
     
