@@ -18,23 +18,22 @@ public enum PersistensePolicy: Int {
     case Never, Always
 }
 
-
 internal class DefaultAuthorizationManager : AuthorizationManager {
     
     internal init() {
         
     }
-    
-    func isOAuthError(response: Response?) -> Bool {
-        return false;
-    }
-    
+   
     func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool {
         return false;
     }
     
     func isAuthorizationRequired(httpResponse: Response?) -> Bool {
         return false;
+    }
+    
+    func obtainAuthorization(completionHandler: MfpCompletionHandler?) {
+        //        completionHandler(nil, nil)
     }
     
     func clearAuthorizationData() {
@@ -49,9 +48,6 @@ internal class DefaultAuthorizationManager : AuthorizationManager {
         return nil;
     }
     
-    func obtainAuthorizationHeader(completionHandler: MfpCompletionHandler?) {
-//        completionHandler(nil, nil)
-    }
     
     func getUserIdentity() -> AnyObject? {
         return nil;
