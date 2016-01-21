@@ -78,10 +78,10 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     public var allowRedirects : Bool = true
     
     // Public access required by BMSAnalytics framework
-    public internal(set) var startTime: NSTimeInterval = 0.0
+    public private(set) var startTime: NSTimeInterval = 0.0
     
     // Public access required by BMSAnalytics framework
-    public internal(set) var trackingId: String = ""
+    public private(set) var trackingId: String = ""
     
     
     

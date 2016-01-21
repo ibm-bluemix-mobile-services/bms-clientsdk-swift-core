@@ -56,7 +56,7 @@ public class Response {
         - parameter httpResponse: Response object returned from the NSURLSession request
         - parameter isRedirect:   True if the response requires a redirect
     */
-    internal init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool) {
+    public init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool) {
         
         self.isRedirect = isRedirect
         self.httpResponse = httpResponse
