@@ -46,12 +46,20 @@ public enum LogLevel: Int {
 }
 
 
+// Stores logs on the device's file system
+// This protocol is implemented in the BMSAnalytics framework
+public protocol LogSaverProtocol {
+    
+    func logMessageToFile(message: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]?)
+}
+
+
 // TODO: Documentation
 /**
-    Logger
- */
+Logger
+*/
 public class Logger {
-
+    
     
     // MARK: Properties (API)
     
@@ -67,13 +75,17 @@ public class Logger {
     /// If set to `false`, the internal BMSCore debug logs will not be displayed on the console.
     public static var sdkDebugLoggingEnabled: Bool = true
     
+    // Used to persist all logs to the device's file system
+    // This can only be set by the BMSAnalytics framework
+    public static var logSaver: LogSaverProtocol?
+    
     
     
     // MARK: Properties (internal/private)
     
     // Each logger instance is distinguished only by its "name" property
     internal static var loggerInstances: [String: Logger] = [:]
-
+    
     
     
     // MARK: Initializers
@@ -108,12 +120,12 @@ public class Logger {
     // MARK: Log methods (API)
     
     /**
-     Log at the Debug LogLevel.
-     
-     - parameter message: The message to log
-     
-     - Note: Do not supply values for the `file`, `function`, or `line` parameters. These parameters take default values to automatically record the file, function, and line in which this method was called.
-     */
+    Log at the Debug LogLevel.
+    
+    - parameter message: The message to log
+    
+    - Note: Do not supply values for the `file`, `function`, or `line` parameters. These parameters take default values to automatically record the file, function, and line in which this method was called.
+    */
     public func debug(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
         logMessage(message, level: LogLevel.Debug, calledFile: file, calledFunction: function, calledLineNumber: line)
@@ -167,11 +179,10 @@ public class Logger {
         logMessage(message, level: LogLevel.Fatal, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
     
-
     
-    // TODO: mark
-    // MARK:
-
+    
+    // MARK: Logging implementation
+    
     // This is the master function that handles all of the logging, including level checking, printing to console, and writing to file
     // All other log functions below this one are helpers for this function
     public func logMessage(message: String, level: LogLevel, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]? = nil) {
@@ -189,6 +200,8 @@ public class Logger {
             // Example: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
             Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
         }
+        
+        Logger.logSaver?.logMessageToFile(message, level: level, loggerName: self.name, calledFile: calledFile, calledFunction: calledFunction, calledLineNumber: calledLineNumber, additionalMetadata: additionalMetadata)
     }
     
     // Format: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
