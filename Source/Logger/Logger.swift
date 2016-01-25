@@ -544,12 +544,13 @@ public class Logger {
     public static func send(completionHandler userCallback: MfpCompletionHandler? = nil) {
 
         let logSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
-            if error == nil {
+            
+            if error == nil && response?.statusCode == 201 {
                 Logger.internalLogger.debug("Client logs successfully sent to the server.")
+                
+                deleteBufferFile(FILE_LOGGER_SEND)
                 // Remove the uncaught exception flag since the logs containing the exception(s) have just been sent to the server
                 NSUserDefaults.standardUserDefaults().setBool(false, forKey: TAG_UNCAUGHT_EXCEPTION)
-                deleteBufferFile(FILE_LOGGER_SEND)
-                Logger.isUncaughtExceptionDetected = false
             }
             else {
                 Logger.internalLogger.error("Request to send client logs has failed.")
@@ -585,9 +586,11 @@ public class Logger {
     
         // Internal completion handler - wraps around the user supplied completion handler (if supplied)
         let analyticsSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
-            if error != nil {
+            
+            if error == nil && response?.statusCode == 201 {
                 Analytics.logger.debug("Analytics data successfully sent to the server.")
-           deleteBufferFile(FILE_ANALYTICS_SEND)
+                
+                deleteBufferFile(FILE_ANALYTICS_SEND)
             }
             else {
                 Analytics.logger.error("Request to send analytics data to the server has failed.")
