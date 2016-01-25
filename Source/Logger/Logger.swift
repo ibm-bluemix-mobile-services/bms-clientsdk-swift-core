@@ -544,7 +544,7 @@ public class Logger {
     public static func send(completionHandler userCallback: MfpCompletionHandler? = nil) {
 
         let logSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
-            if error != nil {
+            if error == nil {
                 Logger.internalLogger.debug("Client logs successfully sent to the server.")
                 // Remove the uncaught exception flag since the logs containing the exception(s) have just been sent to the server
                 NSUserDefaults.standardUserDefaults().setBool(false, forKey: TAG_UNCAUGHT_EXCEPTION)
