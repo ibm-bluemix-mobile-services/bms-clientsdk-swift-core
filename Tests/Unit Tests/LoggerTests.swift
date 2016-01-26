@@ -640,14 +640,12 @@ class LoggerTests: XCTestCase {
         let fakePKG = "MYPKG"
         let API_KEY = "apikey"
         let APP_NAME = "myApp"
-        let HOST_NAME = "mfp-analytics-server"
-        let UPLOAD_PATH = "/imfmobileanalytics/v1/receiver/apps/"
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
         let bmsClient = BMSClient.sharedInstance
         bmsClient.initializeWithBluemixAppRoute("bluemix", bluemixAppGUID: "appID1", bluemixRegionSuffix: REGION_US_SOUTH)
         Analytics.initializeWithAppName("testAppName", apiKey: "testApiKey")
-        let url = "https://" + HOST_NAME + REGION_US_SOUTH + UPLOAD_PATH + bmsClient.bluemixAppGUID!
+        let url = "https://" + HOST_NAME + "." + REGION_US_SOUTH + UPLOAD_PATH
         
         Analytics.initializeWithAppName(APP_NAME, apiKey: API_KEY)
         
@@ -680,21 +678,13 @@ class LoggerTests: XCTestCase {
         loggerInstance.error("1 2 3 4")
         loggerInstance.fatal("StephenColbert")
         
-        let logs: String! =  try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
-        
-        let formattedLogs = "[\(logs)]"
-        
-        XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
-        
-        let (request, payload) = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
+        let request = Logger.buildLogSendRequest() { (response, error) -> Void in
         }!
         
         XCTAssertTrue(request.resourceUrl == url)
         XCTAssertTrue(request.headers == headers)
         XCTAssertNil(request.queryParameters)
         XCTAssertTrue(request.httpMethod == HttpMethod.POST)
-        
-        XCTAssertTrue(payload == formattedLogs)
     }
     
     func testBuildLogSendRequestAPIKeyEmptyStringFail(){
@@ -730,11 +720,11 @@ class LoggerTests: XCTestCase {
         loggerInstance.error("1 2 3 4")
         loggerInstance.fatal("StephenColbert")
         
-        let logs: String! =  try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
+        try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
         
         XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
-        let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
+        let request = Logger.buildLogSendRequest() { (response, error) -> Void in
         }
         
         XCTAssertNil(request)
@@ -795,10 +785,10 @@ class LoggerTests: XCTestCase {
         loggerInstance.error("1 2 3 4")
         loggerInstance.fatal("StephenColbert")
         
-        let logs: String! = try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
+        try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
         XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
-        let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
+        let request = Logger.buildLogSendRequest() { (response, error) -> Void in
                 XCTAssertNil(response)
                 XCTAssertNotNil(error)
         }
@@ -862,10 +852,10 @@ class LoggerTests: XCTestCase {
         loggerInstance.error("1 2 3 4")
         loggerInstance.fatal("StephenColbert")
         
-        let logs: String! = try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
+        try! Logger.getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
         XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
-        let request = Logger.buildLogSendRequest(logs) { (response, error) -> Void in
+        let request = Logger.buildLogSendRequest() { (response, error) -> Void in
             XCTAssertNil(response)
             XCTAssertNotNil(error)
         }

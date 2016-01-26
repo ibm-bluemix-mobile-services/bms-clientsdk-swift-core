@@ -159,7 +159,7 @@ public class Analytics {
             // There is no "identifierForVendor" property for Apple Watch, so we generate a random ID
             deviceId = Request.uniqueDeviceId
             model = "Apple Watch"
-            #elseif TARGET_OS_IOS
+        #elseif TARGET_OS_IOS
             let device = UIDevice.currentDevice()
             osVersion = device.systemVersion
             deviceId = device.identifierForVendor?.UUIDString as String
@@ -173,7 +173,9 @@ public class Analytics {
         requestMetadata["brand"] = "Apple"
         requestMetadata["osVersion"] = osVersion
         requestMetadata["model"] = model
-        requestMetadata["deviceID"] = deviceId
+        // TODO: Get the TARGET_OS_IOS availability check above working
+//        requestMetadata["deviceID"] = deviceId
+        requestMetadata["deviceID"] = "REPLACE ME WITH deviceId"
         requestMetadata["mfpAppName"] = Analytics.appName
         requestMetadata["appStoreLabel"] = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String ?? ""
         requestMetadata["appStoreId"] = NSBundle.mainBundle().bundleIdentifier ?? ""
