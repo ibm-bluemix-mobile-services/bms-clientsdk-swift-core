@@ -49,8 +49,8 @@ internal let TAG_MAX_STORE_SIZE = "loggerMaxFileSize"
 internal let DEFAULT_MAX_STORE_SIZE: UInt64 = 100000
 internal let DEFAULT_LOW_BOUND_FILE_SIZE = 10000
 
-internal let HOST_NAME = "mfp-analytics-server" 
-internal let UPLOAD_PATH =  "/imfmobileanalytics/v1/receiver/apps/"
+internal let HOST_NAME = "mfp-analytics-service"
+internal let UPLOAD_PATH = "/analytics-service/data/events/clientlogs/"
 
 internal let CONTENT_TYPE = "Content-Type"
 internal let TEXT_PLAIN_TYPE = "text/plain"

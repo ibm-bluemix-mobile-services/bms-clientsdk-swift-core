@@ -544,12 +544,13 @@ public class Logger {
     public static func send(completionHandler userCallback: MfpCompletionHandler? = nil) {
 
         let logSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
-            if error != nil {
+            
+            if error == nil && response?.statusCode == 201 {
                 Logger.internalLogger.debug("Client logs successfully sent to the server.")
+                
+                deleteBufferFile(FILE_LOGGER_SEND)
                 // Remove the uncaught exception flag since the logs containing the exception(s) have just been sent to the server
                 NSUserDefaults.standardUserDefaults().setBool(false, forKey: TAG_UNCAUGHT_EXCEPTION)
-                deleteBufferFile(FILE_LOGGER_SEND)
-                Logger.isUncaughtExceptionDetected = false
             }
             else {
                 Logger.internalLogger.error("Request to send client logs has failed.")
@@ -562,12 +563,12 @@ public class Logger {
         dispatch_async(Logger.sendLogsToServerQueue) { () -> Void in
             do {
                 let logsToSend: String? = try getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
-                if logsToSend != nil {
-                    if let (request, logPayload) = buildLogSendRequest(logsToSend!, withCallback: logSendCallback){
-                        // Everything went as expected, so send the logs!
-                        request.sendString(logPayload, withCompletionHandler: logSendCallback)
-                    }
+                if let logPayload = logsToSend, request = buildLogSendRequest(logSendCallback) {
                     
+                    // Everything went as expected, so send the logs!
+                    let logPayloadJson = ["__logdata": logPayload]
+                    let logPayloadData = try NSJSONSerialization.dataWithJSONObject(logPayloadJson, options: [])
+                    request.sendData(logPayloadData, withCompletionHandler: logSendCallback)
                 }
                 else {
                     Logger.internalLogger.info("There are no logs to send.")
@@ -585,9 +586,11 @@ public class Logger {
     
         // Internal completion handler - wraps around the user supplied completion handler (if supplied)
         let analyticsSendCallback: MfpCompletionHandler = { (response: Response?, error: NSError?) in
-            if error != nil {
+            
+            if error == nil && response?.statusCode == 201 {
                 Analytics.logger.debug("Analytics data successfully sent to the server.")
-           deleteBufferFile(FILE_ANALYTICS_SEND)
+                
+                deleteBufferFile(FILE_ANALYTICS_SEND)
             }
             else {
                 Analytics.logger.error("Request to send analytics data to the server has failed.")
@@ -600,11 +603,12 @@ public class Logger {
         dispatch_async(Logger.sendAnalyticsToServerQueue) { () -> Void in
             do {
                 let logsToSend: String? = try getLogs(fileName: FILE_ANALYTICS_LOGS, overflowFileName:FILE_ANALYTICS_OVERFLOW, bufferFileName: FILE_ANALYTICS_SEND)
-                if logsToSend != nil {
-                    if let (request, logPayload) = buildLogSendRequest(logsToSend!, withCallback: analyticsSendCallback){
-                        request.sendString(logPayload, withCompletionHandler: analyticsSendCallback)
-                    }
-
+                if let logPayload = logsToSend, request = buildLogSendRequest(analyticsSendCallback) {
+                    
+                    // Everything went as expected, so send the logs!
+                    let logPayloadJson = ["__logdata": logPayload]
+                    let logPayloadData = try NSJSONSerialization.dataWithJSONObject(logPayloadJson, options: [])
+                    request.sendData(logPayloadData, withCompletionHandler: analyticsSendCallback)
                 }
                 else {
                     Analytics.logger.info("There are no analytics data to send.")
@@ -618,12 +622,13 @@ public class Logger {
     
     
     // Build the Request object that will be used to send the logs to the server
-    internal static func buildLogSendRequest(logs: String, withCallback callback: MfpCompletionHandler) -> (MFPRequest, String)? {
+    internal static func buildLogSendRequest(callback: MfpCompletionHandler) -> MFPRequest? {
         
         let bmsClient = BMSClient.sharedInstance
         var headers = ["Content-Type": "application/json"]
     
-        guard let appGuid = bmsClient.bluemixAppGUID else {
+        // TODO: This property check may not be necessary. We only need the BMSClient.bluemixRegionSuffix property
+        guard bmsClient.bluemixAppGUID != nil else {
             returnInitializationError("BMSClient", missingValue: "bluemixAppGUID", callback: callback)
             return nil
         }
@@ -635,12 +640,9 @@ public class Logger {
         
         headers[API_ID_HEADER] = Analytics.apiKey!
     
-        let logUploaderUrl = BMSClient.defaultProtocol + "://" + HOST_NAME + bmsClient.bluemixRegionSuffix! + UPLOAD_PATH + appGuid
+        let logUploaderUrl = BMSClient.defaultProtocol + "://" + HOST_NAME + "." + bmsClient.bluemixRegionSuffix! + UPLOAD_PATH
         
-        let logPayload = "[" + logs + "]"
-        
-        let request = MFPRequest(url: logUploaderUrl, headers: headers, queryParameters: nil, method: HttpMethod.POST)
-        return (request, logPayload)
+        return MFPRequest(url: logUploaderUrl, headers: headers, queryParameters: nil, method: HttpMethod.POST)
     }
     
     
