@@ -35,7 +35,6 @@ public class Request: MFPRequest {
         
         let myCallback : MfpCompletionHandler = {(response: Response?, error:NSError?) in
             if error == nil {
-                print (2)
                 if let unWrappedResponse = response {
                     if BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) {
                         if self.oauthFailCounter++ < 2 {
@@ -51,9 +50,14 @@ public class Request: MFPRequest {
                             }
                             authManager.obtainAuthorization(authCallback)
                         }
+                        else {
+                            callback?(response, error)
+                        }
+                    } else {
+                        callback?(response, error)
                     }
                 } else {
-                    //send failure?
+                    callback?(response, error)
                 }
                 
             }

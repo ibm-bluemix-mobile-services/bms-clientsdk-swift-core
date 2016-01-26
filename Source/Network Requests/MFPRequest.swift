@@ -127,7 +127,6 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
 //        networkSession = NSURLSession(configuration: configuration)
         networkRequest = NSMutableURLRequest()
         super.init()
-        configuration.requestCachePolicy = NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData
         MFPRequest.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
     
