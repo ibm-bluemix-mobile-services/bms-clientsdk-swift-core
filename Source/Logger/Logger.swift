@@ -738,11 +738,9 @@ public class Logger {
     // TODO: Rename to delete any file
     internal static func deleteBufferFile(bufferFile: String) {
         
-        let filePath = Logger.logsDocumentPath + bufferFile
-        
-        if Logger.fileManager.fileExistsAtPath(filePath) && Logger.fileManager.isDeletableFileAtPath(filePath) {
+        if Logger.fileManager.fileExistsAtPath(bufferFile) && Logger.fileManager.isDeletableFileAtPath(bufferFile) {
             do {
-                try Logger.fileManager.removeItemAtPath(filePath)
+                try Logger.fileManager.removeItemAtPath(bufferFile)
             }
             catch let error {
                 Logger.internalLogger.error("Failed to delete log file \(bufferFile) after sending. Error: \(error)")

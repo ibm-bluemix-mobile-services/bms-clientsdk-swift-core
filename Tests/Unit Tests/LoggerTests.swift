@@ -940,19 +940,8 @@ class LoggerTests: XCTestCase {
         }
         
         Logger.deleteBufferFile(pathToBuffer)
-        
-        let formattedContents = try! String(contentsOfFile: pathToFile, encoding: NSUTF8StringEncoding)
-        let fileContents = "[\(formattedContents)]"
-        let logDict : NSData = fileContents.dataUsingEncoding(NSUTF8StringEncoding)!
-        let jsonDict: AnyObject? = try! NSJSONSerialization.JSONObjectWithData(logDict, options:NSJSONReadingOptions.MutableContainers)
-        
     
-        let error = jsonDict![0]
-        XCTAssertNotNil(error[TAG_MSG])
-        XCTAssertTrue(error[TAG_PKG] == fakePKG)
-        XCTAssertTrue(error[TAG_TIMESTAMP] != nil)
-        XCTAssertTrue(error[TAG_LEVEL] == "ERROR")
-        
+        XCTAssertFalse(NSFileManager().fileExistsAtPath(pathToBuffer))
     }
     
     func testDeleteBufferFile(){
