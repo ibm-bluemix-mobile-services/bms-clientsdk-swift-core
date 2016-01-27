@@ -93,7 +93,7 @@ public class Logger {
     
     /// If set to `false`, the internal BMSCore debug logs will not be displayed on the console.
     /// However, the logs will continue to be written to file provided that `logStoreEnabled` is `true` and the `logLevelFilter` property is at the `Debug` level.
-    public static var sdkDebugLoggingEnabled: Bool = false
+    public static var sdkDebugLoggingEnabled: Bool = true
     
     /// True if the app crashed recently due to an uncaught exception.
     /// This property will be set back to `false` if the logs are sent to the server.
@@ -562,16 +562,20 @@ public class Logger {
         // Use a serial queue to ensure that the same logs do not get sent more than once
         dispatch_async(Logger.sendLogsToServerQueue) { () -> Void in
             do {
+                // Gather the logs and put them in a JSON object
                 let logsToSend: String? = try getLogs(fileName: FILE_LOGGER_LOGS, overflowFileName: FILE_LOGGER_OVERFLOW, bufferFileName: FILE_LOGGER_SEND)
-                if let logPayload = logsToSend, request = buildLogSendRequest(logSendCallback) {
-                    
-                    // Everything went as expected, so send the logs!
+                var logPayloadData = try NSJSONSerialization.dataWithJSONObject([], options: [])
+                if let logPayload = logsToSend {
                     let logPayloadJson = ["__logdata": logPayload]
-                    let logPayloadData = try NSJSONSerialization.dataWithJSONObject(logPayloadJson, options: [])
-                    request.sendData(logPayloadData, withCompletionHandler: logSendCallback)
+                    logPayloadData = try NSJSONSerialization.dataWithJSONObject(logPayloadJson, options: [])
                 }
                 else {
                     Logger.internalLogger.info("There are no logs to send.")
+                }
+                
+                // Send the request, even if there are no logs to send (to keep track of device info)
+                if let request = buildLogSendRequest(logSendCallback) {
+                    request.sendData(logPayloadData, withCompletionHandler: logSendCallback)
                 }
             }
             catch let error as NSError {
@@ -602,16 +606,20 @@ public class Logger {
         // Use a serial queue to ensure that the same analytics data do not get sent more than once
         dispatch_async(Logger.sendAnalyticsToServerQueue) { () -> Void in
             do {
-                let logsToSend: String? = try getLogs(fileName: FILE_ANALYTICS_LOGS, overflowFileName:FILE_ANALYTICS_OVERFLOW, bufferFileName: FILE_ANALYTICS_SEND)
-                if let logPayload = logsToSend, request = buildLogSendRequest(analyticsSendCallback) {
-                    
-                    // Everything went as expected, so send the logs!
+                // Gather the logs and put them in a JSON object
+                let logsToSend: String? = try getLogs(fileName: FILE_ANALYTICS_LOGS, overflowFileName: FILE_ANALYTICS_OVERFLOW, bufferFileName: FILE_ANALYTICS_SEND)
+                var logPayloadData = try NSJSONSerialization.dataWithJSONObject([], options: [])
+                if let logPayload = logsToSend {
                     let logPayloadJson = ["__logdata": logPayload]
-                    let logPayloadData = try NSJSONSerialization.dataWithJSONObject(logPayloadJson, options: [])
-                    request.sendData(logPayloadData, withCompletionHandler: analyticsSendCallback)
+                    logPayloadData = try NSJSONSerialization.dataWithJSONObject(logPayloadJson, options: [])
                 }
                 else {
                     Analytics.logger.info("There are no analytics data to send.")
+                }
+                
+                // Send the request, even if there are no logs to send (to keep track of device info)
+                if let request = buildLogSendRequest(analyticsSendCallback) {
+                    request.sendData(logPayloadData, withCompletionHandler: analyticsSendCallback)
                 }
             }
             catch let error as NSError {
@@ -727,11 +735,14 @@ public class Logger {
     
     
     // The buffer file is typically the one used for storing logs that will be sent to the server
+    // TODO: Rename to delete any file
     internal static func deleteBufferFile(bufferFile: String) {
         
-        if Logger.fileManager.isDeletableFileAtPath(bufferFile) {
+        let filePath = Logger.logsDocumentPath + bufferFile
+        
+        if Logger.fileManager.fileExistsAtPath(filePath) && Logger.fileManager.isDeletableFileAtPath(filePath) {
             do {
-                try Logger.fileManager.removeItemAtPath(bufferFile)
+                try Logger.fileManager.removeItemAtPath(filePath)
             }
             catch let error {
                 Logger.internalLogger.error("Failed to delete log file \(bufferFile) after sending. Error: \(error)")
