@@ -93,7 +93,7 @@ public class Logger {
     
     /// If set to `false`, the internal BMSCore debug logs will not be displayed on the console.
     /// However, the logs will continue to be written to file provided that `logStoreEnabled` is `true` and the `logLevelFilter` property is at the `Debug` level.
-    public static var sdkDebugLoggingEnabled: Bool = true
+    public static var sdkDebugLoggingEnabled: Bool = false
     
     /// True if the app crashed recently due to an uncaught exception.
     /// This property will be set back to `false` if the logs are sent to the server.
