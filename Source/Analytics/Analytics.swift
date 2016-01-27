@@ -101,13 +101,12 @@ public class Analytics {
             logger.warn("The previous session did not end properly so the session will not be recorded. This new session will override the previous session.")
         }
         
-        let startTime = NSDate.timeIntervalSinceReferenceDate() * 1000 // milliseconds
+        let startTime = Int(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
         
         lifecycleEvents[KEY_METADATA_CATEGORY] = TAG_CATEGORY_EVENT
         lifecycleEvents[KEY_METADATA_TYPE] = TAG_SESSION
         lifecycleEvents[KEY_EVENT_START_TIME] = startTime
-    
-        logger.analytics(Analytics.lifecycleEvents)
+        lifecycleEvents[KEY_METADATA_SESSIONID] = NSUUID().UUIDString
     }
     
     
@@ -124,10 +123,18 @@ public class Analytics {
         }
         
         // If the guard statement above passes, this if statement should always succeed
-        if let startTime = lifecycleEvents[KEY_EVENT_START_TIME] as? NSTimeInterval {
-            let sessionDuration = NSDate.timeIntervalSinceReferenceDate() - startTime
+        if let startTime = lifecycleEvents[KEY_EVENT_START_TIME] as? Int {
+            let sessionDuration = Int(NSDate.timeIntervalSinceReferenceDate() * 1000) - startTime
             lifecycleEvents[KEY_METADATA_DURATION] = sessionDuration
             lifecycleEvents.removeValueForKey(KEY_EVENT_START_TIME)
+            
+            // Let the Analytics service know how the app was last closed
+            if Logger.isUncaughtExceptionDetected {
+                lifecycleEvents[KEY_METADATA_CLOSEDBY] = AppClosedBy.CRASH.rawValue
+            }
+            else {
+                lifecycleEvents[KEY_METADATA_CLOSEDBY] = AppClosedBy.USER.rawValue
+            }
             
             logger.analytics(lifecycleEvents)
         }
@@ -223,6 +230,13 @@ public class Analytics {
         return responseMetadata
     }
     
+}
+
+// How the last app session ended
+private enum AppClosedBy: String {
+    
+    case USER
+    case CRASH
 }
 
 
