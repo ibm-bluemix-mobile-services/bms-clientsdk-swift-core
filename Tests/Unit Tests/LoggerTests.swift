@@ -902,7 +902,7 @@ class LoggerTests: XCTestCase {
         }
     }
     
-    func testDeleteBufferFileFail(){
+    func testDeleteFileFail(){
         let fakePKG = "mfpsdk.logger"
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
@@ -939,12 +939,12 @@ class LoggerTests: XCTestCase {
             
         }
         
-        Logger.deleteBufferFile(pathToBuffer)
+        Logger.deleteFile(FILE_LOGGER_SEND)
     
         XCTAssertFalse(NSFileManager().fileExistsAtPath(pathToBuffer))
     }
     
-    func testDeleteBufferFile(){
+    func testDeleteFile(){
         let fakePKG = "MYPKG"
         let pathToFile = Logger.logsDocumentPath + FILE_LOGGER_LOGS
         let pathToBuffer = Logger.logsDocumentPath + FILE_LOGGER_SEND
@@ -978,7 +978,7 @@ class LoggerTests: XCTestCase {
         
         XCTAssertTrue(NSFileManager().fileExistsAtPath(pathToBuffer))
         
-        Logger.deleteBufferFile(pathToBuffer)
+        Logger.deleteFile(FILE_LOGGER_SEND)
         
         XCTAssertFalse(NSFileManager().fileExistsAtPath(pathToBuffer))
     }

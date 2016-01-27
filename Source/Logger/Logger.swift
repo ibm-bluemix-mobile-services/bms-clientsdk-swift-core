@@ -548,7 +548,7 @@ public class Logger {
             if error == nil && response?.statusCode == 201 {
                 Logger.internalLogger.debug("Client logs successfully sent to the server.")
                 
-                deleteBufferFile(FILE_LOGGER_SEND)
+                deleteFile(FILE_LOGGER_SEND)
                 // Remove the uncaught exception flag since the logs containing the exception(s) have just been sent to the server
                 NSUserDefaults.standardUserDefaults().setBool(false, forKey: TAG_UNCAUGHT_EXCEPTION)
             }
@@ -594,7 +594,7 @@ public class Logger {
             if error == nil && response?.statusCode == 201 {
                 Analytics.logger.debug("Analytics data successfully sent to the server.")
                 
-                deleteBufferFile(FILE_ANALYTICS_SEND)
+                deleteFile(FILE_ANALYTICS_SEND)
             }
             else {
                 Analytics.logger.error("Request to send analytics data to the server has failed.")
@@ -734,16 +734,17 @@ public class Logger {
     }
     
     
-    // The buffer file is typically the one used for storing logs that will be sent to the server
-    // TODO: Rename to delete any file
-    internal static func deleteBufferFile(bufferFile: String) {
+    // For deleting files where only the file name is supplied, not the full path
+    internal static func deleteFile(fileName: String) {
         
-        if Logger.fileManager.fileExistsAtPath(bufferFile) && Logger.fileManager.isDeletableFileAtPath(bufferFile) {
+        let pathToFile = Logger.logsDocumentPath + fileName
+        
+        if Logger.fileManager.fileExistsAtPath(pathToFile) && Logger.fileManager.isDeletableFileAtPath(pathToFile) {
             do {
-                try Logger.fileManager.removeItemAtPath(bufferFile)
+                try Logger.fileManager.removeItemAtPath(pathToFile)
             }
             catch let error {
-                Logger.internalLogger.error("Failed to delete log file \(bufferFile) after sending. Error: \(error)")
+                Logger.internalLogger.error("Failed to delete log file \(fileName) after sending. Error: \(error)")
             }
         }
     }
