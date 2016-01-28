@@ -177,4 +177,15 @@ class AnalyticsTests: XCTestCase {
         XCTAssert(responseBytes == 36)
     }
     
+    // Make sure we get the expected info for an iOS simulator
+    func testGetDeviceInfoForiOS() {
+        
+        let (osVersion, model, deviceId) = Analytics.getDeviceInfo()
+        let device = UIDevice.currentDevice()
+        
+        XCTAssertEqual(osVersion, device.systemVersion)
+        XCTAssertEqual(model, "Simulator")
+        XCTAssertEqual(deviceId, device.identifierForVendor?.UUIDString)
+    }
+    
 }

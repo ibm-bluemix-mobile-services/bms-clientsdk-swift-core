@@ -156,22 +156,7 @@ public class Analytics {
     // This data gets added to a Request header
     internal static func generateOutboundRequestMetadata() -> String? {
         
-        // Device info
-        var osVersion = ""
-        var model = ""
-        var deviceId = ""
-        #if TARGET_OS_WATCH
-            let device = WKInterfaceDevice.currentDevice()
-            osVersion = device.systemVersion
-            // There is no "identifierForVendor" property for Apple Watch, so we generate a random ID
-            deviceId = Request.uniqueDeviceId
-            model = "Apple Watch"
-        #elseif TARGET_OS_IOS
-            let device = UIDevice.currentDevice()
-            osVersion = device.systemVersion
-            deviceId = device.identifierForVendor?.UUIDString as String
-            model = device.modelName
-        #endif
+        let (osVersion, model, deviceId): (String, String, String) = getDeviceInfo()
         
         // All of this data will go in a header for the request
         var requestMetadata: [String: String] = [:]
@@ -180,9 +165,7 @@ public class Analytics {
         requestMetadata["brand"] = "Apple"
         requestMetadata["osVersion"] = osVersion
         requestMetadata["model"] = model
-        // TODO: Get the TARGET_OS_IOS availability check above working
-//        requestMetadata["deviceID"] = deviceId
-        requestMetadata["deviceID"] = "REPLACE ME WITH deviceId"
+        requestMetadata["deviceID"] = deviceId
         requestMetadata["mfpAppName"] = Analytics.appName
         requestMetadata["appStoreLabel"] = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String ?? ""
         requestMetadata["appStoreId"] = NSBundle.mainBundle().bundleIdentifier ?? ""
@@ -228,6 +211,29 @@ public class Analytics {
         }
         
         return responseMetadata
+    }
+    
+    // Get information about the device running the app
+    internal static func getDeviceInfo() -> (String, String, String) {
+        
+        var osVersion = ""
+        var model = ""
+        var deviceId = ""
+        
+        #if os(iOS)
+            let device = UIDevice.currentDevice()
+            osVersion = device.systemVersion
+            deviceId = device.identifierForVendor?.UUIDString ?? "unknown"
+            model = device.modelName
+        #elseif os(watchOS)
+            let device = WKInterfaceDevice.currentDevice()
+            osVersion = device.systemVersion
+            // There is no "identifierForVendor" property for Apple Watch, so we generate a random ID
+            deviceId = Request.uniqueDeviceId
+            model = "Apple Watch"
+        #endif
+        
+        return (osVersion, model, deviceId)
     }
     
 }
