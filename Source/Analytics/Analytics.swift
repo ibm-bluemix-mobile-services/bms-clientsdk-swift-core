@@ -38,6 +38,8 @@ public class Analytics {
     // An app session is roughly defined as the time during which an app is being used (from becoming active to going inactive)
     internal static var lifecycleEvents: [String: AnyObject] = [:]
     
+    internal static var startTime: Int64 = 0
+    
     
     
     // MARK: Methods (public)
@@ -102,10 +104,9 @@ public class Analytics {
             logger.warn("The previous session did not end properly so the session will not be recorded. This new session will override the previous session.")
         }
         
-        let startTime = Int(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
+        Analytics.startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
         
         lifecycleEvents[KEY_METADATA_CATEGORY] = TAG_CATEGORY_APP_SESSION
-        lifecycleEvents[KEY_EVENT_START_TIME] = startTime
         lifecycleEvents[KEY_METADATA_SESSIONID] = NSUUID().UUIDString
     }
     
@@ -117,29 +118,26 @@ public class Analytics {
     dynamic static internal func logSessionEnd() {
         
         // logSessionStart() must have been called first so that we can get the session start time
-        guard !lifecycleEvents.isEmpty else {
+        guard !lifecycleEvents.isEmpty && Analytics.startTime > 0 else {
             logger.warn("The current app session ended before the start event was triggered, so the session cannot be recorded.")
             return
         }
         
-        // If the guard statement above passes, this if statement should always succeed
-        if let startTime = lifecycleEvents[KEY_EVENT_START_TIME] as? Int {
-            let sessionDuration = Int(NSDate.timeIntervalSinceReferenceDate() * 1000) - startTime
-            lifecycleEvents[KEY_METADATA_DURATION] = sessionDuration
-            lifecycleEvents.removeValueForKey(KEY_EVENT_START_TIME)
-            
-            // Let the Analytics service know how the app was last closed
-            if Logger.isUncaughtExceptionDetected {
-                lifecycleEvents[KEY_METADATA_CLOSEDBY] = AppClosedBy.CRASH.rawValue
-            }
-            else {
-                lifecycleEvents[KEY_METADATA_CLOSEDBY] = AppClosedBy.USER.rawValue
-            }
-            
-            logger.analytics(lifecycleEvents)
+        let sessionDuration = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) - Analytics.startTime
+        lifecycleEvents[KEY_METADATA_DURATION] = Int(sessionDuration)
+        
+        // Let the Analytics service know how the app was last closed
+        if Logger.isUncaughtExceptionDetected {
+            lifecycleEvents[KEY_METADATA_CLOSEDBY] = AppClosedBy.CRASH.rawValue
+        }
+        else {
+            lifecycleEvents[KEY_METADATA_CLOSEDBY] = AppClosedBy.USER.rawValue
         }
         
+        logger.analytics(lifecycleEvents)
+        
         lifecycleEvents = [:]
+        Analytics.startTime = 0
     }
     
     
