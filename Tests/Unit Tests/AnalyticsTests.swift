@@ -91,7 +91,7 @@ class AnalyticsTests: XCTestCase {
         
         Analytics.logSessionEnd()
         
-        XCTAssertNil(Analytics.lifecycleEvents[TAG_SESSION])
+        XCTAssertNil(Analytics.lifecycleEvents[KEY_EVENT_START_TIME])
         
         Analytics.logSessionStart()
         

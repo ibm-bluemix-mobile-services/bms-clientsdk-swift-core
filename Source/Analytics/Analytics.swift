@@ -103,8 +103,7 @@ public class Analytics {
         
         let startTime = Int(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
         
-        lifecycleEvents[KEY_METADATA_CATEGORY] = TAG_CATEGORY_EVENT
-        lifecycleEvents[KEY_METADATA_TYPE] = TAG_SESSION
+        lifecycleEvents[KEY_METADATA_CATEGORY] = TAG_CATEGORY_APP_SESSION
         lifecycleEvents[KEY_EVENT_START_TIME] = startTime
         lifecycleEvents[KEY_METADATA_SESSIONID] = NSUUID().UUIDString
     }
