@@ -47,11 +47,12 @@ public class Analytics {
     
         This method must be called before sending `Analytics` or `Logger` logs.
         
-        - parameter appName:  The analytics data
+        - parameter appName:  The application name.  Should be consistent across platforms (e.g. Android and iOS).
         - parameter apiKey:   A unique ID used to authenticate with the MFP analytics server
     */
-    // TODO: Add parameter for analytics events
     public static func initializeWithAppName(appName: String, apiKey: String) {
+     
+        // TODO: Add parameter for analytics events
         
         // Any required properties here should be checked for initialization in the private initializer
         if !appName.isEmpty {
