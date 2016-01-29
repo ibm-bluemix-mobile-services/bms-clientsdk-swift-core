@@ -116,10 +116,7 @@ class AnalyticsTests: XCTestCase {
     
     /**
         1) Call logSessionEnd(). This should have no effect since logSessionStart() was never called.
-        2) Call logSessionStart() again. This should cause Analytics.lifecycleEvents to be updated,
-            - The original start time (KEY_EVENT_START_TIME) should be replaced with the new start time.
-            - The session (TAG_SESSION) is a unique ID that should contain a different value each time logSessionStart()
-                is called.
+        2) Call logSessionStart().
     */
     func testlogSessionEndBeforeLogSessionStart() {
         
@@ -196,7 +193,7 @@ class AnalyticsTests: XCTestCase {
     // Make sure we get the expected info for an iOS simulator
     func testGetDeviceInfoForiOS() {
         
-        let (osVersion, model, deviceId) = Analytics.getDeviceInfo()
+        let (osVersion, model, deviceId) = Analytics.getiOSDeviceInfo()
         let device = UIDevice.currentDevice()
         
         XCTAssertEqual(osVersion, device.systemVersion)

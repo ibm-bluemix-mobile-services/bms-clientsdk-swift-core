@@ -41,4 +41,17 @@ public extension Analytics {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
     }
     
+    
+    internal static func getiOSDeviceInfo() -> (String, String, String) {
+        
+        var osVersion = "", model = "", deviceId = ""
+        
+        let device = UIDevice.currentDevice()
+        osVersion = device.systemVersion
+        deviceId = device.identifierForVendor?.UUIDString ?? "unknown"
+        model = device.modelName
+        
+        return (osVersion, model, deviceId)
+    }
+    
 }

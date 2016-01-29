@@ -154,7 +154,13 @@ public class Analytics {
     // This data gets added to a Request header
     internal static func generateOutboundRequestMetadata() -> String? {
         
-        let (osVersion, model, deviceId): (String, String, String) = getDeviceInfo()
+        var osVersion = "", model = "", deviceId = ""
+        
+        #if os(iOS)
+            (osVersion, model, deviceId) = Analytics.getiOSDeviceInfo()
+        #elseif os(watchOS)
+            (osVersion, model, deviceId) = Analytics.getWatchOSDeviceInfo()
+        #endif
         
         // All of this data will go in a header for the request
         var requestMetadata: [String: String] = [:]
@@ -211,30 +217,8 @@ public class Analytics {
         return responseMetadata
     }
     
-    // Get information about the device running the app
-    internal static func getDeviceInfo() -> (String, String, String) {
-        
-        var osVersion = ""
-        var model = ""
-        var deviceId = ""
-        
-        #if os(iOS)
-            let device = UIDevice.currentDevice()
-            osVersion = device.systemVersion
-            deviceId = device.identifierForVendor?.UUIDString ?? "unknown"
-            model = device.modelName
-        #elseif os(watchOS)
-            let device = WKInterfaceDevice.currentDevice()
-            osVersion = device.systemVersion
-            // There is no "identifierForVendor" property for Apple Watch, so we generate a random ID
-            deviceId = Request.uniqueDeviceId
-            model = "Apple Watch"
-        #endif
-        
-        return (osVersion, model, deviceId)
-    }
-    
 }
+
 
 // How the last app session ended
 private enum AppClosedBy: String {
