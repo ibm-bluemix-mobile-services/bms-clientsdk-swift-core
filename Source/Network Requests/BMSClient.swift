@@ -73,11 +73,14 @@ public class BMSClient: MFPClient {
         The required intializer for the `BMSClient` class.
     
         Sets the base URL for the authorization server.
+    
+        - Note: The `backendRoute` and `backendGUID` parameters are not required to use the `BMSAnalytics` framework.
 
-        - parameter backendRoute: Specifies the base URL for the authorization server
-        - parameter backendGUID:  Specifies the GUID of the Bluemix application
+        - parameter backendRoute:           The base URL for the authorization server
+        - parameter backendGUID:            The GUID of the Bluemix application
+        - parameter bluemixRegionSuffix:    The region where your Bluemix application is hosted
      */
-    public func initializeWithBluemixAppRoute(bluemixAppRoute: String, bluemixAppGUID: String, bluemixRegionSuffix: String) {
+    public func initializeWithBluemixAppRoute(bluemixAppRoute: String?, bluemixAppGUID: String?, bluemixRegionSuffix: String) {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
         self.bluemixRegionSuffix = bluemixRegionSuffix

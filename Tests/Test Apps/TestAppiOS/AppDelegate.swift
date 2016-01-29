@@ -24,11 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         let myBMSClient = BMSClient.sharedInstance
-        myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "", bluemixRegionSuffix: REGION_US_SOUTH)
+        // REPLACE WITH REAL APP ROUTE AND GUID
+        myBMSClient.initializeWithBluemixAppRoute("https://example.mybluemix.net", bluemixAppGUID: "1234", bluemixRegionSuffix: REGION_US_SOUTH)
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
         
-        // TODO: Get a real apiKey from Bluemix app
-        Analytics.initializeWithAppName("TestAppiOS", apiKey: "REPLACE WITH ACTUAL API KEY")
+        // REPLACE WITH REAL API KEY
+        Analytics.initializeWithAppName("TestAppiOS", apiKey: "1234")
         
         Analytics.startRecordingApplicationLifecycle()
         

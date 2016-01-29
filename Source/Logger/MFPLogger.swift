@@ -73,7 +73,7 @@ public class Logger {
     public static var logLevelFilter: LogLevel = LogLevel.Debug
     
     /// If set to `false`, the internal BMSCore debug logs will not be displayed on the console.
-    public static var sdkDebugLoggingEnabled: Bool = true
+    public static var sdkDebugLoggingEnabled: Bool = false
     
     // Used to persist all logs to the device's file system
     // This can only be set by the BMSAnalytics framework
