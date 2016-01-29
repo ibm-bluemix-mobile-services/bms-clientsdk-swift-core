@@ -104,13 +104,18 @@ class AnalyticsTests: XCTestCase {
         XCTAssertTrue(Analytics.lifecycleEvents.isEmpty)
         XCTAssertEqual(Analytics.startTime, 0)
         
-        Analytics.logSessionStart()
+        // Need a little time delay so that the first and second sessions don't have the same start time
+        let timeDelay = dispatch_time(DISPATCH_TIME_NOW, 1)
+        dispatch_after(timeDelay, dispatch_get_main_queue()) { () -> Void in
         
-        let secondSessionStartTime = Analytics.startTime
-        let secondSessionId = Analytics.lifecycleEvents[KEY_METADATA_SESSIONID] as! String
+            Analytics.logSessionStart()
         
-        XCTAssertTrue(secondSessionStartTime > firstSessionStartTime)
-        XCTAssertNotEqual(firstSessionId, secondSessionId)
+            let secondSessionStartTime = Analytics.startTime
+            let secondSessionId = Analytics.lifecycleEvents[KEY_METADATA_SESSIONID] as! String
+        
+            XCTAssertTrue(secondSessionStartTime > firstSessionStartTime)
+            XCTAssertNotEqual(firstSessionId, secondSessionId)
+        }
     }
     
     
@@ -163,7 +168,7 @@ class AnalyticsTests: XCTestCase {
     func testGenerateInboundResponseMetadata() {
         
         let requestUrl = "http://example.com"
-        let request = Request(url: requestUrl, headers: nil, queryParameters: nil)
+        let request = MFPRequest(url: requestUrl, headers: nil, queryParameters: nil)
         request.startTime = NSDate.timeIntervalSinceReferenceDate()
         request.trackingId = NSUUID().UUIDString
         request.sendWithCompletionHandler(nil)
