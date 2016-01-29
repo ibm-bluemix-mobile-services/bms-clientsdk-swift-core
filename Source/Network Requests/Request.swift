@@ -15,6 +15,14 @@
 import Foundation
 
 public class Request: MFPRequest {
+    
+    private var oauthFailCounter = 0
+    private var savedRequestBody: NSData?
+    
+    public init(url: String, method: HttpMethod) {
+        super.init(url: url, headers: nil, queryParameters:nil, method: method)
+    }
+    
     public override func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
         
         let authManager: AuthorizationManager = BMSClient.sharedInstance.sharedAuthorizationManager
@@ -23,17 +31,42 @@ public class Request: MFPRequest {
             self.headers["Authorization"] = authHeader
         }
         
-        //TODO: ilan - fix
-        func processResponse(response: Response?, error: NSError?) {
-//            if (authManager.isOAuthError(response)) {
-//                authManager.obtainAuthorizationHeader({
-//                    (response: Response?, error: NSError?) in (response != nil) ? self.sendWithCompletionHandler(callback) : callback?(response, error)
-//                });
-//            } else {
-//                callback?(response, error)
-//            }
-        }
+        savedRequestBody = requestBody
         
-        super.sendWithCompletionHandler(processResponse)
+        let myCallback : MfpCompletionHandler = {(response: Response?, error:NSError?) in
+            if error == nil {
+                if let unWrappedResponse = response {
+                    if BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) {
+                        if self.oauthFailCounter++ < 2 {
+                            let authCallback: MfpCompletionHandler = {(response: Response?, error:NSError?) in
+                                if error == nil {
+                                    if let myRequestBody = self.requestBody {
+                                        self.sendData(myRequestBody, withCompletionHandler: nil)
+                                    }
+                                    else {                                   
+                                        self.sendWithCompletionHandler(callback)
+                                    }
+                                }
+                            }
+                            authManager.obtainAuthorization(authCallback)
+                        }
+                        else {
+                            callback?(response, error)
+                        }
+                    } else {
+                        callback?(response, error)
+                    }
+                } else {
+                    callback?(response, error)
+                }
+                
+            }
+            else {
+                callback?(response, error)
+            }
+            
+            
+        }
+        super.sendWithCompletionHandler(myCallback)
     }
 }
