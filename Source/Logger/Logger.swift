@@ -635,9 +635,9 @@ public class Logger {
         let bmsClient = BMSClient.sharedInstance
         var headers = ["Content-Type": "application/json"]
     
-        // TODO: This property check may not be necessary. We only need the BMSClient.bluemixRegionSuffix property
-        guard bmsClient.bluemixAppGUID != nil else {
-            returnInitializationError("BMSClient", missingValue: "bluemixAppGUID", callback: callback)
+        // Only the region is required to communicate with the Analytics service. App route and GUID are not required.
+        guard bmsClient.bluemixRegionSuffix != nil && bmsClient.bluemixRegionSuffix != "" else {
+            returnInitializationError("BMSClient", missingValue: "bluemixRegionSuffix", callback: callback)
             return nil
         }
         

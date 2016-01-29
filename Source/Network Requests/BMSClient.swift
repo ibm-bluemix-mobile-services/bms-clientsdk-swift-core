@@ -89,11 +89,7 @@ public class BMSClient: MFPClient {
 // For unit testing only
 internal extension BMSClient {
     
-    internal func uninitializeBluemixAppRoute() {
-        self.bluemixAppRoute = nil
-    }
-    
-    internal func uninitalizeBluemixAppGUID(){
-        self.bluemixAppGUID = nil
+    internal func uninitializeBluemixRegionSuffix() {
+        self.bluemixRegionSuffix = nil
     }
 }
