@@ -189,7 +189,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
-    func sendData(requestBody: NSData, withCompletionHandler callback: MfpCompletionHandler?) {
+    public func sendData(requestBody: NSData, withCompletionHandler callback: MfpCompletionHandler?) {
         
         self.requestBody = requestBody
         self.sendWithCompletionHandler(callback)
