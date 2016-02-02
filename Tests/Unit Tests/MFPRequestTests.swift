@@ -43,21 +43,6 @@ class MFPRequestTests: XCTestCase {
         XCTAssertNotNil(request.networkRequest)
     }
     
-    func testUniqueDeviceId() {
-        
-        let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore")
-        mfpUserDefaults?.removeObjectForKey("deviceId")
-        
-        // Generate new ID
-        let generatedId = MFPRequest.uniqueDeviceId
-        
-        // Since an ID was already created, this method should keep returning the same one
-        let retrievedId = MFPRequest.uniqueDeviceId
-        XCTAssertEqual(retrievedId, generatedId)
-        let retrievedId2 = MFPRequest.uniqueDeviceId
-        XCTAssertEqual(retrievedId2, generatedId)
-    }
-    
     
     
     // MARK: send

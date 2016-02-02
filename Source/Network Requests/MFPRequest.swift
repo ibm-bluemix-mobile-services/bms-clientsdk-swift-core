@@ -93,24 +93,6 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     
     private static var networkSession: NSURLSession!
     
-    // Create a UUID for the current device and save it to the keychain
-    // Currently only used for Apple Watch devices
-    internal static var uniqueDeviceId: String {
-        // First, check if a UUID was already created
-        let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.Analytics")
-        guard mfpUserDefaults != nil else {
-            MFPRequest.logger.error("Failed to get an ID for this device.")
-            return ""
-        }
-        
-        var deviceId = mfpUserDefaults!.stringForKey("deviceId")
-        if deviceId == nil {
-            deviceId = NSUUID().UUIDString
-            mfpUserDefaults!.setValue(deviceId, forKey: "deviceId")
-        }
-        return deviceId!
-    }
-    
     
     
     // MARK: Initializer

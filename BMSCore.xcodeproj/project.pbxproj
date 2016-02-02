@@ -14,7 +14,6 @@
 		92018A441C45A8250031C893 /* BMSCoreWatchOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 92018A3D1C45A8170031C893 /* BMSCoreWatchOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A471C45AA890031C893 /* BMSClient.swift */; };
 		92018A4E1C45AA890031C893 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A481C45AA890031C893 /* MFPClient.swift */; };
-		92018A4F1C45AA890031C893 /* MFPRequest+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A491C45AA890031C893 /* MFPRequest+iOS.swift */; };
 		92018A501C45AA890031C893 /* MFPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4A1C45AA890031C893 /* MFPRequest.swift */; };
 		92018A511C45AA890031C893 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4B1C45AA890031C893 /* Request.swift */; };
 		92018A521C45AA890031C893 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4C1C45AA890031C893 /* Response.swift */; };
@@ -148,7 +147,6 @@
 		92018A3F1C45A8170031C893 /* Info_watchOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info_watchOS.plist; sourceTree = "<group>"; };
 		92018A471C45AA890031C893 /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
 		92018A481C45AA890031C893 /* MFPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPClient.swift; sourceTree = "<group>"; };
-		92018A491C45AA890031C893 /* MFPRequest+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MFPRequest+iOS.swift"; sourceTree = "<group>"; };
 		92018A4A1C45AA890031C893 /* MFPRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPRequest.swift; sourceTree = "<group>"; };
 		92018A4B1C45AA890031C893 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		92018A4C1C45AA890031C893 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -277,7 +275,6 @@
 				92018A471C45AA890031C893 /* BMSClient.swift */,
 				92018A481C45AA890031C893 /* MFPClient.swift */,
 				92018A4A1C45AA890031C893 /* MFPRequest.swift */,
-				92018A491C45AA890031C893 /* MFPRequest+iOS.swift */,
 				92018A4B1C45AA890031C893 /* Request.swift */,
 				92018A4C1C45AA890031C893 /* Response.swift */,
 			);
@@ -687,7 +684,6 @@
 			files = (
 				926CF6921C4D51760084355B /* MFPLogger.swift in Sources */,
 				92018A511C45AA890031C893 /* Request.swift in Sources */,
-				92018A4F1C45AA890031C893 /* MFPRequest+iOS.swift in Sources */,
 				92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */,
 				92018A501C45AA890031C893 /* MFPRequest.swift in Sources */,
 				92018A521C45AA890031C893 /* Response.swift in Sources */,
