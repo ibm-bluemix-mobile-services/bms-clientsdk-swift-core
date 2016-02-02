@@ -76,7 +76,8 @@ public class Logger {
     public static var sdkDebugLoggingEnabled: Bool = false
     
     // Used to persist all logs to the device's file system
-    // This can only be set by the BMSAnalytics framework
+    // Public access required by BMSAnalytics framework
+    // This will obtain a value when the Analytics class from BMSAnalytics is initialized
     public static var logSaver: LogSaverProtocol?
     
     

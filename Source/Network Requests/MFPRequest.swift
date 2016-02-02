@@ -83,6 +83,10 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     // Public access required by BMSAnalytics framework
     public private(set) var trackingId: String = ""
     
+    // Public access required by BMSAnalytics framework
+    // This will obtain a value when the Analytics class from BMSAnalytics is initialized
+    public static var requestAnalyticsData: String?
+    
     
     
     // MARK: Properties (internal/private)
@@ -208,15 +212,13 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         
         MFPRequest.logger.debug("Network request outbound")
         
-        // TODO: Conditional check for Analytics framework
-        
         // The analytics server needs this ID to match each request with its corresponding response
-//        self.trackingId = NSUUID().UUIDString
-//        headers["x-wl-analytics-tracking-id"] = self.trackingId
+        self.trackingId = NSUUID().UUIDString
+        headers["x-wl-analytics-tracking-id"] = self.trackingId
         
-//        if let requestMetadata = Analytics.generateOutboundRequestMetadata() {
-//            self.headers["x-mfp-analytics-metadata"] = requestMetadata
-//        }
+        if let requestMetadata = MFPRequest.requestAnalyticsData {
+            self.headers["x-mfp-analytics-metadata"] = requestMetadata
+        }
         
         self.startTime = NSDate.timeIntervalSinceReferenceDate()
         
