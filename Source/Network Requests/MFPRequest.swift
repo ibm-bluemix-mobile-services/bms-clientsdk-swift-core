@@ -1,4 +1,4 @@
-	/*
+/*
 *     Copyright 2015 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
@@ -181,7 +181,6 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         self.sendWithCompletionHandler(callback)
     }
     
-    // TODO: Refactor sendWithCompletionHandler - slit into more methods
     
     /**
         Send the request asynchronously.
@@ -193,24 +192,10 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter completionHandler: The closure that will be called when this request finishes
     */
     public func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
-        // Build the Response object and pass it to the user
-//        let originalUrl = self.resourceUrl // Copy the url before query parameters get added to it
-        let buildAndSendResponse = {
-            (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
-            
-            let networkResponse = Response(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
-            
-            // TODO: Add back in when the Analytics server supports this functionality (estimated for May 2016)
-//            let responseMetadata = Analytics.generateInboundResponseMetadata(self, response: networkResponse, url: originalUrl)
-//            Request.logger.analytics(responseMetadata)
-            
-            callback?(networkResponse as Response, error)
-        }
-        
-        // Add metadata to the request header so that analytics data can be obtained for ALL mfp network requests
-        // Must be called before query parameters are added to self.resourceUrl
         
         MFPRequest.logger.debug("Network request outbound")
+        
+        // Add metadata to the request header so that analytics data can be obtained for ALL mfp network requests
         
         // The analytics server needs this ID to match each request with its corresponding response
         self.trackingId = NSUUID().UUIDString
@@ -222,32 +207,9 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         
         self.startTime = NSDate.timeIntervalSinceReferenceDate()
         
-        if var url = NSURL(string: self.resourceUrl) {
+        if let url = NSURL(string: self.resourceUrl) {
             
-            if queryParameters != nil {
-                guard let urlWithQueryParameters = MFPRequest.appendQueryParameters(queryParameters!, toURL: url) else {
-                    // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
-                    let urlErrorMessage = "Failed to append the query parameters to the resource url."
-                    MFPRequest.logger.error(urlErrorMessage)
-                    let malformedUrlError = NSError(domain: MFPRequest.MFP_CORE_ERROR_DOMAIN, code: BMSCoreErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
-                    callback?(nil, malformedUrlError)
-                    return
-                }
-                url = urlWithQueryParameters
-            }
-            
-            // Build request
-            resourceUrl = String(url)
-            networkRequest.URL = url
-            networkRequest.HTTPMethod = httpMethod.rawValue
-            networkRequest.allHTTPHeaderFields = headers
-            networkRequest.HTTPBody = requestBody
-            
-            MFPRequest.logger.info("Sending Request to " + resourceUrl)
-            
-            // Send request            
-            getNetworkSession().dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
-           
+            buildAndSendRequestWithUrl(url, callback: callback)
         }
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
@@ -255,6 +217,48 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
             let malformedUrlError = NSError(domain: MFPRequest.MFP_CORE_ERROR_DOMAIN, code: BMSCoreErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
             callback?(nil, malformedUrlError)
         }
+    }
+    
+    
+    private func buildAndSendRequestWithUrl(var url: NSURL, callback: MfpCompletionHandler?) {
+        
+        // A callback that builds the Response object and passes it to the user
+        let buildAndSendResponse = {
+            (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
+            
+            let networkResponse = Response(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
+            
+            // TODO: Add back in when the Analytics server supports this functionality (estimated for May 2016)
+            //            let responseMetadata = Analytics.generateInboundResponseMetadata(self, response: networkResponse, url: originalUrl)
+            //            Request.logger.analytics(responseMetadata)
+            
+            callback?(networkResponse as Response, error)
+        }
+        
+        // Add query parameters to URL
+        if queryParameters != nil {
+            guard let urlWithQueryParameters = MFPRequest.appendQueryParameters(queryParameters!, toURL: url) else {
+                // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
+                let urlErrorMessage = "Failed to append the query parameters to the resource url."
+                MFPRequest.logger.error(urlErrorMessage)
+                let malformedUrlError = NSError(domain: MFPRequest.MFP_CORE_ERROR_DOMAIN, code: BMSCoreErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
+                callback?(nil, malformedUrlError)
+                return
+            }
+            url = urlWithQueryParameters
+        }
+        
+        // Build request
+        resourceUrl = String(url)
+        networkRequest.URL = url
+        networkRequest.HTTPMethod = httpMethod.rawValue
+        networkRequest.allHTTPHeaderFields = headers
+        networkRequest.HTTPBody = requestBody
+        
+        MFPRequest.logger.info("Sending Request to " + resourceUrl)
+        
+        // Send request
+        getNetworkSession().dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
     }
     
     
