@@ -74,7 +74,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     /// The request body can be set when sending the request via the `sendString` or `sendData` methods.
     public private(set) var requestBody: NSData?
     
-    // TODO: How is this actually used?
+    /// Determines whether MFPRequests should follow redirect requests
     public var allowRedirects : Bool = true
     
     // Public access required by BMSAnalytics framework
