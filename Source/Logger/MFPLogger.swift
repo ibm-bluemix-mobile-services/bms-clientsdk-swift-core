@@ -15,9 +15,9 @@ import Foundation
 
 
 /**
- Used in the `Logger` class, the `LogLevel` denotes the log severity.
- 
- Lower integer raw values indicate higher severity.
+    Used in the `Logger` class, the `LogLevel` denotes the log severity.
+
+    Lower integer raw values indicate higher severity.
  */
 public enum LogLevel: Int {
     
@@ -54,9 +54,29 @@ public protocol LogSaverProtocol {
 }
 
 
-// TODO: Documentation
 /**
-Logger
+    `Logger` provides a wrapper to Swift's `print()` function, with additional information such as the file, function, and line where the log was called.
+    It supports logging at different levels of verbosity (see the `LogLevel` enum) and filtering by `LogLevel` to limit the log output to the console.
+    
+    Multiple `Logger` instances can be created with different package names using the `getLoggerForName` method.
+ 
+    - Important: All of the below functionality will be added to `Logger` if the `BMSAnalytics` framework is added to your project. `BMSAnalytics` extends `Logger` to allow storing log messages and sending them to an analytics server.
+
+    When the `enabled` property is set to `true` (which is the default value), logs will be persisted to a file on the client device in the following JSON format:
+
+        {
+            "timestamp"    : "17-02-2013 13:54:27:123",   // "dd-MM-yyyy hh:mm:ss:S"
+            "level"        : "ERROR",                     // FATAL || ERROR || WARN || INFO || DEBUG
+            "name"         : "your_logger_name",          // The name of the Logger (typically a class name or app name)
+            "msg"          : "the message",               // Some log message
+            "metadata"     : {"some key": "some value"},  // Additional JSON metadata (only for Analytics logging)
+        }
+
+    Logs are accumulated persistently to the log file until the file size is greater than the `Logger.maxLogStoreSize` property. At this point, half of the old logs will be deleted to make room for new log data.
+
+    Log file data is sent to the Bluemix server when the Logger `send()` method is called, provided that the file is not empty and the BMSClient was initialized via the `initializeWithBluemixAppRoute()` method. When the log data is successfully uploaded, the persisted local log data is deleted.
+
+    - Note: The `Logger` class sets an uncaught exception handler to log application crashes. If you wish to set your own exception handler, do so **before** calling `Logger.getLoggerForName()` or the `Logger` exception handler will be overwritten.
 */
 public class Logger {
     
