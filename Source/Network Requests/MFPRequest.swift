@@ -229,7 +229,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
                     // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
                     let urlErrorMessage = "Failed to append the query parameters to the resource url."
                     MFPRequest.logger.error(urlErrorMessage)
-                    let malformedUrlError = NSError(domain: MFPRequest.MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
+                    let malformedUrlError = NSError(domain: MFPRequest.MFP_CORE_ERROR_DOMAIN, code: BMSCoreErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
                     callback?(nil, malformedUrlError)
                     return
                 }
@@ -252,7 +252,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
             MFPRequest.logger.error(urlErrorMessage)
-            let malformedUrlError = NSError(domain: MFPRequest.MFP_CORE_ERROR_DOMAIN, code: MFPErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
+            let malformedUrlError = NSError(domain: MFPRequest.MFP_CORE_ERROR_DOMAIN, code: BMSCoreErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
             callback?(nil, malformedUrlError)
         }
     }

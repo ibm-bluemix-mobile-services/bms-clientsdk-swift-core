@@ -103,7 +103,7 @@ class MFPRequestTests: XCTestCase {
         request.sendWithCompletionHandler { (response: Response?, error: NSError?) -> Void in
             XCTAssertNil(response)
             XCTAssertEqual(error?.domain, MFPRequest.MFP_CORE_ERROR_DOMAIN)
-            XCTAssertEqual(error?.code, MFPErrorCode.MalformedUrl.rawValue)
+            XCTAssertEqual(error?.code, BMSCoreErrorCode.MalformedUrl.rawValue)
             
             responseReceivedExpectation.fulfill()
         }
