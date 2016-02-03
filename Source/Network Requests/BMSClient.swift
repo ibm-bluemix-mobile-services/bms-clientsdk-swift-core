@@ -13,21 +13,24 @@
 
 
 /**
+    The region where the Bluemix application is hosted.
+
+    This is used for the `bluemixRegionSuffix` parameter of the  `BMSClient.initializeWithBluemixAppRoute()` method.
+*/
+public enum BluemixRegion: String {
+    
+    case US_SOUTH = "ng.bluemix.net"
+    case UK = "eu-gb.bluemix.net"
+    case SYDNEY = "au-syd.bluemix.net"
+}
+
+
+/**
     A singleton that serves as an entry point to Bluemix client-server communication.
 */
 public class BMSClient: MFPClient {
     
-    
-    // TODO: Turn into an enum and DOCUMENT
-    
-    // MARK: Constants
-    
-    public static let REGION_US_SOUTH = "ng.bluemix.net"
-    public static let REGION_UK = "eu-gb.bluemix.net"
-    public static let REGION_SYDNEY = "au-syd.bluemix.net"
-    
-    
-    
+
     // MARK: Properties (public)
     
     /// This singleton should be used for all `BMSClient` activity
@@ -39,7 +42,7 @@ public class BMSClient: MFPClient {
     // Specifies the bluemix region suffix
     public private(set) var bluemixRegionSuffix: String?
     
-    /// Specifies the backend application id.
+    /// Specifies the backend application id
     public private(set) var bluemixAppGUID: String?
         
     /// Specifies the default timeout (in seconds) for all BMS network requests.
@@ -80,10 +83,10 @@ public class BMSClient: MFPClient {
         - parameter backendGUID:            The GUID of the Bluemix application
         - parameter bluemixRegionSuffix:    The region where your Bluemix application is hosted
      */
-    public func initializeWithBluemixAppRoute(bluemixAppRoute: String?, bluemixAppGUID: String?, bluemixRegionSuffix: String) {
+    public func initializeWithBluemixAppRoute(bluemixAppRoute: String?, bluemixAppGUID: String?, bluemixRegionSuffix: BluemixRegion) {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
-        self.bluemixRegionSuffix = bluemixRegionSuffix
+        self.bluemixRegionSuffix = bluemixRegionSuffix.rawValue
     }
     
     private init() {} // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
