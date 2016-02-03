@@ -15,32 +15,17 @@ import XCTest
 @testable import BMSCore
 
 
-// TODO: Update these tests to check if printToConsole was called, rather than checking for file existence
 class MFPLoggerTests: XCTestCase {
     
     func testGetLoggerForName(){
         let name = "sample"
-        
         let logger = Logger.getLoggerForName(name)
         
         XCTAssertTrue(logger.name == Logger.loggerInstances[name]?.name)
     }
     
-    func testNoInternalLogging(){
-        let fakePKG = "MYPKG"
-        let loggerInstance = Logger.getLoggerForName(fakePKG)
-        Logger.logLevelFilter = LogLevel.Debug
-        Logger.sdkDebugLoggingEnabled = false
-        
-        loggerInstance.debug("Hello world")
-        loggerInstance.info("1242342342343243242342")
-        loggerInstance.warn("Str: heyoooooo")
-        loggerInstance.error("1 2 3 4")
-        loggerInstance.fatal("StephenColbert")
-        
-        
-    }
-    
+    // Cannot make any assertions since all these log methods do is print to the console
+    // More thorough unit testing for the Logger class is done in the BMSAnalytics SDK
     func testLogMethods(){
         let fakePKG = "MYPKG"
         let loggerInstance = Logger.getLoggerForName(fakePKG)
@@ -51,35 +36,6 @@ class MFPLoggerTests: XCTestCase {
         loggerInstance.warn("Str: heyoooooo")
         loggerInstance.error("1 2 3 4")
         loggerInstance.fatal("StephenColbert")
-        
-        
     }
     
-    func testLogWithNone(){
-        let fakePKG = "MYPKG"
-        let loggerInstance = Logger.getLoggerForName(fakePKG)
-        Logger.logLevelFilter = LogLevel.None
-        
-        loggerInstance.debug("Hello world")
-        loggerInstance.info("1242342342343243242342")
-        loggerInstance.warn("Str: heyoooooo")
-        loggerInstance.error("1 2 3 4")
-        loggerInstance.fatal("StephenColbert")
-     
-        
-    }
-    
-    func testIncorrectLogLevel(){
-        let fakePKG = "MYPKG"
-        let loggerInstance = Logger.getLoggerForName(fakePKG)
-        Logger.logLevelFilter = LogLevel.Fatal
-        
-        loggerInstance.debug("Hello world")
-        loggerInstance.info("1242342342343243242342")
-        loggerInstance.warn("Str: heyoooooo")
-        loggerInstance.error("1 2 3 4")
-        
-        
-    }
-
 }
