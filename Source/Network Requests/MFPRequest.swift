@@ -110,6 +110,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter headers:         Optional headers to add to the request.
         - parameter queryParameters: Optional query parameters to add to the request.
         - parameter timeout:         Timeout in seconds for this request
+    
+        - Note: A relative URL may be supplied if the `BMSClient` class is initialized with an app route beforehand.
     */
     public init(url: String,
                headers: [String: String]?,
@@ -117,7 +119,17 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
                method: HttpMethod = HttpMethod.GET,
                timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout) {
         
-        self.resourceUrl = url
+        // Relative URL
+        if (!url.containsString("http://") && !url.containsString("https://")),
+            let bmsAppRoute = BMSClient.sharedInstance.bluemixAppRoute {
+                
+            self.resourceUrl = bmsAppRoute + url
+        }
+        // Absolute URL
+        else {
+            self.resourceUrl = url
+        }
+
         self.httpMethod = method
         if headers != nil {
             self.headers = headers!
@@ -128,16 +140,13 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         // Set timeout and initialize network session and request
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = timeout
-//        networkSession = NSURLSession(configuration: configuration)
         networkRequest = NSMutableURLRequest()
+                
         super.init()
+                
         MFPRequest.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
-    
-    public func getNetworkSession() -> NSURLSession {
-        return MFPRequest.networkSession
-    }
-    
+
     
     
     // MARK: Methods (public)
@@ -258,7 +267,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         MFPRequest.logger.info("Sending Request to " + resourceUrl)
         
         // Send request
-        getNetworkSession().dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+        MFPRequest.networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
     }
     
     
