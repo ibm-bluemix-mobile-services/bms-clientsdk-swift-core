@@ -509,10 +509,13 @@ public class Logger {
         NSSetUncaughtExceptionHandler { (caughtException: NSException) -> Void in
             
             if (!Logger.exceptionHasBeenCalled) {
-                Logger.exceptionHasBeenCalled = true
-                Logger.logException(caughtException)
                 // Persist a flag so that when the app starts back up, we can see if an exception occurred in the last session
+                Logger.exceptionHasBeenCalled = true
                 Logger.isUncaughtExceptionDetected = true
+                
+                Logger.logException(caughtException)
+                Analytics.logSessionEnd()
+                
                 Logger.existingUncaughtExceptionHandler?(caughtException)
             }
         }
