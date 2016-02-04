@@ -150,10 +150,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
                 
         MFPRequest.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
+
     
-    public func getNetworkSession() -> NSURLSession {
-        return MFPRequest.networkSession
-    }
     
     // MARK: Methods (public)
     
@@ -262,7 +260,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
             MFPRequest.logger.info("Sending Request to " + resourceUrl)
             
             // Send request            
-            getNetworkSession().dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+            MFPRequest.networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
            
         }
         else {
@@ -292,18 +290,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         
         completionHandler(redirectRequest)
     }
+
     
-    //Add new header
-    public func addHeader(key:String, val:String) {
-        headers[key] = val
-    }
-    
-    //Iterate and add all new headers
-    public func addHeaders(newHeaders: [String:String]) {
-        for (key,value) in newHeaders {
-            addHeader(key, val: value)
-        }
-    }
     
     // MARK: Methods (internal/private)
     
