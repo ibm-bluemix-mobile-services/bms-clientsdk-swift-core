@@ -62,7 +62,7 @@ internal class DefaultAuthorizationManager : AuthorizationManager {
     }
     
     func getAuthorizationPersistencePolicy() -> PersistencePolicy {
-        return PersistencePolicy.NEVER
+        return PersistencePolicy.IMFAuthorizationPerisistencePolicyNever
     }
     
     func setAuthorizationPersistensePolicy(policy: PersistencePolicy) {
