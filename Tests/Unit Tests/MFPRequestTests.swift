@@ -31,6 +31,14 @@ class MFPRequestTests: XCTestCase {
         XCTAssertNotNil(request.networkRequest)
     }
     
+    func testInitWithRelativeUrl() {
+    
+        BMSClient.sharedInstance.initializeWithBluemixAppRoute("https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegionSuffix:REGION_US_SOUTH)
+        let request = MFPRequest(url: "/path/to/resource", headers: nil, queryParameters: nil)
+        
+        XCTAssertEqual(request.resourceUrl, "https://mybluemixapp.net/path/to/resource")
+    }
+    
     func testInitWithDefaultParameters() {
         
         let request = MFPRequest(url: "http://example.com", headers: nil, queryParameters: nil)
