@@ -13,9 +13,8 @@
 
 
 public enum PersistencePolicy: String {
-    case IMFAuthorizationPerisistencePolicyAlways = "IMFAuthorizationPerisistencePolicyAlways"
-    case IMFAuthorizationPerisistencePolicyWithTouchBiometrics = "IMFAuthorizationPerisistencePolicyWithTouchBiometrics"
-    case IMFAuthorizationPerisistencePolicyNever = "IMFAuthorizationPerisistencePolicyNever"
+    case ALWAYS = "ALWAYS"
+    case NEVER = "NEVER"
 }
 
 public protocol AuthorizationManager {
