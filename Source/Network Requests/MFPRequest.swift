@@ -45,6 +45,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     public static let CONTENT_TYPE = "Content-Type"
     public static let TEXT_PLAIN_TYPE = "text/plain"
     
+    
+    
     // MARK: Properties (public)
     
     /// URL that the request is being sent to
@@ -65,16 +67,22 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     /// The request body can be set when sending the request via the `sendString` or `sendData` methods.
     public private(set) var requestBody: NSData?
     
-    private static var networkSession: NSURLSession!
-    
     public var allowRedirects : Bool = true
+    
+    // Public access required by BMSSecurity framework
+    // The timeout is set in the NSURLSession configuration
+    public var networkSession: NSURLSession!
+    
+    
     
     // MARK: Properties (internal/private)
     
-    var networkRequest: NSMutableURLRequest
+    internal var networkRequest: NSMutableURLRequest
     
     internal var startTime: NSTimeInterval = 0.0
+    
     internal var trackingId: String = ""
+    
     private static let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
     
     // Create a UUID for the current device and save it to the keychain
@@ -95,6 +103,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         return deviceId!
     }
     
+    
+    
     // MARK: Initializer
     
     /**
@@ -106,6 +116,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter headers:         Optional headers to add to the request.
         - parameter queryParameters: Optional query parameters to add to the request.
         - parameter timeout:         Timeout in seconds for this request
+    
+        - Note: A relative URL may be supplied if the `BMSClient` class is initialized with an app route beforehand.
     */
     public init(url: String,
                headers: [String: String]?,
@@ -113,7 +125,17 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
                method: HttpMethod = HttpMethod.GET,
                timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout) {
         
-        self.resourceUrl = url
+        // Relative URL
+        if (!url.containsString("http://") && !url.containsString("https://")),
+            let bmsAppRoute = BMSClient.sharedInstance.bluemixAppRoute {
+                
+            self.resourceUrl = bmsAppRoute + url
+        }
+        // Absolute URL
+        else {
+            self.resourceUrl = url
+        }
+
         self.httpMethod = method
         if headers != nil {
             self.headers = headers!
@@ -124,15 +146,14 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         // Set timeout and initialize network session and request
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = timeout
-//        networkSession = NSURLSession(configuration: configuration)
         networkRequest = NSMutableURLRequest()
+                
         super.init()
-        MFPRequest.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+                
+        self.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
+
     
-    public func getNetworkSession() -> NSURLSession {
-        return MFPRequest.networkSession
-    }
     
     // MARK: Methods (public)
     
@@ -241,7 +262,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
             MFPRequest.logger.info("Sending Request to " + resourceUrl)
             
             // Send request            
-            getNetworkSession().dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+            self.networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
            
         }
         else {
@@ -271,6 +292,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         
         completionHandler(redirectRequest)
     }
+
+    
     
     // MARK: Methods (internal/private)
     

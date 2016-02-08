@@ -129,6 +129,7 @@ public class Analytics {
         // Let the Analytics service know how the app was last closed
         if Logger.isUncaughtExceptionDetected {
             lifecycleEvents[KEY_METADATA_CLOSEDBY] = AppClosedBy.CRASH.rawValue
+            Logger.isUncaughtExceptionDetected = false
         }
         else {
             lifecycleEvents[KEY_METADATA_CLOSEDBY] = AppClosedBy.USER.rawValue
