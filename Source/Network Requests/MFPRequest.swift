@@ -77,6 +77,10 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     /// Determines whether MFPRequests should follow redirect requests
     public var allowRedirects : Bool = true
     
+    // Public access required by BMSSecurity framework
+    // The request timeout is set in this NSURLSession's configuration
+    public var networkSession: NSURLSession!
+    
     // Public access required by BMSAnalytics framework
     public private(set) var startTime: NSTimeInterval = 0.0
     
@@ -94,8 +98,6 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     var networkRequest: NSMutableURLRequest
     
     private static let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
-    
-    private static var networkSession: NSURLSession!
     
     
     
@@ -144,7 +146,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
                 
         super.init()
                 
-        MFPRequest.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        self.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
 
     
@@ -267,7 +269,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         MFPRequest.logger.info("Sending Request to " + resourceUrl)
         
         // Send request
-        MFPRequest.networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+        self.networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
     }
     
     

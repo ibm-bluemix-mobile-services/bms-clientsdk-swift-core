@@ -13,8 +13,8 @@
 
 
 public enum PersistencePolicy: String {
-    case NEVER = "NEVER"
     case ALWAYS = "ALWAYS"
+    case NEVER = "NEVER"
 }
 
 public protocol AuthorizationManager {

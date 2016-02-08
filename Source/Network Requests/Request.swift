@@ -32,39 +32,25 @@ public class Request: MFPRequest {
         savedRequestBody = requestBody
         
         let myCallback : MfpCompletionHandler = {(response: Response?, error:NSError?) in
-            if error == nil {
-                if let unWrappedResponse = response {
-                    if BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) {
-                        if self.oauthFailCounter++ < 2 {
-                            let authCallback: MfpCompletionHandler = {(response: Response?, error:NSError?) in
-                                if error == nil {
-                                    if let myRequestBody = self.requestBody {
-                                        self.sendData(myRequestBody, withCompletionHandler: nil)
-                                    }
-                                    else {                                   
-                                        self.sendWithCompletionHandler(callback)
-                                    }
-                                }
-                            }
-                            authManager.obtainAuthorization(authCallback)
-                        }
-                        else {
-                            callback?(response, error)
-                        }
-                    } else {
-                        callback?(response, error)
-                    }
-                } else {
-                    callback?(response, error)
-                }
-                
-            }
-            else {
+            
+            guard error == nil, let unWrappedResponse = response where BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) && self.oauthFailCounter++ < 2 else {
                 callback?(response, error)
+                return
             }
             
-            
+            let authCallback: MfpCompletionHandler = {(response: Response?, error:NSError?) in
+                if error == nil {
+                    if let myRequestBody = self.requestBody {
+                        self.sendData(myRequestBody, withCompletionHandler: nil)
+                    }
+                    else {
+                        self.sendWithCompletionHandler(callback)
+                    }
+                }
+            }
+            authManager.obtainAuthorization(authCallback)
         }
+        
         super.sendWithCompletionHandler(myCallback)
     }
 }
