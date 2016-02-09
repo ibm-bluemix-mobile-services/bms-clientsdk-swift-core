@@ -27,9 +27,6 @@ public enum HttpMethod: String {
     The type of callback sent with MFP network requests
 */
 public typealias MfpCompletionHandler = (Response?, NSError?) -> Void
-    
-    
-public let MFP_PACKAGE_PREFIX = "mfpsdk."
 
  
 /**
@@ -41,17 +38,6 @@ public let MFP_PACKAGE_PREFIX = "mfpsdk."
         sendData(requestBody: NSData, withCompletionHandler callback: mfpCompletionHandler?)
 */
 public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
-
-    
-    // MARK: Constants
-    
-    public static let CONTENT_TYPE = "Content-Type"
-    public static let TEXT_PLAIN_TYPE = "text/plain"
-    
-    public static let MFP_CORE_ERROR_DOMAIN = "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore"
-    
-    internal static let MFP_REQUEST_PACKAGE = MFP_PACKAGE_PREFIX + "request"
-    
     
     
     // MARK: Properties (public)
@@ -97,7 +83,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     
     var networkRequest: NSMutableURLRequest
     
-    private static let logger = Logger.getLoggerForName(MFP_REQUEST_PACKAGE)
+    private static let logger = Logger.getLoggerForName(Logger.mfpLoggerPrefix + "request")
     
     
     
@@ -169,8 +155,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         // Don't want to overwrite content type if it has already been specified as something else
-        if headers[MFPRequest.CONTENT_TYPE] == nil {
-            headers[MFPRequest.CONTENT_TYPE] = MFPRequest.TEXT_PLAIN_TYPE
+        if headers["Content-Type"] == nil {
+            headers["Content-Type"] = "text/plain"
         }
         
         self.sendWithCompletionHandler(callback)
@@ -225,7 +211,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
             MFPRequest.logger.error(urlErrorMessage)
-            let malformedUrlError = NSError(domain: MFPRequest.MFP_CORE_ERROR_DOMAIN, code: BMSCoreErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
+            let malformedUrlError = NSError(domain: BMSCoreError.domain, code: BMSCoreError.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
             callback?(nil, malformedUrlError)
         }
     }
@@ -252,7 +238,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
                 // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
                 let urlErrorMessage = "Failed to append the query parameters to the resource url."
                 MFPRequest.logger.error(urlErrorMessage)
-                let malformedUrlError = NSError(domain: MFPRequest.MFP_CORE_ERROR_DOMAIN, code: BMSCoreErrorCode.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
+                let malformedUrlError = NSError(domain: BMSCoreError.domain, code: BMSCoreError.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
                 callback?(nil, malformedUrlError)
                 return
             }

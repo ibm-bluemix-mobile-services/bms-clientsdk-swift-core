@@ -81,7 +81,7 @@ public protocol LogSaverProtocol {
 public class Logger {
     
     
-    // MARK: Properties (API)
+    // MARK: Properties (Public)
     
     /// The name that identifies this Logger instance
     public let name: String
@@ -99,6 +99,9 @@ public class Logger {
     // Public access required by BMSAnalytics framework
     // This will obtain a value when the Analytics class from BMSAnalytics is initialized
     public static var logSaver: LogSaverProtocol?
+    
+    // Prefix for all internal logger names
+    public static let mfpLoggerPrefix = "mfpsdk."
     
     
     
@@ -213,7 +216,7 @@ public class Logger {
             return
         }
         
-        if self.name.hasPrefix(MFP_PACKAGE_PREFIX) && !Logger.sdkDebugLoggingEnabled && level == LogLevel.Debug {
+        if self.name.hasPrefix(Logger.mfpLoggerPrefix) && !Logger.sdkDebugLoggingEnabled && level == LogLevel.Debug {
             // Don't show our internal logs in the console.
         }
         else {

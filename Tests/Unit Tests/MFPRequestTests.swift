@@ -82,7 +82,7 @@ class MFPRequestTests: XCTestCase {
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[MFPRequest.CONTENT_TYPE], MFPRequest.TEXT_PLAIN_TYPE)
+        XCTAssertEqual(request.headers["Content-Type"], "text/plain")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
@@ -98,7 +98,7 @@ class MFPRequestTests: XCTestCase {
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[MFPRequest.CONTENT_TYPE], "media-type")
+        XCTAssertEqual(request.headers["Content-Type"], "media-type")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
@@ -110,8 +110,8 @@ class MFPRequestTests: XCTestCase {
         let request = MFPRequest(url: badUrl, headers: nil, queryParameters: nil)
         request.sendWithCompletionHandler { (response: Response?, error: NSError?) -> Void in
             XCTAssertNil(response)
-            XCTAssertEqual(error?.domain, MFPRequest.MFP_CORE_ERROR_DOMAIN)
-            XCTAssertEqual(error?.code, BMSCoreErrorCode.MalformedUrl.rawValue)
+            XCTAssertEqual(error?.domain, BMSCoreError.domain)
+            XCTAssertEqual(error?.code, BMSCoreError.MalformedUrl.rawValue)
             
             responseReceivedExpectation.fulfill()
         }
