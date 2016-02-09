@@ -28,7 +28,7 @@ internal class DefaultAuthorizationManager : AuthorizationManager {
         return false;
     }
     
-    func isAuthorizationRequired(httpResponse: Response?) -> Bool {
+    func isAuthorizationRequired(httpResponse: Response) -> Bool {
         return false;
     }
     
@@ -48,24 +48,4 @@ internal class DefaultAuthorizationManager : AuthorizationManager {
         return nil;
     }
     
-    
-    func getUserIdentity() -> AnyObject? {
-        return nil;
-    }
-    
-    func getDeviceIdentity() -> AnyObject? {
-        return nil;
-    }
-    
-    func getAppIdentity() -> AnyObject? {
-        return nil;
-    }
-    
-    func getAuthorizationPersistencePolicy() -> PersistencePolicy {
-        return PersistencePolicy.NEVER
-    }
-    
-    func setAuthorizationPersistensePolicy(policy: PersistencePolicy) {
-        
-    }
 }
