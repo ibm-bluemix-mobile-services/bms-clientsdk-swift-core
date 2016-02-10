@@ -28,16 +28,4 @@ public protocol AuthorizationManager {
     func clearAuthorizationData()
     
     
-//    //TODO: ilan - make this like the android version
-//    
-//    func addCachedAuthorizationHeader(request: NSMutableURLRequest)
-//    
-//    func getUserIdentity() -> UserIdentity?
-//    func getDeviceIdentity() -> DeviceIdentity?
-//    func getAppIdentity() -> AppIdentity?
-//    
-//    func getAuthorizationPersistencePolicy() -> PersistencePolicy
-//    func setAuthorizationPersistensePolicy(policy: PersistencePolicy)
-    
-    
 }
