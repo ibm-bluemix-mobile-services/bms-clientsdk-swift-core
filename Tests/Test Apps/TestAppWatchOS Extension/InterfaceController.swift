@@ -25,7 +25,9 @@ class InterfaceController: WKInterfaceController {
     
     @IBAction func getRequestButtonPressed() {
         
-        testLoggerAndAnalytics()
+        Logger.logLevelFilter = LogLevel.Debug
+        let testLogger = Logger.getLoggerForName("Test")
+        testLogger.debug("GET request button pressed")
         
         let getRequest = MFPRequest(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
         getRequest.sendWithCompletionHandler( { (response: Response?, error: NSError?) in
@@ -45,39 +47,4 @@ class InterfaceController: WKInterfaceController {
             })
         } )
     }
-    
-    
-    func testLoggerAndAnalytics() {
-        
-        Analytics.enabled = true
-        
-        Analytics.log(["buttonPressed": "getRequest"])
-        Analytics.send { (response: Response?, error: NSError?) -> Void in
-            if let response = response {
-                print("\nAnalytics sent successfully: " + String(response.isSuccessful))
-                print("Status Code: " + String(response.statusCode))
-                if let responseText = response.responseText {
-                    print("Response text: " + responseText)
-                }
-                print("")
-            }
-        }
-        
-        Logger.logLevelFilter = LogLevel.Debug
-        Logger.logStoreEnabled = true
-        
-        let testLogger = Logger.getLoggerForName("Test")
-        testLogger.debug("Sending GET request")
-        Logger.send { (response: Response?, error: NSError?) -> Void in
-            if let response = response {
-                print("\nLogs sent successfully: " + String(response.isSuccessful))
-                print("Status Code: " + String(response.statusCode))
-                if let responseText = response.responseText {
-                    print("Response text: " + responseText)
-                }
-                print("")
-            }
-        }
-    }
-    
 }

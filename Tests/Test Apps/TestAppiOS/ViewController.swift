@@ -15,9 +15,6 @@
 import UIKit
 import BMSCore
 
-// TODO: Fix the storyboard so that the view fits in all iOS screen sizes
-
-// TODO: Rename this controller to something more descriptive, like "RequestViewController"
 
 class ViewController: UIViewController, UITextFieldDelegate {
 
@@ -29,8 +26,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func sendRequestButtonPressed(sender: AnyObject) {
         
-        Analytics.log(["buttonPressed": "sendRequest"])
-        Analytics.send()
+        logEvent()
         
         var method: HttpMethod
 
@@ -80,6 +76,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         dispatch_async(dispatch_get_main_queue(), {
             self.responseLabel.text = responseLabelText
         })
+    }
+    
+    
+    private func logEvent() {
+        
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.sdkDebugLoggingEnabled = true
+        
+        let testLogger = Logger.getLoggerForName("TestAppiOS")
+        testLogger.debug("Sending Request button pressed")
     }
     
     
