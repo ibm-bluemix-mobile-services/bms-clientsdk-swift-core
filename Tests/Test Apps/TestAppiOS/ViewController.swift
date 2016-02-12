@@ -91,6 +91,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        responseLabel.layer.borderWidth = 1
     }
     
     
