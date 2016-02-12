@@ -1,5 +1,5 @@
 /*
-*     Copyright 2015 IBM Corp.
+*     Copyright 2016 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -19,9 +19,7 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
     
     @IBOutlet weak var storeLogEnabled: UISwitch!
     @IBOutlet weak var crashButton: UIButton!
-    let logArray = ["none", "debug", "info", "warn", "error", "fatal"]
-    var level = "debug"
-    var type = "debug"
+    
     @IBOutlet weak var packageName: UITextField!
     @IBOutlet weak var levelPicker: UIPickerView!
     @IBOutlet weak var typePicker: UIPickerView!
@@ -30,6 +28,13 @@ class LogController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
     @IBOutlet weak var capture: UISwitch!
 
     @IBOutlet weak var logMessage: UITextField!
+    
+    
+    let logArray = ["none", "debug", "info", "warn", "error", "fatal"]
+    var level = "debug"
+    var type = "debug"
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
