@@ -21,12 +21,12 @@ class MFPRequestTests: XCTestCase {
     
     func testInitWithAllParameters() {
         
-        let request = MFPRequest(url: "http://example.com", headers:[MFPRequest.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], method: HttpMethod.GET, timeout: 10.0)
+        let request = MFPRequest(url: "http://example.com", headers:[MFPRequest.CONTENT_TYPE: "text/plain"], queryParameters: ["someKey": "someValue"], method: HttpMethod.GET, timeout: 10.0)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, 10.0)
-        XCTAssertEqual(request.headers, [MFPRequest.contentType: "text/plain"])
+        XCTAssertEqual(request.headers, [MFPRequest.CONTENT_TYPE: "text/plain"])
         XCTAssertEqual(request.queryParameters!, ["someKey": "someValue"])
         XCTAssertNotNil(request.networkRequest)
     }
@@ -82,13 +82,13 @@ class MFPRequestTests: XCTestCase {
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[MFPRequest.contentType], "text/plain")
+        XCTAssertEqual(request.headers[MFPRequest.CONTENT_TYPE], "text/plain")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
     func testSendStringWithoutOverwritingContentTypeHeader() {
         
-        let request = MFPRequest(url: "http://example.com", headers: [MFPRequest.contentType: "media-type"], queryParameters: ["someKey": "someValue"])
+        let request = MFPRequest(url: "http://example.com", headers: [MFPRequest.CONTENT_TYPE: "media-type"], queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
         request.sendString(dataString, withCompletionHandler: nil)
@@ -98,7 +98,7 @@ class MFPRequestTests: XCTestCase {
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[MFPRequest.contentType], "media-type")
+        XCTAssertEqual(request.headers[MFPRequest.CONTENT_TYPE], "media-type")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
