@@ -7,24 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		92018A251C45A7720031C893 /* Analytics+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A121C45A7720031C893 /* Analytics+iOS.swift */; };
-		92018A271C45A7720031C893 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A141C45A7720031C893 /* Analytics.swift */; };
-		92018A291C45A7720031C893 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A161C45A7720031C893 /* Constants.swift */; };
 		92018A2A1C45A7720031C893 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A171C45A7720031C893 /* Error.swift */; };
-		92018A2C1C45A7720031C893 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A1A1C45A7720031C893 /* Logger.swift */; };
 		92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A231C45A7720031C893 /* AuthorizationManager.swift */; };
 		92018A341C45A7720031C893 /* DefaultAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A241C45A7720031C893 /* DefaultAuthorizationManager.swift */; };
 		92018A401C45A8170031C893 /* BMSCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 92018A3C1C45A8170031C893 /* BMSCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92018A441C45A8250031C893 /* BMSCoreWatchOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 92018A3D1C45A8170031C893 /* BMSCoreWatchOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A471C45AA890031C893 /* BMSClient.swift */; };
 		92018A4E1C45AA890031C893 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A481C45AA890031C893 /* MFPClient.swift */; };
-		92018A4F1C45AA890031C893 /* MFPRequest+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A491C45AA890031C893 /* MFPRequest+iOS.swift */; };
 		92018A501C45AA890031C893 /* MFPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4A1C45AA890031C893 /* MFPRequest.swift */; };
 		92018A511C45AA890031C893 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4B1C45AA890031C893 /* Request.swift */; };
 		92018A521C45AA890031C893 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4C1C45AA890031C893 /* Response.swift */; };
-		92018A531C45AAA30031C893 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A1A1C45A7720031C893 /* Logger.swift */; };
-		92018A541C45AAA90031C893 /* Analytics+watchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A131C45A7720031C893 /* Analytics+watchOS.swift */; };
-		92018A551C45AAAC0031C893 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A141C45A7720031C893 /* Analytics.swift */; };
 		92018A561C45AAC20031C893 /* DefaultAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A241C45A7720031C893 /* DefaultAuthorizationManager.swift */; };
 		92018A571C45AAC40031C893 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A231C45A7720031C893 /* AuthorizationManager.swift */; };
 		92018A581C45AAC70031C893 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4C1C45AA890031C893 /* Response.swift */; };
@@ -33,14 +25,10 @@
 		92018A5B1C45AAD00031C893 /* MFPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A481C45AA890031C893 /* MFPClient.swift */; };
 		92018A5C1C45AAD30031C893 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A471C45AA890031C893 /* BMSClient.swift */; };
 		92018A5D1C45AAD60031C893 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A171C45A7720031C893 /* Error.swift */; };
-		92018A5E1C45AAD80031C893 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A161C45A7720031C893 /* Constants.swift */; };
-		92018A8C1C45AC380031C893 /* AnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A761C45AC380031C893 /* AnalyticsTests.swift */; };
 		92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A771C45AC380031C893 /* BMSClientTests.swift */; };
-		92018A8E1C45AC380031C893 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A781C45AC380031C893 /* LoggerTests.swift */; };
 		92018A8F1C45AC380031C893 /* MFPRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A791C45AC380031C893 /* MFPRequestTests.swift */; };
 		92018A921C45AC380031C893 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A7D1C45AC380031C893 /* ResponseTests.swift */; };
 		92018A931C45AC640031C893 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A621C45AC380031C893 /* AppDelegate.swift */; };
-		92018A961C45ACD80031C893 /* LogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A691C45AC380031C893 /* LogController.swift */; };
 		92018A971C45ACF50031C893 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A6A1C45AC380031C893 /* ViewController.swift */; };
 		92018A9A1C45AD2C0031C893 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A741C45AC380031C893 /* InterfaceController.swift */; };
 		92018A9B1C45AD2F0031C893 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A721C45AC380031C893 /* ExtensionDelegate.swift */; };
@@ -50,6 +38,9 @@
 		926679B91BF3D4E000F597C5 /* TestAppWatchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */; };
 		926679BC1BF4FBD300F597C5 /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		926679BD1BF4FBD300F597C5 /* BMSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		926CF6921C4D51760084355B /* MFPLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* MFPLogger.swift */; };
+		926CF6931C4D51760084355B /* MFPLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* MFPLogger.swift */; };
+		926CF6971C4EADCA0084355B /* MFPLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6961C4EADCA0084355B /* MFPLoggerTests.swift */; };
 		92ED06FD1C45AEC900E0BA1D /* LargeData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 92018A7C1C45AC380031C893 /* LargeData.txt */; };
 		92ED070C1C45AFD900E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070A1C45AFD900E0BA1D /* Assets.xcassets */; };
 		92ED07111C45B01F00E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070F1C45B01F00E0BA1D /* Assets.xcassets */; };
@@ -146,12 +137,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		92018A121C45A7720031C893 /* Analytics+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytics+iOS.swift"; sourceTree = "<group>"; };
-		92018A131C45A7720031C893 /* Analytics+watchOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Analytics+watchOS.swift"; sourceTree = "<group>"; };
-		92018A141C45A7720031C893 /* Analytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
-		92018A161C45A7720031C893 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		92018A171C45A7720031C893 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
-		92018A1A1C45A7720031C893 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		92018A231C45A7720031C893 /* AuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationManager.swift; sourceTree = "<group>"; };
 		92018A241C45A7720031C893 /* DefaultAuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultAuthorizationManager.swift; sourceTree = "<group>"; };
 		92018A3C1C45A8170031C893 /* BMSCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMSCore.h; sourceTree = "<group>"; };
@@ -160,21 +146,17 @@
 		92018A3F1C45A8170031C893 /* Info_watchOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info_watchOS.plist; sourceTree = "<group>"; };
 		92018A471C45AA890031C893 /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
 		92018A481C45AA890031C893 /* MFPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPClient.swift; sourceTree = "<group>"; };
-		92018A491C45AA890031C893 /* MFPRequest+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MFPRequest+iOS.swift"; sourceTree = "<group>"; };
 		92018A4A1C45AA890031C893 /* MFPRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPRequest.swift; sourceTree = "<group>"; };
 		92018A4B1C45AA890031C893 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		92018A4C1C45AA890031C893 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		92018A621C45AC380031C893 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		92018A651C45AC380031C893 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		92018A671C45AC380031C893 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		92018A691C45AC380031C893 /* LogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogController.swift; sourceTree = "<group>"; };
 		92018A6A1C45AC380031C893 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		92018A6E1C45AC380031C893 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		92018A721C45AC380031C893 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		92018A741C45AC380031C893 /* InterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
-		92018A761C45AC380031C893 /* AnalyticsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsTests.swift; sourceTree = "<group>"; };
 		92018A771C45AC380031C893 /* BMSClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClientTests.swift; sourceTree = "<group>"; };
-		92018A781C45AC380031C893 /* LoggerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		92018A791C45AC380031C893 /* MFPRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPRequestTests.swift; sourceTree = "<group>"; };
 		92018A7B1C45AC380031C893 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92018A7C1C45AC380031C893 /* LargeData.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LargeData.txt; sourceTree = "<group>"; };
@@ -182,6 +164,8 @@
 		9235D0A81BC3181900946A32 /* TestAppiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestAppiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestAppWatchOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0C81BC3183F00946A32 /* TestAppWatchOS Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TestAppWatchOS Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		926CF6911C4D51760084355B /* MFPLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPLogger.swift; sourceTree = "<group>"; };
+		926CF6961C4EADCA0084355B /* MFPLoggerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPLoggerTests.swift; sourceTree = "<group>"; };
 		92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCoreWatchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92ED070A1C45AFD900E0BA1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		92ED070B1C45AFD900E0BA1D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -245,31 +229,19 @@
 		92018A101C45A7720031C893 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				92018A161C45A7720031C893 /* Constants.swift */,
 				92018A171C45A7720031C893 /* Error.swift */,
 				92018A461C45AA890031C893 /* Network Requests */,
 				92018A221C45A7720031C893 /* Security */,
-				92018A111C45A7720031C893 /* Analytics */,
 				92018A191C45A7720031C893 /* Logger */,
 				92018A3B1C45A8170031C893 /* Resources */,
 			);
 			path = Source;
 			sourceTree = "<group>";
 		};
-		92018A111C45A7720031C893 /* Analytics */ = {
-			isa = PBXGroup;
-			children = (
-				92018A141C45A7720031C893 /* Analytics.swift */,
-				92018A121C45A7720031C893 /* Analytics+iOS.swift */,
-				92018A131C45A7720031C893 /* Analytics+watchOS.swift */,
-			);
-			path = Analytics;
-			sourceTree = "<group>";
-		};
 		92018A191C45A7720031C893 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
-				92018A1A1C45A7720031C893 /* Logger.swift */,
+				926CF6911C4D51760084355B /* MFPLogger.swift */,
 			);
 			path = Logger;
 			sourceTree = "<group>";
@@ -301,7 +273,6 @@
 				92018A471C45AA890031C893 /* BMSClient.swift */,
 				92018A481C45AA890031C893 /* MFPClient.swift */,
 				92018A4A1C45AA890031C893 /* MFPRequest.swift */,
-				92018A491C45AA890031C893 /* MFPRequest+iOS.swift */,
 				92018A4B1C45AA890031C893 /* Request.swift */,
 				92018A4C1C45AA890031C893 /* Response.swift */,
 			);
@@ -332,7 +303,6 @@
 			isa = PBXGroup;
 			children = (
 				92018A621C45AC380031C893 /* AppDelegate.swift */,
-				92018A691C45AC380031C893 /* LogController.swift */,
 				92018A6A1C45AC380031C893 /* ViewController.swift */,
 				92018A661C45AC380031C893 /* Main.storyboard */,
 				92018A641C45AC380031C893 /* LaunchScreen.storyboard */,
@@ -366,8 +336,7 @@
 				92018A771C45AC380031C893 /* BMSClientTests.swift */,
 				92018A791C45AC380031C893 /* MFPRequestTests.swift */,
 				92018A7D1C45AC380031C893 /* ResponseTests.swift */,
-				92018A761C45AC380031C893 /* AnalyticsTests.swift */,
-				92018A781C45AC380031C893 /* LoggerTests.swift */,
+				926CF6961C4EADCA0084355B /* MFPLoggerTests.swift */,
 				92018A7A1C45AC380031C893 /* Resources */,
 			);
 			path = "Unit Tests";
@@ -676,7 +645,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				92018A971C45ACF50031C893 /* ViewController.swift in Sources */,
-				92018A961C45ACD80031C893 /* LogController.swift in Sources */,
 				92018A931C45AC640031C893 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -696,16 +664,13 @@
 			files = (
 				92018A5B1C45AAD00031C893 /* MFPClient.swift in Sources */,
 				92018A5C1C45AAD30031C893 /* BMSClient.swift in Sources */,
-				92018A541C45AAA90031C893 /* Analytics+watchOS.swift in Sources */,
 				92018A5D1C45AAD60031C893 /* Error.swift in Sources */,
-				92018A531C45AAA30031C893 /* Logger.swift in Sources */,
 				92018A571C45AAC40031C893 /* AuthorizationManager.swift in Sources */,
-				92018A551C45AAAC0031C893 /* Analytics.swift in Sources */,
 				92018A591C45AACA0031C893 /* Request.swift in Sources */,
 				92018A581C45AAC70031C893 /* Response.swift in Sources */,
 				92018A561C45AAC20031C893 /* DefaultAuthorizationManager.swift in Sources */,
 				92018A5A1C45AACC0031C893 /* MFPRequest.swift in Sources */,
-				92018A5E1C45AAD80031C893 /* Constants.swift in Sources */,
+				926CF6931C4D51760084355B /* MFPLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -713,15 +678,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92018A2C1C45A7720031C893 /* Logger.swift in Sources */,
+				926CF6921C4D51760084355B /* MFPLogger.swift in Sources */,
 				92018A511C45AA890031C893 /* Request.swift in Sources */,
-				92018A4F1C45AA890031C893 /* MFPRequest+iOS.swift in Sources */,
 				92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */,
 				92018A501C45AA890031C893 /* MFPRequest.swift in Sources */,
 				92018A521C45AA890031C893 /* Response.swift in Sources */,
-				92018A291C45A7720031C893 /* Constants.swift in Sources */,
-				92018A251C45A7720031C893 /* Analytics+iOS.swift in Sources */,
-				92018A271C45A7720031C893 /* Analytics.swift in Sources */,
 				92018A4E1C45AA890031C893 /* MFPClient.swift in Sources */,
 				92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */,
 				92018A2A1C45A7720031C893 /* Error.swift in Sources */,
@@ -734,10 +695,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				92018A921C45AC380031C893 /* ResponseTests.swift in Sources */,
-				92018A8C1C45AC380031C893 /* AnalyticsTests.swift in Sources */,
+				926CF6971C4EADCA0084355B /* MFPLoggerTests.swift in Sources */,
 				92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */,
 				92018A8F1C45AC380031C893 /* MFPRequestTests.swift in Sources */,
-				92018A8E1C45AC380031C893 /* LoggerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

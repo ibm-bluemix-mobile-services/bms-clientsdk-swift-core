@@ -1,5 +1,5 @@
 /*
-*     Copyright 2015 IBM Corp.
+*     Copyright 2016 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -20,19 +20,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
     func applicationDidFinishLaunching() {
         
         let myBMSClient = BMSClient.sharedInstance
-        myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "", bluemixRegionSuffix: REGION_US_SOUTH)
+        myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "", bluemixRegionSuffix: BluemixRegion.US_SOUTH)
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
-        
-        // TODO: Get a real apiKey from Bluemix app
-        Analytics.initializeWithAppName("TestAppWatchOS", apiKey: "REPLACE WITH ACTUAL API KEY")
     }
-    
-    func applicationDidBecomeActive() {
-        Analytics.recordApplicationDidBecomeActive()
-    }
-    
-    func applicationWillResignActive() {
-        Analytics.recordApplicationWillResignActive()
-    }
-
 }

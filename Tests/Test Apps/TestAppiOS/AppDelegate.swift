@@ -1,5 +1,5 @@
 /*
-*     Copyright 2015 IBM Corp.
+*     Copyright 2016 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -25,13 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let myBMSClient = BMSClient.sharedInstance
         // REPLACE WITH REAL APP ROUTE AND GUID
-        myBMSClient.initializeWithBluemixAppRoute("https://example.mybluemix.net", bluemixAppGUID: "1234", bluemixRegionSuffix: REGION_US_SOUTH)
+        myBMSClient.initializeWithBluemixAppRoute("https://example.mybluemix.net", bluemixAppGUID: "1234", bluemixRegionSuffix: BluemixRegion.US_SOUTH)
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
-        
-        // REPLACE WITH REAL API KEY
-        Analytics.initializeWithAppName("TestAppiOS", apiKey: "1234")
-        
-        Analytics.startRecordingApplicationLifecycle()
         
         return true
     }

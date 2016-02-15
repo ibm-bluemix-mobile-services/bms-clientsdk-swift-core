@@ -1,5 +1,5 @@
 /*
-*     Copyright 2015 IBM Corp.
+*     Copyright 2016 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -37,6 +37,8 @@ public class Response {
     //is this response a success response
     public let isSuccessful: Bool
     
+    
+    
     // MARK: Properties (internal/private)
     
     let httpResponse: NSHTTPURLResponse?
@@ -54,7 +56,7 @@ public class Response {
         - parameter httpResponse: Response object returned from the NSURLSession request
         - parameter isRedirect:   True if the response requires a redirect
     */
-    internal init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool) {
+    public init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool) {
         
         self.isRedirect = isRedirect
         self.httpResponse = httpResponse
@@ -71,7 +73,6 @@ public class Response {
             isSuccessful = false
         }
     }
-    
     
     // Try to convert response NSData to String
     static private func buildResponseStringWithData(responseData: NSData?) -> String? {

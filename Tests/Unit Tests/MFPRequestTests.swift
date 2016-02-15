@@ -1,5 +1,5 @@
 /*
-*     Copyright 2015 IBM Corp.
+*     Copyright 2016 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -33,7 +33,7 @@ class MFPRequestTests: XCTestCase {
     
     func testInitWithRelativeUrl() {
     
-        BMSClient.sharedInstance.initializeWithBluemixAppRoute("https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegionSuffix:REGION_US_SOUTH)
+        BMSClient.sharedInstance.initializeWithBluemixAppRoute("https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegionSuffix: BluemixRegion.US_SOUTH)
         let request = MFPRequest(url: "/path/to/resource", headers: nil, queryParameters: nil)
         
         XCTAssertEqual(request.resourceUrl, "https://mybluemixapp.net/path/to/resource")
@@ -51,21 +51,6 @@ class MFPRequestTests: XCTestCase {
         XCTAssertNotNil(request.networkRequest)
     }
     
-    func testUniqueDeviceId() {
-        
-        let mfpUserDefaults = NSUserDefaults(suiteName: "com.ibm.mobilefirstplatform.clientsdk.swift.BMSCore")
-        mfpUserDefaults?.removeObjectForKey("deviceId")
-        
-        // Generate new ID
-        let generatedId = MFPRequest.uniqueDeviceId
-        
-        // Since an ID was already created, this method should keep returning the same one
-        let retrievedId = MFPRequest.uniqueDeviceId
-        XCTAssertEqual(retrievedId, generatedId)
-        let retrievedId2 = MFPRequest.uniqueDeviceId
-        XCTAssertEqual(retrievedId2, generatedId)
-    }
-    
     
     
     // MARK: send
@@ -78,7 +63,7 @@ class MFPRequestTests: XCTestCase {
         request.sendData(requestData!, withCompletionHandler: nil)
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
-        XCTAssertNotNil(request.headers["x-mfp-analytics-metadata"])
+        XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(request.requestBody, requestData)
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
@@ -94,10 +79,10 @@ class MFPRequestTests: XCTestCase {
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
-        XCTAssertNotNil(request.headers["x-mfp-analytics-metadata"])
+        XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[MFPRequest.CONTENT_TYPE], MFPRequest.TEXT_PLAIN_TYPE)
+        XCTAssertEqual(request.headers["Content-Type"], "text/plain")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
@@ -110,10 +95,10 @@ class MFPRequestTests: XCTestCase {
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
-        XCTAssertNotNil(request.headers["x-mfp-analytics-metadata"])
+        XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[MFPRequest.CONTENT_TYPE], "media-type")
+        XCTAssertEqual(request.headers["Content-Type"], "media-type")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
@@ -125,8 +110,8 @@ class MFPRequestTests: XCTestCase {
         let request = MFPRequest(url: badUrl, headers: nil, queryParameters: nil)
         request.sendWithCompletionHandler { (response: Response?, error: NSError?) -> Void in
             XCTAssertNil(response)
-            XCTAssertEqual(error?.domain, MFP_CORE_ERROR_DOMAIN)
-            XCTAssertEqual(error?.code, MFPErrorCode.MalformedUrl.rawValue)
+            XCTAssertEqual(error?.domain, BMSCoreError.domain)
+            XCTAssertEqual(error?.code, BMSCoreError.MalformedUrl.rawValue)
             
             responseReceivedExpectation.fulfill()
         }

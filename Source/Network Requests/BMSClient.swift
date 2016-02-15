@@ -1,5 +1,5 @@
 /*
-*     Copyright 2015 IBM Corp.
+*     Copyright 2016 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -13,20 +13,24 @@
 
 
 /**
+    The region where the Bluemix application is hosted.
+
+    This is used for the `bluemixRegionSuffix` parameter of the  `BMSClient.initializeWithBluemixAppRoute()` method.
+*/
+public enum BluemixRegion: String {
+    
+    case US_SOUTH = "ng.bluemix.net"
+    case UK = "eu-gb.bluemix.net"
+    case SYDNEY = "au-syd.bluemix.net"
+}
+
+
+/**
     A singleton that serves as an entry point to Bluemix client-server communication.
 */
 public class BMSClient: MFPClient {
     
-    public static let REGION_US_SOUTH = "ng.bluemix.net"
-    public static let REGION_UK = "eu-gb.bluemix.net"
-    public static let REGION_SYDNEY = "au-syd.bluemix.net"
-    
-    public static let HTTP_SCHEME = "http"
-    public static let HTTPS_SCHEME = "https"
-    
-    static let QUERY_PARAM_SUBZONE = "subzone"
-    
-    private var registeredAuthorizationManager: AuthorizationManager?
+
     // MARK: Properties (public)
     
     /// This singleton should be used for all `BMSClient` activity
@@ -38,16 +42,17 @@ public class BMSClient: MFPClient {
     // Specifies the bluemix region suffix
     public private(set) var bluemixRegionSuffix: String?
     
-    /// Specifies the backend application id.
+    /// Specifies the backend application id
     public private(set) var bluemixAppGUID: String?
         
     /// Specifies the default timeout (in seconds) for all BMS network requests.
     public var defaultRequestTimeout: Double = 20.0
+
     
-    // Specifies the default protocol
-    public static var defaultProtocol: String  = BMSClient.HTTPS_SCHEME
     
-    public var sharedAuthorizationManager: AuthorizationManager {
+    // MARK: Properties (internal/private)
+    
+    internal var sharedAuthorizationManager: AuthorizationManager {
         get {
             if registeredAuthorizationManager == nil {
                 return DefaultAuthorizationManager()
@@ -61,10 +66,11 @@ public class BMSClient: MFPClient {
         }
     }
     
+    private var registeredAuthorizationManager: AuthorizationManager?
+    
+    
+    
     // MARK: Initializers
-    
-    private init() {} // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
-    
     
     /**
         The required intializer for the `BMSClient` class.
@@ -77,19 +83,12 @@ public class BMSClient: MFPClient {
         - parameter backendGUID:            The GUID of the Bluemix application
         - parameter bluemixRegionSuffix:    The region where your Bluemix application is hosted
      */
-    public func initializeWithBluemixAppRoute(bluemixAppRoute: String?, bluemixAppGUID: String?, bluemixRegionSuffix: String) {
+    public func initializeWithBluemixAppRoute(bluemixAppRoute: String?, bluemixAppGUID: String?, bluemixRegionSuffix: BluemixRegion) {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
-        self.bluemixRegionSuffix = bluemixRegionSuffix
+        self.bluemixRegionSuffix = bluemixRegionSuffix.rawValue
     }
     
-}
-
-
-// For unit testing only
-internal extension BMSClient {
+    private init() {} // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
     
-    internal func uninitializeBluemixRegionSuffix() {
-        self.bluemixRegionSuffix = nil
-    }
 }

@@ -1,5 +1,5 @@
 /*
-*     Copyright 2015 IBM Corp.
+*     Copyright 2016 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -15,9 +15,6 @@
 import UIKit
 import BMSCore
 
-// TODO: Fix the storyboard so that the view fits in all iOS screen sizes
-
-// TODO: Rename this controller to something more descriptive, like "RequestViewController"
 
 class ViewController: UIViewController, UITextFieldDelegate {
 
@@ -29,8 +26,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func sendRequestButtonPressed(sender: AnyObject) {
         
-        Analytics.log(["buttonPressed": "sendRequest"])
-        Analytics.send()
+        logEvent()
         
         var method: HttpMethod
 
@@ -83,8 +79,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
+    private func logEvent() {
+        
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.sdkDebugLoggingEnabled = true
+        
+        let testLogger = Logger.getLoggerForName("TestAppiOS")
+        testLogger.debug("Sending Request button pressed")
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        responseLabel.layer.borderWidth = 1
     }
     
     
