@@ -87,6 +87,12 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     
     
     
+    // MARK: Constants
+    
+    public static let contentType = "Content-Type"
+    
+    
+    
     // MARK: Initializer
     
     /**
@@ -155,8 +161,8 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         // Don't want to overwrite content type if it has already been specified as something else
-        if headers["Content-Type"] == nil {
-            headers["Content-Type"] = "text/plain"
+        if headers[MFPRequest.contentType] == nil {
+            headers[MFPRequest.contentType] = "text/plain"
         }
         
         self.sendWithCompletionHandler(callback)
