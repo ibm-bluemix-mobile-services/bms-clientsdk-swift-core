@@ -21,19 +21,19 @@ class MFPRequestTests: XCTestCase {
     
     func testInitWithAllParameters() {
         
-        let request = MFPRequest(url: "http://example.com", headers:["Content-Type": "text/plain"], queryParameters: ["someKey": "someValue"], method: HttpMethod.GET, timeout: 10.0)
+        let request = MFPRequest(url: "http://example.com", headers:[MFPRequest.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], method: HttpMethod.GET, timeout: 10.0)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, 10.0)
-        XCTAssertEqual(request.headers, ["Content-Type": "text/plain"])
+        XCTAssertEqual(request.headers, [MFPRequest.contentType: "text/plain"])
         XCTAssertEqual(request.queryParameters!, ["someKey": "someValue"])
         XCTAssertNotNil(request.networkRequest)
     }
     
     func testInitWithRelativeUrl() {
     
-        BMSClient.sharedInstance.initializeWithBluemixAppRoute("https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegionSuffix: BluemixRegion.US_SOUTH)
+        BMSClient.sharedInstance.initializeWithBluemixAppRoute("https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.US_SOUTH)
         let request = MFPRequest(url: "/path/to/resource", headers: nil, queryParameters: nil)
         
         XCTAssertEqual(request.resourceUrl, "https://mybluemixapp.net/path/to/resource")
@@ -82,13 +82,13 @@ class MFPRequestTests: XCTestCase {
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers["Content-Type"], "text/plain")
+        XCTAssertEqual(request.headers[MFPRequest.contentType], "text/plain")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
     func testSendStringWithoutOverwritingContentTypeHeader() {
         
-        let request = MFPRequest(url: "http://example.com", headers: ["Content-Type": "media-type"], queryParameters: ["someKey": "someValue"])
+        let request = MFPRequest(url: "http://example.com", headers: [MFPRequest.contentType: "media-type"], queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
         request.sendString(dataString, withCompletionHandler: nil)
@@ -98,7 +98,7 @@ class MFPRequestTests: XCTestCase {
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers["Content-Type"], "media-type")
+        XCTAssertEqual(request.headers[MFPRequest.contentType], "media-type")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     

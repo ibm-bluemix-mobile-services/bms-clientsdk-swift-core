@@ -23,10 +23,10 @@ class BMSClientTests: XCTestCase {
         XCTAssertNil(clientInstance.bluemixAppRoute, "BMSClient has not yet been initialized")
         XCTAssertNil(clientInstance.bluemixAppGUID, "BMSClient has not yet been initialized")
         
-        clientInstance.initializeWithBluemixAppRoute("http://example.com", bluemixAppGUID: "1234", bluemixRegionSuffix:BluemixRegion.US_SOUTH)
+        clientInstance.initializeWithBluemixAppRoute("http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.US_SOUTH)
         XCTAssertEqual(clientInstance.bluemixAppRoute, "http://example.com")
         XCTAssertEqual(clientInstance.bluemixAppGUID, "1234")
-        XCTAssertEqual(clientInstance.bluemixRegionSuffix, BluemixRegion.US_SOUTH.rawValue)
+        XCTAssertEqual(clientInstance.bluemixRegion, BMSClient.US_SOUTH)
         
         // Make sure the sharedInstance singleton is persistent
         let newClientInstance = BMSClient.sharedInstance
