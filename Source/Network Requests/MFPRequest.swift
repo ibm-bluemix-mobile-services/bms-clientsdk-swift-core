@@ -89,7 +89,7 @@ public class MFPRequest: NSObject, NSURLSessionTaskDelegate {
     
     // MARK: Constants
     
-    public static let contentType = "Content-Type"
+    public static let CONTENT_TYPE = "Content-Type"
     
     
     
