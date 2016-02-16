@@ -11,7 +11,6 @@ This package contains the core components of the Swift SDK.
 * HTTP Infrastructure
 * Security and Authentication
 * Logger
-* Analytics
 
 
 ## Requirements
@@ -36,11 +35,6 @@ end
 ##### watchOS
 ```ruby
 use_frameworks!
-
-target 'MyApp WatchKit App' do
-    platform :ios, '8.0'
-    pod 'BMSCore'
-end
 
 target 'MyApp WatchKit Extension' do
     platform :watchos, '2.0'
