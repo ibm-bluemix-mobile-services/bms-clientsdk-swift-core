@@ -230,8 +230,11 @@ public class Logger {
     // Format: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
     public static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
         
-        if level != LogLevel.Analytics {
-            print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
-        }
+        // Suppress console log output for apps that are being released to the App Store
+        #if DEBUG
+            if level != LogLevel.Analytics {
+                    print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
+            }
+        #endif
     }
 }
