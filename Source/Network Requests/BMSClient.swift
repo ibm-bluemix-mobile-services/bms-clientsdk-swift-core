@@ -59,10 +59,10 @@ public class BMSClient: MFPClient {
     
     // MARK: Constants
     
-    // TODO: Documentation
-    public static let US_SOUTH = "ng.bluemix.net"
-    public static let UK = "eu-gb.bluemix.net"
-    public static let SYDNEY = "au-syd.bluemix.net"
+    // TODO: 2/17/16 - Documentation
+    public static let REGION_US_SOUTH = "ng.bluemix.net"
+    public static let REGION_UK = "eu-gb.bluemix.net"
+    public static let REGION_SYDNEY = "au-syd.bluemix.net"
     
     
     
@@ -77,7 +77,7 @@ public class BMSClient: MFPClient {
 
         - parameter backendRoute:           The base URL for the authorization server
         - parameter backendGUID:            The GUID of the Bluemix application
-        - parameter bluemixRegion:          The region where your Bluemix application is hosted.
+        - parameter bluemixRegion:          The region where your Bluemix application is hosted. Use one of the `BMSClient.REGION` constants.
      */
     public func initializeWithBluemixAppRoute(bluemixAppRoute: String?, bluemixAppGUID: String?, bluemixRegion: String) {
         self.bluemixAppRoute = bluemixAppRoute
