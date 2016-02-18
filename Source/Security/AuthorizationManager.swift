@@ -27,5 +27,7 @@ public protocol AuthorizationManager {
 
     func clearAuthorizationData()
     
-    
+    func getUserIdentity() -> BaseUserIdentity
+    func getDeviceIdentity() -> BaseDeviceIdentity
+    func getAppIdentity() -> BaseAppIdentity
 }

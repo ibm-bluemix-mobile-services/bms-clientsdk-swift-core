@@ -18,7 +18,7 @@ public enum PersistensePolicy: Int {
     case Never, Always
 }
 
-internal class DefaultAuthorizationManager : AuthorizationManager {
+internal class BaseAuthorizationManager : AuthorizationManager {
     
     internal init() {
         
@@ -46,6 +46,18 @@ internal class DefaultAuthorizationManager : AuthorizationManager {
     
     func getCachedAuthorizationHeader() -> String? {
         return nil;
+    }
+    
+    func getUserIdentity() -> BaseUserIdentity {
+        return BaseUserIdentity()
+    }
+    
+    func getDeviceIdentity() -> BaseDeviceIdentity {
+        return BaseDeviceIdentity()
+    }
+    
+    func getAppIdentity() -> BaseAppIdentity {
+        return BaseAppIdentity()        
     }
     
 }

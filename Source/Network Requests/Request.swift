@@ -46,6 +46,8 @@ public class Request: MFPRequest {
                     else {
                         self.sendWithCompletionHandler(callback)
                     }
+                } else {
+                    callback?(response, error)
                 }
             }
             authManager.obtainAuthorization(authCallback)
