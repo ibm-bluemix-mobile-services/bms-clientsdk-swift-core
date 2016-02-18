@@ -18,7 +18,7 @@ public enum PersistensePolicy: Int {
     case Never, Always
 }
 
-internal class BaseAuthorizationManager : AuthorizationManager {
+internal class DefaultAuthorizationManager : AuthorizationManager {
     
     internal init() {
         
