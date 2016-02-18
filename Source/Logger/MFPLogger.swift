@@ -48,7 +48,7 @@ public enum LogLevel: Int {
 
 // Stores logs on the device's file system
 // This protocol is implemented in the BMSAnalytics framework
-public protocol LogSaverProtocol {
+public protocol LogRecorderProtocol {
     
     func logMessageToFile(message: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]?)
 }
@@ -98,7 +98,7 @@ public class Logger {
     // Used to persist all logs to the device's file system
     // Public access required by BMSAnalytics framework
     // This will obtain a value when the Analytics class from BMSAnalytics is initialized
-    public static var logSaver: LogSaverProtocol?
+    public static var logRecorder: LogRecorderProtocol?
     
     // Prefix for all internal logger names
     public static let mfpLoggerPrefix = "mfpsdk."
@@ -224,14 +224,17 @@ public class Logger {
             Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
         }
         
-        Logger.logSaver?.logMessageToFile(message, level: level, loggerName: self.name, calledFile: calledFile, calledFunction: calledFunction, calledLineNumber: calledLineNumber, additionalMetadata: additionalMetadata)
+        Logger.logRecorder?.logMessageToFile(message, level: level, loggerName: self.name, calledFile: calledFile, calledFunction: calledFunction, calledLineNumber: calledLineNumber, additionalMetadata: additionalMetadata)
     }
     
     // Format: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
     public static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
         
-        if level != LogLevel.Analytics {
-            print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
-        }
+        // Suppress console log output for apps that are being released to the App Store
+        #if DEBUG
+            if level != LogLevel.Analytics {
+                    print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
+            }
+        #endif
     }
 }
