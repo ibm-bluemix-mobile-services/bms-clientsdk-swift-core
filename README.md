@@ -42,6 +42,24 @@ target 'MyApp WatchKit Extension' do
 end
 ```
 
+To enable Logger to print logs to the Xcode console, add the following post-install hook to your Podfile:
+
+```ruby
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        if target.name.include? 'BMSCore'
+            target.build_configurations.each do |config|
+                if config.name == 'Debug'
+                    config.build_settings['OTHER_SWIFT_FLAGS'] = '-DDEBUG'
+                else
+                    config.build_settings['OTHER_SWIFT_FLAGS'] = ''
+                end
+            end
+        end
+    end
+end
+```
+
 
 =======================
 Copyright 2015 IBM Corp.
