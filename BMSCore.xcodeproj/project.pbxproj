@@ -39,6 +39,13 @@
 		926CF6921C4D51760084355B /* MFPLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* MFPLogger.swift */; };
 		926CF6931C4D51760084355B /* MFPLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* MFPLogger.swift */; };
 		926CF6971C4EADCA0084355B /* MFPLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6961C4EADCA0084355B /* MFPLoggerTests.swift */; };
+		927DF2061C7CF60600245647 /* BaseAppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2031C7CF60600245647 /* BaseAppIdentity.swift */; };
+		927DF2071C7CF60600245647 /* BaseAppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2031C7CF60600245647 /* BaseAppIdentity.swift */; };
+		927DF2081C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */; };
+		927DF2091C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */; };
+		927DF20A1C7CF60600245647 /* BaseUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2051C7CF60600245647 /* BaseUserIdentity.swift */; };
+		927DF20B1C7CF60600245647 /* BaseUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2051C7CF60600245647 /* BaseUserIdentity.swift */; };
+		927DF20C1C7CF63F00245647 /* BaseAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51C00E1C7625BC00023F37 /* BaseAuthorizationManager.swift */; };
 		92ED06FD1C45AEC900E0BA1D /* LargeData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 92018A7C1C45AC380031C893 /* LargeData.txt */; };
 		92ED070C1C45AFD900E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070A1C45AFD900E0BA1D /* Assets.xcassets */; };
 		92ED07111C45B01F00E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070F1C45B01F00E0BA1D /* Assets.xcassets */; };
@@ -47,9 +54,6 @@
 		92ED07191C45B59D00E0BA1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92018A661C45AC380031C893 /* Main.storyboard */; };
 		92ED071A1C45BA0500E0BA1D /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92018A6D1C45AC380031C893 /* Interface.storyboard */; };
 		92F264021B94EBB60063CC1D /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
-		FD51C0091C76258700023F37 /* BaseAppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51C0041C76258700023F37 /* BaseAppIdentity.swift */; };
-		FD51C00A1C76258700023F37 /* BaseDeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51C0051C76258700023F37 /* BaseDeviceIdentity.swift */; };
-		FD51C00D1C76258700023F37 /* BaseUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51C0081C76258700023F37 /* BaseUserIdentity.swift */; };
 		FD51C00F1C7625BC00023F37 /* BaseAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51C00E1C7625BC00023F37 /* BaseAuthorizationManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -167,6 +171,9 @@
 		9235D0C81BC3183F00946A32 /* TestAppWatchOS Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TestAppWatchOS Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		926CF6911C4D51760084355B /* MFPLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPLogger.swift; sourceTree = "<group>"; };
 		926CF6961C4EADCA0084355B /* MFPLoggerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPLoggerTests.swift; sourceTree = "<group>"; };
+		927DF2031C7CF60600245647 /* BaseAppIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAppIdentity.swift; sourceTree = "<group>"; };
+		927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDeviceIdentity.swift; sourceTree = "<group>"; };
+		927DF2051C7CF60600245647 /* BaseUserIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseUserIdentity.swift; sourceTree = "<group>"; };
 		92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCoreWatchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92ED070A1C45AFD900E0BA1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		92ED070B1C45AFD900E0BA1D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -176,9 +183,6 @@
 		92ED07151C45B03700E0BA1D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92F263F71B94EBB50063CC1D /* BMSCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F264011B94EBB60063CC1D /* BMSCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BMSCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		FD51C0041C76258700023F37 /* BaseAppIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAppIdentity.swift; sourceTree = "<group>"; };
-		FD51C0051C76258700023F37 /* BaseDeviceIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDeviceIdentity.swift; sourceTree = "<group>"; };
-		FD51C0081C76258700023F37 /* BaseUserIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseUserIdentity.swift; sourceTree = "<group>"; };
 		FD51C00E1C7625BC00023F37 /* BaseAuthorizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAuthorizationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -254,7 +258,7 @@
 		92018A221C45A7720031C893 /* Security */ = {
 			isa = PBXGroup;
 			children = (
-				FD51C0031C76258700023F37 /* identity */,
+				927DF2021C7CF60600245647 /* Identity */,
 				92018A231C45A7720031C893 /* AuthorizationManager.swift */,
 				FD51C00E1C7625BC00023F37 /* BaseAuthorizationManager.swift */,
 			);
@@ -357,6 +361,16 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		927DF2021C7CF60600245647 /* Identity */ = {
+			isa = PBXGroup;
+			children = (
+				927DF2031C7CF60600245647 /* BaseAppIdentity.swift */,
+				927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */,
+				927DF2051C7CF60600245647 /* BaseUserIdentity.swift */,
+			);
+			path = Identity;
+			sourceTree = "<group>";
+		};
 		92ED07091C45AFD900E0BA1D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -405,16 +419,6 @@
 				9235D0C81BC3183F00946A32 /* TestAppWatchOS Extension.appex */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		FD51C0031C76258700023F37 /* identity */ = {
-			isa = PBXGroup;
-			children = (
-				FD51C0041C76258700023F37 /* BaseAppIdentity.swift */,
-				FD51C0051C76258700023F37 /* BaseDeviceIdentity.swift */,
-				FD51C0081C76258700023F37 /* BaseUserIdentity.swift */,
-			);
-			path = identity;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -678,6 +682,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				927DF20C1C7CF63F00245647 /* BaseAuthorizationManager.swift in Sources */,
 				92018A5B1C45AAD00031C893 /* MFPClient.swift in Sources */,
 				92018A5C1C45AAD30031C893 /* BMSClient.swift in Sources */,
 				92018A5D1C45AAD60031C893 /* Error.swift in Sources */,
@@ -685,7 +690,10 @@
 				92018A591C45AACA0031C893 /* Request.swift in Sources */,
 				92018A581C45AAC70031C893 /* Response.swift in Sources */,
 				92018A5A1C45AACC0031C893 /* MFPRequest.swift in Sources */,
+				927DF20B1C7CF60600245647 /* BaseUserIdentity.swift in Sources */,
 				926CF6931C4D51760084355B /* MFPLogger.swift in Sources */,
+				927DF2091C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */,
+				927DF2071C7CF60600245647 /* BaseAppIdentity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -693,16 +701,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD51C00D1C76258700023F37 /* BaseUserIdentity.swift in Sources */,
-				FD51C00A1C76258700023F37 /* BaseDeviceIdentity.swift in Sources */,
 				926CF6921C4D51760084355B /* MFPLogger.swift in Sources */,
-				FD51C0091C76258700023F37 /* BaseAppIdentity.swift in Sources */,
+				927DF20A1C7CF60600245647 /* BaseUserIdentity.swift in Sources */,
 				92018A511C45AA890031C893 /* Request.swift in Sources */,
+				927DF2061C7CF60600245647 /* BaseAppIdentity.swift in Sources */,
 				92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */,
 				92018A501C45AA890031C893 /* MFPRequest.swift in Sources */,
 				92018A521C45AA890031C893 /* Response.swift in Sources */,
 				92018A4E1C45AA890031C893 /* MFPClient.swift in Sources */,
 				92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */,
+				927DF2081C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */,
 				92018A2A1C45A7720031C893 /* Error.swift in Sources */,
 				FD51C00F1C7625BC00023F37 /* BaseAuthorizationManager.swift in Sources */,
 			);
