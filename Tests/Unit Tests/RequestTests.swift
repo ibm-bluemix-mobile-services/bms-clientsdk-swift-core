@@ -18,7 +18,8 @@ import XCTest
 
 class RequestTests: XCTestCase {
 
-    func testSendWithCompletionHandlerWithNil() {
+    
+    func testSendWithCompletionHandlerWithNoRequestBody() {
         let request = Request(url: "http://example.com", method: HttpMethod.GET)
         
         request.sendWithCompletionHandler(nil)
@@ -26,4 +27,15 @@ class RequestTests: XCTestCase {
         XCTAssertEqual(request.oauthFailCounter, 0)
     }
 
+    
+    func testSendWithCompletionHandlerWithRequestBody() {
+        let request = Request(url: "http://example.com", headers:[Request.CONTENT_TYPE: "text/plain"], queryParameters: ["someKey": "someValue"], method: HttpMethod.GET, timeout: 10.0)
+        
+        let requestBody = "request data".dataUsingEncoding(NSUTF8StringEncoding)!
+        // sendData() should populate the the BaseRequest.requestBody parameter, which gets assigned to savedRequestBody
+        request.sendData(requestBody, withCompletionHandler: nil)
+        
+        XCTAssertEqual(request.savedRequestBody, requestBody)
+    }
+    
 }

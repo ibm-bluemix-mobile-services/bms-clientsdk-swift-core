@@ -21,6 +21,12 @@ public class Request: BaseRequest {
         super.init(url: url, headers: nil, queryParameters:nil, method: method)
     }
     
+    // This is required since the other custom Request initializer overrides this superclass initializer
+    public override init(url: String, headers: [String: String]?, queryParameters: [String: String]?, method: HttpMethod = HttpMethod.GET, timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout) {
+     
+        super.init(url: url, headers: headers, queryParameters: queryParameters, method: method, timeout: timeout)
+    }
+    
     public override func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
         
         let authManager: AuthorizationManager = BMSClient.sharedInstance.sharedAuthorizationManager
