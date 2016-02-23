@@ -12,15 +12,18 @@
 */
 
 
-/**
-    A singleton that serves as an entry point to MobileFirst Platform Foundation client-server communication.
-*/
-public class MFPClient: BaseClient {
-    
-    
-    // MARK: Properties (public)
-    
-    /// Specifies the default timeout (in seconds) for all BMS network requests.
-    public var defaultRequestTimeout: Double = 20.0
-    
+import XCTest
+@testable import BMSCore
+
+
+class RequestTests: XCTestCase {
+
+    func testSendWithCompletionHandlerWithNil() {
+        let request = Request(url: "http://example.com", method: HttpMethod.GET)
+        
+        request.sendWithCompletionHandler(nil)
+        XCTAssertNil(request.savedRequestBody)
+        XCTAssertEqual(request.oauthFailCounter, 0)
+    }
+
 }

@@ -12,10 +12,10 @@
 */
 
 
-public class Request: MFPRequest {
+public class Request: BaseRequest {
     
-    private var oauthFailCounter = 0
-    private var savedRequestBody: NSData?
+    internal var oauthFailCounter = 0
+    internal var savedRequestBody: NSData?
     
     public init(url: String, method: HttpMethod) {
         super.init(url: url, headers: nil, queryParameters:nil, method: method)

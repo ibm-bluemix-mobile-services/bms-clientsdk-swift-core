@@ -13,14 +13,11 @@
 
 
 /**
-    A singleton that serves as an entry point to MobileFirst Platform Foundation client-server communication.
+    Defines the methods and properties needed to create network connections to a server.
 */
-public class MFPClient: BaseClient {
+internal protocol BaseClient {
     
     
-    // MARK: Properties (public)
-    
-    /// Specifies the default timeout (in seconds) for all BMS network requests.
-    public var defaultRequestTimeout: Double = 20.0
-    
+    /// Specifies the default timeout (in seconds) for all network requests.
+    var defaultRequestTimeout: Double { get set }    
 }
