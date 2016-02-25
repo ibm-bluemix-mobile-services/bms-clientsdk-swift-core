@@ -49,6 +49,7 @@
 		927DF20A1C7CF60600245647 /* BaseUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2051C7CF60600245647 /* BaseUserIdentity.swift */; };
 		927DF20B1C7CF60600245647 /* BaseUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2051C7CF60600245647 /* BaseUserIdentity.swift */; };
 		927DF20C1C7CF63F00245647 /* BaseAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51C00E1C7625BC00023F37 /* BaseAuthorizationManager.swift */; };
+		927DF20E1C7F6CCB00245647 /* MFPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF20D1C7F6CCB00245647 /* MFPClientTests.swift */; };
 		92ED06FD1C45AEC900E0BA1D /* LargeData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 92018A7C1C45AC380031C893 /* LargeData.txt */; };
 		92ED070C1C45AFD900E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070A1C45AFD900E0BA1D /* Assets.xcassets */; };
 		92ED07111C45B01F00E0BA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92ED070F1C45B01F00E0BA1D /* Assets.xcassets */; };
@@ -179,6 +180,7 @@
 		927DF2031C7CF60600245647 /* BaseAppIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAppIdentity.swift; sourceTree = "<group>"; };
 		927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDeviceIdentity.swift; sourceTree = "<group>"; };
 		927DF2051C7CF60600245647 /* BaseUserIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseUserIdentity.swift; sourceTree = "<group>"; };
+		927DF20D1C7F6CCB00245647 /* MFPClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MFPClientTests.swift; sourceTree = "<group>"; };
 		92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCoreWatchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92ED070A1C45AFD900E0BA1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		92ED070B1C45AFD900E0BA1D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 			isa = PBXGroup;
 			children = (
 				92018A771C45AC380031C893 /* BMSClientTests.swift */,
+				927DF20D1C7F6CCB00245647 /* MFPClientTests.swift */,
 				92018A791C45AC380031C893 /* BaseRequestTests.swift */,
 				927DF2001C7CD7B900245647 /* RequestTests.swift */,
 				92018A7D1C45AC380031C893 /* ResponseTests.swift */,
@@ -731,6 +734,7 @@
 			files = (
 				927DF2011C7CD7B900245647 /* RequestTests.swift in Sources */,
 				92018A921C45AC380031C893 /* ResponseTests.swift in Sources */,
+				927DF20E1C7F6CCB00245647 /* MFPClientTests.swift in Sources */,
 				926CF6971C4EADCA0084355B /* MFPLoggerTests.swift in Sources */,
 				92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */,
 				92018A8F1C45AC380031C893 /* BaseRequestTests.swift in Sources */,

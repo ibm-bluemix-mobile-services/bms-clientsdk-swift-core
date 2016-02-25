@@ -20,7 +20,41 @@ public class MFPClient: BaseClient {
     
     // MARK: Properties (public)
     
-    /// Specifies the default timeout (in seconds) for all BMS network requests.
+    /// This singleton should be used for all `MFPClient` activity
+    public static let sharedInstance = MFPClient()
+    
+    /// Specifies the protocol for connecting with the MFP server
+    public private(set) var mfpProtocol: String?
+    
+    /// Specifies the host name of the MFP server
+    public private(set) var mfpHost: String?
+    
+    /// Specifies the port for connecting with the MFP server
+    public private(set) var mfpPort: String?
+    
+    /// Specifies the default timeout (in seconds) for all MFP network requests.
     public var defaultRequestTimeout: Double = 20.0
+    
+    
+    
+    // MARK: Initializers
+    
+    /**
+        The required intializer for the `MFPClient` class.
+        
+        Sets the base URL for the MFP server.
+        
+        - parameter mfpProtocol:    The protocol for connecting with the MFP server.
+        - parameter mfpHost:        The host name of the MFP server.
+        - parameter mfpPort:        The port for the MPF server.
+    */
+    public func initializeWithMfpProtocol(mfpProtocol: String, mfpHost: String, mfpPort: String) {
+        
+        self.mfpHost = mfpHost
+        self.mfpProtocol = mfpProtocol.stringByReplacingOccurrencesOfString("://", withString: "")
+        self.mfpPort = mfpPort.stringByReplacingOccurrencesOfString(":", withString: "")
+    }
+    
+    private init() {} // Prevent users from using MFPClient() initializer - They must use MFPClient.sharedInstance
     
 }
