@@ -14,10 +14,6 @@
 
 import Foundation
 
-public enum PersistensePolicy: Int {
-    case Never, Always
-}
-
 internal class BaseAuthorizationManager : AuthorizationManager {
     
     internal init() {
