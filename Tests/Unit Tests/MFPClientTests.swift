@@ -26,7 +26,7 @@ class MFPClientTests: XCTestCase {
         XCTAssertNil(clientInstance.mfpHost, "MFPClient has not yet been initialized")
         XCTAssertNil(clientInstance.mfpPort, "MFPClient has not yet been initialized")
         
-        clientInstance.initializeWithMfpProtocol("http://", mfpHost: "example.com", mfpPort: ":9080")
+        clientInstance.initializeWithUrlComponents(mfpProtocol: "http://", mfpHost: "example.com", mfpPort: ":9080")
         XCTAssertEqual(clientInstance.mfpProtocol, "http")
         XCTAssertEqual(clientInstance.mfpHost, "example.com")
         XCTAssertEqual(clientInstance.mfpPort, "9080")

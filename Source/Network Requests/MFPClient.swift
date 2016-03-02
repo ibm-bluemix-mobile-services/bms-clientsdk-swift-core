@@ -35,6 +35,10 @@ public class MFPClient: BaseClient {
     /// Specifies the default timeout (in seconds) for all MFP network requests.
     public var defaultRequestTimeout: Double = 20.0
     
+    // Device metadata to be sent with every BMSCore network request
+    // This should only be set by the MFP Foundation SDK
+    public var deviceMetadata: String?
+    
     
     
     // MARK: Initializers
@@ -48,7 +52,7 @@ public class MFPClient: BaseClient {
         - parameter mfpHost:        The host name of the MFP server.
         - parameter mfpPort:        The port for the MPF server.
     */
-    public func initializeWithMfpProtocol(mfpProtocol: String, mfpHost: String, mfpPort: String) {
+    public func initializeWithUrlComponents(mfpProtocol mfpProtocol: String, mfpHost: String, mfpPort: String) {
         
         self.mfpHost = mfpHost
         self.mfpProtocol = mfpProtocol.stringByReplacingOccurrencesOfString("://", withString: "")
