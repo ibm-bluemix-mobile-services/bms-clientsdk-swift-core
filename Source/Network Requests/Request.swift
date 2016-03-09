@@ -16,7 +16,7 @@ public class Request: MFPRequest {
     
     private var oauthFailCounter = 0
     private var savedRequestBody: NSData?
-    
+    private var domainName = "com.ibm.mobilefoundation.client"
     public init(url: String, method: HttpMethod) {
         super.init(url: url, headers: nil, queryParameters:nil, method: method)
     }
@@ -33,8 +33,17 @@ public class Request: MFPRequest {
         
         let myCallback : MfpCompletionHandler = {(response: Response?, error:NSError?) in
             
-            guard error == nil, let unWrappedResponse = response where BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) && self.oauthFailCounter++ < 2 else {
+            guard error == nil else {
                 callback?(response, error)
+                return
+            }
+            
+            guard let unWrappedResponse = response where BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) && self.oauthFailCounter++ < 2 else {
+                if (response?.statusCode)! >= 400 {
+                    callback?(response, NSError(domain: domainName, code: -1, userInfo: nil))
+                } else {
+                    callback?(response, error)
+                }
                 return
             }
             
