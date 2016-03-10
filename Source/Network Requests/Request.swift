@@ -38,14 +38,17 @@ public class Request: MFPRequest {
                 return
             }
             
-            guard let unWrappedResponse = response where BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) && self.oauthFailCounter++ < 2 else {
+            guard let unWrappedResponse = response where
+                BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) &&
+                    self.oauthFailCounter++ < 2
+                else {
                 if (response?.statusCode)! >= 400 {
-                    callback?(response, NSError(domain: domainName, code: -1, userInfo: nil))
-                } else {
-                    callback?(response, error)
+                        callback?(response, NSError(domain: self.domainName, code: -1, userInfo: nil))
+                    } else {
+                        callback?(response, nil)
+                    }
+                    return
                 }
-                return
-            }
             
             let authCallback: MfpCompletionHandler = {(response: Response?, error:NSError?) in
                 if error == nil {
