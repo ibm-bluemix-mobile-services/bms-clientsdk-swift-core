@@ -16,7 +16,7 @@ public class Request: BaseRequest {
     
     internal var oauthFailCounter = 0
     internal var savedRequestBody: NSData?
-    
+    private var domainName = "com.ibm.bms.mca.client"
     public init(url: String, method: HttpMethod) {
         super.init(url: url, headers: nil, queryParameters:nil, method: method)
     }
@@ -39,10 +39,22 @@ public class Request: BaseRequest {
         
         let myCallback : MfpCompletionHandler = {(response: Response?, error:NSError?) in
             
-            guard error == nil, let unWrappedResponse = response where BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) && self.oauthFailCounter++ < 2 else {
+            guard error == nil else {
                 callback?(response, error)
                 return
             }
+            
+            guard let unWrappedResponse = response where
+                BMSClient.sharedInstance.sharedAuthorizationManager.isAuthorizationRequired(unWrappedResponse) &&
+                    self.oauthFailCounter++ < 2
+                else {
+                if (response?.statusCode)! >= 400 {
+                        callback?(response, NSError(domain: self.domainName, code: -1, userInfo: nil))
+                    } else {
+                        callback?(response, nil)
+                    }
+                    return
+                }
             
             let authCallback: MfpCompletionHandler = {(response: Response?, error:NSError?) in
                 if error == nil {
