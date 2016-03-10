@@ -16,7 +16,7 @@ public class Request: MFPRequest {
     
     private var oauthFailCounter = 0
     private var savedRequestBody: NSData?
-    private var domainName = "com.ibm.mobilefoundation.client"
+    private var domainName = "com.ibm.bms.mca.client"
     public init(url: String, method: HttpMethod) {
         super.init(url: url, headers: nil, queryParameters:nil, method: method)
     }
