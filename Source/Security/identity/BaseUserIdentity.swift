@@ -11,7 +11,7 @@
 *     limitations under the License.
 */
 
-
+/// This class represents the base user identity class, with default methods and keys
 public class BaseUserIdentity {
     public static let ID = "id"
     public static let AUTH_BY = "authBy"

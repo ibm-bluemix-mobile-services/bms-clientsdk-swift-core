@@ -19,15 +19,51 @@ public enum PersistencePolicy: String {
 
 public protocol AuthorizationManager {
 
+    /*!
+        @brief check if authorization is Required, using the responseAuthorizationHeader string
+        @param statusCode http response status code
+        @param responseAuthorizationHeader authirization header
+    
+        @return Whether authorization is required
+     */
     func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool
+    
+    /*
+        @brief Whether authorization is required
+    
+        @param httpResponse http response ti check
+     */
     func isAuthorizationRequired(httpResponse: Response) -> Bool
     
+    /*!
+        @brief Starts authorization process
+        @param completionHandler The completion handler
+     */
     func obtainAuthorization(completionHandler: MfpCompletionHandler?)
+    
+    /*!
+        @brief Returns previously obtained authorization header. The value will be added to all outgoing requests as Authorization header.
+        @return cached authorization header
+     */
     func getCachedAuthorizationHeader() -> String?
 
+    /*!
+        @brief Clears authorization data
+     */
     func clearAuthorizationData()
     
+    /*!
+        @return UserIdentity object
+     */
     func getUserIdentity() -> BaseUserIdentity
+    
+    /*!
+        @return DeviceIdentity object
+     */
     func getDeviceIdentity() -> BaseDeviceIdentity
+    
+    /*!
+        @return AppIdentity object
+     */
     func getAppIdentity() -> BaseAppIdentity
 }

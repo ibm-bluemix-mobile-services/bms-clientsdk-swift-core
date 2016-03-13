@@ -11,7 +11,7 @@
 *     limitations under the License.
 */
 
-
+/// This class represents the base device identity class, with default methods and keys
 public class BaseDeviceIdentity{
     
     public static let ID = "id"

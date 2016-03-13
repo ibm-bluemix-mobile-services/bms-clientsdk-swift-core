@@ -11,10 +11,11 @@
 *     limitations under the License.
 */
 
-
+/// This class represents the base app identity class, with default methods and keys
 public class BaseAppIdentity{
-    
+
     public static let ID = "id"
+
     public static let VERSION = "version"
     
     public var jsonData : [String:String] = ([:])
