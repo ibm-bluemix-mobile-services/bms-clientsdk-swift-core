@@ -29,7 +29,7 @@ class InterfaceController: WKInterfaceController {
         let testLogger = Logger.getLoggerForName("Test")
         testLogger.debug("GET request button pressed")
         
-        let getRequest = MFPRequest(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
+        let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
         getRequest.sendWithCompletionHandler( { (response: Response?, error: NSError?) in
             
             var responseLabelText = ""

@@ -12,13 +12,19 @@
 */
 
 
-public class Request: MFPRequest {
+public class Request: BaseRequest {
     
-    private var oauthFailCounter = 0
-    private var savedRequestBody: NSData?
+    internal var oauthFailCounter = 0
+    internal var savedRequestBody: NSData?
     private var domainName = "com.ibm.bms.mca.client"
     public init(url: String, method: HttpMethod) {
         super.init(url: url, headers: nil, queryParameters:nil, method: method)
+    }
+    
+    // This is required since the other custom Request initializer overrides this superclass initializer
+    public override init(url: String, headers: [String: String]?, queryParameters: [String: String]?, method: HttpMethod = HttpMethod.GET, timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout) {
+     
+        super.init(url: url, headers: headers, queryParameters: queryParameters, method: method, timeout: timeout)
     }
     
     public override func sendWithCompletionHandler(callback: MfpCompletionHandler?) {

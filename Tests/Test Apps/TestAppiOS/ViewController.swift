@@ -51,7 +51,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             method = HttpMethod.GET
         }
         
-        let getRequest = MFPRequest(url: resourceUrl.text!, headers: nil, queryParameters: nil, method: method, timeout: 5.0)
+        let getRequest = Request(url: resourceUrl.text!, headers: nil, queryParameters: nil, method: method, timeout: 5.0)
         getRequest.sendWithCompletionHandler(populateInterfaceWithResponseData)
     }
     

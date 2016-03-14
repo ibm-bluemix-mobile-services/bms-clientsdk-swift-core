@@ -13,11 +13,52 @@
 
 
 /**
-    Defines the methods and properties needed to create network connections to a server.
+    A singleton that serves as an entry point to MobileFirst Platform Foundation client-server communication.
 */
-internal protocol MFPClient {
+public class MFPClient: BaseClient {
     
     
-    /// Specifies the default timeout (in seconds) for all network requests.
-    var defaultRequestTimeout: Double { get set }    
+    // MARK: Properties (public)
+    
+    /// This singleton should be used for all `MFPClient` activity
+    public static let sharedInstance = MFPClient()
+    
+    /// Specifies the protocol for connecting with the MFP server
+    public private(set) var mfpProtocol: String?
+    
+    /// Specifies the host name of the MFP server
+    public private(set) var mfpHost: String?
+    
+    /// Specifies the port for connecting with the MFP server
+    public private(set) var mfpPort: String?
+    
+    /// Specifies the default timeout (in seconds) for all MFP network requests.
+    public var defaultRequestTimeout: Double = 20.0
+    
+    // Device metadata to be sent with every BMSCore network request
+    // This should only be set by the MFP Foundation SDK
+    public var deviceMetadata: String?
+    
+    
+    
+    // MARK: Initializers
+    
+    /**
+        The required intializer for the `MFPClient` class.
+        
+        Sets the base URL for the MFP server.
+        
+        - parameter mfpProtocol:    The protocol for connecting with the MFP server.
+        - parameter mfpHost:        The host name of the MFP server.
+        - parameter mfpPort:        The port for the MPF server.
+    */
+    public func initializeWithUrlComponents(mfpProtocol mfpProtocol: String, mfpHost: String, mfpPort: String) {
+        
+        self.mfpHost = mfpHost
+        self.mfpProtocol = mfpProtocol.stringByReplacingOccurrencesOfString("://", withString: "")
+        self.mfpPort = mfpPort.stringByReplacingOccurrencesOfString(":", withString: "")
+    }
+    
+    private init() {} // Prevent users from using MFPClient() initializer - They must use MFPClient.sharedInstance
+    
 }

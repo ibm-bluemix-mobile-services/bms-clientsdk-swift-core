@@ -15,7 +15,7 @@
 /**
     A singleton that serves as an entry point to Bluemix client-server communication.
 */
-public class BMSClient: MFPClient {
+public class BMSClient: BaseClient {
     
 
     // MARK: Properties (public)
