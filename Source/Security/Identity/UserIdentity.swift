@@ -1,5 +1,5 @@
 /*
-*     Copyright 2016 IBM Corp.
+*     Copyright 2015 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -11,16 +11,14 @@
 *     limitations under the License.
 */
 
+import Foundation
 
-/**
-    These error codes indicate a failure that occurred within the BMSCore framework.
-*/
-public enum BMSCoreError: Int {
-    
-    case MalformedUrl
-    case ClientNotInitialized
-	case ServerRespondedWithError
-    
-    static let domain = "com.ibm.mobilefirstplatform.clientsdk.swift.bmscore"
+public protocol UserIdentity{
+
+	func getId() ->String?
+	
+	func getAuthBy() ->String?
+	
+	func getDisplayName() -> String?
+
 }
-

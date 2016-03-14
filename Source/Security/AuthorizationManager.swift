@@ -55,15 +55,15 @@ public protocol AuthorizationManager {
     /*!
         @return UserIdentity object
      */
-    func getUserIdentity() -> BaseUserIdentity
+    func getUserIdentity() -> UserIdentity?
     
     /*!
         @return DeviceIdentity object
      */
-    func getDeviceIdentity() -> BaseDeviceIdentity
+    func getDeviceIdentity() -> DeviceIdentity
     
     /*!
         @return AppIdentity object
      */
-    func getAppIdentity() -> BaseAppIdentity
+    func getAppIdentity() -> AppIdentity
 }

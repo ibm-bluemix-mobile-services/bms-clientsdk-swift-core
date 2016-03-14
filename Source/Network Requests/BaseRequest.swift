@@ -60,7 +60,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     /// The request body can be set when sending the request via the `sendString` or `sendData` methods.
     public private(set) var requestBody: NSData?
     
-    /// Determines whether each request should follow redirect requests
+    /// Determines whether request should follow http redirects
     public var allowRedirects : Bool = true
     
     // Public access required by BMSSecurity framework

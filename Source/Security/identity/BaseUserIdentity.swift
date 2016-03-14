@@ -12,7 +12,7 @@
 */
 
 /// This class represents the base user identity class, with default methods and keys
-public class BaseUserIdentity {
+public class BaseUserIdentity : UserIdentity {
     public static let ID = "id"
     public static let AUTH_BY = "authBy"
     public static let DISPLAY_NAME = "displayName"

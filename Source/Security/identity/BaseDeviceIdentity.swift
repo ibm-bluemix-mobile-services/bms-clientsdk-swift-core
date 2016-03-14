@@ -12,16 +12,33 @@
 */
 
 /// This class represents the base device identity class, with default methods and keys
-public class BaseDeviceIdentity{
+import Foundation
+import WatchKit
+
+public class BaseDeviceIdentity : DeviceIdentity {
     
     public static let ID = "id"
     public static let OS = "platform"
+	public static let OS_VERSION = "osVersion";
     public static let MODEL = "model"
     
     public var jsonData : [String:String] = ([:])
     
-    public init() {}
-    
+    public init() {
+		#if os(watchOS)
+			jsonData[BaseDeviceIdentity.ID] = nil
+			jsonData[BaseDeviceIdentity.OS] =  WKInterfaceDevice.currentDevice().systemName
+			jsonData[BaseDeviceIdentity.OS_VERSION] = WKInterfaceDevice.currentDevice().systemVersion
+			jsonData[BaseDeviceIdentity.MODEL] =  WKInterfaceDevice.currentDevice().model
+		#else
+			jsonData[BaseDeviceIdentity.ID] = UIDevice.currentDevice().identifierForVendor?.UUIDString
+			jsonData[BaseDeviceIdentity.OS] =  UIDevice.currentDevice().systemName
+			jsonData[BaseDeviceIdentity.OS_VERSION] = UIDevice.currentDevice().systemVersion
+			jsonData[BaseDeviceIdentity.MODEL] =  UIDevice.currentDevice().model
+		#endif
+		
+	}
+	
     public func getAsJson() -> [String:String]{
         return jsonData
     }
@@ -43,7 +60,11 @@ public class BaseDeviceIdentity{
         return jsonData[BaseDeviceIdentity.OS]
     }
     
-    public func getModel() -> String? {
+	public func getOSVersion() -> String? {
+		return nil;
+	}
+
+	public func getModel() -> String? {
         return jsonData[BaseDeviceIdentity.MODEL]
     }
 }

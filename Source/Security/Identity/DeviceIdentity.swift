@@ -1,5 +1,5 @@
 /*
-*     Copyright 2016 IBM Corp.
+*     Copyright 2015 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -11,13 +11,16 @@
 *     limitations under the License.
 */
 
+import Foundation
 
-/**
-    Defines the methods and properties needed to create network connections to a server.
-*/
-internal protocol BaseClient {
-    
-    
-    /// Specifies the default timeout (in seconds) for all network requests.
-    var defaultRequestTimeout: Double { get set }    
+public protocol DeviceIdentity{
+	
+	func getId() ->String?
+	
+	func getOS() -> String?
+	
+	func getOSVersion() -> String?
+	
+	func getModel() -> String?
+	
 }

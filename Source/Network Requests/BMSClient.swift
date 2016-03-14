@@ -15,7 +15,7 @@
 /**
     A singleton that serves as an entry point to Bluemix client-server communication.
 */
-public class BMSClient: BaseClient {
+public class BMSClient {
     
 
     // MARK: Properties (public)
@@ -35,7 +35,7 @@ public class BMSClient: BaseClient {
     /// Specifies the default timeout (in seconds) for all BMS network requests.
     public var defaultRequestTimeout: Double = 20.0
 
-    public var sharedAuthorizationManager: AuthorizationManager {
+    public var authorizationManager: AuthorizationManager {
         get {
             if registeredAuthorizationManager == nil {
                 return BaseAuthorizationManager()
@@ -60,9 +60,9 @@ public class BMSClient: BaseClient {
     // MARK: Constants
     
     // TODO: 2/17/16 - Documentation
-    public static let REGION_US_SOUTH = "ng.bluemix.net"
-    public static let REGION_UK = "eu-gb.bluemix.net"
-    public static let REGION_SYDNEY = "au-syd.bluemix.net"
+    public static let REGION_US_SOUTH = ".ng.bluemix.net"
+    public static let REGION_UK = ".eu-gb.bluemix.net"
+    public static let REGION_SYDNEY = ".au-syd.bluemix.net"
     
     
     

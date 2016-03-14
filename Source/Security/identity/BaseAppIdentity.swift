@@ -12,7 +12,7 @@
 */
 
 /// This class represents the base app identity class, with default methods and keys
-public class BaseAppIdentity{
+public class BaseAppIdentity : AppIdentity{
 
     public static let ID = "id"
 
@@ -20,8 +20,11 @@ public class BaseAppIdentity{
     
     public var jsonData : [String:String] = ([:])
     
-    public init() {}
-    
+    public init() {
+		jsonData[BaseAppIdentity.ID] = NSBundle(forClass:object_getClass(self)).bundleIdentifier;
+		jsonData[BaseAppIdentity.VERSION] = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String;
+	}
+	
     public func getAsJson() -> [String:String]{
         return jsonData
     }

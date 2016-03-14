@@ -26,7 +26,9 @@ internal class BaseAuthorizationManager : AuthorizationManager {
     }
     
     func obtainAuthorization(completionHandler: MfpCompletionHandler?) {
-        //        completionHandler(nil, nil)
+		if let completionHandler = completionHandler{
+			completionHandler(nil, nil)
+		}
     }
     
     func clearAuthorizationData() {
@@ -41,15 +43,15 @@ internal class BaseAuthorizationManager : AuthorizationManager {
         return nil;
     }
     
-    func getUserIdentity() -> BaseUserIdentity {
-        return BaseUserIdentity()
+    func getUserIdentity() -> UserIdentity? {
+		return nil;
     }
     
-    func getDeviceIdentity() -> BaseDeviceIdentity {
+    func getDeviceIdentity() -> DeviceIdentity {
         return BaseDeviceIdentity()
     }
     
-    func getAppIdentity() -> BaseAppIdentity {
+    func getAppIdentity() -> AppIdentity {
         return BaseAppIdentity()        
     }
     
