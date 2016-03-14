@@ -231,7 +231,7 @@ public class Logger {
     public static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
         
         // Suppress console log output for apps that are being released to the App Store
-        #if DEBUG
+        #if !RELEASE_BUILD
             if level != LogLevel.Analytics {
                     print("[\(level.stringValue)] [\(loggerName)] \(calledFunction) in \(calledFile):\(calledLineNumber) :: \(logMessage)")
             }
