@@ -21,13 +21,13 @@ public class BaseUserIdentity : UserIdentity {
     
 	public var id:String? {
 		get {
-			return jsonData[BaseUserIdentity.AUTH_BY]
+			return jsonData[BaseUserIdentity.ID]
 		}
 	}
 	
 	public var authBy:String? {
 		get {
-			return jsonData[BaseUserIdentity.ID]
+			return jsonData[BaseUserIdentity.AUTH_BY]
 		}
 	}
 	

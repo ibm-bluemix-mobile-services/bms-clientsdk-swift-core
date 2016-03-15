@@ -30,7 +30,7 @@ public class Request: BaseRequest {
         
         let authManager: AuthorizationManager = BMSClient.sharedInstance.authorizationManager
         
-        if let authHeader: String = authManager.getCachedAuthorizationHeader() {
+        if let authHeader: String = authManager.cachedAuthorizationHeader {
             self.headers["Authorization"] = authHeader
         }
         

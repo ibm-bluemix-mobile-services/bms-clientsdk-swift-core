@@ -41,29 +41,29 @@ public protocol AuthorizationManager {
      */
     func obtainAuthorization(completionHandler: MfpCompletionHandler?)
     
-    /*!
+	/*!
+	@brief Clears authorization data
+	*/
+	func clearAuthorizationData()
+
+	/*!
         @brief Returns previously obtained authorization header. The value will be added to all outgoing requests as Authorization header.
         @return cached authorization header
      */
-    func getCachedAuthorizationHeader() -> String?
-
-    /*!
-        @brief Clears authorization data
-     */
-    func clearAuthorizationData()
-    
+	var cachedAuthorizationHeader:String? {get}
+	
     /*!
         @return UserIdentity object
      */
-    func getUserIdentity() -> UserIdentity?
+	var userIdentity:UserIdentity? {get}
     
     /*!
         @return DeviceIdentity object
      */
-    func getDeviceIdentity() -> DeviceIdentity
+	var deviceIdentity:DeviceIdentity {get}
     
     /*!
         @return AppIdentity object
      */
-    func getAppIdentity() -> AppIdentity
+	var appIdentity:AppIdentity {get}
 }

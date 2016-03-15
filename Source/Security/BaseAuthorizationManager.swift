@@ -16,7 +16,31 @@ internal class BaseAuthorizationManager : AuthorizationManager {
     internal init() {
         
     }
-   
+	
+	public var cachedAuthorizationHeader:String? {
+		get{
+			return nil;
+		}
+	}
+	
+	public var userIdentity:UserIdentity? {
+		get{
+			return nil;
+		}
+	}
+	
+	public var deviceIdentity:DeviceIdentity {
+		get{
+			return BaseDeviceIdentity()
+		}
+	}
+	
+	public var appIdentity:AppIdentity {
+		get{
+			return BaseAppIdentity()
+		}
+	}
+	
     func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool {
         return false;
     }
@@ -38,21 +62,6 @@ internal class BaseAuthorizationManager : AuthorizationManager {
     func addCachedAuthorizationHeader(request: NSMutableURLRequest) {
         
     }
-    
-    func getCachedAuthorizationHeader() -> String? {
-        return nil;
-    }
-    
-    func getUserIdentity() -> UserIdentity? {
-		return nil;
-    }
-    
-    func getDeviceIdentity() -> DeviceIdentity {
-        return BaseDeviceIdentity()
-    }
-    
-    func getAppIdentity() -> AppIdentity {
-        return BaseAppIdentity()        
-    }
-    
+	
+
 }
