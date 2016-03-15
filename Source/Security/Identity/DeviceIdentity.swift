@@ -14,13 +14,8 @@
 import Foundation
 
 public protocol DeviceIdentity{
-	
-	func getId() ->String?
-	
-	func getOS() -> String?
-	
-	func getOSVersion() -> String?
-	
-	func getModel() -> String?
-	
+	var id:String? {get}
+	var OS:String? {get}
+	var OSVersion:String? {get}
+	var model:String? {get}
 }

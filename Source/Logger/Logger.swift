@@ -13,7 +13,6 @@
 
 import Foundation
 
-
 /**
     Used in the `Logger` class, the `LogLevel` denotes the log severity.
 
@@ -58,7 +57,7 @@ public protocol LogRecorderProtocol {
     `Logger` provides a wrapper to Swift's `print()` function, with additional information such as the file, function, and line where the log was called.
     It supports logging at different levels of verbosity (see the `LogLevel` enum) and filtering by `LogLevel` to limit the log output to the console.
     
-    Multiple `Logger` instances can be created with different package names using the `getLoggerForName` method.
+    Multiple `Logger` instances can be created with different package names using the `loggerForName` method.
  
     - Important: All of the below functionality will be added to `Logger` if the `BMSAnalytics` framework is added to your project. `BMSAnalytics` extends `Logger` to allow storing log messages and sending them to an analytics server.
 
@@ -76,7 +75,7 @@ public protocol LogRecorderProtocol {
 
     Log file data is sent to the Bluemix server when the Logger `send()` method is called, provided that the file is not empty and the BMSClient was initialized via the `initializeWithBluemixAppRoute()` method. When the log data is successfully uploaded, the persisted local log data is deleted.
 
-    - Note: The `Logger` class sets an uncaught exception handler to log application crashes. If you wish to set your own exception handler, do so **before** calling `Logger.getLoggerForName()` or the `Logger` exception handler will be overwritten.
+    - Note: The `Logger` class sets an uncaught exception handler to log application crashes. If you wish to set your own exception handler, do so **before** calling `Logger.loggerForName()` or the `Logger` exception handler will be overwritten.
 */
 public class Logger {
     
@@ -122,7 +121,7 @@ public class Logger {
     
     - returns: A Logger instance
     */
-    public static func getLoggerForName(loggerName: String) -> Logger {
+    public static func loggerForName(loggerName: String) -> Logger {
         
         if let existingLogger = Logger.loggerInstances[loggerName] {
             return existingLogger

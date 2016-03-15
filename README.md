@@ -1,16 +1,14 @@
 IBM Bluemix Mobile Services - Client SDK Swift Core
 ===================================================
 
-This is the core component of the Swift SDK for IBM Bluemix Mobile Services. 
-
-https://console.ng.bluemix.net/solutions/mobilefirst
-
+This is the core component of the Swift SDK for [IBM Bluemix Mobile Services](https://console.ng.bluemix.net/docs/services/mobile.html). 
 
 ## Contents
 This package contains the core components of the Swift SDK.
+
 * HTTP Infrastructure
-* Security and Authentication
-* Logger
+* Security and Authentication interfaces
+* Logger and Analytics interfaces
 
 
 ## Requirements
@@ -41,28 +39,13 @@ target 'MyApp WatchKit Extension' do
     pod 'BMSCore'
 end
 ```
+### Disabling Logging output for production applications
 
-To enable Logger to print logs to the Xcode console, add the following post-install hook to your Podfile:
-
-```ruby
-post_install do |installer|
-    installer.pods_project.targets.each do |target|
-        if target.name.include? 'BMSCore'
-            target.build_configurations.each do |config|
-                if config.name == 'Debug'
-                    config.build_settings['OTHER_SWIFT_FLAGS'] = '-DDEBUG'
-                else
-                    config.build_settings['OTHER_SWIFT_FLAGS'] = ''
-                end
-            end
-        end
-    end
-end
-```
+By default the Logger class will print its logs to Xcode console. If is advised to disable Logger output for applications built in release mode. In order to do so add a debug flag named `RELEASE_BUILD` to your release build configuration. One of the way of doing so is adding `-D RELEASE_BUILD` to `Other Swift Flags` section of the project build configuration. 
 
 
 =======================
-Copyright 2015 IBM Corp.
+Copyright 2016 IBM Corp.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

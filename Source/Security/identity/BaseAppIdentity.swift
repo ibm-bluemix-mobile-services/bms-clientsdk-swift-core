@@ -20,7 +20,18 @@ public class BaseAppIdentity : AppIdentity{
     
     public var jsonData : [String:String] = ([:])
     
-    public init() {
+	public var id:String? {
+		get{
+			return jsonData[BaseAppIdentity.ID]
+		}
+	}
+	public var version:String? {
+		get{
+			return jsonData[BaseAppIdentity.VERSION]
+		}
+	}
+	
+	public init() {
 		jsonData[BaseAppIdentity.ID] = NSBundle(forClass:object_getClass(self)).bundleIdentifier;
 		jsonData[BaseAppIdentity.VERSION] = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String;
 	}
@@ -37,13 +48,5 @@ public class BaseAppIdentity : AppIdentity{
 
         jsonData = json
     }
-    
-    public func getId() ->String? {
-        return jsonData[BaseAppIdentity.ID]
-    }
-    
-    public func getVersion() -> String? {
-        return jsonData[BaseAppIdentity.VERSION]
-    }
-    
+
 }

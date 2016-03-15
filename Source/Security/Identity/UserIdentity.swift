@@ -15,10 +15,8 @@ import Foundation
 
 public protocol UserIdentity{
 
-	func getId() ->String?
-	
-	func getAuthBy() ->String?
-	
-	func getDisplayName() -> String?
+	var id:String? {get}
+	var authBy:String? {get}
+	var displayName:String? {get}
 
 }

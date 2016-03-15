@@ -11,7 +11,6 @@
 *     limitations under the License.
 */
 
-
 import WatchKit
  
 
@@ -76,22 +75,14 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     // Public access required by BMSAnalytics framework
     // This will obtain a value when the Analytics class from BMSAnalytics is initialized
     public static var requestAnalyticsData: String?
-    
-    
-    
+	
     // MARK: Properties (internal/private)
-    
     var networkRequest: NSMutableURLRequest
     
-    private static let logger = Logger.getLoggerForName(Logger.mfpLoggerPrefix + "request")
-    
-    
+    private static let logger = Logger.loggerForName(Logger.mfpLoggerPrefix + "request")
     
     // MARK: Constants
-    
     public static let CONTENT_TYPE = "Content-Type"
-    
-    
     
     // MARK: Initializer
     

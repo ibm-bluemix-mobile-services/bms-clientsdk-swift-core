@@ -14,9 +14,6 @@
 import Foundation
 
 public protocol AppIdentity{
-	
-	func getId() ->String?
-	
-	func getVersion() -> String?
-	
+	var id:String? {get}
+	var version:String? {get}
 }

@@ -23,7 +23,34 @@ public class BaseDeviceIdentity : DeviceIdentity {
     public static let MODEL = "model"
     
     public var jsonData : [String:String] = ([:])
-    
+	
+	public var id:String? {
+		get{
+			return jsonData[BaseDeviceIdentity.ID]
+		}
+	}
+	
+	public var OS:String? {
+		get{
+			return jsonData[BaseDeviceIdentity.OS]
+		}
+	}
+
+	
+	public var OSVersion:String? {
+		get{
+			return jsonData[BaseDeviceIdentity.OS_VERSION]
+		}
+	}
+
+	
+	public var model:String? {
+		get{
+			return jsonData[BaseDeviceIdentity.MODEL]
+		}
+	}
+
+	
     public init() {
 		#if os(watchOS)
 			jsonData[BaseDeviceIdentity.ID] = nil
@@ -51,20 +78,5 @@ public class BaseDeviceIdentity : DeviceIdentity {
         
         jsonData = json
     }
-    
-    public func getId() ->String? {
-        return jsonData[BaseDeviceIdentity.ID]
-    }
-    
-    public func getOS() -> String? {
-        return jsonData[BaseDeviceIdentity.OS]
-    }
-    
-	public func getOSVersion() -> String? {
-		return nil;
-	}
 
-	public func getModel() -> String? {
-        return jsonData[BaseDeviceIdentity.MODEL]
-    }
 }
