@@ -17,25 +17,25 @@ internal class BaseAuthorizationManager : AuthorizationManager {
         
     }
 	
-	public var cachedAuthorizationHeader:String? {
+	var cachedAuthorizationHeader:String? {
 		get{
 			return nil;
 		}
 	}
 	
-	public var userIdentity:UserIdentity? {
+	var userIdentity:UserIdentity? {
 		get{
 			return nil;
 		}
 	}
 	
-	public var deviceIdentity:DeviceIdentity {
+	var deviceIdentity:DeviceIdentity {
 		get{
 			return BaseDeviceIdentity()
 		}
 	}
 	
-	public var appIdentity:AppIdentity {
+	var appIdentity:AppIdentity {
 		get{
 			return BaseAppIdentity()
 		}
