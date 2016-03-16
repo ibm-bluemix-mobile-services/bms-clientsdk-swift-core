@@ -17,7 +17,7 @@ public class BaseUserIdentity : UserIdentity {
     public static let AUTH_BY = "authBy"
     public static let DISPLAY_NAME = "displayName"
 	
-    public var jsonData : [String:String] = ([:])
+    public private(set) var jsonData : [String:String] = ([:])
     
 	public var id:String? {
 		get {
@@ -41,8 +41,8 @@ public class BaseUserIdentity : UserIdentity {
 
     }
     
-    public init(map: AnyObject?) {
-        guard let json = map as? Dictionary<String, String> else {
+    public init(map: [String:AnyObject]?) {
+        guard let json = map as? [String:String] else {
             jsonData = ([:])
             return
         }

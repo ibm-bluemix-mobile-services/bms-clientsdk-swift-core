@@ -22,7 +22,7 @@ public class BaseDeviceIdentity : DeviceIdentity {
 	public static let OS_VERSION = "osVersion";
     public static let MODEL = "model"
     
-    public var jsonData : [String:String] = ([:])
+    public internal(set) var jsonData : [String:String] = ([:])
 	
 	public var id:String? {
 		get{
@@ -53,7 +53,7 @@ public class BaseDeviceIdentity : DeviceIdentity {
 	
     public init() {
 		#if os(watchOS)
-			jsonData[BaseDeviceIdentity.ID] = nil
+			jsonData[BaseDeviceIdentity.ID] = "Not Available"
 			jsonData[BaseDeviceIdentity.OS] =  WKInterfaceDevice.currentDevice().systemName
 			jsonData[BaseDeviceIdentity.OS_VERSION] = WKInterfaceDevice.currentDevice().systemVersion
 			jsonData[BaseDeviceIdentity.MODEL] =  WKInterfaceDevice.currentDevice().model
@@ -65,13 +65,9 @@ public class BaseDeviceIdentity : DeviceIdentity {
 		#endif
 		
 	}
-	
-    public func getAsJson() -> [String:String]{
-        return jsonData
-    }
     
-    public init(map: AnyObject?) {
-        guard let json = map as? Dictionary<String, String> else {
+    public init(map: [String:AnyObject]?) {
+        guard let json = map as? [String:String] else {
             jsonData = ([:])
             return
         }

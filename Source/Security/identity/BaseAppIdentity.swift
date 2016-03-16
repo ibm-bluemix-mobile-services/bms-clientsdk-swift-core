@@ -18,7 +18,7 @@ public class BaseAppIdentity : AppIdentity{
 
     public static let VERSION = "version"
     
-    public var jsonData : [String:String] = ([:])
+    public internal(set) var jsonData : [String:String] = ([:])
     
 	public var id:String? {
 		get{
@@ -36,12 +36,8 @@ public class BaseAppIdentity : AppIdentity{
 		jsonData[BaseAppIdentity.VERSION] = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String;
 	}
 	
-    public func getAsJson() -> [String:String]{
-        return jsonData
-    }
-    
-    public init(map: AnyObject?) {
-        guard let json = map as? Dictionary<String, String> else {
+    public init(map: [String:AnyObject]?) {
+        guard let json = map as? [String:String] else {
             jsonData = ([:])
             return
         }
