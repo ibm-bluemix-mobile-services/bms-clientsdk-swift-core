@@ -66,14 +66,14 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     // The request timeout is set in this NSURLSession's configuration
     public var networkSession: NSURLSession!
     
-    // Public access required by BMSAnalytics framework
+    // Public access required by MFPAnalytics framework
     public private(set) var startTime: NSTimeInterval = 0.0
     
-    // Public access required by BMSAnalytics framework
+    // Public access required by MFPAnalytics framework
     public private(set) var trackingId: String = ""
     
-    // Public access required by BMSAnalytics framework
-    // This will obtain a value when the Analytics class from BMSAnalytics is initialized
+    // Public access required by MFPAnalytics framework
+    // This will obtain a value when the Analytics class from MFPAnalytics is initialized
     public static var requestAnalyticsData: String?
 	
     // MARK: Properties (internal/private)

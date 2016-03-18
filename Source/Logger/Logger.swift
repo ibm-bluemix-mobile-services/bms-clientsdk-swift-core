@@ -46,7 +46,7 @@ public enum LogLevel: Int {
 
 
 // Stores logs on the device's file system
-// This protocol is implemented in the BMSAnalytics framework
+// This protocol is implemented in the MFPAnalytics framework
 public protocol LogRecorderProtocol {
     
     func logMessageToFile(message: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]?)
@@ -59,7 +59,7 @@ public protocol LogRecorderProtocol {
     
     Multiple `Logger` instances can be created with different package names using the `loggerForName` method.
  
-    - Important: All of the below functionality will be added to `Logger` if the `BMSAnalytics` framework is added to your project. `BMSAnalytics` extends `Logger` to allow storing log messages and sending them to an analytics server.
+    - Important: All of the below functionality will be added to `Logger` if the `MFPAnalytics` framework is added to your project. `MFPAnalytics` extends `Logger` to allow storing log messages and sending them to an analytics server.
 
     When the `enabled` property is set to `true` (which is the default value), logs will be persisted to a file on the client device in the following JSON format:
 
@@ -95,8 +95,8 @@ public class Logger {
     public static var sdkDebugLoggingEnabled: Bool = false
     
     // Used to persist all logs to the device's file system
-    // Public access required by BMSAnalytics framework
-    // This will obtain a value when the Analytics class from BMSAnalytics is initialized
+    // Public access required by MFPAnalytics framework
+    // This will obtain a value when the Analytics class from MFPAnalytics is initialized
     public static var logRecorder: LogRecorderProtocol?
     
     // Prefix for all internal logger names
