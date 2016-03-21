@@ -84,7 +84,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         Logger.logLevelFilter = LogLevel.Debug
         Logger.sdkDebugLoggingEnabled = true
         
-        let testLogger = Logger.getLoggerForName("TestAppiOS")
+        let testLogger = Logger.loggerForName("TestAppiOS")
         testLogger.debug("Sending Request button pressed")
     }
     

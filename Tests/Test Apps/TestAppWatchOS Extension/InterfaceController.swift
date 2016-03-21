@@ -26,7 +26,7 @@ class InterfaceController: WKInterfaceController {
     @IBAction func getRequestButtonPressed() {
         
         Logger.logLevelFilter = LogLevel.Debug
-        let testLogger = Logger.getLoggerForName("Test")
+        let testLogger = Logger.loggerForName("Test")
         testLogger.debug("GET request button pressed")
         
         let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)

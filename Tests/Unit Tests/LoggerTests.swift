@@ -15,11 +15,11 @@ import XCTest
 @testable import BMSCore
 
 
-class MFPLoggerTests: XCTestCase {
+class LoggerTests: XCTestCase {
     
     func testGetLoggerForName(){
         let name = "sample"
-        let logger = Logger.getLoggerForName(name)
+        let logger = Logger.loggerForName(name)
         
         XCTAssertTrue(logger.name == Logger.loggerInstances[name]?.name)
     }
@@ -28,7 +28,7 @@ class MFPLoggerTests: XCTestCase {
     // More thorough unit testing for the Logger class is done in the MFPAnalytics SDK
     func testLogMethods(){
         let fakePKG = "MYPKG"
-        let loggerInstance = Logger.getLoggerForName(fakePKG)
+        let loggerInstance = Logger.loggerForName(fakePKG)
         Logger.logLevelFilter = LogLevel.Debug
         
         loggerInstance.debug("Hello world")
