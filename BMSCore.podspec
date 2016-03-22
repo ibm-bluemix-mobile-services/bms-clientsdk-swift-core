@@ -12,6 +12,8 @@ Pod::Spec.new do |s|
   s.ios.exclude_files = 'Source/**/*watchOS*.swift'
   s.watchos.exclude_files = 'Source/**/*iOS*.swift'
 
+  s.dependency 'BMSAnalyticsSpec', '~> 0.0.1'
+
   s.requires_arc = true
 
   s.ios.deployment_target = '8.0'
