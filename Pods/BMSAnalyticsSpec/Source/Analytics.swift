@@ -26,7 +26,7 @@ public enum DeviceEvent {
 
 
 // This protocol is implemented in the MFPAnalytics framework
-public protocol AnalyticsDelegate: class {
+public protocol AnalyticsDelegate {
     
     var userIdentity: String? { get set }
     
@@ -67,9 +67,9 @@ public class Analytics {
     
     // Handles all internal implementation of the Analytics class
     // Public access required by MFPAnalytics framework, which is required to initialize this property
-    internal static var delegate: AnalyticsDelegate?
+    public static var delegate: AnalyticsDelegate?
     
-    internal static let logger = Logger.loggerForName(Logger.mfpLoggerPrefix + "analytics")
+    public static let logger = Logger.loggerForName(Logger.mfpLoggerPrefix + "analytics")
     
     
     
