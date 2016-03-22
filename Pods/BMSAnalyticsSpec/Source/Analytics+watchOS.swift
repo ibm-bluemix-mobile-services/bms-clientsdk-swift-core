@@ -26,7 +26,7 @@ public extension Analytics {
      */
     public static func recordApplicationDidBecomeActive() {
         
-        Analytics.analyticsImplementer?.logSessionStart()
+        Analytics.delegate?.logSessionStart()
     }
     
     
@@ -38,7 +38,7 @@ public extension Analytics {
      */
     public static func recordApplicationWillResignActive() {
         
-        Analytics.analyticsImplementer?.logSessionEnd()
+        Analytics.delegate?.logSessionEnd()
     }
     
 }

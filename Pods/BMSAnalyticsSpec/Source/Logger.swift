@@ -46,7 +46,9 @@ public enum LogLevel: Int {
 
 // Stores logs on the device's file system
 // This protocol is implemented in the MFPAnalytics framework
-public protocol LogRecorderProtocol {
+public protocol LogRecorderDelegate {
+    
+    var isUncaughtExceptionDetected: Bool { get set }
     
     func logMessageToFile(message: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]?)
 }
@@ -54,7 +56,7 @@ public protocol LogRecorderProtocol {
 
 // Sends logs to the analytics server
 // This protocol is implemented in the MFPAnalytics framework
-public protocol LogSenderProtocol {
+public protocol LogSenderDelegate {
     
     func send(completionHandler userCallback: AnyObject?)
     func sendAnalytics(completionHandler userCallback: AnyObject?)
@@ -114,10 +116,10 @@ public class Logger {
     /// This property will be set back to `false` if the logs are sent to the server.
     public static var isUncaughtExceptionDetected: Bool {
         get {
-            return NSUserDefaults.standardUserDefaults().boolForKey(Constants.uncaughtException)
+            return Logger.delegate?.isUncaughtExceptionDetected ?? false
         }
         set {
-            NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: Constants.uncaughtException)
+            Logger.delegate?.isUncaughtExceptionDetected = isUncaughtExceptionDetected
         }
     }
     
@@ -125,13 +127,9 @@ public class Logger {
     
     // MARK: Properties (internal)
     
-    // Used to persist all logs to the device's file system
+    // Used to persist all logs to the device's file system and send logs to the analytics server
     // Public access required by MFPAnalytics framework, which is required to initialize this property
-    public static var logRecorder: LogRecorderProtocol?
-    
-    // Used to send logs to the analytics server
-    // Public access required by MFPAnalytics framework, which is required to initialize this property
-    public static var logSender: LogSenderProtocol?
+    public static var delegate: protocol<LogRecorderDelegate, LogSenderDelegate>?
     
     // Each logger instance is distinguished only by its "name" property
     internal static var loggerInstances: [String: Logger] = [:]
@@ -241,7 +239,7 @@ public class Logger {
      */
     public static func send(completionHandler userCallback: AnyObject? = nil) {
         
-        Logger.logSender?.send(completionHandler: userCallback)
+        Logger.delegate?.send(completionHandler: userCallback)
     }
     
     
@@ -275,7 +273,7 @@ public class Logger {
             Logger.printLogToConsole(message, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
         }
         
-        Logger.logRecorder?.logMessageToFile(message, level: level, loggerName: self.name, calledFile: calledFile, calledFunction: calledFunction, calledLineNumber: calledLineNumber, additionalMetadata: additionalMetadata)
+        Logger.delegate?.logMessageToFile(message, level: level, loggerName: self.name, calledFile: calledFile, calledFunction: calledFunction, calledLineNumber: calledLineNumber, additionalMetadata: additionalMetadata)
     }
     
     // Format: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"

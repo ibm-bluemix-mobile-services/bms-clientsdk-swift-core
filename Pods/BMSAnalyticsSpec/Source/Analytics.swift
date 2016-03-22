@@ -26,10 +26,11 @@ public enum DeviceEvent {
 
 
 // This protocol is implemented in the MFPAnalytics framework
-public protocol AnalyticsImplementation {
+public protocol AnalyticsDelegate: class {
+    
+    var userIdentity: String? { get set }
     
     func initialize(appName appName: String?, apiKey: String?, deviceEvents: [DeviceEvent])
-    func updateUserIdentity(userIdentity: String?) -> String
     func logSessionStart()
     func logSessionEnd()
 }
@@ -56,7 +57,7 @@ public class Analytics {
     /// To reset the userId, set the value to nil.
     public static var userIdentity: String? {
         didSet {
-            userIdentity = Analytics.analyticsImplementer?.updateUserIdentity(userIdentity)
+            Analytics.delegate?.userIdentity = userIdentity
         }
     }
     
@@ -66,14 +67,13 @@ public class Analytics {
     
     // Handles all internal implementation of the Analytics class
     // Public access required by MFPAnalytics framework, which is required to initialize this property
-    internal static var analyticsImplementer: AnalyticsImplementation?
+    internal static var delegate: AnalyticsDelegate?
     
-    internal static let logger = Logger.loggerForName(Constants.Package.analytics)
+    internal static let logger = Logger.loggerForName(Logger.mfpLoggerPrefix + "analytics")
     
     
     
     // MARK: Methods (public)
-    
     
     /**
         The required initializer for the `Analytics` class when communicating with a Bluemix analytics service.
@@ -86,7 +86,7 @@ public class Analytics {
     */
     public static func initializeForBluemix(appName appName: String?, apiKey: String?, deviceEvents: DeviceEvent...) {
         
-        Analytics.analyticsImplementer?.initialize(appName: appName, apiKey: apiKey, deviceEvents: deviceEvents)
+        Analytics.delegate?.initialize(appName: appName, apiKey: apiKey, deviceEvents: deviceEvents)
     }
     
     
@@ -114,7 +114,7 @@ public class Analytics {
      */
     public static func send(completionHandler userCallback: AnyObject? = nil) {
         
-        Logger.logSender?.sendAnalytics(completionHandler: userCallback)
+        Logger.delegate?.sendAnalytics(completionHandler: userCallback)
     }
     
 }
