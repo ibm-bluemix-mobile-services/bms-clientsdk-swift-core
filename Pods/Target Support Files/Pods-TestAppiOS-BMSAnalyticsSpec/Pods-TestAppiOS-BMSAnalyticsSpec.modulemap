@@ -1,0 +1,6 @@
+framework module BMSAnalyticsSpec {
+  umbrella header "Pods-TestAppiOS-BMSAnalyticsSpec-umbrella.h"
+
+  export *
+  module * { export * }
+}

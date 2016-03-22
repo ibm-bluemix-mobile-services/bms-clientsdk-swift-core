@@ -1,0 +1,10 @@
+PODS:
+  - BMSAnalyticsSpec (0.0.1)
+
+DEPENDENCIES:
+  - BMSAnalyticsSpec (~> 0.0.1)
+
+SPEC CHECKSUMS:
+  BMSAnalyticsSpec: 59dacb13c4c3013be8bc28f8c58e3d888a0627c0
+
+COCOAPODS: 0.39.0
