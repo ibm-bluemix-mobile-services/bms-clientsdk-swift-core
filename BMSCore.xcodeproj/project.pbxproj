@@ -41,9 +41,6 @@
 		9235D0FD1BC33D5600946A32 /* BMSCoreWatchOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92A8E4D61BBF2D9C00995FE8 /* BMSCoreWatchOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		926679B91BF3D4E000F597C5 /* TestAppWatchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */; };
 		926679BD1BF4FBD300F597C5 /* BMSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		926CF6921C4D51760084355B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* Logger.swift */; };
-		926CF6931C4D51760084355B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6911C4D51760084355B /* Logger.swift */; };
-		926CF6971C4EADCA0084355B /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926CF6961C4EADCA0084355B /* LoggerTests.swift */; };
 		927DF2011C7CD7B900245647 /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2001C7CD7B900245647 /* RequestTests.swift */; };
 		927DF2061C7CF60600245647 /* BaseAppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2031C7CF60600245647 /* BaseAppIdentity.swift */; };
 		927DF2071C7CF60600245647 /* BaseAppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2031C7CF60600245647 /* BaseAppIdentity.swift */; };
@@ -189,8 +186,6 @@
 		9235D0A81BC3181900946A32 /* TestAppiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestAppiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0BC1BC3183F00946A32 /* TestAppWatchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestAppWatchOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0C81BC3183F00946A32 /* TestAppWatchOS Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TestAppWatchOS Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		926CF6911C4D51760084355B /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		926CF6961C4EADCA0084355B /* LoggerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		927DF2001C7CD7B900245647 /* RequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		927DF2031C7CF60600245647 /* BaseAppIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAppIdentity.swift; sourceTree = "<group>"; };
 		927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDeviceIdentity.swift; sourceTree = "<group>"; };
@@ -286,18 +281,9 @@
 				92018A171C45A7720031C893 /* Error.swift */,
 				92018A461C45AA890031C893 /* Network Requests */,
 				92018A221C45A7720031C893 /* Security */,
-				92018A191C45A7720031C893 /* Logger */,
 				92018A3B1C45A8170031C893 /* Resources */,
 			);
 			path = Source;
-			sourceTree = "<group>";
-		};
-		92018A191C45A7720031C893 /* Logger */ = {
-			isa = PBXGroup;
-			children = (
-				926CF6911C4D51760084355B /* Logger.swift */,
-			);
-			path = Logger;
 			sourceTree = "<group>";
 		};
 		92018A221C45A7720031C893 /* Security */ = {
@@ -391,7 +377,6 @@
 				92018A791C45AC380031C893 /* BaseRequestTests.swift */,
 				927DF2001C7CD7B900245647 /* RequestTests.swift */,
 				92018A7D1C45AC380031C893 /* ResponseTests.swift */,
-				926CF6961C4EADCA0084355B /* LoggerTests.swift */,
 				92018A7A1C45AC380031C893 /* Resources */,
 			);
 			path = "Unit Tests";
@@ -966,7 +951,6 @@
 				922CD63F1CA04DDE002E29C0 /* UserIdentity.swift in Sources */,
 				92018A5A1C45AACC0031C893 /* Request.swift in Sources */,
 				927DF20B1C7CF60600245647 /* BaseUserIdentity.swift in Sources */,
-				926CF6931C4D51760084355B /* Logger.swift in Sources */,
 				927DF2091C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */,
 				927DF2071C7CF60600245647 /* BaseAppIdentity.swift in Sources */,
 				922CD6401CA04DE1002E29C0 /* AppIdentity.swift in Sources */,
@@ -978,7 +962,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A9CDF121C973DAA00890633 /* UserIdentity.swift in Sources */,
-				926CF6921C4D51760084355B /* Logger.swift in Sources */,
 				927DF20A1C7CF60600245647 /* BaseUserIdentity.swift in Sources */,
 				92018A511C45AA890031C893 /* BaseRequest.swift in Sources */,
 				927DF2061C7CF60600245647 /* BaseAppIdentity.swift in Sources */,
@@ -1000,7 +983,6 @@
 			files = (
 				927DF2011C7CD7B900245647 /* RequestTests.swift in Sources */,
 				92018A921C45AC380031C893 /* ResponseTests.swift in Sources */,
-				926CF6971C4EADCA0084355B /* LoggerTests.swift in Sources */,
 				92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */,
 				92018A8F1C45AC380031C893 /* BaseRequestTests.swift in Sources */,
 			);

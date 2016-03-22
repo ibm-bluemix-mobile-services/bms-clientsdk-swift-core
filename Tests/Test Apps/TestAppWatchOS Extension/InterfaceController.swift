@@ -15,6 +15,7 @@
 import WatchKit
 import Foundation
 import BMSCoreWatchOS
+import BMSAnalyticsSpec
 
 
 class InterfaceController: WKInterfaceController {

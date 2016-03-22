@@ -12,6 +12,7 @@
 */
 
 import WatchKit
+import BMSAnalyticsSpec
  
 
 /**

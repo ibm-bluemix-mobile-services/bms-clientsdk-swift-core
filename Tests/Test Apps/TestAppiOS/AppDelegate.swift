@@ -14,6 +14,7 @@
 
 import UIKit
 import BMSCore
+import BMSAnalyticsSpec
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
