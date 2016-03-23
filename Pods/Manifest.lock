@@ -1,10 +1,10 @@
 PODS:
-  - BMSAnalyticsSpec (0.0.3)
+  - BMSAnalyticsSpec (0.0.4)
 
 DEPENDENCIES:
-  - BMSAnalyticsSpec (~> 0.0.3)
+  - BMSAnalyticsSpec (~> 0.0.4)
 
 SPEC CHECKSUMS:
-  BMSAnalyticsSpec: a23fc6d6cc32870b43f91abec075ed80d69bdab4
+  BMSAnalyticsSpec: 974213d9c396707af4d956e227d29f152795cb97
 
 COCOAPODS: 0.39.0

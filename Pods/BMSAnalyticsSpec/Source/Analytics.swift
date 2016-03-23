@@ -75,20 +75,7 @@ public class Analytics {
     
     // MARK: Methods (public)
     
-    /**
-        The required initializer for the `Analytics` class when communicating with a Bluemix analytics service.
-        
-        This method must be called after the `BMSClient.initializeWithBluemixAppRoute()` method and before calling `Analytics.send()` or `Logger.send()`.
-        
-        - parameter appName:        The application name.  Should be consistent across platforms (e.g. Android and iOS).
-        - parameter apiKey:         A unique ID used to authenticate with the Bluemix analytics service
-        - parameter deviceEvents:   Device events that will be recorded automatically by the `Analytics` class
-    */
-    public static func initializeForBluemix(appName appName: String?, apiKey: String?, deviceEvents: DeviceEvent...) {
-        
-        Analytics.delegate?.initialize(appName: appName, apiKey: apiKey, deviceEvents: deviceEvents)
-    }
-    
+    // NOTE: The initializer is in the MFPAnalytics framework
     
     /**
          Write analytics data to file.
