@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.ios.exclude_files = 'Source/**/*watchOS*.swift'
   s.watchos.exclude_files = 'Source/**/*iOS*.swift'
 
-  s.dependency 'BMSAnalyticsSpec', '~> 0.0.5'
+  s.dependency 'BMSAnalyticsSpec', '~> 0.0.6'
 
   s.requires_arc = true
 

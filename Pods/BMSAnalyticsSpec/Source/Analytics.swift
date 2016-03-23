@@ -30,9 +30,7 @@ public protocol AnalyticsDelegate {
     
     var userIdentity: String? { get set }
     
-    func initialize(appName appName: String?, apiKey: String?, deviceEvents: [DeviceEvent])
-    func logSessionStart()
-    func logSessionEnd()
+    func initializeForBluemix(appName appName: String?, apiKey: String?, deviceEvents: DeviceEvent...)
 }
 
 
@@ -46,12 +44,6 @@ public class Analytics {
     
     /// Determines whether analytics logs will be persisted to file.
     public static var enabled: Bool = true
-    
-    /// The unique ID used to send logs to the Analytics server
-    public private(set) static var apiKey: String?
-    
-    /// The name of the iOS/WatchOS app
-    public private(set) static var appName: String?
     
     /// Identifies the current application user.
     /// To reset the userId, set the value to nil.
@@ -86,9 +78,9 @@ public class Analytics {
          
          - parameter metadata:  The analytics data
      */
-    public static func log(metadata: [String: AnyObject]) {
+    public static func log(metadata: [String: AnyObject], file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
-        Analytics.logger.analytics(metadata)
+        Analytics.logger.analytics(metadata, file: file, function: function, line: line)
     }
     
     
