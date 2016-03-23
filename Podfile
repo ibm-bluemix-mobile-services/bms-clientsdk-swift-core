@@ -6,7 +6,7 @@ use_frameworks!
 # Methods
 
 def pod_BMSAnalyticsSpec
-	pod 'BMSAnalyticsSpec', '~> 0.0.4'
+	pod 'BMSAnalyticsSpec', '~> 0.0.5'
 end
 
 def import_pods_iOS

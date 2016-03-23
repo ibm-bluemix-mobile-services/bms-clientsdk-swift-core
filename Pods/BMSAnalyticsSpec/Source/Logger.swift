@@ -44,20 +44,13 @@ public enum LogLevel: Int {
 }
 
 
-// Stores logs on the device's file system
+// Contains functionality to write logs to file and send them to an analytics server
 // This protocol is implemented in the MFPAnalytics framework
-public protocol LogRecorderDelegate {
+public protocol LoggerDelegate {
     
     var isUncaughtExceptionDetected: Bool { get set }
     
     func logMessageToFile(message: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]?)
-}
-
-
-// Sends logs to the analytics server
-// This protocol is implemented in the MFPAnalytics framework
-public protocol LogSenderDelegate {
-    
     func send(completionHandler userCallback: AnyObject?)
     func sendAnalytics(completionHandler userCallback: AnyObject?)
 }
@@ -129,7 +122,7 @@ public class Logger {
     
     // Used to persist all logs to the device's file system and send logs to the analytics server
     // Public access required by MFPAnalytics framework, which is required to initialize this property
-    public static var delegate: protocol<LogRecorderDelegate, LogSenderDelegate>?
+    public static var delegate: LoggerDelegate?
     
     // Each logger instance is distinguished only by its "name" property
     internal static var loggerInstances: [String: Logger] = [:]
