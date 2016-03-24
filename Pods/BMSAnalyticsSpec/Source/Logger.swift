@@ -51,8 +51,8 @@ public protocol LoggerDelegate {
     var isUncaughtExceptionDetected: Bool { get set }
     
     func logMessageToFile(message: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]?)
-    func send(completionHandler userCallback: AnyObject?)
-    func sendAnalytics(completionHandler userCallback: AnyObject?)
+    func send(completionHandler userCallback: Any?)
+    func sendAnalytics(completionHandler userCallback: Any?)
 }
 
 
@@ -230,7 +230,7 @@ public class Logger {
          
          - parameter completionHandler:  Optional callback containing the results of the send request
      */
-    public static func send(completionHandler userCallback: AnyObject? = nil) {
+    public static func send(completionHandler userCallback: Any? = nil) {
         
         Logger.delegate?.send(completionHandler: userCallback)
     }
@@ -251,7 +251,7 @@ public class Logger {
     
     // This is the master function that handles all of the logging, including level checking, printing to console, and writing to file
     // All other log functions below this one are helpers for this function
-    public func logMessage(message: String, level: LogLevel, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]? = nil) {
+    internal func logMessage(message: String, level: LogLevel, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]? = nil) {
         
         // The level must exceed the Logger.logLevelFilter, or we do nothing
         guard level.rawValue <= Logger.logLevelFilter.rawValue else {
@@ -270,6 +270,7 @@ public class Logger {
     }
     
     // Format: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
+    // Public access required by BMSAnalytics framework
     public static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
         
         // Suppress console log output for apps that are being released to the App Store
