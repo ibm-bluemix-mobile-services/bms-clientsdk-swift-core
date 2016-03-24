@@ -112,7 +112,7 @@ public class Logger {
             return Logger.delegate?.isUncaughtExceptionDetected ?? false
         }
         set {
-            Logger.delegate?.isUncaughtExceptionDetected = isUncaughtExceptionDetected
+            Logger.delegate?.isUncaughtExceptionDetected = newValue
         }
     }
     
