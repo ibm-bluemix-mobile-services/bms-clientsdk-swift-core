@@ -26,10 +26,6 @@ class InterfaceController: WKInterfaceController {
     
     @IBAction func getRequestButtonPressed() {
         
-        Logger.logLevelFilter = LogLevel.Debug
-        let testLogger = Logger.loggerForName("Test")
-        testLogger.debug("GET request button pressed")
-        
         let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
         getRequest.sendWithCompletionHandler( { (response: Response?, error: NSError?) in
             
@@ -47,5 +43,23 @@ class InterfaceController: WKInterfaceController {
                 self.responseLabel.setText(responseLabelText)
             })
         } )
+    }
+    
+    private func logSendButtonPressedEvent() {
+        
+        Logger.logLevelFilter = LogLevel.Debug
+        
+        let logger = Logger.loggerForName("TestAppWatchOS")
+        logger.debug("GET request button pressed")
+        
+        
+        // NOTE: All of the methods below do nothing since the implementation (the BMSAnalytics framework) is not provided
+        // These method calls are just to confirm the existence of the APIs
+        
+        let eventMetadata = ["buttonPressed": "GET Request"]
+        Analytics.log(eventMetadata)
+        
+        Logger.send()
+        Analytics.send()
     }
 }

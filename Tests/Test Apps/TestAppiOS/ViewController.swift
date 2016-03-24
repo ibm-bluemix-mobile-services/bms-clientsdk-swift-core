@@ -25,9 +25,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var httpMethod: UITextField!
     
     
+    let logger = Logger.loggerForName("TestAppiOS")
+    
+    
     @IBAction func sendRequestButtonPressed(sender: AnyObject) {
         
-        logEvent()
+        logSendButtonPressedEvent()
         
         var method: HttpMethod
 
@@ -63,6 +66,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         if let responseError = error {
             responseLabelText = "ERROR: \(responseError.localizedDescription)"
+            logger.error(responseLabelText)
         }
         else if response != nil {
             let status = response!.statusCode ?? 0
@@ -80,13 +84,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    private func logEvent() {
+    private func logSendButtonPressedEvent() {
         
-        Logger.logLevelFilter = LogLevel.Debug
-        Logger.sdkDebugLoggingEnabled = true
+        logger.debug("Sending Request button pressed")
         
-        let testLogger = Logger.loggerForName("TestAppiOS")
-        testLogger.debug("Sending Request button pressed")
+        // NOTE: All of the methods below do nothing since the implementation (the BMSAnalytics framework) is not provided
+        // These method calls are just to confirm the existence of the APIs
+        
+        let eventMetadata = ["buttonPressed": "send"]
+        Analytics.log(eventMetadata)
+        
+        Logger.send()
+        Analytics.send()
     }
     
     

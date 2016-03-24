@@ -29,6 +29,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         myBMSClient.initializeWithBluemixAppRoute("https://example.mybluemix.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
         
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.sdkDebugLoggingEnabled = true
+        
         return true
     }
 
