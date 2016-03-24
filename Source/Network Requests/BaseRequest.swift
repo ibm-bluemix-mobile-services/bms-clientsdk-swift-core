@@ -250,7 +250,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         networkRequest.allHTTPHeaderFields = headers
         networkRequest.HTTPBody = requestBody
         
-        BaseRequest.logger.info("Sending Request to " + resourceUrl)
+        BaseRequest.logger.debug("Sending Request to " + resourceUrl)
         
         // Send request
         self.networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
@@ -269,7 +269,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     {
         var redirectRequest: NSURLRequest?
         if allowRedirects {
-            BaseRequest.logger.info("Redirecting: " + String(session))
+            BaseRequest.logger.debug("Redirecting: " + String(session))
             redirectRequest = request
         }
         
