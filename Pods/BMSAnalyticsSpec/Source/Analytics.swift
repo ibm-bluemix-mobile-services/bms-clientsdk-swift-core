@@ -25,7 +25,7 @@ public enum DeviceEvent {
 }
 
 
-// This protocol is implemented in the MFPAnalytics framework
+// This protocol is implemented in the BMSAnalytics framework
 public protocol AnalyticsDelegate {
     
     var userIdentity: String? { get set }
@@ -56,16 +56,16 @@ public class Analytics {
     // MARK: Properties (internal/private)
     
     // Handles all internal implementation of the Analytics class
-    // Public access required by MFPAnalytics framework, which is required to initialize this property
+    // Public access required by BMSAnalytics framework, which is required to initialize this property
     public static var delegate: AnalyticsDelegate?
     
-    public static let logger = Logger.loggerForName(Logger.mfpLoggerPrefix + "analytics")
+    public static let logger = Logger.loggerForName(Logger.bmsLoggerPrefix + "analytics")
     
     
     
     // MARK: Methods (public)
     
-    // NOTE: The initializer is in the MFPAnalytics framework
+    // NOTE: The initializer is in the BMSAnalytics framework
     
     /**
          Write analytics data to file.

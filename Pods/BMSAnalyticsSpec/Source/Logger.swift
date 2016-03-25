@@ -45,7 +45,7 @@ public enum LogLevel: Int {
 
 
 // Contains functionality to write logs to file and send them to an analytics server
-// This protocol is implemented in the MFPAnalytics framework
+// This protocol is implemented in the BMSAnalytics framework
 public protocol LoggerDelegate {
     
     var isUncaughtExceptionDetected: Bool { get set }
@@ -62,7 +62,7 @@ public protocol LoggerDelegate {
 
     Multiple `Logger` instances can be created with different package names using the `loggerForName` method.
 
-    - Important: All of the below functionality will be added to `Logger` if the `MFPAnalytics` framework is added to your project. `MFPAnalytics` extends `Logger` to allow storing log messages and sending them to an analytics server.
+    - Important: All of the below functionality will be added to `Logger` if the `BMSAnalytics` framework is added to your project. `BMSAnalytics` extends `Logger` to allow storing log messages and sending them to an analytics server.
 
     When the `enabled` property is set to `true` (which is the default value), logs will be persisted to a file on the client device in the following JSON format:
 
@@ -121,14 +121,14 @@ public class Logger {
     // MARK: Properties (internal)
     
     // Used to persist all logs to the device's file system and send logs to the analytics server
-    // Public access required by MFPAnalytics framework, which is required to initialize this property
+    // Public access required by BMSAnalytics framework, which is required to initialize this property
     public static var delegate: LoggerDelegate?
     
     // Each logger instance is distinguished only by its "name" property
     internal static var loggerInstances: [String: Logger] = [:]
     
     // Prefix for all internal logger names
-    public static let mfpLoggerPrefix = "mfpsdk."
+    public static let bmsLoggerPrefix = "bmssdk."
     
     
     
@@ -258,7 +258,7 @@ public class Logger {
             return
         }
         
-        if self.name.hasPrefix(Logger.mfpLoggerPrefix) && !Logger.sdkDebugLoggingEnabled && level == LogLevel.Debug {
+        if self.name.hasPrefix(Logger.bmsLoggerPrefix) && !Logger.sdkDebugLoggingEnabled && level == LogLevel.Debug {
             // Don't show our internal logs in the console.
         }
         else {
@@ -269,7 +269,7 @@ public class Logger {
         Logger.delegate?.logMessageToFile(message, level: level, loggerName: self.name, calledFile: calledFile, calledFunction: calledFunction, calledLineNumber: calledLineNumber, additionalMetadata: additionalMetadata)
     }
     
-    // Format: [DEBUG] [mfpsdk.logger] logMessage in Logger.swift:234 :: "Some random message"
+    // Format: [DEBUG] [bmssdk.logger] logMessage in Logger.swift:234 :: "Some random message"
     // Public access required by BMSAnalytics framework
     public static func printLogToConsole(logMessage: String, loggerName: String, level: LogLevel, calledFunction: String, calledFile: String, calledLineNumber: Int) {
         

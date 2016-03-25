@@ -80,7 +80,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     // MARK: Properties (internal/private)
     var networkRequest: NSMutableURLRequest
     
-    private static let logger = Logger.loggerForName(Logger.mfpLoggerPrefix + "request")
+    private static let logger = Logger.loggerForName(Logger.bmsLoggerPrefix + "request")
     
     // MARK: Constants
     public static let CONTENT_TYPE = "Content-Type"
