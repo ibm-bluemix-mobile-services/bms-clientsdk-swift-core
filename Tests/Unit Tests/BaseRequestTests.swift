@@ -63,7 +63,7 @@ class BaseRequestTests: XCTestCase {
         request.sendData(requestData!, withCompletionHandler: nil)
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
-        XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the MFPAnalytics framework
+        XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(request.requestBody, requestData)
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
@@ -79,7 +79,7 @@ class BaseRequestTests: XCTestCase {
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
-        XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the MFPAnalytics framework
+        XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
         XCTAssertEqual(request.headers[BaseRequest.CONTENT_TYPE], "text/plain")
@@ -95,7 +95,7 @@ class BaseRequestTests: XCTestCase {
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
-        XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the MFPAnalytics framework
+        XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
         XCTAssertEqual(request.headers[BaseRequest.CONTENT_TYPE], "media-type")

@@ -24,9 +24,9 @@ public enum HttpMethod: String {
  
  
 /**
-    The type of callback sent with MFP network requests
+    The type of callback sent with BMS network requests
 */
-public typealias MfpCompletionHandler = (Response?, NSError?) -> Void
+public typealias BmsCompletionHandler = (Response?, NSError?) -> Void
 
  
 /**
@@ -34,8 +34,8 @@ public typealias MfpCompletionHandler = (Response?, NSError?) -> Void
 
     When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as either NSData or plain text when sending the request via one of the following methods:
 
-        sendString(requestBody: String, withCompletionHandler callback: mfpCompletionHandler?)
-        sendData(requestBody: NSData, withCompletionHandler callback: mfpCompletionHandler?)
+        sendString(requestBody: String, withCompletionHandler callback: BmsCompletionHandler?)
+        sendData(requestBody: NSData, withCompletionHandler callback: BmsCompletionHandler?)
 */
 public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
@@ -67,14 +67,14 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     // The request timeout is set in this NSURLSession's configuration
     public var networkSession: NSURLSession!
     
-    // Public access required by MFPAnalytics framework
+    // Public access required by BMSAnalytics framework
     public private(set) var startTime: NSTimeInterval = 0.0
     
-    // Public access required by MFPAnalytics framework
+    // Public access required by BMSAnalytics framework
     public private(set) var trackingId: String = ""
     
-    // Public access required by MFPAnalytics framework
-    // This will obtain a value when the Analytics class from MFPAnalytics is initialized
+    // Public access required by BMSAnalytics framework
+    // This will obtain a value when the Analytics class from BMSAnalytics is initialized
     public static var requestAnalyticsData: String?
 	
     // MARK: Properties (internal/private)
@@ -149,7 +149,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
-    public func sendString(requestBody: String, withCompletionHandler callback: MfpCompletionHandler?) {
+    public func sendString(requestBody: String, withCompletionHandler callback: BmsCompletionHandler?) {
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         // Don't want to overwrite content type if it has already been specified as something else
@@ -170,7 +170,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter requestBody: HTTP request body
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
-    public func sendData(requestBody: NSData, withCompletionHandler callback: MfpCompletionHandler?) {
+    public func sendData(requestBody: NSData, withCompletionHandler callback: BmsCompletionHandler?) {
         
         self.requestBody = requestBody
         self.sendWithCompletionHandler(callback)
@@ -186,11 +186,11 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
 
         - parameter completionHandler: The closure that will be called when this request finishes
     */
-    public func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
+    public func sendWithCompletionHandler(callback: BmsCompletionHandler?) {
         
         BaseRequest.logger.debug("Network request outbound")
         
-        // Add metadata to the request header so that analytics data can be obtained for ALL mfp network requests
+        // Add metadata to the request header so that analytics data can be obtained for ALL bms network requests
         
         // The analytics server needs this ID to match each request with its corresponding response
         self.trackingId = NSUUID().UUIDString
@@ -215,7 +215,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     }
     
     
-    private func buildAndSendRequestWithUrl(var url: NSURL, callback: MfpCompletionHandler?) {
+    private func buildAndSendRequestWithUrl(var url: NSURL, callback: BmsCompletionHandler?) {
         
         // A callback that builds the Response object and passes it to the user
         let buildAndSendResponse = {

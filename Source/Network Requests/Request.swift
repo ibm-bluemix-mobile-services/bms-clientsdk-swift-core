@@ -26,7 +26,7 @@ public class Request: BaseRequest {
         super.init(url: url, headers: headers, queryParameters: queryParameters, method: method, timeout: timeout)
     }
     
-    public override func sendWithCompletionHandler(callback: MfpCompletionHandler?) {
+    public override func sendWithCompletionHandler(callback: BmsCompletionHandler?) {
         
         let authManager: AuthorizationManager = BMSClient.sharedInstance.authorizationManager
         
@@ -36,7 +36,7 @@ public class Request: BaseRequest {
         
         savedRequestBody = requestBody
         
-        let myCallback : MfpCompletionHandler = {(response: Response?, error:NSError?) in
+        let myCallback : BmsCompletionHandler = {(response: Response?, error:NSError?) in
             
             guard error == nil else {
 				if let callback = callback{
@@ -57,7 +57,7 @@ public class Request: BaseRequest {
                     return
                 }
             
-            let authCallback: MfpCompletionHandler = {(response: Response?, error:NSError?) in
+            let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
                 if error == nil {
                     if let myRequestBody = self.requestBody {
                         self.sendData(myRequestBody, withCompletionHandler: nil)

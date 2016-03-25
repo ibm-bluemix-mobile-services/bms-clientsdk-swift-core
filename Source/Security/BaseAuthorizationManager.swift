@@ -49,7 +49,7 @@ internal class BaseAuthorizationManager : AuthorizationManager {
         return false;
     }
     
-    func obtainAuthorization(completionHandler: MfpCompletionHandler?) {
+    func obtainAuthorization(completionHandler: BmsCompletionHandler?) {
 		if let completionHandler = completionHandler{
 			completionHandler(nil, nil)
 		}

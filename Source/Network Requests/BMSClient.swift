@@ -73,7 +73,7 @@ public class BMSClient {
     
         Sets the base URL for the authorization server.
     
-        - Note: The `backendRoute` and `backendGUID` parameters are not required to use the `MFPAnalytics` framework.
+        - Note: The `backendRoute` and `backendGUID` parameters are not required to use the `BMSAnalytics` framework.
 
         - parameter backendRoute:           The base URL for the authorization server
         - parameter backendGUID:            The GUID of the Bluemix application
