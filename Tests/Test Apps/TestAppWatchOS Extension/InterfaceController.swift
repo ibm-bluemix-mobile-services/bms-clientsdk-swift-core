@@ -58,8 +58,5 @@ class InterfaceController: WKInterfaceController {
         
         let eventMetadata = ["buttonPressed": "GET Request"]
         Analytics.log(eventMetadata)
-        
-        Logger.send()
-        Analytics.send()
     }
 }

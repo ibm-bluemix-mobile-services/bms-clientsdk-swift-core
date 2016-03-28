@@ -93,9 +93,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         let eventMetadata = ["buttonPressed": "send"]
         Analytics.log(eventMetadata)
-        
-        Logger.send()
-        Analytics.send()
     }
     
     

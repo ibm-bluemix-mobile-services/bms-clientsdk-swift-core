@@ -65,7 +65,23 @@ public class Analytics {
     
     // MARK: Methods (public)
     
-    // NOTE: The initializer is in the BMSAnalytics framework
+#if swift(>=2.2)
+    
+    /**
+         Write analytics data to file.
+         
+         Similar to the `Logger` class logging methods, old logs will be removed if the file size exceeds the `Logger.maxLogStoreSize` property.
+         
+         When ready, use the `Analytics.send()` method to send the logs to the Bluemix server.
+         
+         - parameter metadata:  The analytics data
+     */
+    public static func log(metadata: [String: AnyObject], file: String = #file, function: String = #function, line: Int = #line) {
+     
+        Analytics.logger.analytics(metadata, file: file, function: function, line: line)
+    }
+    
+#else
     
     /**
          Write analytics data to file.
@@ -77,21 +93,10 @@ public class Analytics {
          - parameter metadata:  The analytics data
      */
     public static func log(metadata: [String: AnyObject], file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
-        
+    
         Analytics.logger.analytics(metadata, file: file, function: function, line: line)
     }
     
-    
-    /**
-         Send the accumulated analytics logs to the Bluemix server.
-         
-         Analytics logs can only be sent if the BMSClient was initialized via the `initializeWithBluemixAppRoute()` method.
-         
-         - parameter completionHandler:  Optional callback containing the results of the send request
-     */
-    public static func send(completionHandler userCallback: Any? = nil) {
-        
-        Logger.delegate?.sendAnalytics(completionHandler: userCallback)
-    }
+#endif
     
 }
