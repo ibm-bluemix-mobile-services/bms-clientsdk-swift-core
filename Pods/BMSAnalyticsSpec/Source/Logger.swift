@@ -170,7 +170,7 @@ public class Logger {
         
         - Note: Do not supply values for the `file`, `function`, or `line` parameters. These parameters take default values to automatically record the file, function, and line in which this method was called.
     */
-    public func debug(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func debug(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
         logMessage(message, level: LogLevel.Debug, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
@@ -182,7 +182,7 @@ public class Logger {
          
          - Note: Do not supply values for the `file`, `function`, or `line` parameters. These parameters take default values to automatically record the file, function, and line in which this method was called.
      */
-    public func info(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func info(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
         logMessage(message, level: LogLevel.Info, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
@@ -194,7 +194,7 @@ public class Logger {
          
          - Note: Do not supply values for the `file`, `function`, or `line` parameters. These parameters take default values to automatically record the file, function, and line in which this method was called.
      */
-    public func warn(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func warn(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
         logMessage(message, level: LogLevel.Warn, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
@@ -206,7 +206,7 @@ public class Logger {
          
          - Note: Do not supply values for the `file`, `function`, or `line` parameters. These parameters take default values to automatically record the file, function, and line in which this method was called.
      */
-    public func error(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func error(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
         logMessage(message, level: LogLevel.Error, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
@@ -218,7 +218,7 @@ public class Logger {
          
          - Note: Do not supply values for the `file`, `function`, or `line` parameters. These parameters take default values to automatically record the file, function, and line in which this method was called.
      */
-    public func fatal(message: String, file: String = #file, function: String = #function, line: Int = #line) {
+    public func fatal(message: String, file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
         logMessage(message, level: LogLevel.Fatal, calledFile: file, calledFunction: function, calledLineNumber: line)
     }
@@ -240,7 +240,7 @@ public class Logger {
     // MARK: Analytics
     
     // Equivalent to the other log methods, but this method accepts data as JSON rather than a string
-    internal func analytics(metadata: [String: AnyObject], file: String = #file, function: String = #function, line: Int = #line) {
+    internal func analytics(metadata: [String: AnyObject], file: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
         
         logMessage("", level: LogLevel.Analytics, calledFile: file, calledFunction: function, calledLineNumber: line, additionalMetadata: metadata)
     }
