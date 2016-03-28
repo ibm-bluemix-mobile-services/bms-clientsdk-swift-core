@@ -215,7 +215,9 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     }
     
     
-    private func buildAndSendRequestWithUrl(var url: NSURL, callback: BmsCompletionHandler?) {
+    private func buildAndSendRequestWithUrl(url: NSURL, callback: BmsCompletionHandler?) {
+        
+        var requestUrl = url
         
         // A callback that builds the Response object and passes it to the user
         let buildAndSendResponse = {
@@ -232,7 +234,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         
         // Add query parameters to URL
         if queryParameters != nil {
-            guard let urlWithQueryParameters = BaseRequest.appendQueryParameters(queryParameters!, toURL: url) else {
+            guard let urlWithQueryParameters = BaseRequest.appendQueryParameters(queryParameters!, toURL: requestUrl) else {
                 // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
                 let urlErrorMessage = "Failed to append the query parameters to the resource url."
                 BaseRequest.logger.error(urlErrorMessage)
@@ -240,12 +242,12 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
                 callback?(nil, malformedUrlError)
                 return
             }
-            url = urlWithQueryParameters
+            requestUrl = urlWithQueryParameters
         }
         
         // Build request
-        resourceUrl = String(url)
-        networkRequest.URL = url
+        resourceUrl = String(requestUrl)
+        networkRequest.URL = requestUrl
         networkRequest.HTTPMethod = httpMethod.rawValue
         networkRequest.allHTTPHeaderFields = headers
         networkRequest.HTTPBody = requestBody

@@ -36,7 +36,7 @@ public class Request: BaseRequest {
         
         savedRequestBody = requestBody
         
-        let myCallback : BmsCompletionHandler = {(response: Response?, error:NSError?) in
+        let myCallback : BmsCompletionHandler = {(response: Response?, error: NSError?) in
             
             guard error == nil else {
 				if let callback = callback{
@@ -47,15 +47,18 @@ public class Request: BaseRequest {
             
             guard let unWrappedResponse = response where
 					BMSClient.sharedInstance.authorizationManager.isAuthorizationRequired(unWrappedResponse) &&
-                    self.oauthFailCounter++ < 2
+                    self.oauthFailCounter < 2
 			else {
                 if (response?.statusCode)! >= 400 {
-                        callback?(response, NSError(domain: BMSCoreError.domain, code: BMSCoreError.ServerRespondedWithError.rawValue, userInfo: nil))
-                    } else {
-                        callback?(response, nil)
-                    }
-                    return
+                    callback?(response, NSError(domain: BMSCoreError.domain, code: BMSCoreError.ServerRespondedWithError.rawValue, userInfo: nil))
                 }
+                else {
+                    callback?(response, nil)
+                }
+                return
+            }
+            
+            self.oauthFailCounter += 1
             
             let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
                 if error == nil {
