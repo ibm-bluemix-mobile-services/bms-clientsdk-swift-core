@@ -65,24 +65,6 @@ public class Analytics {
     
     // MARK: Methods (public)
     
-#if swift(>=2.2)
-    
-    /**
-         Write analytics data to file.
-         
-         Similar to the `Logger` class logging methods, old logs will be removed if the file size exceeds the `Logger.maxLogStoreSize` property.
-         
-         When ready, use the `Analytics.send()` method to send the logs to the Bluemix server.
-         
-         - parameter metadata:  The analytics data
-     */
-    public static func log(metadata: [String: AnyObject], file: String = #file, function: String = #function, line: Int = #line) {
-     
-        Analytics.logger.analytics(metadata, file: file, function: function, line: line)
-    }
-    
-#else
-    
     /**
          Write analytics data to file.
          
@@ -96,7 +78,5 @@ public class Analytics {
     
         Analytics.logger.analytics(metadata, file: file, function: function, line: line)
     }
-    
-#endif
     
 }
