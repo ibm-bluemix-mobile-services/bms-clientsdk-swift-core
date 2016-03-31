@@ -14,7 +14,6 @@
 
 import UIKit
 import BMSCore
-import BMSAnalyticsSpec
 
 
 class ViewController: UIViewController, UITextFieldDelegate {
