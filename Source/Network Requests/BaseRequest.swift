@@ -12,8 +12,7 @@
 */
 
 import WatchKit
-import BMSAnalyticsSpec
- 
+
 
 /**
     The HTTP method to be used in the `Request` class initializer.
