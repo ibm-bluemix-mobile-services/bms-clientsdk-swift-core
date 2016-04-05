@@ -17,8 +17,24 @@
 */
 public class BMSClient {
     
+    
+    // MARK: Constants
+    
+    /// The southern United States Bluemix region
+    /// - Note: Use this in the `BMSClient initializeWithBluemixAppRoute` method.
+    public static let REGION_US_SOUTH = ".ng.bluemix.net"
+    
+    /// The United Kingdom Bluemix region
+    /// - Note: Use this in the `BMSClient initializeWithBluemixAppRoute` method.
+    public static let REGION_UK = ".eu-gb.bluemix.net"
+    
+    /// The Sydney Bluemix region
+    /// - Note: Use this in the `BMSClient initializeWithBluemixAppRoute` method.
+    public static let REGION_SYDNEY = ".au-syd.bluemix.net"
+    
+    
 
-    // MARK: Properties (public)
+    // MARK: Properties (API)
     
     /// This singleton should be used for all `BMSClient` activity
     public static let sharedInstance = BMSClient()
@@ -34,7 +50,11 @@ public class BMSClient {
         
     /// Specifies the default timeout (in seconds) for all BMS network requests.
     public var defaultRequestTimeout: Double = 20.0
-
+    
+    
+    
+    // MARK: Properties (internal)
+    
     public var authorizationManager: AuthorizationManager {
         get {
             if registeredAuthorizationManager == nil {
@@ -49,20 +69,7 @@ public class BMSClient {
         }
     }
     
-    
-    
-    // MARK: Properties (internal/private)
-    
     private var registeredAuthorizationManager: AuthorizationManager?
-    
-    
-    
-    // MARK: Constants
-    
-    // TODO: 2/17/16 - Documentation
-    public static let REGION_US_SOUTH = ".ng.bluemix.net"
-    public static let REGION_UK = ".eu-gb.bluemix.net"
-    public static let REGION_SYDNEY = ".au-syd.bluemix.net"
     
     
     

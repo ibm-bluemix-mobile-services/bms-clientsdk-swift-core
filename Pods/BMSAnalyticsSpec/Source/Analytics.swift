@@ -12,6 +12,9 @@
 */
 
 
+
+// MARK: DeviceEvent
+
 /**
     Set of device events that the `Analytics` class will listen for. Whenever an event of the specified type occurs, analytics data for that event get recorded.
 
@@ -25,6 +28,9 @@ public enum DeviceEvent {
 }
 
 
+
+// MARK: - AnalyticsDelegate
+
 // This protocol is implemented in the BMSAnalytics framework
 public protocol AnalyticsDelegate {
     
@@ -32,13 +38,16 @@ public protocol AnalyticsDelegate {
 }
 
 
+
+// MARK: - Analytics
+
 /**
     `Analytics` provides a means of capturing analytics data and sending the data to the mobile analytics service.
 */
 public class Analytics {
     
     
-    // MARK: Properties (public)
+    // MARK: Properties (API)
     
     /// Determines whether analytics logs will be persisted to file.
     public static var enabled: Bool = true
@@ -53,7 +62,7 @@ public class Analytics {
     
     
     
-    // MARK: Properties (internal/private)
+    // MARK: Properties (internal)
     
     // Handles all internal implementation of the Analytics class
     // Public access required by BMSAnalytics framework, which is required to initialize this property
@@ -63,7 +72,7 @@ public class Analytics {
     
     
     
-    // MARK: Methods (public)
+    // MARK: Methods (API)
     
     /**
          Write analytics data to file.

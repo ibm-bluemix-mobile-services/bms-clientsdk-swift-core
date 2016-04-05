@@ -11,8 +11,11 @@
 *     limitations under the License.
 */
 
+
 import WatchKit
 
+
+// MARK: HttpMethod
 
 /**
     The HTTP method to be used in the `Request` class initializer.
@@ -20,14 +23,20 @@ import WatchKit
 public enum HttpMethod: String {
     case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
 }
- 
- 
+
+
+
+// MARK: - BmsCompletionHandler
+
 /**
     The type of callback sent with BMS network requests
 */
 public typealias BmsCompletionHandler = (Response?, NSError?) -> Void
 
- 
+
+
+// MARK: - BaseRequest
+
 /**
     Build and send HTTP network requests.
 
@@ -39,7 +48,13 @@ public typealias BmsCompletionHandler = (Response?, NSError?) -> Void
 public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     
-    // MARK: Properties (public)
+    // MARK: Constants
+    
+    public static let CONTENT_TYPE = "Content-Type"
+    
+    
+    
+    // MARK: Properties (API)
     
     /// URL that the request is being sent to
     public private(set) var resourceUrl: String
@@ -62,6 +77,10 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     /// Determines whether request should follow http redirects
     public var allowRedirects : Bool = true
     
+    
+    
+    // MARK: Properties (internal)
+    
     // Public access required by BMSSecurity framework
     // The request timeout is set in this NSURLSession's configuration
     public var networkSession: NSURLSession!
@@ -75,14 +94,12 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     // Public access required by BMSAnalytics framework
     // This will obtain a value when the Analytics class from BMSAnalytics is initialized
     public static var requestAnalyticsData: String?
-	
-    // MARK: Properties (internal/private)
+
     var networkRequest: NSMutableURLRequest
     
     private static let logger = Logger.loggerForName(Logger.bmsLoggerPrefix + "request")
     
-    // MARK: Constants
-    public static let CONTENT_TYPE = "Content-Type"
+    
     
     // MARK: Initializer
     
@@ -134,7 +151,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
 
     
     
-    // MARK: Methods (public)
+    // MARK: Methods (API)
     
     /**
         Add a request body and send the request asynchronously.
@@ -214,6 +231,10 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     }
     
     
+    
+    // MARK: Methods (internal)
+    
+    
     private func buildAndSendRequestWithUrl(url: NSURL, callback: BmsCompletionHandler?) {
         
         var requestUrl = url
@@ -258,29 +279,6 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     }
     
     
-    
-    // MARK: NSURLSessionTaskDelegate
-    
-    // Handle HTTP redirection
-    public func URLSession(session: NSURLSession,
-        task: NSURLSessionTask,
-        willPerformHTTPRedirection response: NSHTTPURLResponse,
-        newRequest request: NSURLRequest,
-        completionHandler: ((NSURLRequest?) -> Void))
-    {
-        var redirectRequest: NSURLRequest?
-        if allowRedirects {
-            BaseRequest.logger.debug("Redirecting: " + String(session))
-            redirectRequest = request
-        }
-        
-        completionHandler(redirectRequest)
-    }
-    
-    
-    
-    // MARK: Methods (internal/private)
-    
     /**
         Returns the supplied URL with query parameters appended to it; the original URL is not modified.
         Characters in the query parameters that are not URL safe are automatically converted to percent-encoding.
@@ -313,6 +311,26 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         else {
             return nil
         }
+    }
+    
+    
+    
+    // MARK: NSURLSessionTaskDelegate
+    
+    // Handle HTTP redirection
+    public func URLSession(session: NSURLSession,
+                          task: NSURLSessionTask,
+                          willPerformHTTPRedirection response: NSHTTPURLResponse,
+                          newRequest request: NSURLRequest,
+                          completionHandler: ((NSURLRequest?) -> Void))
+    {
+        var redirectRequest: NSURLRequest?
+        if allowRedirects {
+            BaseRequest.logger.debug("Redirecting: " + String(session))
+            redirectRequest = request
+        }
+        
+        completionHandler(redirectRequest)
     }
     
 }

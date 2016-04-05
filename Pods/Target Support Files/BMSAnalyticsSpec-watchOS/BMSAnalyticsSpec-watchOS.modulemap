@@ -1,5 +1,5 @@
 framework module BMSAnalyticsSpec {
-  umbrella header "Pods-BMSCoreTests-BMSAnalyticsSpec-umbrella.h"
+  umbrella header "BMSAnalyticsSpec-watchOS-umbrella.h"
 
   export *
   module * { export * }

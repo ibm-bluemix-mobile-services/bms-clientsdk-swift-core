@@ -14,11 +14,23 @@
 
 public class Request: BaseRequest {
     
+    
+    // MARK: Properties (internal)
+    
     internal var oauthFailCounter = 0
     internal var savedRequestBody: NSData?
+    
+    
+    
+    // MARK: Initializer
+    
     public init(url: String, method: HttpMethod) {
         super.init(url: url, headers: nil, queryParameters:nil, method: method)
     }
+    
+    
+    
+    // MARK: Method overrides
     
     // This is required since the other custom Request initializer overrides this superclass initializer
     public override init(url: String, headers: [String: String]?, queryParameters: [String: String]?, method: HttpMethod = HttpMethod.GET, timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout) {

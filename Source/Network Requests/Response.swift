@@ -18,7 +18,7 @@
 public class Response {
     
     
-    // MARK: Properties (public)
+    // MARK: Properties (API)
     
     /// HTTP status of the response
     public let statusCode: Int?
@@ -34,16 +34,16 @@ public class Response {
     /// Returns nil if there is no body or if the response is not valid NSData.
     public let responseData: NSData?
     
-    //is this response a success response
+    /// Does the response contain a 2xx status code
     public let isSuccessful: Bool
     
     
     
-    // MARK: Properties (internal/private)
+    // MARK: Properties (internal)
     
-    let httpResponse: NSHTTPURLResponse?
+    internal let httpResponse: NSHTTPURLResponse?
     
-    let isRedirect: Bool
+    internal let isRedirect: Bool
     
     
     

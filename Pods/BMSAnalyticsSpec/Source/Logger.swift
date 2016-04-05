@@ -12,6 +12,8 @@
 */
 
 
+// MARK: LogLevel
+
 /**
     Used in the `Logger` class, the `LogLevel` denotes the log severity.
 
@@ -44,6 +46,9 @@ public enum LogLevel: Int {
 }
 
 
+
+// MARK: - LoggerDelegate
+
 // Contains functionality to write logs to file and send them to an analytics server
 // This protocol is implemented in the BMSAnalytics framework
 public protocol LoggerDelegate {
@@ -53,6 +58,9 @@ public protocol LoggerDelegate {
     func logMessageToFile(message: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]?)
 }
 
+
+
+// MARK: - Logger
 
 /**
     `Logger` provides a wrapper to Swift's `print()` function, with additional information such as the file, function, and line where the log was called.
@@ -159,7 +167,7 @@ public class Logger {
     
     
     
-    // MARK: Log methods (API)
+    // MARK: Methods (API)
     
     /**
         Log at the Debug LogLevel.
@@ -229,7 +237,7 @@ public class Logger {
     
     
     
-    // MARK: Logging implementation
+    // MARK: Methods (internal)
     
     // This is the master function that handles all of the logging, including level checking, printing to console, and writing to file
     // All other log functions below this one are helpers for this function
