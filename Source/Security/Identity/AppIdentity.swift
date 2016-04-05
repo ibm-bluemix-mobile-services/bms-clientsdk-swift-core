@@ -11,7 +11,6 @@
 *     limitations under the License.
 */
 
-import Foundation
 
 public protocol AppIdentity{
 	var id:String? {get}

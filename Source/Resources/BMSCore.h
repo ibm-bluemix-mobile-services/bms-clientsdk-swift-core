@@ -12,13 +12,11 @@
 */
 
 
-#import <UIKit/UIKit.h>
+@import Foundation;
+@import BMSAnalyticsAPI;
 
 //! Project version number for BMSCore.
 FOUNDATION_EXPORT double BMSCoreVersionNumber;
 
 //! Project version string for BMSCore.
 FOUNDATION_EXPORT const unsigned char BMSCoreVersionString[];
-
-
-@import BMSAnalyticsAPI;

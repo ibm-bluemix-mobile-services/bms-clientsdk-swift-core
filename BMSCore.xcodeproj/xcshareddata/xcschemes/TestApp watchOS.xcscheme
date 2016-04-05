@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0720"
+   LastUpgradeVersion = "0730"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,22 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9235D0BB1BC3183F00946A32"
-               BuildableName = "TestAppWatchOS.app"
-               BlueprintName = "TestAppWatchOS"
-               ReferencedContainer = "container:BMSCore.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9235D0C71BC3183F00946A32"
-               BuildableName = "TestAppWatchOS Extension.appex"
-               BlueprintName = "TestAppWatchOS Extension"
+               BuildableName = "TestApp watchOS.app"
+               BlueprintName = "TestApp watchOS"
                ReferencedContainer = "container:BMSCore.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,8 +29,22 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9235D0A71BC3181900946A32"
-               BuildableName = "TestAppiOS.app"
-               BlueprintName = "TestAppiOS"
+               BuildableName = "TestApp iOS.app"
+               BlueprintName = "TestApp iOS"
+               ReferencedContainer = "container:BMSCore.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9235D0C71BC3183F00946A32"
+               BuildableName = "TestApp watchOS Extension.appex"
+               BlueprintName = "TestApp watchOS Extension"
                ReferencedContainer = "container:BMSCore.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -56,23 +56,13 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "926679C41BF50E7E00F597C5"
-               BuildableName = "BMSCoreUITests.xctest"
-               BlueprintName = "BMSCoreUITests"
-               ReferencedContainer = "container:BMSCore.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9235D0BB1BC3183F00946A32"
-            BuildableName = "TestAppWatchOS.app"
-            BlueprintName = "TestAppWatchOS"
+            BuildableName = "TestApp watchOS.app"
+            BlueprintName = "TestApp watchOS"
             ReferencedContainer = "container:BMSCore.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -96,8 +86,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9235D0BB1BC3183F00946A32"
-            BuildableName = "TestAppWatchOS.app"
-            BlueprintName = "TestAppWatchOS"
+            BuildableName = "TestApp watchOS.app"
+            BlueprintName = "TestApp watchOS"
             ReferencedContainer = "container:BMSCore.xcodeproj">
          </BuildableReference>
       </RemoteRunnable>
@@ -105,8 +95,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9235D0BB1BC3183F00946A32"
-            BuildableName = "TestAppWatchOS.app"
-            BlueprintName = "TestAppWatchOS"
+            BuildableName = "TestApp watchOS.app"
+            BlueprintName = "TestApp watchOS"
             ReferencedContainer = "container:BMSCore.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -126,8 +116,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9235D0BB1BC3183F00946A32"
-            BuildableName = "TestAppWatchOS.app"
-            BlueprintName = "TestAppWatchOS"
+            BuildableName = "TestApp watchOS.app"
+            BlueprintName = "TestApp watchOS"
             ReferencedContainer = "container:BMSCore.xcodeproj">
          </BuildableReference>
       </RemoteRunnable>
@@ -135,8 +125,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9235D0BB1BC3183F00946A32"
-            BuildableName = "TestAppWatchOS.app"
-            BlueprintName = "TestAppWatchOS"
+            BuildableName = "TestApp watchOS.app"
+            BlueprintName = "TestApp watchOS"
             ReferencedContainer = "container:BMSCore.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

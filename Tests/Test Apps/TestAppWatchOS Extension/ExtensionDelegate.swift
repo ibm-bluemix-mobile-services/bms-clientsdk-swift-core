@@ -13,7 +13,8 @@
 
 
 import WatchKit
-import BMSCoreWatchOS
+import BMSCore
+
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate {
 

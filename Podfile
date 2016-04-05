@@ -23,27 +23,27 @@ end
 
 # Targets
 
-target 'BMSCore' do
+target 'BMSCore iOS' do
 	import_pods_iOS
 end
 
-target 'BMSCoreTests' do
+target 'BMSCore watchOS' do
+    import_pods_watchOS
+end
+
+target 'BMSCore Tests' do
     import_pods_iOS
 end
 
-target 'BMSCoreWatchOS' do
-	import_pods_watchOS
-end
-
-target 'TestAppiOS' do
+target 'TestApp iOS' do
 	import_pods_iOS
 end
 
-target 'TestAppWatchOS' do
+target 'TestApp watchOS' do
 
 end
 
-target 'TestAppWatchOS Extension' do
+target 'TestApp watchOS Extension' do
 	import_pods_watchOS
 end
 

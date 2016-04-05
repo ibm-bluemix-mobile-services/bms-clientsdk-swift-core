@@ -13,8 +13,7 @@
 
 
 import WatchKit
-import Foundation
-import BMSCoreWatchOS
+import BMSCore
 
 
 class InterfaceController: WKInterfaceController {

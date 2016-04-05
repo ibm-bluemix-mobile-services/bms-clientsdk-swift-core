@@ -1,6 +1,0 @@
-framework module BMSCore {
-    umbrella header "BMSCoreWatchOS.h"
-    
-    export *
-    module * { export * }
-}

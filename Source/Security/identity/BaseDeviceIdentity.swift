@@ -11,10 +11,11 @@
 *     limitations under the License.
 */
 
-/// This class represents the base device identity class, with default methods and keys
-import Foundation
+
 import WatchKit
 
+
+/// This class represents the base device identity class, with default methods and keys
 public class BaseDeviceIdentity : DeviceIdentity {
     
     public static let ID = "id"
