@@ -21,4 +21,4 @@ FOUNDATION_EXPORT double BMSCoreWatchOSVersionNumber;
 FOUNDATION_EXPORT const unsigned char BMSCoreWatchOSVersionString[];
 
 
-@import BMSAnalyticsSpec;
+@import BMSAnalyticsAPI;

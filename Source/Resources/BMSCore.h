@@ -21,4 +21,4 @@ FOUNDATION_EXPORT double BMSCoreVersionNumber;
 FOUNDATION_EXPORT const unsigned char BMSCoreVersionString[];
 
 
-@import BMSAnalyticsSpec;
+@import BMSAnalyticsAPI;

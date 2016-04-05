@@ -1105,7 +1105,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$CONFIGURATION_BUILD_DIR/BMSAnalyticsSpec-iOS\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$CONFIGURATION_BUILD_DIR/BMSAnalyticsAPI-iOS\"";
 				INFOPLIST_FILE = "Tests/Test Apps/TestAppiOS/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ibm.mobilefirstplatform.clientsdk.swift.TestAppiOS;
@@ -1120,7 +1120,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$CONFIGURATION_BUILD_DIR/BMSAnalyticsSpec-iOS\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$CONFIGURATION_BUILD_DIR/BMSAnalyticsAPI-iOS\"";
 				INFOPLIST_FILE = "Tests/Test Apps/TestAppiOS/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ibm.mobilefirstplatform.clientsdk.swift.TestAppiOS;
@@ -1136,7 +1136,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$CONFIGURATION_BUILD_DIR/BMSAnalyticsSpec-watchOS\"",
+					"\"$CONFIGURATION_BUILD_DIR/BMSAnalyticsAPI-watchOS\"",
 				);
 				INFOPLIST_FILE = "Tests/Test Apps/TestAppWatchOS Extension/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -1157,7 +1157,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$CONFIGURATION_BUILD_DIR/BMSAnalyticsSpec-watchOS\"",
+					"\"$CONFIGURATION_BUILD_DIR/BMSAnalyticsAPI-watchOS\"",
 				);
 				INFOPLIST_FILE = "Tests/Test Apps/TestAppWatchOS Extension/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";

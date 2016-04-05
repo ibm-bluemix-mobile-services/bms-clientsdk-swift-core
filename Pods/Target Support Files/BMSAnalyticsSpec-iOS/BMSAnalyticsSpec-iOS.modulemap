@@ -1,6 +1,0 @@
-framework module BMSAnalyticsSpec {
-  umbrella header "BMSAnalyticsSpec-iOS-umbrella.h"
-
-  export *
-  module * { export * }
-}

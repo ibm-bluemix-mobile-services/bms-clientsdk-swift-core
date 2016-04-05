@@ -5,18 +5,18 @@ use_frameworks!
 
 # Methods
 
-def pod_BMSAnalyticsSpec
-	pod 'BMSAnalyticsSpec', '~> 0.0.16'
+def pod_BMSAnalyticsAPI
+	pod 'BMSAnalyticsAPI', '~> 0.0.19'
 end
 
 def import_pods_iOS
 	platform :ios, '8.0'
-    pod_BMSAnalyticsSpec
+    pod_BMSAnalyticsAPI
 end
 
 def import_pods_watchOS
 	platform :watchos, '2.0'
-    pod_BMSAnalyticsSpec
+    pod_BMSAnalyticsAPI
 end
 
 

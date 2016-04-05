@@ -217,7 +217,7 @@
    limitations under the License.
 </string>
 			<key>Title</key>
-			<string>BMSAnalyticsSpec</string>
+			<string>BMSAnalyticsAPI</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
