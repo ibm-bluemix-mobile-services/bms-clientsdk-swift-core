@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.watchos.deployment_target = '2.0'
 
-  s.dependency 'BMSAnalyticsAPI', '0.0.19'
+  s.dependency 'BMSAnalyticsAPI', '0.0.20'
 
   s.requires_arc = true
 
