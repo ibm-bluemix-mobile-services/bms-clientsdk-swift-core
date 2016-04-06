@@ -33,8 +33,6 @@
 		92018A921C45AC380031C893 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A7D1C45AC380031C893 /* ResponseTests.swift */; };
 		92018A931C45AC640031C893 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A621C45AC380031C893 /* AppDelegate.swift */; };
 		92018A971C45ACF50031C893 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A6A1C45AC380031C893 /* ViewController.swift */; };
-		92018A9A1C45AD2C0031C893 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A741C45AC380031C893 /* InterfaceController.swift */; };
-		92018A9B1C45AD2F0031C893 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A721C45AC380031C893 /* ExtensionDelegate.swift */; };
 		922CD63F1CA04DDE002E29C0 /* UserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF111C973DAA00890633 /* UserIdentity.swift */; };
 		922CD6401CA04DE1002E29C0 /* AppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF131C973E4800890633 /* AppIdentity.swift */; };
 		922CD6411CA04DE3002E29C0 /* DeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF151C973E5F00890633 /* DeviceIdentity.swift */; };
@@ -58,6 +56,8 @@
 		92ED07181C45B52900E0BA1D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92018A641C45AC380031C893 /* LaunchScreen.storyboard */; };
 		92ED07191C45B59D00E0BA1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92018A661C45AC380031C893 /* Main.storyboard */; };
 		92ED071A1C45BA0500E0BA1D /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92018A6D1C45AC380031C893 /* Interface.storyboard */; };
+		92FAA7871CB5711F00A9EC13 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A721C45AC380031C893 /* ExtensionDelegate.swift */; };
+		92FAA7881CB5712200A9EC13 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A741C45AC380031C893 /* InterfaceController.swift */; };
 		A93A0A69AE408DD87F9CA99B /* Pods_TestApp_watchOS_Extension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A46EF25401A4EC9391A5248 /* Pods_TestApp_watchOS_Extension.framework */; };
 		FD51C00F1C7625BC00023F37 /* BaseAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51C00E1C7625BC00023F37 /* BaseAuthorizationManager.swift */; };
 /* End PBXBuildFile section */
@@ -1014,8 +1014,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92018A9B1C45AD2F0031C893 /* ExtensionDelegate.swift in Sources */,
-				92018A9A1C45AD2C0031C893 /* InterfaceController.swift in Sources */,
+				92FAA7871CB5711F00A9EC13 /* ExtensionDelegate.swift in Sources */,
+				92FAA7881CB5712200A9EC13 /* InterfaceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
