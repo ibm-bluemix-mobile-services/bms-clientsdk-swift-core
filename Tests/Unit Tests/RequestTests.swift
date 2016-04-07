@@ -33,7 +33,7 @@ class RequestTests: XCTestCase {
         
         let requestBody = "request data".dataUsingEncoding(NSUTF8StringEncoding)!
         // sendData() should populate the the BaseRequest.requestBody parameter, which gets assigned to savedRequestBody
-        request.sendData(requestBody, withCompletionHandler: nil)
+        request.sendData(requestBody, completionHandler: nil)
         
         XCTAssertEqual(request.savedRequestBody, requestBody)
     }

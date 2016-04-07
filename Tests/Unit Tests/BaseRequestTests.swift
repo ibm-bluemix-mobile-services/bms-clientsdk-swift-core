@@ -60,7 +60,7 @@ class BaseRequestTests: XCTestCase {
         let request = BaseRequest(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
         let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
         
-        request.sendData(requestData!, withCompletionHandler: nil)
+        request.sendData(requestData!, completionHandler: nil)
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
@@ -75,7 +75,7 @@ class BaseRequestTests: XCTestCase {
         let request = BaseRequest(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
-        request.sendString(dataString, withCompletionHandler: nil)
+        request.sendString(dataString, completionHandler: nil)
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
@@ -91,7 +91,7 @@ class BaseRequestTests: XCTestCase {
         let request = BaseRequest(url: "http://example.com", headers: [BaseRequest.CONTENT_TYPE: "media-type"], queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
-        request.sendString(dataString, withCompletionHandler: nil)
+        request.sendString(dataString, completionHandler: nil)
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
