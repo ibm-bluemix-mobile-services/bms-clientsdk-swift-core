@@ -16,8 +16,7 @@
     Contains useful data received from an HTTP network response.
 */
 public class Response {
-    
-    
+	
     // MARK: Properties (API)
     
     /// HTTP status of the response
@@ -36,8 +35,6 @@ public class Response {
     
     /// Does the response contain a 2xx status code
     public let isSuccessful: Bool
-    
-    
     
     // MARK: Properties (internal)
     

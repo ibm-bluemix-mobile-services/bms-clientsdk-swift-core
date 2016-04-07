@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'BMSCore'
-  s.version      = '0.0.45'
+  s.version      = '0.0.46'
   s.summary      = 'The core component of the Swift client SDK for IBM Bluemix Mobile Services'
   s.homepage     = 'https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-core'
   s.license      = 'Apache License, Version 2.0'
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.git', :tag => s.version }
 
   s.source_files = 'Source/**/*'
-  
+
   s.exclude_files = 'Source/Resources/*.plist'
   s.ios.exclude_files = 'Source/**/*watchOS*.swift'
   s.watchos.exclude_files = 'Source/**/*iOS*.swift'

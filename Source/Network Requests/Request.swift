@@ -20,8 +20,6 @@ public class Request: BaseRequest {
     internal var oauthFailCounter = 0
     internal var savedRequestBody: NSData?
     
-    
-    
     // MARK: Initializer
     
     public init(url: String, method: HttpMethod) {

@@ -12,9 +12,6 @@
 */
 
 
-import WatchKit
-
-
 // MARK: HttpMethod
 
 /**

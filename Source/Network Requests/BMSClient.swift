@@ -16,8 +16,7 @@
     A singleton that serves as an entry point to Bluemix client-server communication.
 */
 public class BMSClient {
-    
-    
+	
     // MARK: Constants
     
     /// The southern United States Bluemix region
@@ -52,27 +51,8 @@ public class BMSClient {
     public var defaultRequestTimeout: Double = 20.0
     
     
-    
-    // MARK: Properties (internal)
-    
-    public var authorizationManager: AuthorizationManager {
-        get {
-            if registeredAuthorizationManager == nil {
-                return BaseAuthorizationManager()
-            }
-            
-            return registeredAuthorizationManager!
-        }
-        
-        set(newAuthorizationManager) {
-            registeredAuthorizationManager = newAuthorizationManager
-        }
-    }
-    
-    private var registeredAuthorizationManager: AuthorizationManager?
-    
-    
-    
+	public var authorizationManager: AuthorizationManager
+	
     // MARK: Initializers
     
     /**
@@ -89,9 +69,11 @@ public class BMSClient {
     public func initializeWithBluemixAppRoute(bluemixAppRoute: String?, bluemixAppGUID: String?, bluemixRegion: String) {
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
-        self.bluemixRegion = bluemixRegion
+        self.bluemixRegion = bluemixRegion	
     }
     
-    private init() {} // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
+	private init() {
+		self.authorizationManager = BaseAuthorizationManager()
+	} // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
     
 }
