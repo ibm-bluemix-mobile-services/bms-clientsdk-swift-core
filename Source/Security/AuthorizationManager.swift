@@ -26,20 +26,19 @@ public protocol AuthorizationManager {
     
         @return Whether authorization is required
      */
-    func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool
+    func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool
     
     /*
         @brief Whether authorization is required
-    
         @param httpResponse http response ti check
      */
-    func isAuthorizationRequired(httpResponse: Response) -> Bool
+    func isAuthorizationRequired(forHttpResponse httpResponse: Response) -> Bool
     
     /*!
         @brief Starts authorization process
         @param completionHandler The completion handler
      */
-    func obtainAuthorization(completionHandler: BmsCompletionHandler?)
+    func obtainAuthorization(completionHandler completionHandler: BmsCompletionHandler?)
     
 	/*!
 	@brief Clears authorization data

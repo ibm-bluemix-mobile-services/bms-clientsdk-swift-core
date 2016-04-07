@@ -47,7 +47,7 @@ class InterfaceController: WKInterfaceController {
         
         Logger.logLevelFilter = LogLevel.Debug
         
-        let logger = Logger.loggerForName("TestAppWatchOS")
+		let logger = Logger.logger(forName: "TestAppWatchOS")
         logger.debug("GET request button pressed")
         
         

@@ -54,9 +54,10 @@ public class Request: BaseRequest {
 				}
                 return
             }
-            
+			
+			let authManager = BMSClient.sharedInstance.authorizationManager;
             guard let unWrappedResponse = response where
-					BMSClient.sharedInstance.authorizationManager.isAuthorizationRequired(unWrappedResponse) &&
+					authManager.isAuthorizationRequired(forHttpResponse: unWrappedResponse) &&
                     self.oauthFailCounter < 2
 			else {
                 if (response?.statusCode)! >= 400 {
@@ -73,7 +74,7 @@ public class Request: BaseRequest {
             let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
                 if error == nil {
                     if let myRequestBody = self.requestBody {
-                        self.sendData(myRequestBody, withCompletionHandler: nil)
+                        self.sendData(myRequestBody, completionHandler: nil)
                     }
                     else {
                         self.sendWithCompletionHandler(callback)
@@ -82,7 +83,7 @@ public class Request: BaseRequest {
                     callback?(response, error)
                 }
             }
-            authManager.obtainAuthorization(authCallback)
+			authManager.obtainAuthorization(completionHandler: authCallback)
         }
         
         super.sendWithCompletionHandler(myCallback)

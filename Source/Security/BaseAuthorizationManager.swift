@@ -41,15 +41,15 @@ internal class BaseAuthorizationManager : AuthorizationManager {
 		}
 	}
 	
-    func isAuthorizationRequired(statusCode: Int, responseAuthorizationHeader: String) -> Bool {
+	func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
         return false;
     }
     
-    func isAuthorizationRequired(httpResponse: Response) -> Bool {
+    func isAuthorizationRequired(forHttpResponse httpResponse: Response) -> Bool {
         return false;
     }
     
-    func obtainAuthorization(completionHandler: BmsCompletionHandler?) {
+    func obtainAuthorization(completionHandler completionHandler: BmsCompletionHandler?) {
 		if let completionHandler = completionHandler{
 			completionHandler(nil, nil)
 		}

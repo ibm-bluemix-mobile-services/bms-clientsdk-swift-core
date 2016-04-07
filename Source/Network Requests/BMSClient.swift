@@ -11,7 +11,6 @@
 *     limitations under the License.
 */
 
-
 /**
     A singleton that serves as an entry point to Bluemix client-server communication.
 */
@@ -60,10 +59,10 @@ public class BMSClient {
     
         Sets the base URL for the authorization server.
     
-        - Note: The `backendRoute` and `backendGUID` parameters are not required to use the `BMSAnalytics` framework.
+        - Note: The `backendAppRoute` and `backendAppGUID` parameters are not required to use the `BMSAnalytics` framework.
 
-        - parameter backendRoute:           The base URL for the authorization server
-        - parameter backendGUID:            The GUID of the Bluemix application
+        - parameter backendAppRoute:           The base URL for the authorization server
+        - parameter backendAppGUID:            The GUID of the Bluemix application
         - parameter bluemixRegion:          The region where your Bluemix application is hosted. Use one of the `BMSClient.REGION` constants.
      */
     public func initializeWithBluemixAppRoute(bluemixAppRoute: String?, bluemixAppGUID: String?, bluemixRegion: String) {

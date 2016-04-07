@@ -94,7 +94,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
 
     var networkRequest: NSMutableURLRequest
     
-    private static let logger = Logger.loggerForName(Logger.bmsLoggerPrefix + "request")
+	private static let logger = Logger.logger(forName: Logger.bmsLoggerPrefix + "request")
     
     
     
@@ -159,10 +159,10 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
         If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler will be called back with an error and a nil `Response`.
     
-        - parameter requestBody: HTTP request body
+        - parameter requestBody: HTTP request body as NSString
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
-    public func sendString(requestBody: String, withCompletionHandler callback: BmsCompletionHandler?) {
+    public func sendString(requestBody: String, completionHandler: BmsCompletionHandler?) {
         self.requestBody = requestBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         // Don't want to overwrite content type if it has already been specified as something else
@@ -170,7 +170,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
             headers[BaseRequest.CONTENT_TYPE] = "text/plain"
         }
         
-        self.sendWithCompletionHandler(callback)
+		self.sendWithCompletionHandler(completionHandler)
     }
     
     /**
@@ -180,13 +180,12 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
         If the `resourceUrl` string is a malformed url or if the `queryParameters` cannot be appended to it, the completion handler will be called back with an error and a nil `Response`.
     
-        - parameter requestBody: HTTP request body
+        - parameter requestBody: HTTP request body as NSData
         - parameter withCompletionHandler: The closure that will be called when this request finishes
     */
-    public func sendData(requestBody: NSData, withCompletionHandler callback: BmsCompletionHandler?) {
-        
+    public func sendData(requestBody: NSData, completionHandler: BmsCompletionHandler?) {
         self.requestBody = requestBody
-        self.sendWithCompletionHandler(callback)
+		self.sendWithCompletionHandler(completionHandler)
     }
     
     
@@ -199,7 +198,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
 
         - parameter completionHandler: The closure that will be called when this request finishes
     */
-    public func sendWithCompletionHandler(callback: BmsCompletionHandler?) {
+    public func sendWithCompletionHandler(completionHandler: BmsCompletionHandler?) {
         
         BaseRequest.logger.debug("Network request outbound")
         
@@ -217,13 +216,13 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         
         if let url = NSURL(string: self.resourceUrl) {
             
-            buildAndSendRequestWithUrl(url, callback: callback)
+            buildAndSendRequestWithUrl(url, callback: completionHandler)
         }
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
             BaseRequest.logger.error(urlErrorMessage)
             let malformedUrlError = NSError(domain: BMSCoreError.domain, code: BMSCoreError.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
-            callback?(nil, malformedUrlError)
+            completionHandler?(nil, malformedUrlError)
         }
     }
     

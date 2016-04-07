@@ -24,7 +24,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var httpMethod: UITextField!
     
     
-    let logger = Logger.loggerForName("TestAppiOS")
+	let logger = Logger.logger(forName: "TestAppiOS")
     
     
     @IBAction func sendRequestButtonPressed(sender: AnyObject) {
