@@ -10,11 +10,9 @@ This package contains the core components of the Swift SDK.
 * Security and Authentication interfaces
 * Logger and Analytics interfaces
 
-
 ## Requirements
 * iOS 8.0+ / watchOS 2.0+
 * Xcode 7
-
 
 ## Installation
 The Bluemix Mobile Services Swift SDK is available via [Cocoapods](http://cocoapods.org/). 
@@ -39,6 +37,42 @@ target 'MyApp WatchKit Extension' do
     pod 'BMSCore'
 end
 ```
+
+## Usage Examples
+
+```Swift
+let appRoute = "https://greatapp.mybluemix.net"
+let appGuid = "2fe35477-5410-4c87-1234-aca59511433b"
+let bluemixRegion = BMSClient.REGION_US_SOUTH
+
+BMSClient.sharedInstance
+	.initializeWithBluemixAppRoute(appRoute,
+	                               bluemixAppGUID: appGuid,
+	                               bluemixRegion: bluemixRegion)
+                              
+let request = Request(url: "/", method: HttpMethod.GET)
+request.headers = ["foo":"bar"]
+request.queryParameters = ["foo":"bar"]
+
+request.sendWithCompletionHandler { (response, error) -> Void in
+	if let error = error {
+		print ("Error :: \(error)")
+	} else {
+		print ("Success :: \(response?.responseText)")
+	}
+}
+
+let logger = Logger.loggerForName("FirstLogger")
+
+logger1.debug("This is a debug message")
+logger1.error("This is an error message")
+logger1.info("This is an info message")
+logger1.warn("This is a warning message")
+
+```
+
+> By default the Bluemix Mobile Service SDK internal debug logging will not be printed to Xcode console. If you want to enable SDK debug logging output set the `Logger.sdkDebugLoggingEnabled` property to `true`. 
+
 ### Disabling Logging output for production applications
 
 By default the Logger class will print its logs to Xcode console. If is advised to disable Logger output for applications built in release mode. In order to do so add a debug flag named `RELEASE_BUILD` to your release build configuration. One of the way of doing so is adding `-D RELEASE_BUILD` to `Other Swift Flags` section of the project build configuration. 
