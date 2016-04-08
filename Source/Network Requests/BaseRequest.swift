@@ -18,10 +18,11 @@
     The HTTP method to be used in the `Request` class initializer.
 */
 public enum HttpMethod: String {
-    case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
+    case
+	GET = "GET", POST = "POST", PUT = "PUT", DELETE = "DELETE",
+	TRACE = "TRACE", HEAD = "HEAD", OPTIONS = "OPTIONS", CONNECT = "CONNECT",
+	PATCH = "PATCH"
 }
-
-
 
 // MARK: - BmsCompletionHandler
 
@@ -48,8 +49,6 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     // MARK: Constants
     
     public static let CONTENT_TYPE = "Content-Type"
-    
-    
     
     // MARK: Properties (API)
     
