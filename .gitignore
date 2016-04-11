@@ -5,3 +5,5 @@ DerivedData/
 .idea/
 Pods/
 Podfile.lock
+Carthage/
+Cartfile.resolved
