@@ -60,6 +60,7 @@ public class Request: BaseRequest {
 					authManager.isAuthorizationRequired(forHttpResponse: unWrappedResponse) &&
                     self.oauthFailCounter < 2
 			else {
+                self.oauthFailCounter += 1
                 if (response?.statusCode)! >= 400 {
                     callback?(response, NSError(domain: BMSCoreError.domain, code: BMSCoreError.ServerRespondedWithError.rawValue, userInfo: nil))
                 }
