@@ -401,10 +401,26 @@
 		9261C02D1CBD607300913706 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				9261C02E1CBD609A00913706 /* BMSAnalyticsAPI.framework */,
-				9261C0321CBD60A900913706 /* BMSAnalyticsAPI.framework */,
+				9261C0771CBD935300913706 /* iOS */,
+				9261C0781CBD935E00913706 /* watchOS */,
 			);
 			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		9261C0771CBD935300913706 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				9261C02E1CBD609A00913706 /* BMSAnalyticsAPI.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		9261C0781CBD935E00913706 /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				9261C0321CBD60A900913706 /* BMSAnalyticsAPI.framework */,
+			);
+			name = watchOS;
 			sourceTree = "<group>";
 		};
 		927DF2021C7CF60600245647 /* Identity */ = {
