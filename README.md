@@ -15,10 +15,11 @@ This package contains the core components of the Swift SDK.
 * Xcode 7
 
 ## Installation
-The Bluemix Mobile Services Swift SDK is available via [Cocoapods](http://cocoapods.org/).
-To install, add the `BMSCore` pod to your `Podfile`.
+The Bluemix Mobile Services Swift SDKs are available via [Cocoapods](http://cocoapods.org/) and [Carthage](https://github.com/Carthage/Carthage).
 
-##### iOS
+#### Cocoapods
+To install BMSCore using Cocoapods, add it to your Podfile:
+
 ```ruby
 use_frameworks!
 
@@ -28,15 +29,16 @@ target 'MyApp' do
 end
 ```
 
-##### watchOS
-```ruby
-use_frameworks!
+Then run the `pod install` command.
 
-target 'MyApp WatchKit Extension' do
-    platform :watchos, '2.0'
-    pod 'BMSCore'
-end
+#### Carthage
+To install BMSCore using Carthage, add it to your Cartfile: 
+
+```ogdl
+github "ibm-bluemix-mobile-services/bms-clientsdk-swift-core"
 ```
+
+Then run the `carthage update` command. To complete the integration, follow the instructions [here](https://github.com/Carthage/Carthage#getting-started).
 
 ## Usage Examples
 
