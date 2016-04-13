@@ -38,7 +38,9 @@ To install BMSCore using Carthage, add it to your Cartfile:
 github "ibm-bluemix-mobile-services/bms-clientsdk-swift-core"
 ```
 
-Then run the `carthage update` command. To complete the integration, follow the instructions [here](https://github.com/Carthage/Carthage#getting-started).
+Then run the `carthage update` command. Once the build is finished, drag `BMSCore.framework` and `BMSAnalyticsAPI.framework` into your Xcode project. 
+
+To complete the integration, follow the instructions [here](https://github.com/Carthage/Carthage#getting-started).
 
 ## Usage Examples
 
