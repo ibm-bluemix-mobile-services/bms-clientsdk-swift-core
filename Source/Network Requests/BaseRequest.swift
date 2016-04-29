@@ -200,8 +200,6 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     */
     public func sendWithCompletionHandler(completionHandler: BmsCompletionHandler?) {
         
-        BaseRequest.logger.debug("Network request outbound")
-        
         // Add metadata to the request header so that analytics data can be obtained for ALL bms network requests
         
         // The analytics server needs this ID to match each request with its corresponding response
