@@ -73,6 +73,9 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     /// Determines whether request should follow http redirects
     public var allowRedirects : Bool = true
+	
+	/// Deterimes the cache policy to use for sending request
+	public var cachePolicy: NSURLRequestCachePolicy = .UseProtocolCachePolicy
     
     
     
@@ -142,7 +145,8 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = timeout
         networkRequest = NSMutableURLRequest()
-		networkRequest.cachePolicy = cachePolicy
+
+		self.cachePolicy = cachePolicy
 		
         super.init()
                 
@@ -268,6 +272,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         networkRequest.HTTPMethod = httpMethod.rawValue
         networkRequest.allHTTPHeaderFields = headers
         networkRequest.HTTPBody = requestBody
+		networkRequest.cachePolicy = cachePolicy
         
         BaseRequest.logger.debug("Sending Request to " + resourceUrl)
         
