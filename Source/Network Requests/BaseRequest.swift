@@ -109,6 +109,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter headers:         Optional headers to add to the request.
         - parameter queryParameters: Optional query parameters to add to the request.
         - parameter timeout:         Timeout in seconds for this request
+		- parameter cachePolicy:	 Cache policy to use when sending request
     
         - Note: A relative URL may be supplied if the `BMSClient` class is initialized with an app route beforehand.
     */
@@ -116,7 +117,8 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
                headers: [String: String]?,
                queryParameters: [String: String]?,
                method: HttpMethod = HttpMethod.GET,
-               timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout) {
+               timeout: Double = BMSClient.sharedInstance.defaultRequestTimeout,
+               cachePolicy: NSURLRequestCachePolicy = NSURLRequestCachePolicy.UseProtocolCachePolicy) {
         
         // Relative URL
         if (!url.containsString("http://") && !url.containsString("https://")),
@@ -140,7 +142,8 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = timeout
         networkRequest = NSMutableURLRequest()
-                
+		networkRequest.cachePolicy = cachePolicy
+		
         super.init()
                 
         self.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
