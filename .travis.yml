@@ -16,4 +16,4 @@ script:
   - xcodebuild -scheme 'BMSCore watchOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
   - xcodebuild test -scheme 'BMSCore Tests' -destination 'platform=iOS Simulator,name=iPhone 6s'
 after_script:
-  - curl -s -X POST -H "Content-Type&#58; application/json" -H "Accept&#58; application/json" -H "Travis-API-Version&#58; 3" -H "Authorization&#58; token xmHXEuC1RtrXEAHLbL0c1g" -d "{ 'request'&#58; { 'branch'&#58; '$TRAVIS_BRANCH' } }" https&#58;//api.travis-ci.org/repo/ibm-bluemix-mobile-services/bms-clientsdk-analytics/requests 
+  - curl -s -X POST -H "Content-Type&#58; application/json" -H "Accept&#58; application/json" -H "Travis-API-Version&#58; 3" -H "Authorization&#58; token xmHXEuC1RtrXEAHLbL0c1g" -d "{ 'request'&#58; { 'branch'&#58; '$TRAVIS_BRANCH' } }" https&#58;//api.travis-ci.org/repo/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics/requests 
