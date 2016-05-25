@@ -80,7 +80,7 @@ public class Request: BaseRequest {
             let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
                 if error == nil {
                     if let myRequestBody = self.requestBody {
-                        self.sendData(myRequestBody, completionHandler: nil)
+                        self.sendData(myRequestBody, completionHandler: callback)
                     }
                     else {
                         self.sendWithCompletionHandler(callback)
