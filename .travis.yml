@@ -17,5 +17,4 @@ script:
   - xcodebuild test -scheme 'BMSCore Tests' -destination 'platform=iOS Simulator,name=iPhone 6s'
 after_script:
   - ./travis-build-trigger.sh 7588419 $TRAVIS_BRANCH $AUTH_TOKEN
-  - ./travis-build-trigger.sh 8211847 $TRAVIS_BRANCH $AUTH_TOKEN
   - ./travis-build-trigger.sh 7588425 $TRAVIS_BRANCH $AUTH_TOKEN
