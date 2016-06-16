@@ -239,7 +239,8 @@ if [[ ! -z "$workspaceFile" ]]; then
 elif [[ ! -z "$projectFile" ]]; then
 	  buildCmd+=(-project $projectFile)
 fi
-buildCmd+=( -scheme "$appScheme" -configuration Debug -enableCodeCoverage YES)
+#buildCmd+=( -scheme "$appScheme" -configuration Debug -enableCodeCoverage YES)
+buildCmd+=( -scheme "$appScheme" -configuration Debug)
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
 fi
