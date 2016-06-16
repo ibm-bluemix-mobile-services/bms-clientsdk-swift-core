@@ -232,7 +232,8 @@ echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='A
 echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
 
 echo -n 'Running tests'
-buildCmd=(xcodebuild clean build test)
+#buildCmd=(xcodebuild clean build test)
+buildCmd=(xcodebuild clean build)
 if [[ ! -z "$workspaceFile" ]]; then
     buildCmd+=(-workspace $workspaceFile)
 elif [[ ! -z "$projectFile" ]]; then
