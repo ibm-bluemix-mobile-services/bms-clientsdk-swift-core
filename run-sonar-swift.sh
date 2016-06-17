@@ -232,17 +232,15 @@ echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='A
 echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
 
 echo -n 'Running tests'
-#buildCmd=(xcodebuild clean build test)
-buildCmd=(xcodebuild clean build)
-if [[ ! -z "$workspaceFile" ]]; then
-    buildCmd+=(-workspace $workspaceFile)
-elif [[ ! -z "$projectFile" ]]; then
-	  buildCmd+=(-project $projectFile)
-fi
-#buildCmd+=( -scheme "$appScheme" -configuration Debug -enableCodeCoverage YES)
-buildCmd+=( -scheme "$appScheme" -configuration Debug)
+buildCmd=(xcodebuild test)
+#if [[ ! -z "$workspaceFile" ]]; then
+#    buildCmd+=(-workspace $workspaceFile)
+#elif [[ ! -z "$projectFile" ]]; then
+#	  buildCmd+=(-project $projectFile)
+#fi
+buildCmd+=( -scheme "$testScheme" -configuration Debug -enableCodeCoverage YES)
 if [[ ! -z "$destinationSimulator" ]]; then
-    buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
+    buildCmd+=( -destination "$destinationSimulator" -destination-timeout 60)
 fi
 
 runCommand  sonar-reports/xcodebuild.log "${buildCmd[@]}"
@@ -250,32 +248,32 @@ cat sonar-reports/xcodebuild.log  | $XCPRETTY_CMD -t --report junit
 mv build/reports/junit.xml sonar-reports/TEST-report.xml
 
 
-#echo -n 'Computing coverage report'
+echo -n 'Computing coverage report'
 
 # Build the --exclude flags
-#excludedCommandLineFlags=""
-#if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
-#	echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
-#	while read word; do
-#		excludedCommandLineFlags+=" -i $word"
-#	done < tmpFileRunSonarSh2
-#	rm -rf tmpFileRunSonarSh2
-#fi
-#if [ "$vflag" = "on" ]; then
-#	echo "Command line exclusion flags for slather is:$excludedCommandLineFlags"
-#fi
+excludedCommandLineFlags=""
+if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
+	echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
+	while read word; do
+		excludedCommandLineFlags+=" -i $word"
+	done < tmpFileRunSonarSh2
+	rm -rf tmpFileRunSonarSh2
+fi
+if [ "$vflag" = "on" ]; then
+	echo "Command line exclusion flags for slather is:$excludedCommandLineFlags"
+fi
 
 projectArray=(${projectFile//,/ })
 firstProject=${projectArray[0]}
 
-#slatherCmd=($SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
-#if [[ ! -z "$workspaceFile" ]]; then
-#    slatherCmd+=( --workspace $workspaceFile)
-#fi
-#slatherCmd+=( --scheme "$appScheme" $firstProject)
+slatherCmd=($SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
+if [[ ! -z "$workspaceFile" ]]; then
+    slatherCmd+=( --workspace $workspaceFile)
+fi
+slatherCmd+=( --scheme "$appScheme" $firstProject)
 
-#runCommand /dev/stdout "${slatherCmd[@]}"
-#mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
+runCommand /dev/stdout "${slatherCmd[@]}"
+mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
 
 
 # SwiftLint
