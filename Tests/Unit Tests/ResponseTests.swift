@@ -18,9 +18,14 @@ class ResponseTests: XCTestCase {
     
 
     func testInit() {
+        #if swift(>=3.0)
+            let responseData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".data(using: .utf8)
+            let httpURLResponse = HTTPURLResponse(url: URL(string: "http://example.com")!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        #else
+            let responseData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
+            let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        #endif
         
-        let responseData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
-        let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
         let testResponse = Response(responseData: responseData!, httpResponse: httpURLResponse, isRedirect: true)
         
         XCTAssertEqual(testResponse.statusCode, 200)
@@ -51,8 +56,14 @@ class ResponseTests: XCTestCase {
     
     func testInitWithValidString() {
         
-        let responseDataWithValidString = "Some random string data".dataUsingEncoding(NSUTF8StringEncoding)
-        let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        #if swift(>=3.0)
+            let responseDataWithValidString = "Some random string data".data(using: .utf8)
+            let httpURLResponse = HTTPURLResponse(url: URL(string: "http://example.com")!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        #else
+            let responseDataWithValidString = "Some random string data".dataUsingEncoding(NSUTF8StringEncoding)
+            let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        #endif
+        
         let invalidStringResponse = Response(responseData: responseDataWithValidString!, httpResponse: httpURLResponse, isRedirect: true)
         
         XCTAssertEqual(invalidStringResponse.responseData, responseDataWithValidString)
@@ -61,8 +72,14 @@ class ResponseTests: XCTestCase {
     
     func testInitWithNonStringData() {
         
-        let responseDataWithNonStringData = NSData(bytes: [0x00, 0xFF] as [UInt8], length: 2)
-        let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        #if swift(>=3.0)
+            let responseDataWithNonStringData = Data(bytes: [0x00, 0xFF])
+            let httpURLResponse = HTTPURLResponse(url: URL(string: "http://example.com")!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        #else
+            let responseDataWithNonStringData = NSData(bytes: [0x00, 0xFF] as [UInt8], length: 2)
+            let httpURLResponse = NSHTTPURLResponse(URL: NSURL(string: "http://example.com")!, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: ["key": "value"])
+        #endif
+        
         let invalidStringResponse = Response(responseData: responseDataWithNonStringData, httpResponse: httpURLResponse, isRedirect: true)
         
         XCTAssertEqual(invalidStringResponse.responseData, responseDataWithNonStringData)

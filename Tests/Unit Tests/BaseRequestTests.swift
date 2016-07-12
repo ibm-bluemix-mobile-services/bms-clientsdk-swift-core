@@ -33,7 +33,12 @@ class BaseRequestTests: XCTestCase {
     
     func testInitWithRelativeUrl() {
     
-        BMSClient.sharedInstance.initializeWithBluemixAppRoute("https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
+        #if swift(>=3.0)
+            BMSClient.sharedInstance.initializeWithBluemixAppRoute(bluemixAppRoute: "https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
+        #else
+            BMSClient.sharedInstance.initializeWithBluemixAppRoute("https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
+        #endif
+        
         let request = BaseRequest(url: "/path/to/resource", headers: nil, queryParameters: nil)
         
         XCTAssertEqual(request.resourceUrl, "https://mybluemixapp.net/path/to/resource")
@@ -58,9 +63,14 @@ class BaseRequestTests: XCTestCase {
     func testSendData() {
         
         let request = BaseRequest(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
-        let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
         
-        request.sendData(requestData!, completionHandler: nil)
+        #if swift(>=3.0)
+            let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".data(using: .utf8)
+            request.sendData(requestBody: requestData!, completionHandler: nil)
+        #else
+            let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
+            request.sendData(requestData!, completionHandler: nil)
+        #endif
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
@@ -75,8 +85,13 @@ class BaseRequestTests: XCTestCase {
         let request = BaseRequest(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
-        request.sendString(dataString, completionHandler: nil)
-        let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
+        #if swift(>=3.0)
+            request.sendString(requestBody: dataString, completionHandler: nil)
+            let requestBodyAsString = String(data: request.requestBody!, encoding: .utf8)
+        #else
+            request.sendString(dataString, completionHandler: nil)
+            let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
+        #endif
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
@@ -91,8 +106,13 @@ class BaseRequestTests: XCTestCase {
         let request = BaseRequest(url: "http://example.com", headers: [BaseRequest.CONTENT_TYPE: "media-type"], queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
-        request.sendString(dataString, completionHandler: nil)
-        let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
+        #if swift(>=3.0)
+            request.sendString(requestBody: dataString, completionHandler: nil)
+            let requestBodyAsString = String(data: request.requestBody!, encoding: .utf8)
+        #else
+            request.sendString(dataString, completionHandler: nil)
+            let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
+        #endif
         
         XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
@@ -104,74 +124,136 @@ class BaseRequestTests: XCTestCase {
     
     func testSendWithMalformedUrl() {
         
-        let responseReceivedExpectation = self.expectationWithDescription("Receive network response")
+        #if swift(>=3.0)
+            let responseReceivedExpectation = self.expectation(withDescription: "Receive network response")
+        #else
+            let responseReceivedExpectation = self.expectationWithDescription("Receive network response")
+        #endif
         
         let badUrl = "!@#$%^&*()"
         let request = BaseRequest(url: badUrl, headers: nil, queryParameters: nil)
-        request.sendWithCompletionHandler { (response: Response?, error: NSError?) -> Void in
-            XCTAssertNil(response)
-            XCTAssertEqual(error?.domain, BMSCoreError.domain)
-            XCTAssertEqual(error?.code, BMSCoreError.MalformedUrl.rawValue)
-            
-            responseReceivedExpectation.fulfill()
-        }
         
-        self.waitForExpectationsWithTimeout(5.0) { (error: NSError?) -> Void in
-            if error != nil {
-                XCTFail("Expectation failed with error: \(error)")
+        #if swift(>=3.0)
+            
+            request.send { (response: Response?, error: NSError?) -> Void in
+                XCTAssertNil(response)
+                XCTAssertEqual(error?.domain, BMSCoreError.domain)
+                XCTAssertEqual(error?.code, BMSCoreError.MalformedUrl.rawValue)
+                
+                responseReceivedExpectation.fulfill()
             }
-        }
+            
+            self.waitForExpectations(withTimeout: 5.0) { (error: NSError?) -> Void in
+                if error != nil {
+                    XCTFail("Expectation failed with error: \(error)")
+                }
+            }
+            
+        #else
+            
+            request.sendWithCompletionHandler { (response: Response?, error: NSError?) -> Void in
+                XCTAssertNil(response)
+                XCTAssertEqual(error?.domain, BMSCoreError.domain)
+                XCTAssertEqual(error?.code, BMSCoreError.MalformedUrl.rawValue)
+                
+                responseReceivedExpectation.fulfill()
+            }
+            
+            self.waitForExpectationsWithTimeout(5.0) { (error: NSError?) -> Void in
+                if error != nil {
+                    XCTFail("Expectation failed with error: \(error)")
+                }
+            }
+            
+        #endif
     }
     
     
     
-    // MARK: addQueryParameters
+    // MARK: appendQueryParameters
     
-    func testAddQueryParametersWithEmptyParameters() {
+    func testAppendQueryParametersWithEmptyParameters() {
         
-        let url = NSURL(string: "http://example.com")
         let parameters: [String: String] = [:]
-        let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!)! )
+        
+        #if swift(>=3.0)
+            let url = URL(string: "http://example.com")
+            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        #else
+            let url = NSURL(string: "http://example.com")
+            let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!)! )
+        #endif
         
         XCTAssertEqual(finalUrl, "http://example.com")
     }
     
     
-    func testAddQueryParametersWithValidParameters() {
+    func testAppendQueryParametersWithValidParameters() {
         
-        let url = NSURL(string: "http://example.com")
         let parameters = ["key1": "value1", "key2": "value2"]
-        let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!)! )
         
-        XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
+        #if swift(>=3.0)
+            let url = URL(string: "http://example.com")
+            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+            
+            XCTAssertEqual(finalUrl, "http://example.com?key2=value2&key1=value1")
+        #else
+            let url = NSURL(string: "http://example.com")
+            let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!)! )
+            
+            XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
+        #endif
     }
     
-    func testAddQueryParametersWithReservedCharacters() {
+    func testAppendQueryParametersWithReservedCharacters() {
         
-        let url = NSURL(string: "http://example.com")
         let parameters = ["Reserved_characters": "\"#%<>[\\]^`{|}"]
-        let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!) )
         
-        XCTAssert(finalUrl.containsString("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
+        #if swift(>=3.0)
+            let url = URL(string: "http://example.com")
+            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+            
+            XCTAssert(finalUrl.contains("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
+        #else
+            let url = NSURL(string: "http://example.com")
+            let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!)! )
+            
+            XCTAssert(finalUrl.containsString("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
+        #endif
     }
     
-    func testAddQueryParametersDoesNotOverwriteUrlParameters() {
-        
-        let url = NSURL(string: "http://example.com?hardCodedKey=hardCodedValue")
+    func testAppendQueryParametersDoesNotOverwriteUrlParameters() {
         
         let parameters = ["key1": "value1", "key2": "value2"]
-        let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!)! )
         
-        XCTAssertEqual(finalUrl, "http://example.com?hardCodedKey=hardCodedValue&key1=value1&key2=value2")
+        #if swift(>=3.0)
+            let url = URL(string: "http://example.com?hardCodedKey=hardCodedValue")
+            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+            
+            XCTAssertEqual(finalUrl, "http://example.com?hardCodedKey=hardCodedValue&key2=value2&key1=value1")
+        #else
+            let url = NSURL(string: "http://example.com?hardCodedKey=hardCodedValue")
+            let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!)! )
+            
+            XCTAssertEqual(finalUrl, "http://example.com?hardCodedKey=hardCodedValue&key1=value1&key2=value2")
+        #endif
     }
     
-    func testAddQueryParametersWithCorrectNumberOfAmpersands() {
+    func testAppendQueryParametersWithCorrectNumberOfAmpersands() {
         
-        let url = NSURL(string: "http://example.com")
         let parameters = ["k1": "v1", "k2": "v2", "k3": "v3", "k4": "v4"]
-        let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!) )
         
-        let numberOfAmpersands = finalUrl.componentsSeparatedByString("&")
+        #if swift(>=3.0)
+            let url = URL(string: "http://example.com")
+            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+            
+            let numberOfAmpersands = finalUrl.components(separatedBy: "&")
+        #else
+            let url = NSURL(string: "http://example.com")
+            let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!)! )
+            
+            let numberOfAmpersands = finalUrl.componentsSeparatedByString("&")
+        #endif
         
         XCTAssertEqual(numberOfAmpersands.count - 1, 3)
     }

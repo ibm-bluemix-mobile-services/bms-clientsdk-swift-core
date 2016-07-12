@@ -23,7 +23,12 @@ class BMSClientTests: XCTestCase {
         XCTAssertNil(clientInstance.bluemixAppRoute, "BMSClient has not yet been initialized")
         XCTAssertNil(clientInstance.bluemixAppGUID, "BMSClient has not yet been initialized")
         
-        clientInstance.initializeWithBluemixAppRoute("http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.REGION_US_SOUTH)
+        #if swift(>=3.0)
+            clientInstance.initializeWithBluemixAppRoute(bluemixAppRoute: "http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.REGION_US_SOUTH)
+        #else
+            clientInstance.initializeWithBluemixAppRoute("http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.REGION_US_SOUTH)
+        #endif
+        
         XCTAssertEqual(clientInstance.bluemixAppRoute, "http://example.com")
         XCTAssertEqual(clientInstance.bluemixAppGUID, "1234")
         XCTAssertEqual(clientInstance.bluemixRegion, BMSClient.REGION_US_SOUTH)
