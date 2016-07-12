@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.module_map = 'Source/Resources/module.modulemap'
 
-  s.dependency 'BMSAnalyticsAPI', '1.0.1'
+  s.dependency 'BMSAnalyticsAPI', '~> 1.0'
 
   s.requires_arc = true
 
