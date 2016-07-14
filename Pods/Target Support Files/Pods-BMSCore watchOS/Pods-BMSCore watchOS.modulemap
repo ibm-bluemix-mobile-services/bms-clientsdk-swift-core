@@ -1,0 +1,6 @@
+framework module Pods_BMSCore_watchOS {
+  umbrella header "Pods-BMSCore watchOS-umbrella.h"
+
+  export *
+  module * { export * }
+}
