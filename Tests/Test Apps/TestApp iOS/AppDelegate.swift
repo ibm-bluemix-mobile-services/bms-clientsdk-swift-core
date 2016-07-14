@@ -21,11 +21,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    // Ignore the warning on the extraneous underscore in Swift 2. It is there for Swift 3.
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         let myBMSClient = BMSClient.sharedInstance
+        
         // REPLACE WITH REAL APP ROUTE AND GUID
-        myBMSClient.initializeWithBluemixAppRoute("https://example.mybluemix.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
+        #if swift(>=3.0)
+            myBMSClient.initializeWithBluemixAppRoute(bluemixAppRoute: "https://example.mybluemix.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
+        #else
+            myBMSClient.initializeWithBluemixAppRoute("https://example.mybluemix.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
+        #endif
+        
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
         
         Logger.logLevelFilter = LogLevel.Debug

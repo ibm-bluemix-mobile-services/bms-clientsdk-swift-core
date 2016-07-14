@@ -21,7 +21,12 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
     func applicationDidFinishLaunching() {
         
         let myBMSClient = BMSClient.sharedInstance
-        myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "", bluemixRegion: BMSClient.REGION_US_SOUTH)
+        
+        #if swift(>=3.0)
+            myBMSClient.initializeWithBluemixAppRoute(bluemixAppRoute: "", bluemixAppGUID: "", bluemixRegion: BMSClient.REGION_US_SOUTH)
+        #else
+            myBMSClient.initializeWithBluemixAppRoute("", bluemixAppGUID: "", bluemixRegion: BMSClient.REGION_US_SOUTH)
+        #endif
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
     }
 }

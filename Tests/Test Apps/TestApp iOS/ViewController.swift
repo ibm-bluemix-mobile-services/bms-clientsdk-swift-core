@@ -26,36 +26,67 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
 	let logger = Logger.logger(forName: "TestAppiOS")
     
-    
-    @IBAction func sendRequestButtonPressed(sender: AnyObject) {
+    // Ignore the warning on the extraneous underscore in Swift 2. It is there for Swift 3.
+    @IBAction func sendRequestButtonPressed(_ sender: AnyObject) {
         
         logSendButtonPressedEvent()
         
         var method: HttpMethod
 
-        switch httpMethod.text!.lowercaseString {
-        case "post":
+        #if swift(>=3.0)
+            
+            switch httpMethod.text!.lowercased() {
+            case "post":
+                method = HttpMethod.POST
+            case "put":
+                method = HttpMethod.PUT
+            case "delete":
+                method = HttpMethod.DELETE
+            case "trace":
+                method = HttpMethod.TRACE
+            case "head":
+                method = HttpMethod.HEAD
+            case "options":
+                method = HttpMethod.OPTIONS
+            case "connect":
+                method = HttpMethod.CONNECT
+            case "patch":
+                method = HttpMethod.PATCH
+            default:
+                method = HttpMethod.GET
+            }
+            
+        #else
+            
+            switch httpMethod.text!.lowercaseString {
+            case "post":
             method = HttpMethod.POST
-        case "put":
+            case "put":
             method = HttpMethod.PUT
-        case "delete":
+            case "delete":
             method = HttpMethod.DELETE
-        case "trace":
+            case "trace":
             method = HttpMethod.TRACE
-        case "head":
+            case "head":
             method = HttpMethod.HEAD
-        case "options":
+            case "options":
             method = HttpMethod.OPTIONS
-        case "connect":
+            case "connect":
             method = HttpMethod.CONNECT
-        case "patch":
+            case "patch":
             method = HttpMethod.PATCH
-        default:
+            default:
             method = HttpMethod.GET
-        }
+            }
+
+        #endif
         
         let getRequest = Request(url: resourceUrl.text!, headers: nil, queryParameters: nil, method: method, timeout: 5.0)
-        getRequest.sendWithCompletionHandler(populateInterfaceWithResponseData)
+        #if swift(>=3.0)
+            getRequest.send(completionHandler: populateInterfaceWithResponseData)
+        #else
+            getRequest.sendWithCompletionHandler(populateInterfaceWithResponseData)
+        #endif
     }
     
     
@@ -65,7 +96,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         if let responseError = error {
             responseLabelText = "ERROR: \(responseError.localizedDescription)"
-            logger.error(responseLabelText)
+            #if swift(>=3.0)
+                logger.error(message: responseLabelText)
+            #else
+                logger.error(responseLabelText)
+            #endif
         }
         else if response != nil {
             let status = response!.statusCode ?? 0
@@ -77,21 +112,37 @@ class ViewController: UIViewController, UITextFieldDelegate {
             responseLabelText += "Response Text: \(responseText) \n\n"
         }
         
-        dispatch_async(dispatch_get_main_queue(), {
-            self.responseLabel.text = responseLabelText
-        })
+        #if swift(>=3.0)
+            DispatchQueue.main.async(execute: {
+                self.responseLabel.text = responseLabelText
+            })
+        #else
+            dispatch_async(dispatch_get_main_queue(), {
+                self.responseLabel.text = responseLabelText
+            })
+        #endif
     }
     
     
     private func logSendButtonPressedEvent() {
         
-        logger.debug("Sending Request button pressed")
+        #if swift(>=3.0)
+            logger.debug(message: "Sending Request button pressed")
+        #else
+            logger.debug("Sending Request button pressed")
+        #endif
         
         // NOTE: All of the methods below do nothing since the implementation (the BMSAnalytics framework) is not provided
         // These method calls are just to confirm the existence of the APIs
         
         let eventMetadata = ["buttonPressed": "send"]
-        Analytics.log(eventMetadata)
+        
+        #if swift(>=3.0)
+            Analytics.log(metadata: eventMetadata)
+        #else
+            Analytics.log(eventMetadata)
+        #endif
+        
     }
     
     
@@ -101,8 +152,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         responseLabel.layer.borderWidth = 1
     }
     
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    // Ignore the warning on the extraneous underscore in Swift 2. It is there for Swift 3.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
     }

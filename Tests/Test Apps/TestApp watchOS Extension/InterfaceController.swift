@@ -25,22 +25,42 @@ class InterfaceController: WKInterfaceController {
     @IBAction func getRequestButtonPressed() {
         
         let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
-        getRequest.sendWithCompletionHandler( { (response: Response?, error: NSError?) in
-            
-            var responseLabelText = ""
-            
-            if let responseError = error {
-                responseLabelText = "ERROR: \(responseError.localizedDescription)"
-            }
-            else if response != nil {
-                let status = response!.statusCode ?? 0
-                responseLabelText = "Status: \(status) \n\n"
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                self.responseLabel.setText(responseLabelText)
-            })
-        } )
+        
+        #if swift(>=3.0)
+            getRequest.send(completionHandler: { (response: Response?, error: NSError?) in
+                
+                var responseLabelText = ""
+                
+                if let responseError = error {
+                    responseLabelText = "ERROR: \(responseError.localizedDescription)"
+                }
+                else if response != nil {
+                    let status = response!.statusCode ?? 0
+                    responseLabelText = "Status: \(status) \n\n"
+                }
+                
+                DispatchQueue.main.async(execute: {
+                    self.responseLabel.setText(responseLabelText)
+                })
+            } )
+        #else
+            getRequest.sendWithCompletionHandler( { (response: Response?, error: NSError?) in
+                
+                var responseLabelText = ""
+                
+                if let responseError = error {
+                    responseLabelText = "ERROR: \(responseError.localizedDescription)"
+                }
+                else if response != nil {
+                    let status = response!.statusCode ?? 0
+                    responseLabelText = "Status: \(status) \n\n"
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.responseLabel.setText(responseLabelText)
+                })
+            } )
+        #endif
     }
     
     private func logSendButtonPressedEvent() {
@@ -48,13 +68,21 @@ class InterfaceController: WKInterfaceController {
         Logger.logLevelFilter = LogLevel.Debug
         
 		let logger = Logger.logger(forName: "TestAppWatchOS")
-        logger.debug("GET request button pressed")
+        #if swift(>=3.0)
+            logger.debug(message: "GET request button pressed")
+        #else
+            logger.debug("GET request button pressed")
+        #endif
         
         
         // NOTE: All of the methods below do nothing since the implementation (the BMSAnalytics framework) is not provided
         // These method calls are just to confirm the existence of the APIs
         
         let eventMetadata = ["buttonPressed": "GET Request"]
-        Analytics.log(eventMetadata)
+        #if swift(>=3.0)
+            Analytics.log(metadata: eventMetadata)
+        #else
+            Analytics.log(eventMetadata)
+        #endif
     }
 }
