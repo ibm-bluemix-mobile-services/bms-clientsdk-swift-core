@@ -15,26 +15,36 @@ This package contains the core components of the Swift SDK.
 
 ## Requirements
 * iOS 8.0+ / watchOS 2.0+
-* Xcode 7
+* Xcode 7+
+* Swift 2.2 - 3.0
 
 ## Installation
 The Bluemix Mobile Services Swift SDKs are available via [Cocoapods](http://cocoapods.org/) and [Carthage](https://github.com/Carthage/Carthage).
 
-#### Cocoapods
+### Cocoapods
 To install BMSCore using Cocoapods, add it to your Podfile:
 
 ```ruby
 use_frameworks!
 
 target 'MyApp' do
-    platform :ios, '8.0'
     pod 'BMSCore'
 end
 ```
 
 Then run the `pod install` command.
 
-#### Carthage
+#### Swift 2.3
+
+For apps built with Swift 2.3, you may receive a prompt saying "Convert to Current Swift Syntax?" for BMSCore and BMSAnalyticsAPI when opening your project in Xcode 8 (following the installation of BMSCore). Choose the `Convert` option. 
+**Note:** This should only be done once. If the prompt appears again in the future after you have already converted, always choose the `Later` option.
+
+#### Swift 3.0
+
+For apps built with Swift 3.0, you may receive a prompt saying "Convert to Current Swift Syntax?" for BMSCore and BMSAnalyticsAPI when opening your project in Xcode 8 (following the installation of BMSCore). Always choose the `Later` option. 
+
+
+### Carthage
 To install BMSCore using Carthage, add it to your Cartfile: 
 
 ```ogdl
@@ -44,6 +54,14 @@ github "ibm-bluemix-mobile-services/bms-clientsdk-swift-core"
 Then run the `carthage update` command. Once the build is finished, drag `BMSCore.framework` and `BMSAnalyticsAPI.framework` into your Xcode project. 
 
 To complete the integration, follow the instructions [here](https://github.com/Carthage/Carthage#getting-started).
+
+#### Swift 2.3
+
+For apps built with Swift 2.3, use the bash command `TOOLCHAINS=com.apple.dt.toolchain.Swift_2_3 carthage build` instead of `carthage update`. 
+
+#### Swift 3.0
+
+For apps built with Swift 3.0, change the [Command Line Tools](https://developer.apple.com/library/mac/recipes/xcode_help-locations_preferences/SpecifyingCommandLineTools/SpecifyingCommandLineTools.html) setting in Xcode preferences to `Xcode 8.0` before running the `carthage update` command.
 
 ## Usage Examples
 
