@@ -9,9 +9,7 @@ matrix:
       osx_image: xcode7.3
       sudo: required
 script:
-  - pod setup
-  - pod spec lint --allow-warnings
-  - carthage update
+  - pod spec lint
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore iOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore watchOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
   - xcodebuild -workspace 'BMSCore.xcworkspace' test -scheme 'BMSCore Tests' -destination 'platform=iOS Simulator,name=iPhone 6'
