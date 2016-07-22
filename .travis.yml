@@ -13,6 +13,7 @@ script:
   - pod spec lint
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore iOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore watchOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
+  - killall "Simulator"
   - xcodebuild -workspace 'BMSCore.xcworkspace' test -scheme 'BMSCore Tests' -destination 'platform=iOS Simulator,name=iPhone 6'
 after_script:
   - ./travis-build-trigger.sh 7588419 $TRAVIS_BRANCH $AUTH_TOKEN
