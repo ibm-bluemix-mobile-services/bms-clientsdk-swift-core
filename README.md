@@ -15,7 +15,7 @@ This package contains the core components of the Swift SDK.
 
 ## Requirements
 * iOS 8.0+ / watchOS 2.0+
-* Xcode 7+
+* Xcode 7.3 - 8.0
 * Swift 2.2 - 3.0
 
 ## Installation
