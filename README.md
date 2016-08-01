@@ -36,12 +36,12 @@ Then run the `pod install` command.
 
 #### Swift 2.3
 
-For apps built with Swift 2.3, you may receive a prompt saying "Convert to Current Swift Syntax?" for BMSCore and BMSAnalyticsAPI when opening your project in Xcode 8 (following the installation of BMSCore). Choose the *Convert* option. 
+For apps built with Swift 2.3, you may receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore). Choose the *Convert* option, and select `BMSCore.framework` and `BMSAnalyticsAPI.framework`.
 **Note:** This should only be done once. If the prompt appears again in the future after you have already converted, always choose the *Later* option.
 
 #### Swift 3.0
 
-For apps built with Swift 3.0, you may receive a prompt saying "Convert to Current Swift Syntax?" for BMSCore and BMSAnalyticsAPI when opening your project in Xcode 8 (following the installation of BMSCore). Always choose the *Later* option. 
+For apps built with Swift 3.0, you may receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore). Always choose the *Later* option. 
 
 
 ### Carthage
