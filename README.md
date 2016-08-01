@@ -36,12 +36,12 @@ Then run the `pod install` command.
 
 #### Swift 2.3
 
-For apps built with Swift 2.3, you may receive a prompt saying "Convert to Current Swift Syntax?" for BMSCore and BMSAnalyticsAPI when opening your project in Xcode 8 (following the installation of BMSCore). Choose the `Convert` option. 
-**Note:** This should only be done once. If the prompt appears again in the future after you have already converted, always choose the `Later` option.
+For apps built with Swift 2.3, you may receive a prompt saying "Convert to Current Swift Syntax?" for BMSCore and BMSAnalyticsAPI when opening your project in Xcode 8 (following the installation of BMSCore). Choose the *Convert* option. 
+**Note:** This should only be done once. If the prompt appears again in the future after you have already converted, always choose the *Later* option.
 
 #### Swift 3.0
 
-For apps built with Swift 3.0, you may receive a prompt saying "Convert to Current Swift Syntax?" for BMSCore and BMSAnalyticsAPI when opening your project in Xcode 8 (following the installation of BMSCore). Always choose the `Later` option. 
+For apps built with Swift 3.0, you may receive a prompt saying "Convert to Current Swift Syntax?" for BMSCore and BMSAnalyticsAPI when opening your project in Xcode 8 (following the installation of BMSCore). Always choose the *Later* option. 
 
 
 ### Carthage
@@ -57,11 +57,11 @@ To complete the integration, follow the instructions [here](https://github.com/C
 
 #### Swift 2.3
 
-For apps built with Swift 2.3, use the bash command `TOOLCHAINS=com.apple.dt.toolchain.Swift_2_3 carthage build` instead of `carthage update`. 
+For apps built with Swift 2.3, change the [Command Line Tools](https://developer.apple.com/library/mac/recipes/xcode_help-locations_preferences/SpecifyingCommandLineTools/SpecifyingCommandLineTools.html) setting in Xcode preferences to `Xcode 8.0`, then run the bash command `TOOLCHAINS=com.apple.dt.toolchain.Swift_2_3 carthage update`. 
 
 #### Swift 3.0
 
-For apps built with Swift 3.0, change the [Command Line Tools](https://developer.apple.com/library/mac/recipes/xcode_help-locations_preferences/SpecifyingCommandLineTools/SpecifyingCommandLineTools.html) setting in Xcode preferences to `Xcode 8.0` before running the `carthage update` command.
+For apps built with Swift 3.0, change the [Command Line Tools](https://developer.apple.com/library/mac/recipes/xcode_help-locations_preferences/SpecifyingCommandLineTools/SpecifyingCommandLineTools.html) setting in Xcode preferences to `Xcode 8.0`, then run the `carthage update` command.
 
 ## Usage Examples
 
