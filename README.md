@@ -4,7 +4,7 @@ IBM Bluemix Mobile Services - Client SDK Swift Core
 [![Build Status](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.svg?branch=master)](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core)
 [![Build Status](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.svg?branch=development)](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core)
 
-This is the core component of the Swift SDK for [IBM Bluemix Mobile Services](http://www.ibm.com/cloud-computing/bluemix/mobile/).
+This is the core component of the Swift SDK for [IBM Bluemix Mobile Services](https://console.ng.bluemix.net/docs/mobile/index.html).
 
 ## Contents
 This package contains the core components of the Swift SDK.
