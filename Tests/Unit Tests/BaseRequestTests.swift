@@ -125,7 +125,7 @@ class BaseRequestTests: XCTestCase {
     func testSendWithMalformedUrl() {
         
         #if swift(>=3.0)
-            let responseReceivedExpectation = self.expectation(withDescription: "Receive network response")
+            let responseReceivedExpectation = self.expectation(description: "Receive network response")
         #else
             let responseReceivedExpectation = self.expectationWithDescription("Receive network response")
         #endif
@@ -143,7 +143,7 @@ class BaseRequestTests: XCTestCase {
                 responseReceivedExpectation.fulfill()
             }
             
-            self.waitForExpectations(withTimeout: 5.0) { (error: NSError?) -> Void in
+            self.waitForExpectations(timeout: 5.0) { (error: Error?) -> Void in
                 if error != nil {
                     XCTFail("Expectation failed with error: \(error)")
                 }
