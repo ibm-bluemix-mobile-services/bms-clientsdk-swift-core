@@ -15,7 +15,7 @@ This package contains the core components of the Swift SDK.
 
 ## Requirements
 * iOS 8.0+ / watchOS 2.0+
-* Xcode 7.3 - 8.0
+* Xcode 7.3, 8.0 beta 4, 8.0 beta 5
 * Swift 2.2 - 3.0
 
 ## Installation
@@ -36,10 +36,14 @@ Then run the `pod install` command.
 
 #### Swift 2.3
 
+Before running the `pod install` command, make sure to use Cocoapods version [1.1.0.beta.1](https://github.com/CocoaPods/CocoaPods/releases/tag/1.1.0.beta.1).
+
 For apps built with Swift 2.3, you may receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore). Choose the *Convert* option, and select `BMSCore.framework` and `BMSAnalyticsAPI.framework`.
 **Note:** This should only be done once. If the prompt appears again in the future after you have already converted, always choose the *Later* option.
 
 #### Swift 3.0
+
+Before running the `pod install` command, make sure to use Cocoapods version [1.1.0.beta.1](https://github.com/CocoaPods/CocoaPods/releases/tag/1.1.0.beta.1).
 
 For apps built with Swift 3.0, you may receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore). Always choose the *Later* option. 
 
@@ -55,13 +59,11 @@ Then run the `carthage update` command. Once the build is finished, drag `BMSCor
 
 To complete the integration, follow the instructions [here](https://github.com/Carthage/Carthage#getting-started).
 
-#### Swift 2.3
+#### Xcode 8
 
-For apps built with Swift 2.3, change the [Command Line Tools](https://developer.apple.com/library/mac/recipes/xcode_help-locations_preferences/SpecifyingCommandLineTools/SpecifyingCommandLineTools.html) setting in Xcode preferences to `Xcode 8.0`, then run the bash command `TOOLCHAINS=com.apple.dt.toolchain.Swift_2_3 carthage update`. 
+Carthage currently is not supported for BMSCore in Xcode 8 beta. Please use Cocoapods instead.
 
-#### Swift 3.0
 
-For apps built with Swift 3.0, change the [Command Line Tools](https://developer.apple.com/library/mac/recipes/xcode_help-locations_preferences/SpecifyingCommandLineTools/SpecifyingCommandLineTools.html) setting in Xcode preferences to `Xcode 8.0`, then run the `carthage update` command.
 
 ## Usage Examples
 
