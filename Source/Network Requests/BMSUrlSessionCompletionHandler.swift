@@ -21,4 +21,12 @@ public typealias BMSDataTaskCompletionHandler = (NSData?, NSURLResponse?, NSErro
 internal struct BMSUrlSessionCompletionHandler {
     
     
+    // Required to hook in challenge handling via AuthorizationManager
+    static func from(completionHandler: BMSDataTaskCompletionHandler, urlSession: NSURLSession, request: NSURLRequest) -> BMSDataTaskCompletionHandler {
+        
+        return { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
+            
+            completionHandler(data, response, error)
+        }
+    }
 }
