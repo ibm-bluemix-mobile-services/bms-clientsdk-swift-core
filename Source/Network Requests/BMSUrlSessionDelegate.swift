@@ -14,7 +14,127 @@
 
 // Custom wrapper for NSURLSessionDelegate
 // Uses AuthorizationManager from the BMSSecurity framework to handle network requests to MCA protected backends
-internal struct BMSUrlSessionDelegate {
+internal class BMSUrlSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate {
+    
+    // The user-supplied session delegate
+    internal let parentDelegate: NSURLSessionDelegate?
+    
+    // The user-supplied task delegate
+    internal let parentTaskDelegate: NSURLSessionTaskDelegate?
+    
+    // The user-supplied data delegate
+    internal let parentDataDelegate: NSURLSessionDataDelegate?
     
     
+    
+    init(parentDelegate: NSURLSessionDelegate) {
+        
+        if parentDelegate.conformsToProtocol(NSURLSessionDelegate) {
+            self.parentDelegate = parentDelegate
+        }
+        else {
+            self.parentDelegate = nil
+        }
+        
+        if parentDelegate.conformsToProtocol(NSURLSessionTaskDelegate) {
+            self.parentTaskDelegate = parentDelegate as! NSURLSessionTaskDelegate
+        }
+        else {
+            self.parentTaskDelegate = nil
+        }
+        
+        if parentDelegate.conformsToProtocol(NSURLSessionDataDelegate) {
+            self.parentDataDelegate = parentDelegate as! NSURLSessionDataDelegate
+        }
+        else {
+            self.parentDataDelegate = nil
+        }
+    }
+}
+
+
+
+// MARK: Delegate
+
+internal extension BMSUrlSessionDelegate {
+    
+    internal func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
+        
+        parentDelegate?.URLSession?(session, didBecomeInvalidWithError: error)
+    }
+    
+    internal func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+        
+        completionHandler(.PerformDefaultHandling, nil)
+    }
+    
+    internal func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
+        
+        parentDelegate?.URLSessionDidFinishEventsForBackgroundURLSession?(session)
+    }
+}
+
+
+
+// MARK: Task delegate
+
+internal extension BMSUrlSessionDelegate {
+    
+    internal func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse, newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {
+        
+        parentTaskDelegate?.URLSession?(session, task: task, willPerformHTTPRedirection: response, newRequest: request, completionHandler: completionHandler)
+    }
+    
+    internal func URLSession(session: NSURLSession, task: NSURLSessionTask, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+        
+        completionHandler(.PerformDefaultHandling, nil)
+    }
+    
+    internal func URLSession(session: NSURLSession, task: NSURLSessionTask, needNewBodyStream completionHandler: (NSInputStream?) -> Void) {
+        
+        parentTaskDelegate?.URLSession?(session, task: task, needNewBodyStream: completionHandler)
+    }
+    
+    internal func URLSession(session: NSURLSession, task: NSURLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        
+        parentTaskDelegate?.URLSession?(session, task: task, didSendBodyData: bytesSent, totalBytesSent: totalBytesSent, totalBytesExpectedToSend: totalBytesExpectedToSend)
+    }
+    
+    internal func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+        
+        parentTaskDelegate?.URLSession?(session, task: task, didCompleteWithError: error)
+    }
+}
+
+
+
+// MARK: Data delegate
+
+internal extension BMSUrlSessionDelegate {
+    
+    internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
+        
+        parentDataDelegate?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
+    }
+    
+    internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeDownloadTask downloadTask: NSURLSessionDownloadTask) {
+        
+        parentDataDelegate?.URLSession?(session, dataTask: dataTask, didBecomeDownloadTask: downloadTask)
+    }
+    
+    @available(iOS 9.0, *)
+    internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeStreamTask streamTask: NSURLSessionStreamTask) {
+        
+        parentDataDelegate?.URLSession?(session, dataTask: dataTask, didBecomeStreamTask: streamTask)
+    }
+    
+    internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
+        
+        parentDataDelegate?.URLSession?(session, dataTask: dataTask, didReceiveData: data)
+    }
+    
+    internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, willCacheResponse proposedResponse: NSCachedURLResponse, completionHandler: (NSCachedURLResponse?) -> Void) {
+        
+        parentDataDelegate?.URLSession?(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
+    }
 }
