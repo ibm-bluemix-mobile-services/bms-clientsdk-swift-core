@@ -25,7 +25,32 @@ public struct BMSUrlSession {
                delegate: NSURLSessionDelegate? = nil,
                delegateQueue: NSOperationQueue? = nil) {
         
-        urlSession = NSURLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        var bmsDelegate: NSURLSessionDelegate? = nil
+        if delegate != nil {
+            bmsDelegate = BMSUrlSessionDelegate(parentDelegate: delegate!)
+        }
+        urlSession = NSURLSession(configuration: configuration, delegate: bmsDelegate, delegateQueue: delegateQueue)
+    }
+    
+    
+    // Inject BMSSecurity and BMSAnalytics into the request object by adding headers
+    internal func prepareRequest(request: NSURLRequest) -> NSURLRequest {
+        
+        let bmsRequest = request.mutableCopy() as! NSMutableURLRequest
+        
+        // Security
+        let authManager = BMSClient.sharedInstance.authorizationManager
+        if let authHeader: String = authManager.cachedAuthorizationHeader {
+            bmsRequest.setValue(authHeader, forHTTPHeaderField: "Authorization")
+        }
+        
+        // Analytics
+        bmsRequest.setValue(NSUUID().UUIDString, forHTTPHeaderField: "x-wl-analytics-tracking-id")
+        if let requestMetadata = BaseRequest.requestAnalyticsData {
+            bmsRequest.setValue(requestMetadata, forHTTPHeaderField: "x-mfp-analytics-metadata")
+        }
+        
+        return bmsRequest
     }
 }
 
@@ -47,12 +72,14 @@ extension BMSUrlSession {
     
     public func dataTaskWithRequest(request: NSURLRequest) -> NSURLSessionDataTask {
         
-        return urlSession.dataTaskWithRequest(request)
+        let bmsRequest = prepareRequest(request)
+        return urlSession.dataTaskWithRequest(bmsRequest)
     }
     
     public func dataTaskWithRequest(request: NSURLRequest, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionDataTask {
         
-        return urlSession.dataTaskWithRequest(request, completionHandler: completionHandler)
+        let bmsRequest = prepareRequest(request)
+        return urlSession.dataTaskWithRequest(bmsRequest, completionHandler: completionHandler)
     }
 }
 
@@ -64,21 +91,25 @@ extension BMSUrlSession {
 
     public func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData) -> NSURLSessionUploadTask {
 
-        return urlSession.uploadTaskWithRequest(request, fromData: bodyData)
+        let bmsRequest = prepareRequest(request)
+        return urlSession.uploadTaskWithRequest(bmsRequest, fromData: bodyData)
     }
 
     public func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData?, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask {
         
-        return urlSession.uploadTaskWithRequest(request, fromData: bodyData, completionHandler: completionHandler)
+        let bmsRequest = prepareRequest(request)
+        return urlSession.uploadTaskWithRequest(bmsRequest, fromData: bodyData, completionHandler: completionHandler)
     }
 
     public func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL) -> NSURLSessionUploadTask {
 
-        return urlSession.uploadTaskWithRequest(request, fromFile: fileURL)
+        let bmsRequest = prepareRequest(request)
+        return urlSession.uploadTaskWithRequest(bmsRequest, fromFile: fileURL)
     }
 
     public func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask {
 
-        return urlSession.uploadTaskWithRequest(request, fromFile: fileURL, completionHandler: completionHandler)
+        let bmsRequest = prepareRequest(request)
+        return urlSession.uploadTaskWithRequest(bmsRequest, fromFile: fileURL, completionHandler: completionHandler)
     }
 }
