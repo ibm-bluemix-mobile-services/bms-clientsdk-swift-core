@@ -17,7 +17,7 @@
 internal class BMSUrlSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate {
     
     // The user-supplied session delegate
-    internal let parentDelegate: NSURLSessionDelegate?
+    internal let parentSessionDelegate: NSURLSessionDelegate?
     
     // The user-supplied task delegate
     internal let parentTaskDelegate: NSURLSessionTaskDelegate?
@@ -30,10 +30,10 @@ internal class BMSUrlSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessi
     init(parentDelegate: NSURLSessionDelegate) {
         
         if parentDelegate.conformsToProtocol(NSURLSessionDelegate) {
-            self.parentDelegate = parentDelegate
+            self.parentSessionDelegate = parentDelegate
         }
         else {
-            self.parentDelegate = nil
+            self.parentSessionDelegate = nil
         }
         
         if parentDelegate.conformsToProtocol(NSURLSessionTaskDelegate) {
@@ -50,17 +50,45 @@ internal class BMSUrlSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessi
             self.parentDataDelegate = nil
         }
     }
+    
+    
+    // Handle the challenge with AuthorizationManager from BMSSecurity
+    internal func handleAuthorizationChallenge(urlSession: NSURLSession, dataTask: NSURLSessionDataTask, handleFailure: () -> Void) {
+        
+        let authManager = BMSClient.sharedInstance.authorizationManager
+        let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
+            
+            if error == nil && response?.statusCode >= 200 && response?.statusCode < 300 {
+                
+                // Resend the original request with the "Authorization" header
+                
+                let originalRequest = dataTask.currentRequest!.mutableCopy() as! NSMutableURLRequest
+                
+                let authManager = BMSClient.sharedInstance.authorizationManager
+                if let authHeader: String = authManager.cachedAuthorizationHeader {
+                    originalRequest.setValue(authHeader, forHTTPHeaderField: "Authorization")
+                }
+                
+                urlSession.dataTaskWithRequest(originalRequest).resume()
+            }
+            else {
+                BMSUrlSession.logger.error("Authorization process failed. \nError: \(error). \nResponse: \(response).")
+                handleFailure()
+            }
+        }
+        authManager.obtainAuthorization(completionHandler: authCallback)
+    }
 }
 
 
 
-// MARK: Delegate
+// MARK: Session Delegate
 
 internal extension BMSUrlSessionDelegate {
     
     internal func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
         
-        parentDelegate?.URLSession?(session, didBecomeInvalidWithError: error)
+        parentSessionDelegate?.URLSession?(session, didBecomeInvalidWithError: error)
     }
     
     internal func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
@@ -70,7 +98,7 @@ internal extension BMSUrlSessionDelegate {
     
     internal func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
         
-        parentDelegate?.URLSessionDidFinishEventsForBackgroundURLSession?(session)
+        parentSessionDelegate?.URLSessionDidFinishEventsForBackgroundURLSession?(session)
     }
 }
 
@@ -114,7 +142,16 @@ internal extension BMSUrlSessionDelegate {
     
     internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
         
-        parentDataDelegate?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
+        func callParentDelegate() {
+            parentDataDelegate?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
+        }
+        
+        if BMSUrlSession.isAuthorizationManagerRequired(response) {
+            handleAuthorizationChallenge(session, dataTask: dataTask, handleFailure: callParentDelegate)
+        }
+        else {
+            callParentDelegate()
+        }
     }
     
     internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeDownloadTask downloadTask: NSURLSessionDownloadTask) {

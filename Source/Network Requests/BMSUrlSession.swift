@@ -20,6 +20,8 @@ public struct BMSUrlSession {
     /// The network session
     public let urlSession: NSURLSession
     
+    static let logger = Logger.logger(forName: Logger.bmsLoggerPrefix + "urlSession")
+    
     
     public init(configuration: NSURLSessionConfiguration = .defaultSessionConfiguration(),
                delegate: NSURLSessionDelegate? = nil,
@@ -51,6 +53,21 @@ public struct BMSUrlSession {
         }
         
         return bmsRequest
+    }
+    
+    
+    // If we receive a challenge response from an MCA-protected backend, then we should use AuthorizationManager to handle the challenge.
+    internal static func isAuthorizationManagerRequired(response: NSURLResponse?) -> Bool {
+        
+        let authManager = BMSClient.sharedInstance.authorizationManager
+        
+        if let response = response as? NSHTTPURLResponse,
+            let wwwAuthHeader = response.allHeaderFields["WWW-Authenticate"] as? String
+            where authManager.isAuthorizationRequired(forStatusCode: response.statusCode, httpResponseAuthorizationHeader: wwwAuthHeader) {
+            
+            return true
+        }
+        return false
     }
 }
 
