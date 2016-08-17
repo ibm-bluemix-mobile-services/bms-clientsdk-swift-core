@@ -26,7 +26,47 @@ internal struct BMSUrlSessionCompletionHandler {
         
         return { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
-            completionHandler(data, response, error)
+            if BMSUrlSession.isAuthorizationManagerRequired(response) {
+                
+                func callParentCompletionHandler() {
+                    completionHandler(data, response, error)
+                }
+                
+                let originalRequest = request.mutableCopy() as! NSMutableURLRequest
+                BMSUrlSession.handleAuthorizationChallenge(urlSession, request: originalRequest, handleFailure: callParentCompletionHandler)
+            }
+            else {
+                completionHandler(data, response, error)
+            }
         }
+    }
+    
+    
+    // Handle the challenge using AuthorizationManager
+    private static func handleAuthorizationChallenge(parentCompletionHandler: BMSDataTaskCompletionHandler, url: NSURL?, request: NSURLRequest, urlSession: NSURLSession) {
+        
+        let authManager = BMSClient.sharedInstance.authorizationManager
+        let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
+            
+            if error == nil && response?.statusCode >= 200 && response?.statusCode < 300 {
+                
+                // Resend the original request with the "Authorization" header
+                
+                let originalRequest = request.mutableCopy() as! NSMutableURLRequest
+                
+                // Security
+                let authManager = BMSClient.sharedInstance.authorizationManager
+                if let authHeader: String = authManager.cachedAuthorizationHeader {
+                    
+                    originalRequest.setValue(authHeader, forHTTPHeaderField: "Authorization")
+                }
+                
+                urlSession.dataTaskWithRequest(originalRequest, completionHandler: parentCompletionHandler as! BMSDataTaskCompletionHandler).resume()
+            }
+            else {
+                parentCompletionHandler(response?.responseData, response?.httpResponse, error)
+            }
+        }
+        authManager.obtainAuthorization(completionHandler: authCallback)
     }
 }

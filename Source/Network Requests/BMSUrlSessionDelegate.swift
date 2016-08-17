@@ -50,34 +50,6 @@ internal class BMSUrlSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessi
             self.parentDataDelegate = nil
         }
     }
-    
-    
-    // Handle the challenge with AuthorizationManager from BMSSecurity
-    internal func handleAuthorizationChallenge(urlSession: NSURLSession, dataTask: NSURLSessionDataTask, handleFailure: () -> Void) {
-        
-        let authManager = BMSClient.sharedInstance.authorizationManager
-        let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
-            
-            if error == nil && response?.statusCode >= 200 && response?.statusCode < 300 {
-                
-                // Resend the original request with the "Authorization" header
-                
-                let originalRequest = dataTask.currentRequest!.mutableCopy() as! NSMutableURLRequest
-                
-                let authManager = BMSClient.sharedInstance.authorizationManager
-                if let authHeader: String = authManager.cachedAuthorizationHeader {
-                    originalRequest.setValue(authHeader, forHTTPHeaderField: "Authorization")
-                }
-                
-                urlSession.dataTaskWithRequest(originalRequest).resume()
-            }
-            else {
-                BMSUrlSession.logger.error("Authorization process failed. \nError: \(error). \nResponse: \(response).")
-                handleFailure()
-            }
-        }
-        authManager.obtainAuthorization(completionHandler: authCallback)
-    }
 }
 
 
@@ -147,7 +119,10 @@ internal extension BMSUrlSessionDelegate {
         }
         
         if BMSUrlSession.isAuthorizationManagerRequired(response) {
-            handleAuthorizationChallenge(session, dataTask: dataTask, handleFailure: callParentDelegate)
+            
+            // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSUrlSession.
+            let originalRequest = dataTask.originalRequest!.mutableCopy() as! NSMutableURLRequest
+            BMSUrlSession.handleAuthorizationChallenge(session, request: originalRequest, handleFailure: callParentDelegate)
         }
         else {
             callParentDelegate()
