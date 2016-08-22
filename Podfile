@@ -9,7 +9,6 @@ target 'BMSCore watchOS' do
 end
 
 target 'BMSCore Tests' do
-	platform :ios, '8.0'
 	pod 'BMSAnalyticsAPI', '~> 1.1'
 end
 
