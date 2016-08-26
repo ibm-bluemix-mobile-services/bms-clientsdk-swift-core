@@ -14,29 +14,3 @@
 
 /// Callback for data tasks invoked by BmsUrlSession
 public typealias BMSDataTaskCompletionHandler = (NSData?, NSURLResponse?, NSError?) -> Void
-
-
-// Custom wrapper for NSURLSession task completion handlers
-// Uses AuthorizationManager from the BMSSecurity framework to handle network requests to MCA protected backends
-extension BMSUrlSession {
-    
-    // Required to hook in challenge handling via AuthorizationManager
-    func generateBmsCompletionHandler(from completionHandler: BMSDataTaskCompletionHandler, urlSession: NSURLSession, request: NSURLRequest) -> BMSDataTaskCompletionHandler {
-        
-        return { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
-            
-            if self.isAuthorizationManagerRequired(response) {
-                
-                func callParentCompletionHandler() {
-                    completionHandler(data, response, error)
-                }
-                
-                let originalRequest = request.mutableCopy() as! NSMutableURLRequest
-                self.handleAuthorizationChallenge(urlSession, request: originalRequest, handleFailure: callParentCompletionHandler)
-            }
-            else {
-                completionHandler(data, response, error)
-            }
-        }
-    }
-}
