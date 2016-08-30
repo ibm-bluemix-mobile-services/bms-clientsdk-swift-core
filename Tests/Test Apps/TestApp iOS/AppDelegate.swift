@@ -25,14 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         let myBMSClient = BMSClient.sharedInstance
-        
-        // REPLACE WITH REAL APP ROUTE AND GUID
-        #if swift(>=3.0)
-            myBMSClient.initializeWithBluemixAppRoute(bluemixAppRoute: "https://example.mybluemix.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
-        #else
-            myBMSClient.initializeWithBluemixAppRoute("https://example.mybluemix.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
-        #endif
-        
+        myBMSClient.initialize(bluemixRegion: BMSClient.REGION_US_SOUTH)
         myBMSClient.defaultRequestTimeout = 10.0 // seconds
         
         Logger.logLevelFilter = LogLevel.Debug

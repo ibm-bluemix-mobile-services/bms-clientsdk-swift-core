@@ -15,13 +15,14 @@ import XCTest
 @testable import BMSCore
 
 class BMSClientTests: XCTestCase {
-
     
-    func testInitialization() {
+    
+    func testDeprecatedInitializer() {
         
         let clientInstance = BMSClient.sharedInstance
         XCTAssertNil(clientInstance.bluemixAppRoute, "BMSClient has not yet been initialized")
         XCTAssertNil(clientInstance.bluemixAppGUID, "BMSClient has not yet been initialized")
+        XCTAssertNil(clientInstance.bluemixRegion, "BMSClient has not yet been initialized")
         
         #if swift(>=3.0)
             clientInstance.initializeWithBluemixAppRoute(bluemixAppRoute: "http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.REGION_US_SOUTH)
@@ -32,10 +33,37 @@ class BMSClientTests: XCTestCase {
         XCTAssertEqual(clientInstance.bluemixAppRoute, "http://example.com")
         XCTAssertEqual(clientInstance.bluemixAppGUID, "1234")
         XCTAssertEqual(clientInstance.bluemixRegion, BMSClient.REGION_US_SOUTH)
+    }
+    
+    
+    func testInitializerWithAllParameters() {
         
-        // Make sure the sharedInstance singleton is persistent
-        let newClientInstance = BMSClient.sharedInstance
-        XCTAssertEqual(newClientInstance.bluemixAppRoute, "http://example.com")
-        XCTAssertEqual(newClientInstance.bluemixAppGUID, "1234")
+        let clientInstance = BMSClient.sharedInstance
+        
+        #if swift(>=3.0)
+            clientInstance.initialize(bluemixAppRoute: "http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.REGION_US_SOUTH)
+        #else
+            clientInstance.initialize("http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.REGION_US_SOUTH)
+        #endif
+        
+        XCTAssertEqual(clientInstance.bluemixAppRoute, "http://example.com")
+        XCTAssertEqual(clientInstance.bluemixAppGUID, "1234")
+        XCTAssertEqual(clientInstance.bluemixRegion, BMSClient.REGION_US_SOUTH)
+    }
+    
+    
+    func testInitializerWithOnlyBluemixRegion() {
+        
+        let clientInstance = BMSClient.sharedInstance
+        
+        #if swift(>=3.0)
+            clientInstance.initialize(bluemixRegion:BMSClient.REGION_US_SOUTH)
+        #else
+            clientInstance.initialize(bluemixRegion:BMSClient.REGION_US_SOUTH)
+        #endif
+        
+        XCTAssertNil(clientInstance.bluemixAppRoute)
+        XCTAssertNil(clientInstance.bluemixAppGUID)
+        XCTAssertEqual(clientInstance.bluemixRegion, BMSClient.REGION_US_SOUTH)
     }
 }
