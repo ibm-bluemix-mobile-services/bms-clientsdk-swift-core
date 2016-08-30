@@ -12,46 +12,68 @@
 */
 
 
+/// Callback for data tasks invoked by BmsUrlSession
+public typealias BMSDataTaskCompletionHandler = (NSData?, NSURLResponse?, NSError?) -> Void
+
+
+
 public struct BMSUrlSession {
 
+    
+    internal let configuration: NSURLSessionConfiguration
+    
+    internal let delegate: NSURLSessionDelegate?
+    
+    internal let delegateQueue: NSOperationQueue?
     
     static let logger = Logger.logger(forName: Logger.bmsLoggerPrefix + "urlSession")
     
     
     
+    public init(configuration: NSURLSessionConfiguration = .defaultSessionConfiguration(),
+                delegate: NSURLSessionDelegate? = nil,
+                delegateQueue: NSOperationQueue? = nil) {
+        
+        self.configuration = configuration
+        self.delegate = delegate
+        self.delegateQueue = delegateQueue
+    }
+    
+    
+    
     // MARK: Data tasks
     
-    public static func dataTaskWithURL(url: NSURL, configuration: BMSUrlSessionConfiguration) -> NSURLSessionDataTask {
+    public func dataTaskWithURL(url: NSURL) -> NSURLSessionDataTask {
         
-        return BMSUrlSession.dataTaskWithRequest(NSURLRequest(URL: url), configuration: configuration)
+        return dataTaskWithRequest(NSURLRequest(URL: url))
     }
     
-    public static func dataTaskWithURL(url: NSURL, completionHandler: BMSDataTaskCompletionHandler, configuration: BMSUrlSessionConfiguration) -> NSURLSessionDataTask {
+    public func dataTaskWithURL(url: NSURL, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionDataTask {
         
-        return BMSUrlSession.dataTaskWithRequest(NSURLRequest(URL: url), completionHandler: completionHandler, configuration: configuration)
+        return dataTaskWithRequest(NSURLRequest(URL: url), completionHandler: completionHandler)
     }
     
-    public static func dataTaskWithRequest(request: NSURLRequest, configuration: BMSUrlSessionConfiguration) -> NSURLSessionDataTask {
+    public func dataTaskWithRequest(request: NSURLRequest) -> NSURLSessionDataTask {
         
-        let bmsRequest = prepareRequest(request)
+        let bmsRequest = BMSUrlSession.prepareRequest(request)
         
         let originalTask = BMSUrlSessionTaskType.dataTask
-        let parentDelegate = BMSUrlSessionDelegate(parentDelegate: configuration.parentDelegate, originalTask: originalTask)
+        let parentDelegate = BMSUrlSessionDelegate(parentDelegate: delegate, originalTask: originalTask)
         
-        let urlSession = NSURLSession(configuration: configuration.configuration, delegate: parentDelegate, delegateQueue: configuration.delegateQueue)
+        let urlSession = NSURLSession(configuration: configuration, delegate: parentDelegate, delegateQueue: delegateQueue)
         
         let dataTask = urlSession.dataTaskWithRequest(bmsRequest)
         
         return dataTask
     }
     
-    public static func dataTaskWithRequest(request: NSURLRequest, completionHandler: BMSDataTaskCompletionHandler, configuration: BMSUrlSessionConfiguration) -> NSURLSessionDataTask {
+    public func dataTaskWithRequest(request: NSURLRequest, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionDataTask {
         
-        let bmsRequest = prepareRequest(request)
+        let bmsRequest = BMSUrlSession.prepareRequest(request)
         
-        let urlSession = NSURLSession(configuration: configuration.configuration, delegate: configuration.parentDelegate, delegateQueue: configuration.delegateQueue)
+        let urlSession = NSURLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSUrlSessionTaskType.dataTaskWithCompletionHandler(completionHandler)
-        let bmsCompletionHandler = generateBmsCompletionHandler(from: completionHandler, urlSession: urlSession, request: request, originalTask: originalTask)
+        let bmsCompletionHandler = BMSUrlSession.generateBmsCompletionHandler(from: completionHandler, urlSession: urlSession, request: request, originalTask: originalTask)
         
         let dataTask = urlSession.dataTaskWithRequest(bmsRequest, completionHandler: bmsCompletionHandler)
         
@@ -62,52 +84,52 @@ public struct BMSUrlSession {
     
     // MARK: Upload tasks
         
-    public static func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData, configuration: BMSUrlSessionConfiguration) -> NSURLSessionUploadTask {
+    public func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData) -> NSURLSessionUploadTask {
         
-        let bmsRequest = prepareRequest(request)
+        let bmsRequest = BMSUrlSession.prepareRequest(request)
         
         let originalTask = BMSUrlSessionTaskType.uploadTaskWithData(bodyData)
-        let parentDelegate = BMSUrlSessionDelegate(parentDelegate: configuration.parentDelegate, originalTask: originalTask)
+        let parentDelegate = BMSUrlSessionDelegate(parentDelegate: delegate, originalTask: originalTask)
         
-        let urlSession = NSURLSession(configuration: configuration.configuration, delegate: parentDelegate, delegateQueue: configuration.delegateQueue)
+        let urlSession = NSURLSession(configuration: configuration, delegate: parentDelegate, delegateQueue: delegateQueue)
         let uploadTask = urlSession.uploadTaskWithRequest(bmsRequest, fromData: bodyData)
         
         return uploadTask
     }
     
-    public static func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData?, completionHandler: BMSDataTaskCompletionHandler, configuration: BMSUrlSessionConfiguration) -> NSURLSessionUploadTask {
+    public func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData?, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask {
         
-        let bmsRequest = prepareRequest(request)
+        let bmsRequest = BMSUrlSession.prepareRequest(request)
         
-        let urlSession = NSURLSession(configuration: configuration.configuration, delegate: configuration.parentDelegate, delegateQueue: configuration.delegateQueue)
+        let urlSession = NSURLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSUrlSessionTaskType.uploadTaskWithDataAndCompletionHandler(bodyData, completionHandler)
-        let bmsCompletionHandler = generateBmsCompletionHandler(from: completionHandler, urlSession: urlSession, request: request, originalTask: originalTask)
+        let bmsCompletionHandler = BMSUrlSession.generateBmsCompletionHandler(from: completionHandler, urlSession: urlSession, request: request, originalTask: originalTask)
         
         let uploadTask = urlSession.uploadTaskWithRequest(bmsRequest, fromData: bodyData, completionHandler: bmsCompletionHandler)
         
         return uploadTask
     }
     
-    public static func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL, configuration: BMSUrlSessionConfiguration) -> NSURLSessionUploadTask {
+    public func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL) -> NSURLSessionUploadTask {
         
-        let bmsRequest = prepareRequest(request)
+        let bmsRequest = BMSUrlSession.prepareRequest(request)
         
         let originalTask = BMSUrlSessionTaskType.uploadTaskWithFile(fileURL)
-        let parentDelegate = BMSUrlSessionDelegate(parentDelegate: configuration.parentDelegate, originalTask: originalTask)
+        let parentDelegate = BMSUrlSessionDelegate(parentDelegate: delegate, originalTask: originalTask)
         
-        let urlSession = NSURLSession(configuration: configuration.configuration, delegate: parentDelegate, delegateQueue: configuration.delegateQueue)
+        let urlSession = NSURLSession(configuration: configuration, delegate: parentDelegate, delegateQueue: delegateQueue)
         let uploadTask = urlSession.uploadTaskWithRequest(bmsRequest, fromFile: fileURL)
         
         return uploadTask
     }
     
-    public static func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL, completionHandler: BMSDataTaskCompletionHandler, configuration: BMSUrlSessionConfiguration) -> NSURLSessionUploadTask {
+    public func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask {
         
-        let bmsRequest = prepareRequest(request)
+        let bmsRequest = BMSUrlSession.prepareRequest(request)
         
-        let urlSession = NSURLSession(configuration: configuration.configuration, delegate: configuration.parentDelegate, delegateQueue: configuration.delegateQueue)
+        let urlSession = NSURLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSUrlSessionTaskType.uploadTaskWithFileAndCompletionHandler(fileURL, completionHandler)
-        let bmsCompletionHandler = generateBmsCompletionHandler(from: completionHandler, urlSession: urlSession, request: request, originalTask: originalTask)
+        let bmsCompletionHandler = BMSUrlSession.generateBmsCompletionHandler(from: completionHandler, urlSession: urlSession, request: request, originalTask: originalTask)
         
         let uploadTask = urlSession.uploadTaskWithRequest(bmsRequest, fromFile: fileURL, completionHandler: bmsCompletionHandler)
         
