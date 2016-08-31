@@ -36,7 +36,7 @@ class BaseRequestTests: XCTestCase {
         #if swift(>=3.0)
             BMSClient.sharedInstance.initializeWithBluemixAppRoute(bluemixAppRoute: "https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
         #else
-            BMSClient.sharedInstance.initializeWithBluemixAppRoute("https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
+            BMSClient.sharedInstance.initialize(bluemixAppRoute: "https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
         #endif
         
         let request = BaseRequest(url: "/path/to/resource", headers: nil, queryParameters: nil)

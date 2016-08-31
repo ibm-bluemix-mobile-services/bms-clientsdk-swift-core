@@ -43,7 +43,7 @@ class BMSClientTests: XCTestCase {
         #if swift(>=3.0)
             clientInstance.initialize(bluemixAppRoute: "http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.REGION_US_SOUTH)
         #else
-            clientInstance.initialize("http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.REGION_US_SOUTH)
+            clientInstance.initialize(bluemixAppRoute: "http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.REGION_US_SOUTH)
         #endif
         
         XCTAssertEqual(clientInstance.bluemixAppRoute, "http://example.com")
@@ -57,9 +57,9 @@ class BMSClientTests: XCTestCase {
         let clientInstance = BMSClient.sharedInstance
         
         #if swift(>=3.0)
-            clientInstance.initialize(bluemixRegion:BMSClient.REGION_US_SOUTH)
+            clientInstance.initialize(bluemixRegion: BMSClient.REGION_US_SOUTH)
         #else
-            clientInstance.initialize(bluemixRegion:BMSClient.REGION_US_SOUTH)
+            clientInstance.initialize(bluemixRegion: BMSClient.REGION_US_SOUTH)
         #endif
         
         XCTAssertNil(clientInstance.bluemixAppRoute)
