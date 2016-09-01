@@ -243,32 +243,6 @@ public struct BMSUrlSession {
 
 
 
-/**
-    A custom wrapper of NSURLSession that incorporates analytics and security from Bluemix Mobile Services.
- */
-public struct BMSUrlSessionConfiguration {
-    
-    
-    internal let configuration: NSURLSessionConfiguration
-    
-    internal let parentDelegate: NSURLSessionDelegate?
-    
-    internal let delegateQueue: NSOperationQueue?
-    
-    
-    
-    public init(configuration: NSURLSessionConfiguration = .defaultSessionConfiguration(),
-               delegate: NSURLSessionDelegate? = nil,
-               delegateQueue: NSOperationQueue? = nil) {
-        
-        self.configuration = configuration
-        self.parentDelegate = delegate
-        self.delegateQueue = delegateQueue
-    }
-}
-
-
-
 // List of the supported types of NSURLSessionTask
 // Stored in BMSUrlSession to determine what type of task to use when resending the request after authenticating with MCA
 internal enum BMSUrlSessionTaskType {
