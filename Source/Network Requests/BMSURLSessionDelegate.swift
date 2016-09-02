@@ -19,11 +19,9 @@
 
 #if swift(>=3.0)
     
-    
 
-// MARK: Session Delegate
 
-class BMSURLSessionDelegate: NSObject, URLSessionDelegate {
+internal class BMSURLSessionDelegate: NSObject {
     
     
     // The user-supplied session delegate
@@ -38,8 +36,13 @@ class BMSURLSessionDelegate: NSObject, URLSessionDelegate {
         self.parentDelegate = parentDelegate
         self.originalTask = originalTask
     }
+}
     
     
+    
+// MARK: Session delegate
+    
+extension BMSURLSessionDelegate: URLSessionDelegate {
     
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         
@@ -56,8 +59,8 @@ class BMSURLSessionDelegate: NSObject, URLSessionDelegate {
         parentDelegate?.urlSessionDidFinishEvents!(forBackgroundURLSession: session)
     }
 }
-
-
+    
+    
 
 // MARK: Task delegate
 
@@ -149,9 +152,7 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
 
     
 
-// MARK: Session Delegate
-
-class BMSURLSessionDelegate: NSObject, NSURLSessionDelegate {
+internal class BMSURLSessionDelegate: NSObject {
     
     
     // The user-supplied session delegate
@@ -166,7 +167,13 @@ class BMSURLSessionDelegate: NSObject, NSURLSessionDelegate {
         self.parentDelegate = parentDelegate
         self.originalTask = originalTask
     }
+}
     
+    
+    
+// MARK: Session Delegate
+    
+extension BMSURLSessionDelegate: NSURLSessionDelegate {
     
     func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
         
