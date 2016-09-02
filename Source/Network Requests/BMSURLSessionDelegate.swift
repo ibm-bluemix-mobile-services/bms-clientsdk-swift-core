@@ -18,17 +18,17 @@
 
 // MARK: Session Delegate
 
-class BMSUrlSessionDelegate: NSObject, NSURLSessionDelegate {
+class BMSURLSessionDelegate: NSObject, NSURLSessionDelegate {
     
     
     // The user-supplied session delegate
     internal let parentDelegate: NSURLSessionDelegate?
     
-    internal let originalTask: BMSUrlSessionTaskType
+    internal let originalTask: BMSURLSessionTaskType
     
     
     
-    init(parentDelegate: NSURLSessionDelegate?, originalTask: BMSUrlSessionTaskType) {
+    init(parentDelegate: NSURLSessionDelegate?, originalTask: BMSURLSessionTaskType) {
         
         self.parentDelegate = parentDelegate
         self.originalTask = originalTask
@@ -55,7 +55,7 @@ class BMSUrlSessionDelegate: NSObject, NSURLSessionDelegate {
 
 // MARK: Task delegate
 
-extension BMSUrlSessionDelegate: NSURLSessionTaskDelegate {
+extension BMSURLSessionDelegate: NSURLSessionTaskDelegate {
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse, newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {
         
@@ -87,7 +87,7 @@ extension BMSUrlSessionDelegate: NSURLSessionTaskDelegate {
 
 // MARK: Data delegate
 
-extension BMSUrlSessionDelegate: NSURLSessionDataDelegate {
+extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
     
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
         
@@ -95,11 +95,11 @@ extension BMSUrlSessionDelegate: NSURLSessionDataDelegate {
             (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
         }
         
-        if BMSUrlSession.isAuthorizationManagerRequired(response) {
+        if BMSURLSession.isAuthorizationManagerRequired(response) {
             
-            // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSUrlSession.
+            // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSURLSession.
             let originalRequest = dataTask.originalRequest!.mutableCopy() as! NSMutableURLRequest
-            BMSUrlSession.handleAuthorizationChallenge(session, request: originalRequest, handleFailure: callParentDelegate, originalTask: self.originalTask)
+            BMSURLSession.handleAuthorizationChallenge(session, request: originalRequest, handleFailure: callParentDelegate, originalTask: self.originalTask)
         }
         else {
             callParentDelegate()
