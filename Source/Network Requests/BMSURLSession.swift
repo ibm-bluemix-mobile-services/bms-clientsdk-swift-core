@@ -20,13 +20,13 @@ public typealias BMSDataTaskCompletionHandler = (NSData?, NSURLResponse?, NSErro
 public struct BMSURLSession {
 
     
-    internal let configuration: NSURLSessionConfiguration
+    private let configuration: NSURLSessionConfiguration
     
-    internal let delegate: NSURLSessionDelegate?
+    private let delegate: NSURLSessionDelegate?
     
-    internal let delegateQueue: NSOperationQueue?
+    private let delegateQueue: NSOperationQueue?
     
-    static let logger = Logger.logger(forName: Logger.bmsLoggerPrefix + "urlSession")
+    private static let logger = Logger.logger(forName: Logger.bmsLoggerPrefix + "urlSession")
     
     
     
