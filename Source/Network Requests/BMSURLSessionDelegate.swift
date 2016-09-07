@@ -17,6 +17,8 @@
 
 
 
+// MARK: BMSURLSessionDelegate (Swift 3)
+
 #if swift(>=3.0)
     
 
@@ -151,6 +153,8 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
 #else
 
     
+
+// MARK: BMSURLSessionDelegate (Swift 2)
 
 internal class BMSURLSessionDelegate: NSObject {
     
