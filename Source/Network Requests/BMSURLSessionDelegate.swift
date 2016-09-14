@@ -17,7 +17,7 @@
 
 
 
-// MARK: BMSURLSessionDelegate (Swift 3)
+// MARK: - BMSURLSessionDelegate (Swift 3)
 
 #if swift(>=3.0)
     
@@ -42,7 +42,7 @@ internal class BMSURLSessionDelegate: NSObject {
     
     
     
-// MARK: Session delegate
+// MARK: - Session delegate
     
 extension BMSURLSessionDelegate: URLSessionDelegate {
     
@@ -64,7 +64,7 @@ extension BMSURLSessionDelegate: URLSessionDelegate {
     
     
 
-// MARK: Task delegate
+// MARK: - Task delegate
 
 extension BMSURLSessionDelegate: URLSessionTaskDelegate {
     
@@ -104,25 +104,31 @@ extension BMSURLSessionDelegate: URLSessionTaskDelegate {
 
 
 
-// MARK: Data delegate
+// MARK: - Data delegate
 
 extension BMSURLSessionDelegate: URLSessionDataDelegate {
     
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: (URLSession.ResponseDisposition) -> Void) {
         
-        func callParentDelegate() {
-            (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
-        }
-        
         if BMSURLSession.isAuthorizationManagerRequired(for: response) {
             
             // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSURLSession.
             let originalRequest = dataTask.originalRequest!
-            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, handleFailure: callParentDelegate, originalTask: self.originalTask)
+            
+            // Resend the original request with the "Authorization" header added
+            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
+                
+                if let taskWithAuthorization = urlSessionTask {
+                    taskWithAuthorization.resume()
+                }
+                else {
+                    (self.parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
+                }
+            })
         }
         else {
-            callParentDelegate()
+            (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
         }
     }
     
@@ -154,7 +160,7 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
 
     
 
-// MARK: BMSURLSessionDelegate (Swift 2)
+// MARK: - BMSURLSessionDelegate (Swift 2)
 
 internal class BMSURLSessionDelegate: NSObject {
     
@@ -175,7 +181,7 @@ internal class BMSURLSessionDelegate: NSObject {
     
     
     
-// MARK: Session Delegate
+// MARK: - Session Delegate
     
 extension BMSURLSessionDelegate: NSURLSessionDelegate {
     
@@ -197,7 +203,7 @@ extension BMSURLSessionDelegate: NSURLSessionDelegate {
 
 
 
-// MARK: Task delegate
+// MARK: - Task delegate
 
 extension BMSURLSessionDelegate: NSURLSessionTaskDelegate {
     
@@ -229,24 +235,28 @@ extension BMSURLSessionDelegate: NSURLSessionTaskDelegate {
 
 
 
-// MARK: Data delegate
+// MARK: - Data delegate
 
 extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
     
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
         
-        func callParentDelegate() {
-            (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
-        }
-        
         if BMSURLSession.isAuthorizationManagerRequired(response) {
             
             // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSURLSession.
             let originalRequest = dataTask.originalRequest!.mutableCopy() as! NSMutableURLRequest
-            BMSURLSession.handleAuthorizationChallenge(session, request: originalRequest, handleFailure: callParentDelegate, originalTask: self.originalTask)
+            BMSURLSession.handleAuthorizationChallenge(session, request: originalRequest, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
+                
+                if let taskWithAuthorization = urlSessionTask {
+                    taskWithAuthorization.resume()
+                }
+                else {
+                    (self.parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
+                }
+            })
         }
         else {
-            callParentDelegate()
+            (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
         }
     }
     

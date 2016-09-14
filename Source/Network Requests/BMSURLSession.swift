@@ -21,7 +21,7 @@ public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) ->
     
     
     
-// MARK: BMSURLSession (Swift 3)
+// MARK: - BMSURLSession (Swift 3)
 
     
 /**
@@ -64,7 +64,7 @@ public struct BMSURLSession {
     
     
     
-    // MARK: Data tasks
+    // MARK: - Data tasks
     
     /**
         Creates a task that retrieves the contents of the specified URL.
@@ -146,7 +146,7 @@ public struct BMSURLSession {
     
     
     
-    // MARK: Upload tasks
+    // MARK: - Upload tasks
     
     /**
         Creates a task that uploads data to the URL specified in the request object.
@@ -249,7 +249,7 @@ public struct BMSURLSession {
     
     
     
-    // MARK: Helpers
+    // MARK: - Helpers
     
     // Inject BMSSecurity and BMSAnalytics into the request object by adding headers
     internal static func prepare(request: URLRequest) -> URLRequest {
@@ -285,8 +285,10 @@ public struct BMSURLSession {
     }
     
     
-    // Handle the challenge with AuthorizationManager from BMSSecurity
-    internal static func handleAuthorizationChallenge(session urlSession: URLSession, request: URLRequest, handleFailure: () -> Void, originalTask: BMSURLSessionTaskType) {
+    // Handle the challenge with AuthorizationManager from BMSSecurity.
+    // If authentication is successful, a new URLSessionTask is generated.
+    // This new task is the same as the original task, but now with the "Authorization" header needed to complete the request successfully.
+    internal static func handleAuthorizationChallenge(session urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType, handleTask: (URLSessionTask?) -> Void){
         
         let authManager = BMSClient.sharedInstance.authorizationManager
         let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
@@ -302,31 +304,31 @@ public struct BMSURLSession {
                     request.setValue(authHeader, forHTTPHeaderField: "Authorization")
                 }
                 
-                // Figure out the original URLSessionTask created by the user, and resend it
+                // Figure out the original URLSessionTask created by the user, and pass it back to the completionHandler
                 switch originalTask {
                     
                 case .dataTask:
-                    urlSession.dataTask(with: request).resume()
+                    handleTask(urlSession.dataTask(with: request))
                     
                 case .dataTaskWithCompletionHandler(let completionHandler):
-                    urlSession.dataTask(with: request, completionHandler: completionHandler).resume()
+                    handleTask(urlSession.dataTask(with: request, completionHandler: completionHandler))
                     
                 case .uploadTaskWithFile(let file):
-                    urlSession.uploadTask(with: request, fromFile: file).resume()
+                    handleTask(urlSession.uploadTask(with: request, fromFile: file))
                     
                 case .uploadTaskWithData(let data):
-                    urlSession.uploadTask(with: request, from: data).resume()
+                    handleTask(urlSession.uploadTask(with: request, from: data))
                     
                 case .uploadTaskWithFileAndCompletionHandler(let file, let completionHandler):
-                    urlSession.uploadTask(with: request, fromFile: file, completionHandler: completionHandler).resume()
+                    handleTask(urlSession.uploadTask(with: request, fromFile: file, completionHandler: completionHandler))
                     
                 case .uploadTaskWithDataAndCompletionHandler(let data, let completionHandler):
-                    urlSession.uploadTask(with: request, from: data, completionHandler: completionHandler).resume()
+                    handleTask(urlSession.uploadTask(with: request, from: data, completionHandler: completionHandler))
                 }
             }
             else {
                 BMSURLSession.logger.error(message: "Authorization process failed. \nError: \(error). \nResponse: \(response).")
-                handleFailure()
+                handleTask(nil)
             }
         }
         authManager.obtainAuthorization(completionHandler: authCallback)
@@ -340,11 +342,16 @@ public struct BMSURLSession {
             
             if self.isAuthorizationManagerRequired(for: response) {
                 
-                func callParentCompletionHandler() {
-                    completionHandler(data, response, error)
-                }
-                
-                BMSURLSession.handleAuthorizationChallenge(session: urlSession, request: request, handleFailure: callParentCompletionHandler, originalTask: originalTask)
+                // Resend the original request with the "Authorization" header added
+                BMSURLSession.handleAuthorizationChallenge(session: urlSession, request: request, originalTask: originalTask, handleTask: { (urlSessionTask) in
+                    
+                    if let taskWithAuthorization = urlSessionTask {
+                        taskWithAuthorization.resume()
+                    }
+                    else {
+                        completionHandler(data, response, error)
+                    }
+                })
             }
             else {
                 completionHandler(data, response, error)
@@ -420,7 +427,7 @@ public struct BMSURLSession {
     
     
     
-    // MARK: Data tasks
+    // MARK: - Data tasks
     
     /**
         Creates a task that retrieves the contents of the specified URL.
@@ -503,7 +510,7 @@ public struct BMSURLSession {
     
     
     
-    // MARK: Upload tasks
+    // MARK: - Upload tasks
     
     /**
         Creates a task that uploads data to the URL specified in the request object.
@@ -606,7 +613,7 @@ public struct BMSURLSession {
     
     
     
-    // MARK: Helpers
+    // MARK: - Helpers
     
     // Inject BMSSecurity and BMSAnalytics into the request object by adding headers
     internal static func prepareRequest(request: NSURLRequest) -> NSURLRequest {
@@ -644,8 +651,10 @@ public struct BMSURLSession {
     }
     
     
-    // Handle the challenge with AuthorizationManager from BMSSecurity
-    internal static func handleAuthorizationChallenge(urlSession: NSURLSession, request: NSMutableURLRequest, handleFailure: () -> Void, originalTask: BMSURLSessionTaskType) {
+    // Handle the challenge with AuthorizationManager from BMSSecurity.
+    // If authentication is successful, a new NSURLSessionTask is generated.
+    // This new task is the same as the original task, but now with the "Authorization" header needed to complete the request successfully.
+    internal static func handleAuthorizationChallenge(urlSession: NSURLSession, request: NSMutableURLRequest, originalTask: BMSURLSessionTaskType, handleTask: (NSURLSessionTask?) -> Void) {
         
         let authManager = BMSClient.sharedInstance.authorizationManager
         let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
@@ -663,27 +672,27 @@ public struct BMSURLSession {
                 switch originalTask {
                     
                 case .dataTask:
-                    urlSession.dataTaskWithRequest(request).resume()
+                    handleTask(urlSession.dataTaskWithRequest(request))
                     
                 case .dataTaskWithCompletionHandler(let completionHandler):
-                    urlSession.dataTaskWithRequest(request, completionHandler: completionHandler).resume()
+                    handleTask(urlSession.dataTaskWithRequest(request, completionHandler: completionHandler))
                     
                 case .uploadTaskWithFile(let file):
-                    urlSession.uploadTaskWithRequest(request, fromFile: file).resume()
+                    handleTask(urlSession.uploadTaskWithRequest(request, fromFile: file))
                     
                 case .uploadTaskWithData(let data):
-                    urlSession.uploadTaskWithRequest(request, fromData: data).resume()
+                    handleTask(urlSession.uploadTaskWithRequest(request, fromData: data))
                     
                 case .uploadTaskWithFileAndCompletionHandler(let file, let completionHandler):
-                    urlSession.uploadTaskWithRequest(request, fromFile: file, completionHandler: completionHandler).resume()
+                    handleTask(urlSession.uploadTaskWithRequest(request, fromFile: file, completionHandler: completionHandler))
                     
                 case .uploadTaskWithDataAndCompletionHandler(let data, let completionHandler):
-                    urlSession.uploadTaskWithRequest(request, fromData: data, completionHandler: completionHandler).resume()
+                    handleTask(urlSession.uploadTaskWithRequest(request, fromData: data, completionHandler: completionHandler))
                 }
             }
             else {
                 BMSURLSession.logger.error("Authorization process failed. \nError: \(error). \nResponse: \(response).")
-                handleFailure()
+                handleTask(nil)
             }
         }
         authManager.obtainAuthorization(completionHandler: authCallback)
@@ -697,12 +706,16 @@ public struct BMSURLSession {
             
             if self.isAuthorizationManagerRequired(response) {
                 
-                func callParentCompletionHandler() {
-                    completionHandler(data, response, error)
-                }
-                
                 let originalRequest = request.mutableCopy() as! NSMutableURLRequest
-                BMSURLSession.handleAuthorizationChallenge(urlSession, request: originalRequest, handleFailure: callParentCompletionHandler, originalTask: originalTask)
+                BMSURLSession.handleAuthorizationChallenge(urlSession, request: originalRequest, originalTask: originalTask, handleTask: { (urlSessionTask) in
+                    
+                    if let taskWithAuthorization = urlSessionTask {
+                        taskWithAuthorization.resume()
+                    }
+                    else {
+                        completionHandler(data, response, error)
+                    }
+                })
             }
             else {
                 completionHandler(data, response, error)
