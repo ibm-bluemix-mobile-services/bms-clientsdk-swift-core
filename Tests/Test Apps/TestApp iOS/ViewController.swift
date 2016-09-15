@@ -19,144 +19,104 @@ import BMSCore
 class ViewController: UIViewController, UITextFieldDelegate {
 
     
-    @IBOutlet var responseLabel: UITextView!
     @IBOutlet var resourceUrl: UITextField!
-    @IBOutlet var httpMethod: UITextField!
+    @IBOutlet var httpMethodPicker: UIPickerView!
+    @IBOutlet var callbackPicker: UIPickerView!
+    @IBOutlet var progressBar: UIProgressView!
+    @IBOutlet var responseLabel: UITextView!
     
+    let callbackViewController = CallbackPickerViewController()
+    let httpMethodViewController = HttpMethodPickerViewController()
     
-	let logger = Logger.logger(forName: "TestAppiOS")
+    let logger = Logger.logger(forName: "TestAppiOS")
     
-    // Ignore the warning on the extraneous underscore in Swift 2. It is there for Swift 3.
-    @IBAction func sendRequestButtonPressed(_ sender: AnyObject) {
+    let imageFile = NSBundle.mainBundle().URLForResource("Andromeda", withExtension: "jpg")!
+    
+    var bmsUrlSession: BMSURLSession {
         
-        logSendButtonPressedEvent()
-        
-        var method: HttpMethod
-
-        #if swift(>=3.0)
-            
-            switch httpMethod.text!.lowercased() {
-            case "post":
-                method = HttpMethod.POST
-            case "put":
-                method = HttpMethod.PUT
-            case "delete":
-                method = HttpMethod.DELETE
-            case "trace":
-                method = HttpMethod.TRACE
-            case "head":
-                method = HttpMethod.HEAD
-            case "options":
-                method = HttpMethod.OPTIONS
-            case "connect":
-                method = HttpMethod.CONNECT
-            case "patch":
-                method = HttpMethod.PATCH
-            default:
-                method = HttpMethod.GET
-            }
-            
-        #else
-            
-            switch httpMethod.text!.lowercaseString {
-            case "post":
-            method = HttpMethod.POST
-            case "put":
-            method = HttpMethod.PUT
-            case "delete":
-            method = HttpMethod.DELETE
-            case "trace":
-            method = HttpMethod.TRACE
-            case "head":
-            method = HttpMethod.HEAD
-            case "options":
-            method = HttpMethod.OPTIONS
-            case "connect":
-            method = HttpMethod.CONNECT
-            case "patch":
-            method = HttpMethod.PATCH
-            default:
-            method = HttpMethod.GET
-            }
-
-        #endif
-        
-        let getRequest = Request(url: resourceUrl.text!, headers: nil, queryParameters: nil, method: method, timeout: 5.0)
-        #if swift(>=3.0)
-            getRequest.send(completionHandler: populateInterfaceWithResponseData)
-        #else
-            getRequest.sendWithCompletionHandler(populateInterfaceWithResponseData)
-        #endif
+        switch callbackViewController.callbackType {
+        case .delegate:
+            return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil)
+        case .completionHandler:
+            return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+        }
     }
     
     
-    private func populateInterfaceWithResponseData(response: Response?, error: NSError?) {
+    
+    @IBAction func sendDataTaskRequest(sender: UIButton) {
         
-        var responseLabelText = ""
-        
-        if let responseError = error {
-            responseLabelText = "ERROR: \(responseError.localizedDescription)"
-            #if swift(>=3.0)
-                logger.error(message: responseLabelText)
-            #else
-                logger.error(responseLabelText)
-            #endif
-        }
-        else if response != nil {
-            let status = response!.statusCode ?? 0
-            let headers = response!.headers ?? [:]
-            let responseText = response!.responseText ?? ""
-            
-            responseLabelText = "Status Code: \(status) \n\n"
-            responseLabelText += "Headers: \(headers) \n\n"
-            responseLabelText += "Response Text: \(responseText) \n\n"
+        guard let requestUrl = NSURL(string: resourceUrl.text!) else {
+            logger.error("Invalid URL")
+            return
         }
         
-        #if swift(>=3.0)
-            DispatchQueue.main.async(execute: {
-                self.responseLabel.text = responseLabelText
-            })
-        #else
-            dispatch_async(dispatch_get_main_queue(), {
-                self.responseLabel.text = responseLabelText
-            })
-        #endif
+        let request = NSMutableURLRequest(URL: requestUrl)
+        request.HTTPMethod = httpMethodViewController.httpMethod.rawValue
+        
+        switch callbackViewController.callbackType {
+        case .delegate:
+            bmsUrlSession.dataTaskWithRequest(request).resume()
+        case .completionHandler:
+            bmsUrlSession.dataTaskWithRequest(request, completionHandler: displayData).resume()
+        }
     }
     
     
-    private func logSendButtonPressedEvent() {
+    @IBAction func sendUploadTaskRequest(sender: UIButton) {
         
-        #if swift(>=3.0)
-            logger.debug(message: "Sending Request button pressed")
-        #else
-            logger.debug("Sending Request button pressed")
-        #endif
+        guard let requestUrl = NSURL(string: resourceUrl.text!) else {
+            logger.error("Invalid URL")
+            return
+        }
         
-        // NOTE: All of the methods below do nothing since the implementation (the BMSAnalytics framework) is not provided
-        // These method calls are just to confirm the existence of the APIs
+        let request = NSMutableURLRequest(URL: requestUrl)
+        request.HTTPMethod = httpMethodViewController.httpMethod.rawValue
         
-        let eventMetadata = ["buttonPressed": "send"]
+        switch callbackViewController.callbackType {
+        case .delegate:
+            bmsUrlSession.uploadTaskWithRequest(request, fromFile: imageFile).resume()
+        case .completionHandler:
+            bmsUrlSession.uploadTaskWithRequest(request, fromFile: imageFile, completionHandler: displayData).resume()
+        }
+    }
+    
+    
+    func displayData(data: NSData?, response: NSURLResponse?, error: NSError?) {
         
-        #if swift(>=3.0)
-            Analytics.log(metadata: eventMetadata)
-        #else
-            Analytics.log(eventMetadata)
-        #endif
-        
+        var answer = ""
+        if let response = response as? NSHTTPURLResponse {
+            answer += "Status code: \(response.statusCode)\n\n"
+        }
+        if data != nil {
+            answer += "Response Data: \(String(data: data!, encoding: NSUTF8StringEncoding)!))\n\n"
+        }
+        if error != nil {
+            answer += "Error:  \(error!)"
+        }
+        dispatch_async(dispatch_get_main_queue(), {
+            self.responseLabel.text = answer
+        })
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.callbackPicker.dataSource = callbackViewController
+        self.callbackPicker.delegate = callbackViewController
+        
+        self.httpMethodPicker.dataSource = httpMethodViewController
+        self.httpMethodPicker.delegate = httpMethodViewController
+        
+        self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
         responseLabel.layer.borderWidth = 1
     }
     
-    // Ignore the warning on the extraneous underscore in Swift 2. It is there for Swift 3.
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
     }
 
 }
-

@@ -45,6 +45,10 @@
 		924E0A9B1CB5766E00C2FEE2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 924E0A931CB5766E00C2FEE2 /* Main.storyboard */; };
 		924E0A9C1CB5766E00C2FEE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 924E0A961CB5766E00C2FEE2 /* Assets.xcassets */; };
 		924E0A9E1CB5766E00C2FEE2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924E0A981CB5766E00C2FEE2 /* ViewController.swift */; };
+		926061BF1D8AF91100A98083 /* URLSessionDelegateExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926061BE1D8AF91100A98083 /* URLSessionDelegateExample.swift */; };
+		926061C11D8B0BE800A98083 /* Andromeda.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 926061C01D8B0BE800A98083 /* Andromeda.jpg */; };
+		926061C31D8B3AB000A98083 /* CallbackPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926061C21D8B3AB000A98083 /* CallbackPickerViewController.swift */; };
+		926061C51D8B3AC000A98083 /* HttpMethodPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926061C41D8B3AC000A98083 /* HttpMethodPickerViewController.swift */; };
 		926679B91BF3D4E000F597C5 /* TestApp watchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestApp watchOS.app */; };
 		926679BD1BF4FBD300F597C5 /* BMSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		927DF2011C7CD7B900245647 /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2001C7CD7B900245647 /* RequestTests.swift */; };
@@ -195,6 +199,10 @@
 		924E0A961CB5766E00C2FEE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		924E0A971CB5766E00C2FEE2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		924E0A981CB5766E00C2FEE2 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		926061BE1D8AF91100A98083 /* URLSessionDelegateExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionDelegateExample.swift; sourceTree = "<group>"; };
+		926061C01D8B0BE800A98083 /* Andromeda.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Andromeda.jpg; sourceTree = "<group>"; };
+		926061C21D8B3AB000A98083 /* CallbackPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallbackPickerViewController.swift; sourceTree = "<group>"; };
+		926061C41D8B3AC000A98083 /* HttpMethodPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpMethodPickerViewController.swift; sourceTree = "<group>"; };
 		927DF2001C7CD7B900245647 /* RequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		927DF2031C7CF60600245647 /* BaseAppIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAppIdentity.swift; sourceTree = "<group>"; };
 		927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDeviceIdentity.swift; sourceTree = "<group>"; };
@@ -428,9 +436,11 @@
 			isa = PBXGroup;
 			children = (
 				924E0A901CB5766E00C2FEE2 /* AppDelegate.swift */,
-				924E0A981CB5766E00C2FEE2 /* ViewController.swift */,
+				926061BE1D8AF91100A98083 /* URLSessionDelegateExample.swift */,
 				924E0A931CB5766E00C2FEE2 /* Main.storyboard */,
-				924E0A911CB5766E00C2FEE2 /* LaunchScreen.storyboard */,
+				924E0A981CB5766E00C2FEE2 /* ViewController.swift */,
+				926061C21D8B3AB000A98083 /* CallbackPickerViewController.swift */,
+				926061C41D8B3AC000A98083 /* HttpMethodPickerViewController.swift */,
 				924E0A951CB5766E00C2FEE2 /* Resources */,
 			);
 			path = "TestApp iOS";
@@ -439,6 +449,8 @@
 		924E0A951CB5766E00C2FEE2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				924E0A911CB5766E00C2FEE2 /* LaunchScreen.storyboard */,
+				926061C01D8B0BE800A98083 /* Andromeda.jpg */,
 				924E0A961CB5766E00C2FEE2 /* Assets.xcassets */,
 				924E0A971CB5766E00C2FEE2 /* Info.plist */,
 			);
@@ -704,6 +716,7 @@
 				924E0A9A1CB5766E00C2FEE2 /* LaunchScreen.storyboard in Resources */,
 				924E0A9C1CB5766E00C2FEE2 /* Assets.xcassets in Resources */,
 				924E0A9B1CB5766E00C2FEE2 /* Main.storyboard in Resources */,
+				926061C11D8B0BE800A98083 /* Andromeda.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -951,8 +964,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				926061C51D8B3AC000A98083 /* HttpMethodPickerViewController.swift in Sources */,
+				926061BF1D8AF91100A98083 /* URLSessionDelegateExample.swift in Sources */,
 				924E0A9E1CB5766E00C2FEE2 /* ViewController.swift in Sources */,
 				924E0A991CB5766E00C2FEE2 /* AppDelegate.swift in Sources */,
+				926061C31D8B3AB000A98083 /* CallbackPickerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1067,6 +1083,7 @@
 				924E0A921CB5766E00C2FEE2 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		924E0A931CB5766E00C2FEE2 /* Main.storyboard */ = {
@@ -1089,7 +1106,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Tests/Test Apps/TestApp iOS/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ibm.mobilefirstplatform.clientsdk.swift.TestAppiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1106,7 +1123,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Tests/Test Apps/TestApp iOS/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ibm.mobilefirstplatform.clientsdk.swift.TestAppiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";

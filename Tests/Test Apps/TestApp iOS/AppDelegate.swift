@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     // Ignore the warning on the extraneous underscore in Swift 2. It is there for Swift 3.
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         let myBMSClient = BMSClient.sharedInstance
         myBMSClient.initialize(bluemixRegion: BMSClient.REGION_US_SOUTH)

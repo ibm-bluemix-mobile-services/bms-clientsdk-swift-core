@@ -24,43 +24,27 @@ class InterfaceController: WKInterfaceController {
     
     @IBAction func getRequestButtonPressed() {
         
-        let getRequest = Request(url: "http://httpbin.org/get", headers: nil, queryParameters: nil, method: HttpMethod.GET, timeout: 10.0)
+        let bmsUrlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
         
-        #if swift(>=3.0)
-            getRequest.send(completionHandler: { (response: Response?, error: NSError?) in
-                
-                var responseLabelText = ""
-                
-                if let responseError = error {
-                    responseLabelText = "ERROR: \(responseError.localizedDescription)"
-                }
-                else if response != nil {
-                    let status = response!.statusCode ?? 0
-                    responseLabelText = "Status: \(status) \n\n"
-                }
-                
-                DispatchQueue.main.async(execute: {
-                    self.responseLabel.setText(responseLabelText)
-                })
-            } )
-        #else
-            getRequest.sendWithCompletionHandler( { (response: Response?, error: NSError?) in
-                
-                var responseLabelText = ""
-                
-                if let responseError = error {
-                    responseLabelText = "ERROR: \(responseError.localizedDescription)"
-                }
-                else if response != nil {
-                    let status = response!.statusCode ?? 0
-                    responseLabelText = "Status: \(status) \n\n"
-                }
-                
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.responseLabel.setText(responseLabelText)
-                })
-            } )
-        #endif
+        let request = NSURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
+        let dataTask = bmsUrlSession.dataTaskWithRequest(request) { (_, response: NSURLResponse?, error: NSError?) in
+            
+            var responseLabelText = ""
+            
+            if let responseError = error {
+                responseLabelText = "ERROR: \(responseError.localizedDescription)"
+            }
+            else if let response = response as? NSHTTPURLResponse {
+                let status = response.statusCode ?? 0
+                responseLabelText = "Status: \(status) \n\n"
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.responseLabel.setText(responseLabelText)
+            })
+        }
+        
+        dataTask.resume()
     }
     
     private func logSendButtonPressedEvent() {
