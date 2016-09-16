@@ -168,6 +168,8 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         bmsDelegate.urlSession(URLSession(), dataTask: testDataTask, didReceive: authorizationResponse, completionHandler: {(_) in })
         
         self.waitForExpectations(timeout: 0.1, handler: nil)
+    
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
     
     
@@ -448,6 +450,8 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         bmsDelegate.URLSession(NSURLSession(), dataTask: testDataTask, didReceiveResponse: authorizationResponse, completionHandler: {(_) in })
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
     
     

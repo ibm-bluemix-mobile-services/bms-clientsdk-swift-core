@@ -146,6 +146,8 @@ class BMSUrlSessionTests: XCTestCase {
         XCTAssertNotNil(preparedRequest.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
         
         BaseRequest.requestAnalyticsData = nil
+    
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
     
     
@@ -652,6 +654,8 @@ class BMSUrlSessionTests: XCTestCase {
         XCTAssertNotNil(preparedRequest.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
         
         BaseRequest.requestAnalyticsData = nil
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
     
     
@@ -762,7 +766,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
             let httpResponse = response as! NSHTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
+            XCTAssertEqual(httpResponse.statusCode, 200, "fuck 1")
         }
         
         let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
@@ -772,7 +776,7 @@ class BMSUrlSessionTests: XCTestCase {
         BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
             
             if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
+                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask, "fuck 2")
             }
             else {
                 XCTFail("NSURLSessionTask should not be nil")
@@ -1015,9 +1019,11 @@ class BMSUrlSessionTests: XCTestCase {
         
         BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
         
+        let expectation = self.expectationWithDescription("Should reach original completion handler.")
+        
         func bmsCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
             
-            XCTFail("Should have started a new request rather than call the parent completion handler")
+            expectation.fulfill()
         }
         
         let originalTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(bmsCompletionHandler)
@@ -1025,6 +1031,8 @@ class BMSUrlSessionTests: XCTestCase {
         let testResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
         testCompletionHandler(nil, testResponse, nil)
+        
+        self.waitForExpectationsWithTimeout(5.0, handler: nil)
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
