@@ -18,7 +18,12 @@ public class Request: BaseRequest {
     // MARK: Properties (internal)
     
     internal var oauthFailCounter = 0
+    
+#if swift(>=3.0)
+    internal var savedRequestBody: Data?
+#else
     internal var savedRequestBody: NSData?
+#endif
     
     // MARK: Initializer
     
@@ -55,7 +60,7 @@ public class Request: BaseRequest {
         
         savedRequestBody = requestBody
         
-        let sendCompletionHandler : BmsCompletionHandler = {(response: Response?, error: NSError?) in
+        let sendCompletionHandler : BmsCompletionHandler = {(response: Response?, error: Error?) in
             
             guard error == nil else {
 				if let completionHandler = completionHandler{
@@ -71,7 +76,7 @@ public class Request: BaseRequest {
 			else {
                 self.oauthFailCounter += 1
                 if (response?.statusCode)! >= 400 {
-                    completionHandler?(response, NSError(domain: BMSCoreError.domain, code: BMSCoreError.ServerRespondedWithError.rawValue, userInfo: nil))
+                    completionHandler?(response, BMSCoreError.ServerRespondedWithError)
                 }
                 else {
                     completionHandler?(response, nil)
@@ -81,7 +86,7 @@ public class Request: BaseRequest {
             
             self.oauthFailCounter += 1
             
-            let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
+            let authCallback: BmsCompletionHandler = {(response: Response?, error:Error?) in
                 if error == nil {
                     if let myRequestBody = self.requestBody {
                         self.sendData(requestBody: myRequestBody, completionHandler: completionHandler)

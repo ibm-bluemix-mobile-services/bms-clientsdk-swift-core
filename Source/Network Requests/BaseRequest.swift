@@ -23,16 +23,16 @@ public enum HttpMethod: String {
 
 
 
+#if swift(>=3.0)
+    
+    
+
 // MARK: - BmsCompletionHandler
 
 /**
     The type of callback sent with BMS network requests
 */
-public typealias BmsCompletionHandler = (Response?, NSError?) -> Void
-
-
-
-#if swift(>=3.0)
+public typealias BmsCompletionHandler = (Response?, Error?) -> Void
 
     
     
@@ -234,8 +234,7 @@ public class BaseRequest: NSObject, URLSessionTaskDelegate {
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
             BaseRequest.logger.error(message: urlErrorMessage)
-            let malformedUrlError = NSError(domain: BMSCoreError.domain, code: BMSCoreError.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
-            completionHandler?(nil, malformedUrlError)
+            completionHandler?(nil, BMSCoreError.MalformedUrl)
         }
     }
     
@@ -252,7 +251,7 @@ public class BaseRequest: NSObject, URLSessionTaskDelegate {
             
             let networkResponse = Response(responseData: data, httpResponse: response as? HTTPURLResponse, isRedirect: self.allowRedirects)
 
-            callback?(networkResponse as Response, error)
+            callback?(networkResponse, error)
         }
         
         var requestUrl = url
@@ -263,15 +262,14 @@ public class BaseRequest: NSObject, URLSessionTaskDelegate {
                 // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
                 let urlErrorMessage = "Failed to append the query parameters to the resource url."
                 BaseRequest.logger.error(message: urlErrorMessage)
-                let malformedUrlError = NSError(domain: BMSCoreError.domain, code: BMSCoreError.MalformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
-                callback?(nil, malformedUrlError)
+                callback?(nil, BMSCoreError.MalformedUrl)
                 return
             }
             requestUrl = urlWithQueryParameters
         }
         
         // Build request
-        resourceUrl = String(requestUrl)
+        resourceUrl = String(describing: requestUrl)
         networkRequest.url = requestUrl
         networkRequest.httpMethod = httpMethod.rawValue
         networkRequest.allHTTPHeaderFields = headers
@@ -328,11 +326,11 @@ public class BaseRequest: NSObject, URLSessionTaskDelegate {
                           task: URLSessionTask,
                           willPerformHTTPRedirection response: HTTPURLResponse,
                           newRequest request: URLRequest,
-                          completionHandler: (URLRequest?) -> Void) {
+                          completionHandler: @escaping (URLRequest?) -> Void) {
         
         var redirectRequest: URLRequest?
         if allowRedirects {
-            BaseRequest.logger.debug(message: "Redirecting: " + String(session))
+            BaseRequest.logger.debug(message: "Redirecting: " + String(describing: session))
             redirectRequest = request
         }
         
@@ -344,6 +342,15 @@ public class BaseRequest: NSObject, URLSessionTaskDelegate {
 
 
 #else
+    
+    
+    
+// MARK: - BmsCompletionHandler
+
+/**
+    The type of callback sent with BMS network requests
+*/
+public typealias BmsCompletionHandler = (Response?, NSError?) -> Void
     
     
     

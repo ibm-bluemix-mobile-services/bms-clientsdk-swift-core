@@ -15,7 +15,7 @@
 /**
     These error codes indicate a failure that occurred within the BMSCore framework.
 */
-public enum BMSCoreError: Int {
+public enum BMSCoreError: Error {
     
     case MalformedUrl
     case ClientNotInitialized

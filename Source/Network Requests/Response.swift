@@ -22,16 +22,27 @@ public class Response {
     /// HTTP status of the response
     public let statusCode: Int?
     
+#if swift(>=3.0)
+    /// HTTP headers from the response
+    public let headers: [AnyHashable: Any]?
+#else
     /// HTTP headers from the response
     public let headers: [NSObject: AnyObject]?
+#endif
     
     /// The body of the response as a String.
     /// Returns nil if there is no body or an exception occurred when building the response string.
     public let responseText: String?
     
+#if swift(>=3.0)
+    /// The body of the response as NSData.
+    /// Returns nil if there is no body or if the response is not valid NSData.
+    public let responseData: Data?
+#else
     /// The body of the response as NSData.
     /// Returns nil if there is no body or if the response is not valid NSData.
     public let responseData: NSData?
+#endif
     
     /// Does the response contain a 2xx status code
     public let isSuccessful: Bool

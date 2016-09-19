@@ -90,7 +90,7 @@ public struct BMSURLSession {
         - parameter url:                The URL to retrieve data from.
         - parameter completionHandler:  The completion handler to call when the request is complete.
      */
-    public func dataTaskWithURL(_ url: URL, completionHandler: BMSDataTaskCompletionHandler) -> URLSessionDataTask {
+    public func dataTaskWithURL(_ url: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask {
         
         return dataTaskWithRequest(URLRequest(url: url), completionHandler: completionHandler)
     }
@@ -131,7 +131,7 @@ public struct BMSURLSession {
                                         such as the URL, cache policy, request type, and body data.
         - parameter completionHandler:  The completion handler to call when the request is complete.
      */
-    public func dataTaskWithRequest(_ request: URLRequest, completionHandler: BMSDataTaskCompletionHandler) -> URLSessionDataTask {
+    public func dataTaskWithRequest(_ request: URLRequest, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask {
         
         let bmsRequest = BMSURLSession.prepare(request: request)
         
@@ -184,7 +184,7 @@ public struct BMSURLSession {
         - parameter bodyData:           The body data for the request.
         - parameter completionHandler:  The completion handler to call when the request is complete.
      */
-    public func uploadTaskWithRequest(_ request: URLRequest, fromData bodyData: Data?, completionHandler: BMSDataTaskCompletionHandler) -> URLSessionUploadTask {
+    public func uploadTaskWithRequest(_ request: URLRequest, fromData bodyData: Data?, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.prepare(request: request)
         
@@ -234,7 +234,7 @@ public struct BMSURLSession {
         - parameter fileURL:            The location of the file to upload.
         - parameter completionHandler:  The completion handler to call when the request is complete.
      */
-    public func uploadTaskWithRequest(_ request: URLRequest, fromFile fileURL: URL, completionHandler: BMSDataTaskCompletionHandler) -> URLSessionUploadTask {
+    public func uploadTaskWithRequest(_ request: URLRequest, fromFile fileURL: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.prepare(request: request)
         
@@ -276,7 +276,7 @@ public struct BMSURLSession {
         let authManager = BMSClient.sharedInstance.authorizationManager
         
         if let response = response as? HTTPURLResponse,
-            let wwwAuthHeader = response.allHeaderFields["WWW-Authenticate"] as? String,
+            let wwwAuthHeader = response.allHeaderFields["Www-Authenticate"] as? String,
             authManager.isAuthorizationRequired(forStatusCode: response.statusCode, httpResponseAuthorizationHeader: wwwAuthHeader) {
             
             return true
@@ -288,12 +288,12 @@ public struct BMSURLSession {
     // Handle the challenge with AuthorizationManager from BMSSecurity.
     // If authentication is successful, a new URLSessionTask is generated.
     // This new task is the same as the original task, but now with the "Authorization" header needed to complete the request successfully.
-    internal static func handleAuthorizationChallenge(session urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType, handleTask: (URLSessionTask?) -> Void){
+    internal static func handleAuthorizationChallenge(session urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType, handleTask: @escaping (URLSessionTask?) -> Void){
         
         let authManager = BMSClient.sharedInstance.authorizationManager
-        let authCallback: BmsCompletionHandler = {(response: Response?, error:NSError?) in
+        let authCallback: BmsCompletionHandler = {(response: Response?, error:Error?) in
             
-            if error == nil && response?.statusCode >= 200 && response?.statusCode < 300 {
+            if error == nil && response?.statusCode != nil && (response?.statusCode)! >= 200 && (response?.statusCode)! < 300 {
                 
                 // Resend the original request with the "Authorization" header
                 
@@ -336,11 +336,11 @@ public struct BMSURLSession {
     
     
     // Required to hook in challenge handling via AuthorizationManager
-    internal static func generateBmsCompletionHandler(from completionHandler: BMSDataTaskCompletionHandler, urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType) -> BMSDataTaskCompletionHandler {
+    internal static func generateBmsCompletionHandler(from completionHandler: @escaping BMSDataTaskCompletionHandler, urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType) -> BMSDataTaskCompletionHandler {
         
         return { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             
-            if self.isAuthorizationManagerRequired(for: response) {
+            if BMSURLSession.isAuthorizationManagerRequired(for: response) {
                 
                 // Resend the original request with the "Authorization" header added
                 BMSURLSession.handleAuthorizationChallenge(session: urlSession, request: request, originalTask: originalTask, handleTask: { (urlSessionTask) in
@@ -704,7 +704,7 @@ public struct BMSURLSession {
         
         return { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
-            if self.isAuthorizationManagerRequired(response) {
+            if BMSURLSession.isAuthorizationManagerRequired(response) {
                 
                 let originalRequest = request.mutableCopy() as! NSMutableURLRequest
                 BMSURLSession.handleAuthorizationChallenge(urlSession, request: originalRequest, originalTask: originalTask, handleTask: { (urlSessionTask) in
