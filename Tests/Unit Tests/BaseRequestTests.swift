@@ -34,7 +34,7 @@ class BaseRequestTests: XCTestCase {
     func testInitWithRelativeUrl() {
     
         #if swift(>=3.0)
-            BMSClient.sharedInstance.initializeWithBluemixAppRoute(bluemixAppRoute: "https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
+            BMSClient.sharedInstance.initialize(bluemixAppRoute: "https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
         #else
             BMSClient.sharedInstance.initialize(bluemixAppRoute: "https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.REGION_US_SOUTH)
         #endif
@@ -135,10 +135,9 @@ class BaseRequestTests: XCTestCase {
         
         #if swift(>=3.0)
             
-            request.send { (response: Response?, error: NSError?) -> Void in
+            request.send { (response: Response?, error: Error?) -> Void in
                 XCTAssertNil(response)
-                XCTAssertEqual(error?.domain, BMSCoreError.domain)
-                XCTAssertEqual(error?.code, BMSCoreError.MalformedUrl.rawValue)
+                XCTAssertEqual((error as? BMSCoreError), BMSCoreError.MalformedUrl)
                 
                 responseReceivedExpectation.fulfill()
             }
@@ -178,7 +177,7 @@ class BaseRequestTests: XCTestCase {
         
         #if swift(>=3.0)
             let url = URL(string: "http://example.com")
-            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+            let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
         #else
             let url = NSURL(string: "http://example.com")
             let finalUrl = String( BaseRequest.appendQueryParameters(parameters, toURL: url!)! )
@@ -194,7 +193,7 @@ class BaseRequestTests: XCTestCase {
         
         #if swift(>=3.0)
             let url = URL(string: "http://example.com")
-            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+            let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
             
             XCTAssertEqual(finalUrl, "http://example.com?key2=value2&key1=value1")
         #else
@@ -211,7 +210,7 @@ class BaseRequestTests: XCTestCase {
         
         #if swift(>=3.0)
             let url = URL(string: "http://example.com")
-            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+            let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
             
             XCTAssert(finalUrl.contains("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
         #else
@@ -228,7 +227,7 @@ class BaseRequestTests: XCTestCase {
         
         #if swift(>=3.0)
             let url = URL(string: "http://example.com?hardCodedKey=hardCodedValue")
-            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+            let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
             
             XCTAssertEqual(finalUrl, "http://example.com?hardCodedKey=hardCodedValue&key2=value2&key1=value1")
         #else
@@ -245,7 +244,7 @@ class BaseRequestTests: XCTestCase {
         
         #if swift(>=3.0)
             let url = URL(string: "http://example.com")
-            let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+            let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
             
             let numberOfAmpersands = finalUrl.components(separatedBy: "&")
         #else

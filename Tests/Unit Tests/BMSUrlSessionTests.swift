@@ -165,7 +165,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
         
-        let responseWithAuthorization = HTTPURLResponse(url: testUrl, statusCode: 403, httpVersion: "5", headerFields: ["WWW-Authenticate" : ""])!
+        let responseWithAuthorization = HTTPURLResponse(url: testUrl, statusCode: 403, httpVersion: "5", headerFields: ["WWW-Authenticate" : "asdf"])!
         XCTAssertTrue(BMSURLSession.isAuthorizationManagerRequired(for: responseWithAuthorization))
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
@@ -511,9 +511,11 @@ class BMSUrlSessionTests: XCTestCase {
         
         BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
         
+        let expectation = self.expectation(description: "Should reach original completion handler.")
+        
         func bmsCompletionHandler(data: Data?, response: URLResponse?, error: Error?) {
             
-            XCTFail("Should have started a new request rather than call the parent completion handler")
+            expectation.fulfill()
         }
         
         let originalTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(bmsCompletionHandler)
@@ -523,6 +525,8 @@ class BMSUrlSessionTests: XCTestCase {
         testCompletionHandler(nil, testResponse, nil)
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+        
+        self.waitForExpectations(timeout: 5.0, handler: nil)
     }
     
     
@@ -766,7 +770,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
             let httpResponse = response as! NSHTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200, "fuck 1")
+            XCTAssertEqual(httpResponse.statusCode, 200)
         }
         
         let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
@@ -776,7 +780,7 @@ class BMSUrlSessionTests: XCTestCase {
         BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
             
             if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask, "fuck 2")
+                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
             }
             else {
                 XCTFail("NSURLSessionTask should not be nil")
