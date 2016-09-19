@@ -19,9 +19,26 @@ import BMSCore
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    
+#if swift(>=3.0)
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+        let myBMSClient = BMSClient.sharedInstance
+        myBMSClient.initialize(bluemixRegion: BMSClient.REGION_US_SOUTH)
+        myBMSClient.defaultRequestTimeout = 10.0 // seconds
+        
+        Logger.logLevelFilter = LogLevel.Debug
+        Logger.sdkDebugLoggingEnabled = true
+        
+        return true
+    }
 
 
-    // Ignore the warning on the extraneous underscore in Swift 2. It is there for Swift 3.
+#else
+    
+
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         let myBMSClient = BMSClient.sharedInstance
@@ -33,6 +50,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-
+    
+    
+#endif
 }
 

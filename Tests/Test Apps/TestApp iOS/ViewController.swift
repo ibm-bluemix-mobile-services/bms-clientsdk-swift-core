@@ -179,9 +179,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
+    
+#if swift(>=3.0)
+    
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+    
+    
+#else
+    
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
     }
-
+    
+    
+#endif
 }
