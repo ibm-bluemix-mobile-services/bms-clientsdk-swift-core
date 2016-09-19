@@ -15,6 +15,131 @@
 import BMSCore
 
 
+
+#if swift(>=3.0)
+
+
+class URLSessionDelegateExample: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
+    
+    
+    var response: URLResponse?
+    var dataReceived = Data()
+    
+    let viewController: ViewController
+    
+    let logger = Logger.logger(forName: "TestAppiOS")
+    
+    
+    
+    init(viewController: ViewController) {
+        
+        self.viewController = viewController
+    }
+    
+    
+    
+    // MARK: NSURLSessionDelegate
+    
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+        
+        logger.error(message: "Error: \(error.debugDescription)\n")
+    }
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        logger.info(message: "\n")
+    }
+    
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        
+        logger.debug(message: "\n")
+    }
+    
+    
+    // MARK: NSURLSessionTaskDelegate
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+        
+        logger.debug(message: "\n")
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        logger.info(message: "\n")
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
+        
+        logger.debug(message: "\n")
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        
+        DispatchQueue.main.async {
+            let currentProgress = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
+            self.viewController.progressBar.setProgress(currentProgress, animated: true)
+        }
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        
+        logger.error(message: "Error: \(error.debugDescription)\n")
+        
+        self.viewController.displayData(dataReceived, response: self.response, error: nil)
+        if error != nil {
+            self.viewController.displayData(nil, response: nil, error: error)
+        }
+    }
+    
+    @available(iOS 10.0, *)
+    func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
+        
+        logger.debug(message: "\n")
+    }
+    
+    
+    // MARK: NSURLSessionDataDelegate
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        
+        logger.info(message: "Response: \(response)\n")
+        
+        self.response = response
+        self.viewController.displayData(nil, response: response, error: nil)
+        
+        completionHandler(URLSession.ResponseDisposition.allow)
+    }
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didBecome downloadTask: URLSessionDownloadTask) {
+        
+        logger.debug(message: "\n")
+    }
+    
+    @available(iOS 9.0, *)
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didBecome streamTask: URLSessionStreamTask) {
+     
+        logger.debug(message: "\n")
+    }
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        
+        // Turned off for tasks that download/upload a lot of data
+        //        logger.info("")
+        dataReceived.append(data)
+    }
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
+        
+        logger.debug(message: "\n")
+    }
+}
+
+
+
+#else
+
+
+
 class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate {
     
     
@@ -117,3 +242,6 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
         logger.debug("\n")
     }
 }
+
+
+#endif

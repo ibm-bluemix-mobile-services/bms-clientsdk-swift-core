@@ -24,25 +24,51 @@ class InterfaceController: WKInterfaceController {
     
     @IBAction func getRequestButtonPressed() {
         
-        let bmsUrlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
-        
-        let request = NSURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
-        let dataTask = bmsUrlSession.dataTaskWithRequest(request) { (_, response: NSURLResponse?, error: NSError?) in
+        #if swift(>=3.0)
             
-            var responseLabelText = ""
+            let bmsUrlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
             
-            if let responseError = error {
-                responseLabelText = "ERROR: \(responseError.localizedDescription)"
+            let request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
+            let dataTask = bmsUrlSession.dataTaskWithRequest(request) { (_, response: URLResponse?, error: Error?) in
+                
+                var responseLabelText = ""
+                
+                if let responseError = error {
+                    responseLabelText = "ERROR: \(responseError.localizedDescription)"
+                }
+                else if let response = response as? HTTPURLResponse {
+                    let status = response.statusCode
+                    responseLabelText = "Status: \(status) \n\n"
+                }
+                
+                DispatchQueue.main.async {
+                    self.responseLabel.setText(responseLabelText)
+                }
             }
-            else if let response = response as? NSHTTPURLResponse {
-                let status = response.statusCode ?? 0
-                responseLabelText = "Status: \(status) \n\n"
+            
+        #else
+            
+            let bmsUrlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+            
+            let request = NSURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
+            let dataTask = bmsUrlSession.dataTaskWithRequest(request) { (_, response: NSURLResponse?, error: NSError?) in
+                
+                var responseLabelText = ""
+                
+                if let responseError = error {
+                    responseLabelText = "ERROR: \(responseError.localizedDescription)"
+                }
+                else if let response = response as? NSHTTPURLResponse {
+                    let status = response.statusCode ?? 0
+                    responseLabelText = "Status: \(status) \n\n"
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.responseLabel.setText(responseLabelText)
+                })
             }
             
-            dispatch_async(dispatch_get_main_queue(), {
-                self.responseLabel.setText(responseLabelText)
-            })
-        }
+        #endif
         
         dataTask.resume()
     }
@@ -62,7 +88,7 @@ class InterfaceController: WKInterfaceController {
         // NOTE: All of the methods below do nothing since the implementation (the BMSAnalytics framework) is not provided
         // These method calls are just to confirm the existence of the APIs
         
-        let eventMetadata = ["buttonPressed": "GET Request"]
+        let eventMetadata = ["buttonPressed": "GET Request" as AnyObject]
         #if swift(>=3.0)
             Analytics.log(metadata: eventMetadata)
         #else
