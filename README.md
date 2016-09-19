@@ -65,19 +65,22 @@ Carthage currently is not supported for BMSCore in Xcode 8 beta. Please use Coco
 
 
 
-## Usage Examples (Swift 2.2)
+## Usage Examples
+
+### Swift 2.2
 
 ```Swift
 // Initialize BMSClient
 
-let appRoute = "https://greatapp.mybluemix.net"
+let appRoute = "https://myapp.mybluemix.net"
 let appGuid = "2fe35477-5410-4c87-1234-aca59511433b"
 let bluemixRegion = BMSClient.REGION_US_SOUTH
 
-BMSClient.sharedInstance
-	.initializeWithBluemixAppRoute(appRoute,
+BMSClient.sharedInstance.initialize(appRoute,
 	                               bluemixAppGUID: appGuid,
 	                               bluemixRegion: bluemixRegion)
+	                               
+let logger = Logger.logger(forName: "My Logger")
 
 // Make a network request
 
@@ -88,26 +91,55 @@ request.allHTTPHeaderFields = ["foo":"bar"]
 
 let dataTask = urlSession.dataTaskWithRequest(request) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
     if let httpResponse = response as? NSHTTPURLResponse {
-        print("Status code: \(httpResponse.statusCode)")
+        logger.info("Status code: \(httpResponse.statusCode)")
     }
     if data != nil, let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding) {
-        print("Response data: \(responseString)")
+        logger.info("Response data: \(responseString)")
     }
     if let error = error {
-        print("Error: \(error.debugDescription)")
+        logger.error("Error: \(error.debugDescription)")
     }
 }
-
-// Log some information
-
-let logger = Logger.loggerForName("FirstLogger")
-
-logger.debug("This is a debug message")
-logger.error("This is an error message")
-logger.info("This is an info message")
-logger.warn("This is a warning message")
-
 ```
+
+
+### Swift 3.0
+
+```Swift
+// Initialize BMSClient
+
+let appRoute = "https://myapp.mybluemix.net"
+let appGuid = "2fe35477-5410-4c87-1234-aca59511433b"
+let bluemixRegion = BMSClient.REGION_US_SOUTH
+
+BMSClient.sharedInstance.initialize(bluemixAppRoute: appRoute,
+	                            bluemixAppGUID: appGuid,
+	                            bluemixRegion: bluemixRegion)
+	                            
+let logger = Logger.logger(forName: "My Logger")
+
+// Make a network request
+
+let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+
+var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
+request.httpMethod = "GET"
+request.allHTTPHeaderFields = ["foo":"bar"]
+
+let dataTask = urlSession.dataTaskWithRequest(request) { (data: Data?, response: URLResponse?, error: Error?) in
+    if let httpResponse = response as? HTTPURLResponse {
+        logger.info(message: "Status code: \(httpResponse.statusCode)")
+    }
+    if data != nil, let responseString = String(data: data!, encoding: .utf8) {
+        logger.info(message: "Response data: \(responseString)")
+    }
+    if let error = error {
+        logger.error(message: "Error: \(error)")
+    }
+}
+```
+
+
 
 > By default the Bluemix Mobile Service SDK internal debug logging will not be printed to Xcode console. If you want to enable SDK debug logging output set the `Logger.sdkDebugLoggingEnabled` property to `true`.
 
