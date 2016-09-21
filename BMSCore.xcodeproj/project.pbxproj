@@ -59,13 +59,13 @@
 		927DF20A1C7CF60600245647 /* BaseUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2051C7CF60600245647 /* BaseUserIdentity.swift */; };
 		927DF20B1C7CF60600245647 /* BaseUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2051C7CF60600245647 /* BaseUserIdentity.swift */; };
 		927DF20C1C7CF63F00245647 /* BaseAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51C00E1C7625BC00023F37 /* BaseAuthorizationManager.swift */; };
-		929D46151D6659C8002192E3 /* BMSUrlSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D46141D6659C3002192E3 /* BMSUrlSession.swift */; };
-		929D46161D6659C9002192E3 /* BMSUrlSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D46141D6659C3002192E3 /* BMSUrlSession.swift */; };
+		929D46151D6659C8002192E3 /* BMSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D46141D6659C3002192E3 /* BMSURLSession.swift */; };
+		929D46161D6659C9002192E3 /* BMSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D46141D6659C3002192E3 /* BMSURLSession.swift */; };
 		92A60C0A1D831F6D005E0969 /* BMSUrlSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A60C091D831F6D005E0969 /* BMSUrlSessionTests.swift */; };
 		92A60C0C1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A60C0B1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift */; };
 		92A8DD3B1CEA2F6B0092417A /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
-		92BBA3A11D63B1F70026EC66 /* BMSUrlSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSUrlSessionDelegate.swift */; };
-		92BBA3A21D63B1F70026EC66 /* BMSUrlSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSUrlSessionDelegate.swift */; };
+		92BBA3A11D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */; };
+		92BBA3A21D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */; };
 		92ED06FD1C45AEC900E0BA1D /* LargeData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 92018A7C1C45AC380031C893 /* LargeData.txt */; };
 		A8DC446009D6586F8DB0A399 /* Pods_BMSCore_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E75E9EA9BBCD7E2F4FC7103 /* Pods_BMSCore_iOS.framework */; };
 		CECE3807C60FC48B9F835471 /* Pods_BMSCore_watchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE070372C5BAB5000E5BBD47 /* Pods_BMSCore_watchOS.framework */; };
@@ -207,12 +207,12 @@
 		927DF2031C7CF60600245647 /* BaseAppIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAppIdentity.swift; sourceTree = "<group>"; };
 		927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDeviceIdentity.swift; sourceTree = "<group>"; };
 		927DF2051C7CF60600245647 /* BaseUserIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseUserIdentity.swift; sourceTree = "<group>"; };
-		929D46141D6659C3002192E3 /* BMSUrlSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMSUrlSession.swift; sourceTree = "<group>"; };
+		929D46141D6659C3002192E3 /* BMSURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMSURLSession.swift; sourceTree = "<group>"; };
 		92A60C091D831F6D005E0969 /* BMSUrlSessionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSUrlSessionTests.swift; sourceTree = "<group>"; };
 		92A60C0B1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSUrlSessionDelegateTests.swift; sourceTree = "<group>"; };
 		92A6ACC11CB2CA2D00052C2C /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		92A8E4D61BBF2D9C00995FE8 /* BMSCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		92BBA3A01D63B1F70026EC66 /* BMSUrlSessionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSUrlSessionDelegate.swift; sourceTree = "<group>"; };
+		92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSURLSessionDelegate.swift; sourceTree = "<group>"; };
 		92F263F71B94EBB50063CC1D /* BMSCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F264011B94EBB60063CC1D /* BMSCore Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BMSCore Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9881D6CEA7A89D82EC905239 /* Pods-TestApp watchOS Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestApp watchOS Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestApp watchOS Extension/Pods-TestApp watchOS Extension.debug.xcconfig"; sourceTree = "<group>"; };
@@ -346,8 +346,8 @@
 				92018A4B1C45AA890031C893 /* BaseRequest.swift */,
 				92018A4A1C45AA890031C893 /* Request.swift */,
 				92018A4C1C45AA890031C893 /* Response.swift */,
-				929D46141D6659C3002192E3 /* BMSUrlSession.swift */,
-				92BBA3A01D63B1F70026EC66 /* BMSUrlSessionDelegate.swift */,
+				929D46141D6659C3002192E3 /* BMSURLSession.swift */,
+				92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */,
 			);
 			name = "Network Requests";
 			path = "Source/Network Requests";
@@ -991,13 +991,13 @@
 				92018A5D1C45AAD60031C893 /* Error.swift in Sources */,
 				92018A571C45AAC40031C893 /* AuthorizationManager.swift in Sources */,
 				92018A591C45AACA0031C893 /* BaseRequest.swift in Sources */,
-				929D46151D6659C8002192E3 /* BMSUrlSession.swift in Sources */,
+				929D46151D6659C8002192E3 /* BMSURLSession.swift in Sources */,
 				92018A581C45AAC70031C893 /* Response.swift in Sources */,
 				922CD63F1CA04DDE002E29C0 /* UserIdentity.swift in Sources */,
 				92018A5A1C45AACC0031C893 /* Request.swift in Sources */,
 				927DF20B1C7CF60600245647 /* BaseUserIdentity.swift in Sources */,
 				927DF2091C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */,
-				92BBA3A21D63B1F70026EC66 /* BMSUrlSessionDelegate.swift in Sources */,
+				92BBA3A21D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */,
 				927DF2071C7CF60600245647 /* BaseAppIdentity.swift in Sources */,
 				922CD6401CA04DE1002E29C0 /* AppIdentity.swift in Sources */,
 			);
@@ -1013,13 +1013,13 @@
 				927DF2061C7CF60600245647 /* BaseAppIdentity.swift in Sources */,
 				92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */,
 				92018A501C45AA890031C893 /* Request.swift in Sources */,
-				929D46161D6659C9002192E3 /* BMSUrlSession.swift in Sources */,
+				929D46161D6659C9002192E3 /* BMSURLSession.swift in Sources */,
 				92018A521C45AA890031C893 /* Response.swift in Sources */,
 				3A9CDF161C973E5F00890633 /* DeviceIdentity.swift in Sources */,
 				92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */,
 				3A9CDF141C973E4800890633 /* AppIdentity.swift in Sources */,
 				927DF2081C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */,
-				92BBA3A11D63B1F70026EC66 /* BMSUrlSessionDelegate.swift in Sources */,
+				92BBA3A11D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */,
 				92018A2A1C45A7720031C893 /* Error.swift in Sources */,
 				FD51C00F1C7625BC00023F37 /* BaseAuthorizationManager.swift in Sources */,
 			);

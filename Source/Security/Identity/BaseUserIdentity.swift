@@ -12,28 +12,34 @@
 */
 
 /// This class represents the base user identity class, with default methods and keys
-public class BaseUserIdentity : UserIdentity {
-    public static let ID = "id"
-    public static let AUTH_BY = "authBy"
-    public static let DISPLAY_NAME = "displayName"
+public class BaseUserIdentity: UserIdentity {
+    
+    
+    public struct Key {
+        
+        public static let ID = "id"
+        public static let authorizedBy = "authBy"
+        public static let displayName = "displayName"
+    }
+    
 	
     public private(set) var jsonData : [String:String] = ([:])
     
-	public var id:String? {
+	public var ID: String? {
 		get {
-			return jsonData[BaseUserIdentity.ID]
+			return jsonData[BaseUserIdentity.Key.ID]
 		}
 	}
 	
-	public var authBy:String? {
+	public var authorizedBy: String? {
 		get {
-			return jsonData[BaseUserIdentity.AUTH_BY]
+			return jsonData[BaseUserIdentity.Key.authorizedBy]
 		}
 	}
 	
-	public var displayName:String? {
+	public var displayName: String? {
 		get {
-			return jsonData[BaseUserIdentity.DISPLAY_NAME]
+			return jsonData[BaseUserIdentity.Key.displayName]
 		}
 	}
 	

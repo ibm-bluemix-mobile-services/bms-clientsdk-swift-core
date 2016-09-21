@@ -96,12 +96,25 @@ class ViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        switch callbackViewController.callbackType {
-        case .delegate:
-            bmsUrlSession.dataTaskWithRequest(request!).resume()
-        case .completionHandler:
-            bmsUrlSession.dataTaskWithRequest(request!, completionHandler: displayData).resume()
-        }
+        #if swift(>=3.0)
+        
+            switch callbackViewController.callbackType {
+            case .delegate:
+                bmsUrlSession.dataTask(with: request!).resume()
+            case .completionHandler:
+                bmsUrlSession.dataTask(with: request!, completionHandler: displayData).resume()
+            }
+        
+        #else
+        
+            switch callbackViewController.callbackType {
+            case .delegate:
+                bmsUrlSession.dataTaskWithRequest(request!).resume()
+            case .completionHandler:
+                bmsUrlSession.dataTaskWithRequest(request!, completionHandler: displayData).resume()
+            }
+        
+        #endif
     }
     
     
@@ -111,12 +124,25 @@ class ViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        switch callbackViewController.callbackType {
-        case .delegate:
-            bmsUrlSession.uploadTaskWithRequest(request!, fromFile: imageFile).resume()
-        case .completionHandler:
-            bmsUrlSession.uploadTaskWithRequest(request!, fromFile: imageFile, completionHandler: displayData).resume()
-        }
+        #if swift(>=3.0)
+        
+            switch callbackViewController.callbackType {
+            case .delegate:
+                bmsUrlSession.uploadTask(with: request!, fromFile: imageFile).resume()
+            case .completionHandler:
+                bmsUrlSession.uploadTask(with: request!, fromFile: imageFile, completionHandler: displayData).resume()
+            }
+        
+        #else
+        
+            switch callbackViewController.callbackType {
+            case .delegate:
+                bmsUrlSession.uploadTaskWithRequest(request!, fromFile: imageFile).resume()
+            case .completionHandler:
+                bmsUrlSession.uploadTaskWithRequest(request!, fromFile: imageFile, completionHandler: displayData).resume()
+            }
+        
+        #endif
     }
     
     

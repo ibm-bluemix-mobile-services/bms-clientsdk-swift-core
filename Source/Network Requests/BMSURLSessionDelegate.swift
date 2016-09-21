@@ -245,7 +245,7 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
             
             // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSURLSession.
             let originalRequest = dataTask.originalRequest!.mutableCopy() as! NSMutableURLRequest
-            BMSURLSession.handleAuthorizationChallenge(session, request: originalRequest, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
+            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
                 
                 if let taskWithAuthorization = urlSessionTask {
                     taskWithAuthorization.resume()

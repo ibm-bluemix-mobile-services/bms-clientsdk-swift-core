@@ -22,11 +22,7 @@ class RequestTests: XCTestCase {
     func testSendWithCompletionHandlerWithNoRequestBody() {
         let request = Request(url: "http://example.com", method: HttpMethod.GET)
         
-        #if swift(>=3.0)
-            request.send(completionHandler: nil)
-        #else
-            request.sendWithCompletionHandler(nil)
-        #endif
+        request.send(completionHandler: nil)
         
         XCTAssertNil(request.savedRequestBody)
         XCTAssertEqual(request.oauthFailCounter, 0)
@@ -34,16 +30,16 @@ class RequestTests: XCTestCase {
     
     
     func testSendWithCompletionHandlerWithRequestBody() {
-        let request = Request(url: "http://example.com", headers:[Request.CONTENT_TYPE: "text/plain"], queryParameters: ["someKey": "someValue"], method: HttpMethod.GET, timeout: 10.0)
+        let request = Request(url: "http://example.com", method: HttpMethod.GET, headers: [Request.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], timeout: 10.0)
         
         #if swift(>=3.0)
             let requestBody = "request data".data(using: .utf8)!
             // sendData() should populate the the BaseRequest.requestBody parameter, which gets assigned to savedRequestBody
-            request.sendData(requestBody: requestBody, completionHandler: nil)
+            request.send(requestBody: requestBody, completionHandler: nil)
         #else
             let requestBody = "request data".dataUsingEncoding(NSUTF8StringEncoding)!
             // sendData() should populate the the BaseRequest.requestBody parameter, which gets assigned to savedRequestBody
-            request.sendData(requestBody, completionHandler: nil)
+            request.send(requestBody: requestBody, completionHandler: nil)
         #endif
         
         XCTAssertEqual(request.savedRequestBody, requestBody)

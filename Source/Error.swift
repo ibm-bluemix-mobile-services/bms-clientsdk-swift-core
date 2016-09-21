@@ -17,13 +17,13 @@
     
     
 /**
-    These error codes indicate a failure that occurred within the BMSCore framework.
+    Indicates a failure that occurred within the BMSCore framework.
 */
 public enum BMSCoreError: Error {
     
-    case MalformedUrl
-    case ClientNotInitialized
-	case ServerRespondedWithError
+    case malformedUrl
+    case clientNotInitialized
+	case serverRespondedWithError
     
     static let domain = "com.ibm.mobilefirstplatform.clientsdk.swift.bmscore"
 }
@@ -34,13 +34,13 @@ public enum BMSCoreError: Error {
     
 
 /**
-    These error codes indicate a failure that occurred within the BMSCore framework.
+    Indicates a failure that occurred within the BMSCore framework.
 */
 public enum BMSCoreError: Int, ErrorType {
     
-    case MalformedUrl
-    case ClientNotInitialized
-    case ServerRespondedWithError
+    case malformedUrl
+    case clientNotInitialized
+    case serverRespondedWithError
     
     static let domain = "com.ibm.mobilefirstplatform.clientsdk.swift.bmscore"
 }

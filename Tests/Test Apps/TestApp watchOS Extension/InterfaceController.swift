@@ -29,7 +29,7 @@ class InterfaceController: WKInterfaceController {
             let bmsUrlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
             
             let request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
-            let dataTask = bmsUrlSession.dataTaskWithRequest(request) { (_, response: URLResponse?, error: Error?) in
+            let dataTask = bmsUrlSession.dataTask(with: request) { (_, response: URLResponse?, error: Error?) in
                 
                 var responseLabelText = ""
                 

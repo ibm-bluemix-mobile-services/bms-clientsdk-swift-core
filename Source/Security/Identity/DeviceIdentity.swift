@@ -14,9 +14,9 @@
 
 public protocol DeviceIdentity {
     
-	var id:String? {get}
-	var OS:String? {get}
-	var OSVersion:String? {get}
-	var model:String? {get}
+	var ID: String? { get }
+	var OS: String? { get }
+	var OSVersion: String? { get }
+	var model: String? { get }
     
 }

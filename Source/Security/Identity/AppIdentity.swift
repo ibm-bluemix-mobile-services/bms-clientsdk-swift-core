@@ -12,7 +12,8 @@
 */
 
 
-public protocol AppIdentity{
-	var id:String? {get}
-	var version:String? {get}
+public protocol AppIdentity {
+    
+	var ID: String? { get }
+	var version: String? { get }
 }

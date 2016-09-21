@@ -12,33 +12,37 @@
 */
 
 /// This class represents the base app identity class, with default methods and keys
-public class BaseAppIdentity : AppIdentity{
+public class BaseAppIdentity: AppIdentity {
 
-    public static let ID = "id"
-
-    public static let VERSION = "version"
     
-    public internal(set) var jsonData : [String:String] = ([:])
+    public struct Key {
+        
+        public static let ID = "id"
+        public static let version = "version"
+    }
     
-	public var id:String? {
-		get{
-			return jsonData[BaseAppIdentity.ID]
+    
+    public internal(set) var jsonData: [String:String] = ([:])
+    
+	public var ID: String? {
+		get {
+			return jsonData[BaseAppIdentity.Key.ID]
 		}
 	}
-	public var version:String? {
-		get{
-			return jsonData[BaseAppIdentity.VERSION]
+	public var version: String? {
+		get {
+			return jsonData[BaseAppIdentity.Key.version]
 		}
 	}
 	
 	public init() {
         
         #if swift(>=3.0)
-            jsonData[BaseAppIdentity.ID] = Bundle(for:object_getClass(self)).bundleIdentifier;
-            jsonData[BaseAppIdentity.VERSION] = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String;
+            jsonData[BaseAppIdentity.Key.ID] = Bundle(for:object_getClass(self)).bundleIdentifier
+            jsonData[BaseAppIdentity.Key.version] = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         #else
-            jsonData[BaseAppIdentity.ID] = NSBundle(forClass:object_getClass(self)).bundleIdentifier;
-            jsonData[BaseAppIdentity.VERSION] = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String;
+            jsonData[BaseAppIdentity.Key.ID] = NSBundle(forClass:object_getClass(self)).bundleIdentifier
+            jsonData[BaseAppIdentity.Key.version] = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String
         #endif
         
 	}

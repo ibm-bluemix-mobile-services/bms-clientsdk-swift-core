@@ -26,8 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         let myBMSClient = BMSClient.sharedInstance
-        myBMSClient.initialize(bluemixRegion: BMSClient.REGION_US_SOUTH)
-        myBMSClient.defaultRequestTimeout = 10.0 // seconds
+        myBMSClient.initialize(bluemixRegion: BMSClient.Region.usSouth)
+        myBMSClient.requestTimeout = 10.0 // seconds
         
         Logger.logLevelFilter = LogLevel.Debug
         Logger.sdkDebugLoggingEnabled = true
@@ -42,8 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         let myBMSClient = BMSClient.sharedInstance
-        myBMSClient.initialize(bluemixRegion: BMSClient.REGION_US_SOUTH)
-        myBMSClient.defaultRequestTimeout = 10.0 // seconds
+        myBMSClient.initialize(bluemixRegion: BMSClient.Region.usSouth)
+        myBMSClient.requestTimeout = 10.0 // seconds
         
         Logger.logLevelFilter = LogLevel.Debug
         Logger.sdkDebugLoggingEnabled = true

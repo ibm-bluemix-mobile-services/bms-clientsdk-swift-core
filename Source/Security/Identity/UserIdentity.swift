@@ -12,10 +12,10 @@
 */
 
 
-public protocol UserIdentity{
+public protocol UserIdentity {
 
-	var id:String? {get}
-	var authBy:String? {get}
-	var displayName:String? {get}
+	var ID: String? { get }
+	var authorizedBy: String? { get }
+	var displayName: String? { get }
 
 }

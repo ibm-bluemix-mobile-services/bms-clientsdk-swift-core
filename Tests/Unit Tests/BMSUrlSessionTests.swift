@@ -34,8 +34,8 @@ class BMSUrlSessionTests: XCTestCase {
         
         let request = URLRequest(url: testUrl)
         
-        let dataTaskWithUrl: URLSessionDataTask = bmsSession.dataTaskWithURL(testUrl)
-        let dataTaskWithRequest: URLSessionDataTask = bmsSession.dataTaskWithRequest(request)
+        let dataTaskWithUrl: URLSessionDataTask = bmsSession.dataTask(with: testUrl)
+        let dataTaskWithRequest: URLSessionDataTask = bmsSession.dataTask(with: request)
         
         // Make sure request has some BMS stuff in it
         XCTAssertNotNil(dataTaskWithUrl.originalRequest?.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
@@ -51,8 +51,8 @@ class BMSUrlSessionTests: XCTestCase {
         
         func testCompletionHandler(data: Data?, response: URLResponse?, error: Error?) { }
         
-        let dataTaskWithUrl: URLSessionDataTask = bmsSession.dataTaskWithURL(testUrl, completionHandler: testCompletionHandler)
-        let dataTaskWithRequest: URLSessionDataTask = bmsSession.dataTaskWithRequest(request, completionHandler: testCompletionHandler)
+        let dataTaskWithUrl: URLSessionDataTask = bmsSession.dataTask(with: testUrl, completionHandler: testCompletionHandler)
+        let dataTaskWithRequest: URLSessionDataTask = bmsSession.dataTask(with: request, completionHandler: testCompletionHandler)
         
         // Make sure request has some BMS stuff in it
         XCTAssertNotNil(dataTaskWithUrl.originalRequest?.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
@@ -69,7 +69,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         let request = URLRequest(url: testUrl)
         
-        let uploadTaskFromData: URLSessionUploadTask = bmsSession.uploadTaskWithRequest(request, fromData: Data())
+        let uploadTaskFromData: URLSessionUploadTask = bmsSession.uploadTask(with: request, from: Data())
         
         // Make sure request has some BMS stuff in it
         XCTAssertNotNil(uploadTaskFromData.originalRequest?.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
@@ -84,7 +84,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         func testCompletionHandler(data: Data?, response: URLResponse?, error: Error?) { }
         
-        let uploadTaskFromData: URLSessionUploadTask = bmsSession.uploadTaskWithRequest(request, fromData: Data(), completionHandler: testCompletionHandler)
+        let uploadTaskFromData: URLSessionUploadTask = bmsSession.uploadTask(with: request, from: Data(), completionHandler: testCompletionHandler)
         
         // Make sure request has some BMS stuff in it
         XCTAssertNotNil(uploadTaskFromData.originalRequest?.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
@@ -97,7 +97,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         let request = URLRequest(url: testUrl)
         
-        let uploadTaskFromFile: URLSessionUploadTask = bmsSession.uploadTaskWithRequest(request, fromFile: testUrl)
+        let uploadTaskFromFile: URLSessionUploadTask = bmsSession.uploadTask(with: request, fromFile: testUrl)
         
         // Make sure request has some BMS stuff in it
         XCTAssertNotNil(uploadTaskFromFile.originalRequest?.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
@@ -112,7 +112,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         func testCompletionHandler(data: Data?, response: URLResponse?, error: Error?) { }
         
-        let uploadTaskFromFile: URLSessionUploadTask = bmsSession.uploadTaskWithRequest(request, fromFile: testUrl, completionHandler: testCompletionHandler)
+        let uploadTaskFromFile: URLSessionUploadTask = bmsSession.uploadTask(with: request, fromFile: testUrl, completionHandler: testCompletionHandler)
         
         // Make sure request has some BMS stuff in it
         XCTAssertNotNil(uploadTaskFromFile.originalRequest?.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
@@ -122,13 +122,13 @@ class BMSUrlSessionTests: XCTestCase {
     
     // MARK: - Helpers
     
-    func testPrepare() {
+    func testAddBMSHeaders() {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
             override var cachedAuthorizationHeader:String? {
                 get{
-                    return "testHeader";
+                    return "testHeader"
                 }
             }
         }
@@ -139,7 +139,7 @@ class BMSUrlSessionTests: XCTestCase {
         BaseRequest.requestAnalyticsData = "testData"
         
         let originalRequest = URLRequest(url: testUrl)
-        let preparedRequest = BMSURLSession.prepare(request: originalRequest)
+        let preparedRequest = BMSURLSession.addBMSHeaders(to: originalRequest)
         
         XCTAssertEqual(preparedRequest.allHTTPHeaderFields?["Authorization"], "testHeader")
         XCTAssertEqual(preparedRequest.allHTTPHeaderFields?["x-mfp-analytics-metadata"], "testData")
@@ -158,7 +158,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
                 return true
             }
         }
@@ -176,7 +176,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -185,7 +185,7 @@ class BMSUrlSessionTests: XCTestCase {
             
             override var cachedAuthorizationHeader:String? {
                 get{
-                    return "testHeader";
+                    return "testHeader"
                 }
             }
         }
@@ -214,7 +214,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -246,7 +246,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -283,7 +283,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -315,7 +315,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -352,7 +352,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -385,7 +385,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -423,7 +423,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 callback?(nil, NSError(domain: "", code: 401, userInfo: nil))
             }
         }
@@ -464,11 +464,11 @@ class BMSUrlSessionTests: XCTestCase {
     
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 callback?(nil, NSError(domain: "", code: 401, userInfo: nil))
             }
             
-            override func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
                 return true
             }
         }
@@ -497,14 +497,14 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
                 callback?(testResponse, nil)
             }
             
-            override func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
                 return true
             }
         }
@@ -634,13 +634,13 @@ class BMSUrlSessionTests: XCTestCase {
     
     // MARK: - Helpers
     
-    func testPrepareRequest() {
+    func testAddBMSHeaders() {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
             override var cachedAuthorizationHeader:String? {
                 get{
-                    return "testHeader";
+                    return "testHeader"
                 }
             }
         }
@@ -651,7 +651,7 @@ class BMSUrlSessionTests: XCTestCase {
         BaseRequest.requestAnalyticsData = "testData"
         
         let originalRequest = NSURLRequest(URL: testUrl)
-        let preparedRequest = BMSURLSession.prepareRequest(originalRequest)
+        let preparedRequest = BMSURLSession.addBMSHeaders(to: originalRequest)
         
         XCTAssertEqual(preparedRequest.allHTTPHeaderFields?["Authorization"], "testHeader")
         XCTAssertEqual(preparedRequest.allHTTPHeaderFields?["x-mfp-analytics-metadata"], "testData")
@@ -670,7 +670,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
                 return true
             }
         }
@@ -688,7 +688,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -697,7 +697,7 @@ class BMSUrlSessionTests: XCTestCase {
             
             override var cachedAuthorizationHeader:String? {
                 get{
-                    return "testHeader";
+                    return "testHeader"
                 }
             }
         }
@@ -708,7 +708,7 @@ class BMSUrlSessionTests: XCTestCase {
         let testRequest = NSMutableURLRequest(URL: testUrl)
         let dataTaskType = BMSURLSessionTaskType.dataTask
         
-        BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
             
             if let taskWithAuthorization = urlSessionTask {
                 XCTAssertEqual(taskWithAuthorization.currentRequest!.allHTTPHeaderFields?["Authorization"], "testHeader")
@@ -726,7 +726,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -740,7 +740,7 @@ class BMSUrlSessionTests: XCTestCase {
         let testRequest = NSMutableURLRequest(URL: testUrl)
         let dataTaskType = BMSURLSessionTaskType.dataTask
         
-        BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
             
             if let taskWithAuthorization = urlSessionTask {
                 XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
@@ -758,7 +758,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -777,7 +777,7 @@ class BMSUrlSessionTests: XCTestCase {
         let testRequest = NSMutableURLRequest(URL: testUrl)
         let dataTaskType = BMSURLSessionTaskType.dataTaskWithCompletionHandler(testCompletionHandler)
         
-        BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
             
             if let taskWithAuthorization = urlSessionTask {
                 XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
@@ -795,7 +795,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -809,7 +809,7 @@ class BMSUrlSessionTests: XCTestCase {
         let testRequest = NSMutableURLRequest(URL: testUrl)
         let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFile(testUrl)
         
-        BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
             
             if let taskWithAuthorization = urlSessionTask {
                 XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
@@ -827,7 +827,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -846,7 +846,7 @@ class BMSUrlSessionTests: XCTestCase {
         let testRequest = NSMutableURLRequest(URL: testUrl)
         let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(testUrl, testCompletionHandler)
         
-        BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
             
             if let taskWithAuthorization = urlSessionTask {
                 XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
@@ -864,7 +864,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -879,7 +879,7 @@ class BMSUrlSessionTests: XCTestCase {
         let testData = NSData()
         let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithData(testData)
         
-        BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
             
             if let taskWithAuthorization = urlSessionTask {
                 XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
@@ -897,7 +897,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
@@ -917,7 +917,7 @@ class BMSUrlSessionTests: XCTestCase {
         let testData = NSData()
         let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(testData, testCompletionHandler)
         
-        BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
             
             if let taskWithAuthorization = urlSessionTask {
                 XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
@@ -935,7 +935,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 callback?(nil, NSError(domain: "", code: 401, userInfo: nil))
             }
         }
@@ -946,7 +946,7 @@ class BMSUrlSessionTests: XCTestCase {
         let testRequest = NSMutableURLRequest(URL: testUrl)
         let dataTaskType = BMSURLSessionTaskType.dataTask
         
-        BMSURLSession.handleAuthorizationChallenge(testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
             
             XCTAssertNil(urlSessionTask)
         })
@@ -976,11 +976,11 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 callback?(nil, NSError(domain: "", code: 401, userInfo: nil))
             }
             
-            override func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
                 return true
             }
         }
@@ -1009,14 +1009,14 @@ class BMSUrlSessionTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
                 let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
                 let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
                 
                 callback?(testResponse, nil)
             }
             
-            override func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
                 return true
             }
         }

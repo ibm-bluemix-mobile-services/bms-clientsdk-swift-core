@@ -19,13 +19,13 @@ internal class BaseAuthorizationManager : AuthorizationManager {
 	
 	var cachedAuthorizationHeader:String? {
 		get{
-			return nil;
+			return nil
 		}
 	}
 	
 	var userIdentity:UserIdentity? {
 		get{
-			return nil;
+			return nil
 		}
 	}
 	
@@ -41,15 +41,15 @@ internal class BaseAuthorizationManager : AuthorizationManager {
 		}
 	}
 	
-	func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
-        return false;
+	func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+        return false
     }
     
-    func isAuthorizationRequired(forHttpResponse httpResponse: Response) -> Bool {
-        return false;
+    func isAuthorizationRequired(for httpResponse: Response) -> Bool {
+        return false
     }
     
-    func obtainAuthorization(completionHandler callback: BmsCompletionHandler?) {
+    func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
 		callback?(nil, nil)
     }
     

@@ -13,38 +13,39 @@
 
 
 /**
-    Contains useful data received from an HTTP network response.
+    Contains useful response data from an HTTP request made by the `Request` class.
 */
 public class Response {
 	
+    
     // MARK: Properties (API)
     
-    /// HTTP status of the response
+    /// The HTTP status of the response.
     public let statusCode: Int?
     
 #if swift(>=3.0)
-    /// HTTP headers from the response
+    /// HTTP headers from the response.
     public let headers: [AnyHashable: Any]?
 #else
-    /// HTTP headers from the response
+    /// HTTP headers from the response.
     public let headers: [NSObject: AnyObject]?
 #endif
     
-    /// The body of the response as a String.
-    /// Returns nil if there is no body or an exception occurred when building the response string.
+    /// The body of the response.
+    /// Returns nil if there is no body or the body cannot be converted to a `String`.
     public let responseText: String?
     
 #if swift(>=3.0)
-    /// The body of the response as NSData.
-    /// Returns nil if there is no body or if the response is not valid NSData.
+    /// The body of the response.
+    /// Returns nil if there is no body or if the response is not valid `Data`.
     public let responseData: Data?
 #else
-    /// The body of the response as NSData.
-    /// Returns nil if there is no body or if the response is not valid NSData.
+    /// The body of the response.
+    /// Returns nil if there is no body or if the response is not valid `NSData`.
     public let responseData: NSData?
 #endif
     
-    /// Does the response contain a 2xx status code
+    /// Does the response contain a status code in the [200, 300) range.
     public let isSuccessful: Bool
     
     // MARK: Properties (internal)
@@ -64,11 +65,11 @@ public class Response {
 #if swift(>=3.0)
     
     /**
-        Store data from the NSHTTPURLResponse
+        Convert an HTTPURLResponse to a more accessible response object.
          
-        - parameter responseData: Data returned from the server
-        - parameter httpResponse: Response object returned from the NSURLSession request
-        - parameter isRedirect:   True if the response requires a redirect
+        - parameter responseData: Data returned from the server.
+        - parameter httpResponse: Response object returned from the NSURLSession request.
+        - parameter isRedirect:   True if the response requires a redirect.
      */
     public init(responseData: Data?, httpResponse: HTTPURLResponse?, isRedirect: Bool) {
         
@@ -96,11 +97,11 @@ public class Response {
 #else
     
     /**
-        Store data from the NSHTTPURLResponse
+        Convert an HTTPURLResponse to a more accessible response object.
     
-        - parameter responseData: Data returned from the server
-        - parameter httpResponse: Response object returned from the NSURLSession request
-        - parameter isRedirect:   True if the response requires a redirect
+        - parameter responseData: Data returned from the server.
+        - parameter httpResponse: Response object returned from the NSURLSession request.
+        - parameter isRedirect:   True if the response requires a redirect.
     */
     public init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool) {
         

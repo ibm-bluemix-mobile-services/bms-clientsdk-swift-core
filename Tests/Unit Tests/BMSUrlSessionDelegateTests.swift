@@ -154,7 +154,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
                 return true
             }
         }
@@ -435,7 +435,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
             
-            override func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
                 return true
             }
         }

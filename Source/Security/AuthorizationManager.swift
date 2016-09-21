@@ -13,8 +13,9 @@
 
 
 public enum PersistencePolicy: String {
-    case ALWAYS = "ALWAYS"
-    case NEVER = "NEVER"
+    
+    case always = "ALWAYS"
+    case never = "NEVER"
 }
 
 public protocol AuthorizationManager {
@@ -26,22 +27,22 @@ public protocol AuthorizationManager {
     
         @return Whether authorization is required
      */
-    func isAuthorizationRequired(forStatusCode statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool
+    func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool
     
     /*
         @brief Whether authorization is required
         @param httpResponse http response ti check
      */
-    func isAuthorizationRequired(forHttpResponse httpResponse: Response) -> Bool
+    func isAuthorizationRequired(for httpResponse: Response) -> Bool
     
     /*!
         @brief Starts authorization process
         @param completionHandler The completion handler
      */
-    func obtainAuthorization(completionHandler callback: BmsCompletionHandler?)
+    func obtainAuthorization(completionHandler callback: BMSCompletionHandler?)
     
 	/*!
-	@brief Clears authorization data
+        @brief Clears authorization data
 	*/
 	func clearAuthorizationData()
 
@@ -49,20 +50,20 @@ public protocol AuthorizationManager {
         @brief Returns previously obtained authorization header. The value will be added to all outgoing requests as Authorization header.
         @return cached authorization header
      */
-	var cachedAuthorizationHeader:String? {get}
+	var cachedAuthorizationHeader: String? { get }
 	
     /*!
         @return UserIdentity object
      */
-	var userIdentity:UserIdentity? {get}
+	var userIdentity: UserIdentity? { get }
     
     /*!
         @return DeviceIdentity object
      */
-	var deviceIdentity:DeviceIdentity {get}
+	var deviceIdentity: DeviceIdentity { get }
     
     /*!
         @return AppIdentity object
      */
-	var appIdentity:AppIdentity {get}
+	var appIdentity: AppIdentity { get }
 }

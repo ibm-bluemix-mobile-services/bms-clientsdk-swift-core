@@ -21,7 +21,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
     func applicationDidFinishLaunching() {
         
         let myBMSClient = BMSClient.sharedInstance
-        myBMSClient.initialize(bluemixRegion: BMSClient.REGION_US_SOUTH)
-        myBMSClient.defaultRequestTimeout = 10.0 // seconds
+        myBMSClient.initialize(bluemixRegion: BMSClient.Region.usSouth)
+        myBMSClient.requestTimeout = 10.0 // seconds
     }
 }
