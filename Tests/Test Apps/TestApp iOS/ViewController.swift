@@ -90,7 +90,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     
     
-    @IBAction func sendDataTaskRequest(sender: UIButton) {
+    @IBAction func sendDataTaskRequest(sender button: UIButton) {
         
         guard request != nil else {
             return
@@ -118,7 +118,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @IBAction func sendUploadTaskRequest(sender: UIButton) {
+    @IBAction func sendUploadTaskRequest(sender button: UIButton) {
         
         guard request != nil else {
             return
