@@ -6,6 +6,8 @@ IBM Bluemix Mobile Services - Client SDK Swift Core
 
 This is the core component of the Swift SDK for [IBM Bluemix Mobile Services](https://console.ng.bluemix.net/docs/mobile/index.html).
 
+
+
 ## Contents
 This package contains the core components of the Swift SDK.
 
@@ -13,13 +15,18 @@ This package contains the core components of the Swift SDK.
 * Security and Authentication interfaces
 * Logger and Analytics interfaces
 
+
+
 ## Requirements
 * iOS 8.0+ / watchOS 2.0+
-* Xcode 7.3, 8.0 beta 4, 8.0 beta 5
+* Xcode 7.3, 8.0
 * Swift 2.2 - 3.0
+
+
 
 ## Installation
 The Bluemix Mobile Services Swift SDKs are available via [Cocoapods](http://cocoapods.org/) and [Carthage](https://github.com/Carthage/Carthage).
+
 
 ### Cocoapods
 To install BMSCore using Cocoapods, add it to your Podfile:
@@ -34,18 +41,11 @@ end
 
 Then run the `pod install` command.
 
-#### Swift 2.3
+#### Xcode 8
 
-Before running the `pod install` command, make sure to use Cocoapods version [1.1.0.beta.1](https://github.com/CocoaPods/CocoaPods/releases/tag/1.1.0.beta.1).
+Before running the `pod install` command, make sure to use the latest Cocoapods [pre-release version](https://github.com/CocoaPods/CocoaPods/releases).
 
-For apps built with Swift 2.3, you may receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore). Choose the *Convert* option, and select `BMSCore.framework` and `BMSAnalyticsAPI.framework`.
-**Note:** This should only be done once. If the prompt appears again in the future after you have already converted, always choose the *Later* option.
-
-#### Swift 3.0
-
-Before running the `pod install` command, make sure to use Cocoapods version [1.1.0.beta.1](https://github.com/CocoaPods/CocoaPods/releases/tag/1.1.0.beta.1).
-
-For apps built with Swift 3.0, you may receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore). Always choose the *Later* option. 
+If you receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore), **do not** convert BMSCore or BMSAnalyticsAPI.
 
 
 ### Carthage
@@ -61,11 +61,12 @@ To complete the integration, follow the instructions [here](https://github.com/C
 
 #### Xcode 8
 
-Carthage currently is not supported for BMSCore in Xcode 8 beta. Please use Cocoapods instead.
+For apps built with Swift 2.3, use the command `carthage update --toolchain com.apple.dt.toolchain.Swift_2_3`. Otherwise, use `carthage update`.
 
 
 
 ## Usage Examples
+
 
 ### Swift 2.2
 
@@ -139,13 +140,13 @@ let dataTask = urlSession.dataTaskWithRequest(request) { (data: Data?, response:
 }
 ```
 
-
-
 > By default the Bluemix Mobile Service SDK internal debug logging will not be printed to Xcode console. If you want to enable SDK debug logging output set the `Logger.sdkDebugLoggingEnabled` property to `true`.
+
 
 ### Disabling Logging output for production applications
 
 By default the Logger class will print its logs to Xcode console. If is advised to disable Logger output for applications built in release mode. In order to do so add a debug flag named `RELEASE_BUILD` to your release build configuration. One of the way of doing so is adding `-D RELEASE_BUILD` to `Other Swift Flags` section of the project build configuration.
+
 
 
 =======================
