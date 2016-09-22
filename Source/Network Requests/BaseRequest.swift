@@ -47,7 +47,7 @@ public typealias BMSCompletionHandler = (Response?, Error?) -> Void
 
     When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via the `send()` method.
 */
-public class BaseRequest: NSObject, URLSessionTaskDelegate {
+open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     
     // MARK: Constants
