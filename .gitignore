@@ -3,3 +3,4 @@ Build/
 xcuserdata/
 DerivedData/
 Carthage/
+Pods/
