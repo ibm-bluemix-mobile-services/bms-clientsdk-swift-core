@@ -71,17 +71,19 @@ class InterfaceController: WKInterfaceController {
         #endif
         
         dataTask.resume()
+        
+        logSendButtonPressedEvent()
     }
     
     private func logSendButtonPressedEvent() {
         
-        Logger.logLevelFilter = LogLevel.Debug
+        Logger.logLevelFilter = LogLevel.debug
         
-		let logger = Logger.logger(forName: "TestAppWatchOS")
+		let logger = Logger.logger(name: "TestAppWatchOS")
         #if swift(>=3.0)
             logger.debug(message: "GET request button pressed")
         #else
-            logger.debug("GET request button pressed")
+            logger.debug(message: "GET request button pressed")
         #endif
         
         
@@ -92,7 +94,7 @@ class InterfaceController: WKInterfaceController {
         #if swift(>=3.0)
             Analytics.log(metadata: eventMetadata)
         #else
-            Analytics.log(eventMetadata)
+            Analytics.log(metadata: eventMetadata)
         #endif
     }
 }

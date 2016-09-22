@@ -28,7 +28,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     let callbackViewController = CallbackPickerViewController()
     let httpMethodViewController = HttpMethodPickerViewController()
     
-    let logger = Logger.logger(forName: "TestAppiOS")
+    let logger = Logger.logger(name: "TestAppiOS")
 
 #if swift(>=3.0)
     let imageFile = Bundle.main.url(forResource: "Andromeda", withExtension: "jpg")!
@@ -77,7 +77,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var request: NSURLRequest? {
 
         guard let requestUrl = NSURL(string: resourceUrl.text!) else {
-            logger.error("Invalid URL")
+            logger.error(message: "Invalid URL")
             return nil
         }
         

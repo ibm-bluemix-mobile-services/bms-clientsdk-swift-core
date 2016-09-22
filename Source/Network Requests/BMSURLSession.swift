@@ -42,7 +42,7 @@ public struct BMSURLSession {
     
     private let delegateQueue: OperationQueue?
     
-    private static let logger = Logger.logger(forName: Logger.bmsLoggerPrefix + "urlSession")
+    private static let logger = Logger.logger(name: Logger.bmsLoggerPrefix + "urlSession")
     
     
     
@@ -406,7 +406,7 @@ public struct BMSURLSession {
     
     private let delegateQueue: NSOperationQueue?
     
-    private static let logger = Logger.logger(forName: Logger.bmsLoggerPrefix + "urlSession")
+    private static let logger = Logger.logger(name: Logger.bmsLoggerPrefix + "urlSession")
     
     
     
@@ -691,7 +691,7 @@ public struct BMSURLSession {
                 }
             }
             else {
-                BMSURLSession.logger.error("Authorization process failed. \nError: \(error). \nResponse: \(response).")
+                BMSURLSession.logger.error(message: "Authorization process failed. \nError: \(error). \nResponse: \(response).")
                 handleTask(nil)
             }
         }

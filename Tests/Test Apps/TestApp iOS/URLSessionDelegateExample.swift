@@ -27,7 +27,7 @@ class URLSessionDelegateExample: NSObject, URLSessionDelegate, URLSessionTaskDel
     
     let viewController: ViewController
     
-    let logger = Logger.logger(forName: "TestAppiOS")
+    let logger = Logger.logger(name: "TestAppiOS")
     
     
     
@@ -148,7 +148,7 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
     
     let viewController: ViewController
     
-    let logger = Logger.logger(forName: "TestAppiOS")
+    let logger = Logger.logger(name: "TestAppiOS")
     
     
     
@@ -163,17 +163,17 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
     
     internal func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
         
-        logger.error("Error: \(error.debugDescription)\n")
+        logger.error(message: "Error: \(error.debugDescription)\n")
     }
     
     internal func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
         
-        logger.info("\n")
+        logger.info(message: "\n")
     }
     
     internal func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
         
-        logger.debug("\n")
+        logger.debug(message: "\n")
     }
     
     
@@ -181,17 +181,17 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
     
     internal func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse, newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {
         
-        logger.debug("\n")
+        logger.debug(message: "\n")
     }
     
     internal func URLSession(session: NSURLSession, task: NSURLSessionTask, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
         
-        logger.info("\n")
+        logger.info(message: "\n")
     }
     
     internal func URLSession(session: NSURLSession, task: NSURLSessionTask, needNewBodyStream completionHandler: (NSInputStream?) -> Void) {
         
-        logger.debug("\n")
+        logger.debug(message: "\n")
     }
     
     internal func URLSession(session: NSURLSession, task: NSURLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
@@ -204,7 +204,7 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
     
     internal func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
         
-        logger.error("Error: \(error.debugDescription)\n")
+        logger.error(message: "Error: \(error.debugDescription)\n")
         
         self.viewController.displayData(dataReceived, response: self.response, error: nil)
         if error != nil {
@@ -217,7 +217,7 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
     
     internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
         
-        logger.info("Response: \(response)\n")
+        logger.info(message: "Response: \(response)\n")
         
         self.response = response
         self.viewController.displayData(nil, response: response, error: nil)
@@ -227,7 +227,7 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
     
     internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeDownloadTask downloadTask: NSURLSessionDownloadTask) {
         
-        logger.debug("\n")
+        logger.debug(message: "\n")
     }
     
     internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
@@ -239,7 +239,7 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
     
     internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, willCacheResponse proposedResponse: NSCachedURLResponse, completionHandler: (NSCachedURLResponse?) -> Void) {
         
-        logger.debug("\n")
+        logger.debug(message: "\n")
     }
 }
 

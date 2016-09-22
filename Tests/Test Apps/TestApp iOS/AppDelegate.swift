@@ -29,8 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         myBMSClient.initialize(bluemixRegion: BMSClient.Region.usSouth)
         myBMSClient.requestTimeout = 10.0 // seconds
         
-        Logger.logLevelFilter = LogLevel.Debug
-        Logger.sdkDebugLoggingEnabled = true
+        Logger.logLevelFilter = LogLevel.debug
+        Logger.isInternalDebugLoggingEnabled = true
         
         return true
     }
@@ -45,8 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         myBMSClient.initialize(bluemixRegion: BMSClient.Region.usSouth)
         myBMSClient.requestTimeout = 10.0 // seconds
         
-        Logger.logLevelFilter = LogLevel.Debug
-        Logger.sdkDebugLoggingEnabled = true
+        Logger.logLevelFilter = LogLevel.debug
+        Logger.isInternalDebugLoggingEnabled = true
         
         return true
     }

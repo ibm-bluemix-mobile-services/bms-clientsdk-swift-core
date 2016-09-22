@@ -1,21 +1,30 @@
 use_frameworks!
 
 target 'BMSCore iOS' do
-	pod 'BMSAnalyticsAPI', '~> 1.1'
-end
-
-target 'BMSCore watchOS' do
-	pod 'BMSAnalyticsAPI', '~> 1.1'
+	platform :ios, '9.0'
+	pod 'BMSAnalyticsAPI', '~> 2.0'
 end
 
 target 'BMSCore Tests' do
-	pod 'BMSAnalyticsAPI', '~> 1.1'
+	platform :ios, '9.0'
+	pod 'BMSAnalyticsAPI', '~> 2.0'
+end
+
+target 'BMSCore watchOS' do
+	platform :watchos, '2.0'
+	pod 'BMSAnalyticsAPI', '~> 2.0'
 end
 
 target 'TestApp iOS' do
-	pod 'BMSAnalyticsAPI', '~> 1.1'
+	platform :ios, '9.0'
+	pod 'BMSAnalyticsAPI', '~> 2.0'
+end
+
+target 'TestApp watchOS' do
+	pod 'BMSAnalyticsAPI', '~> 2.0'
 end
 
 target 'TestApp watchOS Extension' do
-	pod 'BMSAnalyticsAPI', '~> 1.1'
+	platform :watchos, '2.0'
+	pod 'BMSAnalyticsAPI', '~> 2.0'
 end

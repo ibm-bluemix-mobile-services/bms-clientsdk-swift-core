@@ -106,7 +106,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     // The current request.
     var networkRequest: URLRequest
     
-	private static let logger = Logger.logger(forName: Logger.bmsLoggerPrefix + "request")
+	private static let logger = Logger.logger(name: Logger.bmsLoggerPrefix + "request")
     
     
     
@@ -388,7 +388,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     // The current request.
     var networkRequest: NSMutableURLRequest
     
-    private static let logger = Logger.logger(forName: Logger.bmsLoggerPrefix + "request")
+    private static let logger = Logger.logger(name: Logger.bmsLoggerPrefix + "request")
     
     
     
@@ -478,7 +478,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         }
         else {
             let urlErrorMessage = "The supplied resource url is not a valid url."
-            BaseRequest.logger.error(urlErrorMessage)
+            BaseRequest.logger.error(message: urlErrorMessage)
             let malformedUrlError = NSError(domain: BMSCoreError.domain, code: BMSCoreError.malformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
             completionHandler?(nil, malformedUrlError)
         }
@@ -507,7 +507,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
             guard let urlWithQueryParameters = BaseRequest.append(queryParameters: queryParameters!, toURL: requestUrl) else {
                 // This scenario does not seem possible due to the robustness of appendQueryParameters(), but it will stay just in case
                 let urlErrorMessage = "Failed to append the query parameters to the resource url."
-                BaseRequest.logger.error(urlErrorMessage)
+                BaseRequest.logger.error(message: urlErrorMessage)
                 let malformedUrlError = NSError(domain: BMSCoreError.domain, code: BMSCoreError.malformedUrl.rawValue, userInfo: [NSLocalizedDescriptionKey: urlErrorMessage])
                 callback?(nil, malformedUrlError)
                 return
@@ -523,7 +523,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         networkRequest.HTTPBody = requestBody
         networkRequest.cachePolicy = cachePolicy
         
-        BaseRequest.logger.debug("Sending Request to " + resourceUrl)
+        BaseRequest.logger.debug(message: "Sending Request to " + resourceUrl)
         
         // Send request
         self.networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
@@ -577,7 +577,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
         var redirectRequest: NSURLRequest?
         if allowRedirects {
-            BaseRequest.logger.debug("Redirecting: " + String(session))
+            BaseRequest.logger.debug(message: "Redirecting: " + String(session))
             redirectRequest = request
         }
     
