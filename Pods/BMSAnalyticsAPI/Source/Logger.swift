@@ -60,7 +60,15 @@ public protocol LoggerDelegate {
     
     var isUncaughtExceptionDetected: Bool { get set }
     
+#if swift(>=3.0)
+    
+    func logToFile(message logMessage: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: Any]?)
+
+#else
+    
     func logToFile(message logMessage: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]?)
+
+#endif
 }
 
 
@@ -230,9 +238,33 @@ public class Logger {
     }
     
     // Equivalent to the other log methods, but this method accepts data as JSON rather than a string.
-    internal func analytics(metadata: [String: AnyObject], file: String = #file, function: String = #function, line: Int = #line) {
+    internal func analytics(metadata: [String: Any], file: String = #file, function: String = #function, line: Int = #line) {
         
         log(message: "", level: LogLevel.analytics, calledFile: file, calledFunction: function, calledLineNumber: line, additionalMetadata: metadata)
+    }
+    
+    
+    
+    // MARK: Methods (internal)
+    
+    // This is the master function that handles all of the logging, including level checking, printing to console, and writing to file.
+    // All other log functions below this one are helpers for this function.
+    internal func log(message logMessage: String, level: LogLevel, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: Any]? = nil) {
+        
+        // The level must exceed the Logger.logLevelFilter, or we do nothing
+        guard level.rawValue <= Logger.logLevelFilter.rawValue else {
+            return
+        }
+        
+        if self.name.hasPrefix(Logger.bmsLoggerPrefix) && !Logger.isInternalDebugLoggingEnabled && level == LogLevel.debug {
+            // Don't show our internal logs in the console.
+        }
+        else {
+            // Print to console
+            Logger.printLog(message: logMessage, loggerName: self.name, level: level, calledFunction: calledFunction, calledFile: calledFile, calledLineNumber: calledLineNumber)
+        }
+        
+        Logger.delegate?.logToFile(message: logMessage, level: level, loggerName: self.name, calledFile: calledFile, calledFunction: calledFunction, calledLineNumber: calledLineNumber, additionalMetadata: additionalMetadata)
     }
     
     
@@ -308,16 +340,13 @@ public class Logger {
     }
     
     
-#endif
-    
-    
     
     // MARK: Methods (internal)
     
     // This is the master function that handles all of the logging, including level checking, printing to console, and writing to file.
     // All other log functions below this one are helpers for this function.
     internal func log(message logMessage: String, level: LogLevel, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String: AnyObject]? = nil) {
-        
+    
         // The level must exceed the Logger.logLevelFilter, or we do nothing
         guard level.rawValue <= Logger.logLevelFilter.rawValue else {
             return
@@ -333,6 +362,10 @@ public class Logger {
         
         Logger.delegate?.logToFile(message: logMessage, level: level, loggerName: self.name, calledFile: calledFile, calledFunction: calledFunction, calledLineNumber: calledLineNumber, additionalMetadata: additionalMetadata)
     }
+    
+    
+#endif
+    
     
     // Format: [DEBUG] [bmssdk.logger] logMessage in Logger.swift:234 :: "Some random message".
     // Public access required by BMSAnalytics framework.

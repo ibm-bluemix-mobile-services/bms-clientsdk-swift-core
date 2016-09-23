@@ -87,7 +87,7 @@ public class Analytics {
          
          - parameter metadata:  The analytics data
      */
-    public static func log(metadata: [String: AnyObject], file: String = #file, function: String = #function, line: Int = #line) {
+    public static func log(metadata: [String: Any], file: String = #file, function: String = #function, line: Int = #line) {
     
         Analytics.logger.analytics(metadata: metadata, file: file, function: function, line: line)
     }
