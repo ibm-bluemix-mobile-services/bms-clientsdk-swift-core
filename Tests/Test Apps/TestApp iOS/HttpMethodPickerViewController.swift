@@ -12,8 +12,16 @@
 */
 
 
+
 import UIKit
 import BMSCore
+
+
+
+// MARK: - Swift 3
+
+#if swift(>=3.0)
+    
 
 
 class HttpMethodPickerViewController: NSObject,UIPickerViewDelegate, UIPickerViewDataSource {
@@ -21,9 +29,6 @@ class HttpMethodPickerViewController: NSObject,UIPickerViewDelegate, UIPickerVie
     
     var httpMethod: HttpMethod = .GET
     
-    
-    
-#if swift(>=3.0)
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
     
@@ -45,29 +50,59 @@ class HttpMethodPickerViewController: NSObject,UIPickerViewDelegate, UIPickerVie
         self.httpMethod = HttpMethod.allValues[row]
     }
     
+}
+
+
+
+extension HttpMethod {
+    
+    static var allValues: [HttpMethod] {
+        
+        return [GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH]
+    }
+}
+
+
+
+
+
+/**************************************************************************************************/
+
+
+
+
+
+// MARK: - Swift 2
+
 #else
+
+
+
+class HttpMethodPickerViewController: NSObject,UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    
+    var httpMethod: HttpMethod = .GET
+    
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        
+    
         return 1
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        
+    
         return HttpMethod.allValues.count
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        
+    
         return HttpMethod.allValues[row].rawValue
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
+    
         self.httpMethod = HttpMethod.allValues[row]
     }
-    
-#endif
     
 }
 
@@ -80,3 +115,7 @@ extension HttpMethod {
         return [GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH]
     }
 }
+
+
+
+#endif

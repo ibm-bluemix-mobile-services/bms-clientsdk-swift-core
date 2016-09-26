@@ -12,12 +12,16 @@
 */
 
 
+
 import BMSCore
 
 
 
+// MARK: - Swift 3
+
 #if swift(>=3.0)
 
+    
 
 class URLSessionDelegateExample: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
     
@@ -133,12 +137,22 @@ class URLSessionDelegateExample: NSObject, URLSessionDelegate, URLSessionTaskDel
         logger.debug(message: "\n")
     }
 }
-
-
-
+    
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
+    
 #else
-
-
+    
+    
 
 class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate {
     
@@ -244,4 +258,5 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
 }
 
 
+    
 #endif

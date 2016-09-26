@@ -12,8 +12,16 @@
 */
 
 
+
 import UIKit
 import BMSCore
+
+
+
+// MARK: - Swift 3
+
+#if swift(>=3.0)
+    
 
 
 class ViewController: UIViewController, UITextFieldDelegate {
@@ -30,35 +38,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     let logger = Logger.logger(name: "TestAppiOS")
 
-#if swift(>=3.0)
     let imageFile = Bundle.main.url(forResource: "Andromeda", withExtension: "jpg")!
-#else
-    let imageFile = NSBundle.mainBundle().URLForResource("Andromeda", withExtension: "jpg")!
-#endif
-    
     
     var bmsUrlSession: BMSURLSession {
         
         switch callbackViewController.callbackType {
             
         case .delegate:
-            #if swift(>=3.0)
-                return BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil)
-            #else
-                return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil)
-            #endif
+            return BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil)
             
         case .completionHandler:
-            #if swift(>=3.0)
-                return BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
-            #else
-                return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
-            #endif
+            return BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
         }
     }
-    
-    
-#if swift(>=3.0)
     
     var request: URLRequest? {
         
@@ -71,24 +63,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         request.httpMethod = httpMethodViewController.httpMethod.rawValue
         return request
     }
-    
-#else
-    
-    var request: NSURLRequest? {
 
-        guard let requestUrl = NSURL(string: resourceUrl.text!) else {
-            logger.error(message: "Invalid URL")
-            return nil
-        }
-        
-        let request = NSMutableURLRequest(URL: requestUrl)
-        request.HTTPMethod = httpMethodViewController.httpMethod.rawValue
-        return request
-    }
-    
-#endif
-    
-    
     
     @IBAction func sendDataTaskRequest(sender button: UIButton) {
         
@@ -96,25 +71,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        #if swift(>=3.0)
-        
-            switch callbackViewController.callbackType {
-            case .delegate:
-                bmsUrlSession.dataTask(with: request!).resume()
-            case .completionHandler:
-                bmsUrlSession.dataTask(with: request!, completionHandler: displayData).resume()
-            }
-        
-        #else
-        
-            switch callbackViewController.callbackType {
-            case .delegate:
-                bmsUrlSession.dataTaskWithRequest(request!).resume()
-            case .completionHandler:
-                bmsUrlSession.dataTaskWithRequest(request!, completionHandler: displayData).resume()
-            }
-        
-        #endif
+        switch callbackViewController.callbackType {
+        case .delegate:
+            bmsUrlSession.dataTask(with: request!).resume()
+        case .completionHandler:
+            bmsUrlSession.dataTask(with: request!, completionHandler: displayData).resume()
+        }
     }
     
     
@@ -124,29 +86,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        #if swift(>=3.0)
-        
-            switch callbackViewController.callbackType {
-            case .delegate:
-                bmsUrlSession.uploadTask(with: request!, fromFile: imageFile).resume()
-            case .completionHandler:
-                bmsUrlSession.uploadTask(with: request!, fromFile: imageFile, completionHandler: displayData).resume()
-            }
-        
-        #else
-        
-            switch callbackViewController.callbackType {
-            case .delegate:
-                bmsUrlSession.uploadTaskWithRequest(request!, fromFile: imageFile).resume()
-            case .completionHandler:
-                bmsUrlSession.uploadTaskWithRequest(request!, fromFile: imageFile, completionHandler: displayData).resume()
-            }
-        
-        #endif
+        switch callbackViewController.callbackType {
+        case .delegate:
+            bmsUrlSession.uploadTask(with: request!, fromFile: imageFile).resume()
+        case .completionHandler:
+            bmsUrlSession.uploadTask(with: request!, fromFile: imageFile, completionHandler: displayData).resume()
+        }
     }
     
-    
-#if swift(>=3.0)
     
     func displayData(_ data: Data?, response: URLResponse?, error: Error?) {
         
@@ -165,10 +112,122 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.callbackPicker.dataSource = callbackViewController
+        self.callbackPicker.delegate = callbackViewController
+        
+        self.httpMethodPicker.dataSource = httpMethodViewController
+        self.httpMethodPicker.delegate = httpMethodViewController
+        
+        #if swift(>=3.0)
+            self.progressBar.transform = CGAffineTransform(scaleX: 1, y: 2)
+        #else
+            self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
+        #endif
+        responseLabel.layer.borderWidth = 1
+    }
+
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+
+}
+
+
+
+
+
+/**************************************************************************************************/
+
+
+
+
+
+// MARK: - Swift 2
+
 #else
+
+
+
+class ViewController: UIViewController, UITextFieldDelegate {
+    
+    
+    @IBOutlet var resourceUrl: UITextField!
+    @IBOutlet var httpMethodPicker: UIPickerView!
+    @IBOutlet var callbackPicker: UIPickerView!
+    @IBOutlet var progressBar: UIProgressView!
+    @IBOutlet var responseLabel: UITextView!
+    
+    let callbackViewController = CallbackPickerViewController()
+    let httpMethodViewController = HttpMethodPickerViewController()
+    
+    let logger = Logger.logger(name: "TestAppiOS")
+    
+    let imageFile = NSBundle.mainBundle().URLForResource("Andromeda", withExtension: "jpg")!
+    
+    
+    var bmsUrlSession: BMSURLSession {
+        
+        switch callbackViewController.callbackType {
+            
+        case .delegate:
+            return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil)
+            
+        case .completionHandler:
+            return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+        }
+    }
+    
+    var request: NSURLRequest? {
+    
+        guard let requestUrl = NSURL(string: resourceUrl.text!) else {
+            logger.error(message: "Invalid URL")
+            return nil
+        }
+    
+        let request = NSMutableURLRequest(URL: requestUrl)
+        request.HTTPMethod = httpMethodViewController.httpMethod.rawValue
+        return request
+    }
+    
+    
+    @IBAction func sendDataTaskRequest(sender button: UIButton) {
+        
+        guard request != nil else {
+            return
+        }
+        
+        switch callbackViewController.callbackType {
+        case .delegate:
+            bmsUrlSession.dataTaskWithRequest(request!).resume()
+        case .completionHandler:
+            bmsUrlSession.dataTaskWithRequest(request!, completionHandler: displayData).resume()
+        }
+    }
+    
+    
+    @IBAction func sendUploadTaskRequest(sender button: UIButton) {
+        
+        guard request != nil else {
+            return
+        }
+        
+        switch callbackViewController.callbackType {
+        case .delegate:
+            bmsUrlSession.uploadTaskWithRequest(request!, fromFile: imageFile).resume()
+        case .completionHandler:
+            bmsUrlSession.uploadTaskWithRequest(request!, fromFile: imageFile, completionHandler: displayData).resume()
+        }
+    }
+
     
     func displayData(data: NSData?, response: NSURLResponse?, error: NSError?) {
-        
+    
         var answer = ""
         if let response = response as? NSHTTPURLResponse {
             answer += "Status code: \(response.statusCode)\n\n"
@@ -183,8 +242,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.responseLabel.text = answer
         })
     }
-    
-#endif
+
     
     
     override func viewDidLoad() {
@@ -205,24 +263,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    
-#if swift(>=3.0)
-    
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return false
-    }
-    
-    
-#else
-    
-    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
     }
     
+}
+
+
     
 #endif
-}

@@ -71,30 +71,5 @@ class InterfaceController: WKInterfaceController {
         #endif
         
         dataTask.resume()
-        
-        logSendButtonPressedEvent()
-    }
-    
-    private func logSendButtonPressedEvent() {
-        
-        Logger.logLevelFilter = LogLevel.debug
-        
-		let logger = Logger.logger(name: "TestAppWatchOS")
-        #if swift(>=3.0)
-            logger.debug(message: "GET request button pressed")
-        #else
-            logger.debug(message: "GET request button pressed")
-        #endif
-        
-        
-        // NOTE: All of the methods below do nothing since the implementation (the BMSAnalytics framework) is not provided
-        // These method calls are just to confirm the existence of the APIs
-        
-        let eventMetadata = ["buttonPressed": "GET Request" as AnyObject]
-        #if swift(>=3.0)
-            Analytics.log(metadata: eventMetadata)
-        #else
-            Analytics.log(metadata: eventMetadata)
-        #endif
     }
 }

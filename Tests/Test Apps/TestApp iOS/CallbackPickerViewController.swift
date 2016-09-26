@@ -12,7 +12,15 @@
 */
 
 
+
 import UIKit
+
+
+
+// MARK: - Swift 3
+
+#if swift(>=3.0)
+    
 
 
 class CallbackPickerViewController: NSObject,UIPickerViewDelegate, UIPickerViewDataSource {
@@ -20,10 +28,7 @@ class CallbackPickerViewController: NSObject,UIPickerViewDelegate, UIPickerViewD
     
     var callbackType: CallbackType = .delegate
     
-    
-    
-#if swift(>=3.0)
-    
+
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
     
         return 1
@@ -44,30 +49,6 @@ class CallbackPickerViewController: NSObject,UIPickerViewDelegate, UIPickerViewD
         self.callbackType = CallbackType.allValues[row]
     }
     
-#else
-    
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        
-        return 1
-    }
-    
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        
-        return CallbackType.allValues.count
-    }
-    
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        
-        return CallbackType.allValues[row].rawValue
-    }
-    
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
-        self.callbackType = CallbackType.allValues[row]
-    }
-    
-#endif
-    
 }
 
 
@@ -82,3 +63,64 @@ enum CallbackType: String {
         return [delegate, completionHandler]
     }
 }
+    
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
+    
+#else
+    
+    
+
+class CallbackPickerViewController: NSObject,UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    
+    var callbackType: CallbackType = .delegate
+    
+    
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    
+        return 1
+    }
+    
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    
+        return CallbackType.allValues.count
+    }
+    
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    
+        return CallbackType.allValues[row].rawValue
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    
+        self.callbackType = CallbackType.allValues[row]
+    }
+
+}
+
+
+
+enum CallbackType: String {
+    
+    case delegate = "Delegate"
+    case completionHandler = "Completion Handler"
+    
+    static var allValues: [CallbackType] {
+        
+        return [delegate, completionHandler]
+    }
+}
+
+
+
+#endif
