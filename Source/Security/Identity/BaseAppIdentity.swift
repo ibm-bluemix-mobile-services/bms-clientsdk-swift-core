@@ -12,6 +12,9 @@
 */
 
 
+
+// MARK: - Swift 3
+
 #if swift(>=3.0)
 
     
@@ -56,13 +59,23 @@ open class BaseAppIdentity: AppIdentity {
     }
     
 }
-
-
+    
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
     
 #else
-
     
-
+    
+    
 /// This class represents the base app identity class, with default methods and keys
 public class BaseAppIdentity: AppIdentity {
 

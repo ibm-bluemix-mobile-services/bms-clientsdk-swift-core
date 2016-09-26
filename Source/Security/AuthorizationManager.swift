@@ -12,11 +12,14 @@
 */
 
 
+
 public enum PersistencePolicy: String {
     
     case always = "ALWAYS"
     case never = "NEVER"
 }
+
+
 
 public protocol AuthorizationManager {
 
@@ -26,44 +29,44 @@ public protocol AuthorizationManager {
         @param responseAuthorizationHeader authirization header
     
         @return Whether authorization is required
-     */
+    */
     func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool
     
     /*
         @brief Whether authorization is required
         @param httpResponse http response ti check
-     */
+    */
     func isAuthorizationRequired(for httpResponse: Response) -> Bool
     
     /*!
         @brief Starts authorization process
         @param completionHandler The completion handler
-     */
+    */
     func obtainAuthorization(completionHandler callback: BMSCompletionHandler?)
     
 	/*!
         @brief Clears authorization data
-	*/
+    */
 	func clearAuthorizationData()
 
 	/*!
         @brief Returns previously obtained authorization header. The value will be added to all outgoing requests as Authorization header.
         @return cached authorization header
-     */
+    */
 	var cachedAuthorizationHeader: String? { get }
 	
     /*!
         @return UserIdentity object
-     */
+    */
 	var userIdentity: UserIdentity? { get }
     
     /*!
         @return DeviceIdentity object
-     */
+    */
 	var deviceIdentity: DeviceIdentity { get }
     
     /*!
         @return AppIdentity object
-     */
+    */
 	var appIdentity: AppIdentity { get }
 }

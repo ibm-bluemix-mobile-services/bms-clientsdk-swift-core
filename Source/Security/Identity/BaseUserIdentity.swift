@@ -12,6 +12,9 @@
 */
 
 
+
+// MARK: - Swift 3
+
 #if swift(>=3.0)
     
     
@@ -62,13 +65,23 @@ open class BaseUserIdentity: UserIdentity {
 	
 
 }
-
-
-
+    
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
+    
 #else
-
-
-
+    
+    
+    
 /// This class represents the base user identity class, with default methods and keys
 public class BaseUserIdentity: UserIdentity {
     

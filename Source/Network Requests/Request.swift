@@ -12,16 +12,20 @@
 */
 
 
+
+// MARK: - Swift 3
+
+#if swift(>=3.0)
+    
+
+
 /**
-    Sends HTTP network requests to access resources protected by the Bluemix Mobile Client Access. 
- 
+    Sends HTTP network requests.
+
     Analytics data is automatically gathered for all requests initiated by this class.
 
-    When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as either Data or plain text when sending the request via one of the following methods:
-
-        sendString(requestBody: String, withCompletionHandler callback: BMSCompletionHandler?)
-        sendData(requestBody: Data, withCompletionHandler callback: BMSCompletionHandler?)
- */
+    When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via the `send()` method.
+*/
 public class Request: BaseRequest {
     
     
@@ -29,19 +33,11 @@ public class Request: BaseRequest {
     
     internal var oauthFailCounter = 0
     
-#if swift(>=3.0)
     internal var savedRequestBody: Data?
-#else
-    internal var savedRequestBody: NSData?
-#endif
     
     
     
-    // MARK: Method overrides
-    
-    
-#if swift(>=3.0)
-    
+    // MARK: Method override
     
     public override func send(requestBody: Data? = nil, completionHandler: BMSCompletionHandler?) {
         
@@ -97,12 +93,45 @@ public class Request: BaseRequest {
         super.send(completionHandler: sendCompletionHandler)
     }
     
+}
+    
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
     
 #else
     
     
+/**
+    Sends HTTP network requests.
+
+    Analytics data is automatically gathered for all requests initiated by this class.
+
+    When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via the `send()` method.
+*/
+public class Request: BaseRequest {
+    
+    
+    // MARK: Properties (internal)
+    
+    internal var oauthFailCounter = 0
+    
+    internal var savedRequestBody: NSData?
+    
+    
+    
+    // MARK: Method overrides
+    
     public override func send(requestBody requestBody: NSData? = nil, completionHandler: BMSCompletionHandler?) {
-        
+    
         let authManager: AuthorizationManager = BMSClient.sharedInstance.authorizationManager
         
         if let authHeader: String = authManager.cachedAuthorizationHeader {
@@ -112,31 +141,31 @@ public class Request: BaseRequest {
         savedRequestBody = requestBody
         
         let myCallback : BMSCompletionHandler = {(response: Response?, error: NSError?) in
-            
+        
             guard error == nil else {
-                if let callback = completionHandler{
+                if let callback = completionHandler {
                     callback(response, error)
                 }
                 return
             }
-            
+    
             let authManager = BMSClient.sharedInstance.authorizationManager
             guard let unWrappedResponse = response where
-                authManager.isAuthorizationRequired(for: unWrappedResponse) &&
-                    self.oauthFailCounter < 2
+                                          authManager.isAuthorizationRequired(for: unWrappedResponse) &&
+                                          self.oauthFailCounter < 2
+            else {
+                self.oauthFailCounter += 1
+                if (response?.statusCode)! >= 400 {
+                    completionHandler?(response, NSError(domain: BMSCoreError.domain, code: BMSCoreError.serverRespondedWithError.rawValue, userInfo: nil))
+                }
                 else {
-                    self.oauthFailCounter += 1
-                    if (response?.statusCode)! >= 400 {
-                        completionHandler?(response, NSError(domain: BMSCoreError.domain, code: BMSCoreError.serverRespondedWithError.rawValue, userInfo: nil))
-                    }
-                    else {
-                        completionHandler?(response, nil)
-                    }
-                    return
+                    completionHandler?(response, nil)
+                }
+                return
             }
-            
+    
             self.oauthFailCounter += 1
-            
+        
             let authCallback: BMSCompletionHandler = {(response: Response?, error:NSError?) in
                 if error == nil {
                     if let myRequestBody = self.requestBody {
@@ -145,7 +174,8 @@ public class Request: BaseRequest {
                     else {
                         self.send(completionHandler: completionHandler)
                     }
-                } else {
+                }
+                else {
                     completionHandler?(response, error)
                 }
             }
@@ -154,9 +184,9 @@ public class Request: BaseRequest {
         
         super.send(completionHandler: myCallback)
     }
-    
-    
-#endif
-    
-    
+
 }
+
+
+
+#endif

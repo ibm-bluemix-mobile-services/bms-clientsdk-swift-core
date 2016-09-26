@@ -13,7 +13,10 @@
 
 
 
+// MARK: - Swift 3
+
 #if swift(>=3.0)
+    
     
     
 /**
@@ -30,9 +33,20 @@ public enum BMSCoreError: Error {
     
     
     
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
+    
 #else
     
-
+    
+    
 /**
     Indicates a failure that occurred within the BMSCore framework.
 */

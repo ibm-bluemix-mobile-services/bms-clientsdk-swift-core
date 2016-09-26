@@ -12,17 +12,15 @@
 */
 
 
-// Custom wrapper for UrlSessionDelegate
-// Uses AuthorizationManager from the BMSSecurity framework to handle network requests to MCA-protected backends
 
-
-
-// MARK: - BMSURLSessionDelegate (Swift 3)
+// MARK: - Swift 3
 
 #if swift(>=3.0)
     
 
-
+    
+// Custom wrapper for UrlSessionDelegate
+// Uses AuthorizationManager from the BMSSecurity framework to handle network requests to MCA-protected backends
 internal class BMSURLSessionDelegate: NSObject {
     
     
@@ -153,14 +151,22 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
         (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
     }
 }
-  
     
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
     
 #else
-
     
-
-// MARK: - BMSURLSessionDelegate (Swift 2)
+    
 
 internal class BMSURLSessionDelegate: NSObject {
     

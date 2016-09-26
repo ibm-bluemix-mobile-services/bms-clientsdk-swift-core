@@ -15,8 +15,12 @@
 import WatchKit
 
 
+
+// MARK: - Swift 3
+
 #if swift(>=3.0)
 
+    
 
 /// This class represents the base device identity class, with default methods and keys
 open class BaseDeviceIdentity: DeviceIdentity {
@@ -85,13 +89,23 @@ open class BaseDeviceIdentity: DeviceIdentity {
     }
 
 }
-
-
+    
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
     
 #else
-
     
-
+    
+    
 /// This class represents the base device identity class, with default methods and keys
 public class BaseDeviceIdentity: DeviceIdentity {
     

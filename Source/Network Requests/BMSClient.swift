@@ -12,6 +12,13 @@
 */
 
 
+
+// MARK: - Swift 3
+
+#if swift(>=3.0)
+    
+
+
 /**
     A singleton that serves as an entry point to Bluemix client-server communication.
 */
@@ -64,8 +71,6 @@ public class BMSClient {
     
     // MARK: Initializers
     
-#if swift(>=3.0)
-    
     /**
         The required intializer for the `BMSClient` class.
      
@@ -76,16 +81,89 @@ public class BMSClient {
         - parameter backendAppRoute:           (Optional) The base URL for the authorization server.
         - parameter backendAppGUID:            (Optional) The GUID of the Bluemix application.
         - parameter bluemixRegion:             The region where your Bluemix application is hosted. Use one of the `BMSClient.Region` constants.
-     */
+    */
     public func initialize(bluemixAppRoute: String? = nil, bluemixAppGUID: String? = nil, bluemixRegion: String...) {
         
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
         self.bluemixRegion = bluemixRegion[0]
     }
-
     
+    
+    // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
+	private init() {
+		self.authorizationManager = BaseAuthorizationManager()
+	}
+
+}
+
+
+
+
+
+/**************************************************************************************************/
+
+
+
+
+
+// MARK: - Swift 2
+
 #else
+
+
+
+/**
+    A singleton that serves as an entry point to Bluemix client-server communication.
+*/
+public class BMSClient {
+    
+    
+    // MARK: Constants
+    
+    /**
+        The region where your Bluemix service is hosted.
+    */
+    public struct Region {
+        
+        /// The southern United States Bluemix region.
+        /// - Note: Use this in the `initialize` method.
+        public static let usSouth = ".ng.bluemix.net"
+        
+        /// The United Kingdom Bluemix region.
+        /// - Note: Use this in the `initialize` method.
+        public static let unitedKingdom = ".eu-gb.bluemix.net"
+        
+        /// The Sydney Bluemix region.
+        /// - Note: Use this in the `initialize` method.
+        public static let sydney = ".au-syd.bluemix.net"
+    }
+    
+    
+    
+    // MARK: Properties (API)
+    
+    /// The singleton that is used for all `BMSClient` activity.
+    public static let sharedInstance = BMSClient()
+    
+    /// Specifies the base Bluemix application backend URL.
+    public private(set) var bluemixAppRoute: String?
+    
+    // Specifies the region where the Bluemix service is hosted.
+    public private(set) var bluemixRegion: String?
+    
+    /// Specifies the Bluemix application backend identifier.
+    public private(set) var bluemixAppGUID: String?
+    
+    /// Specifies the allowed timeout (in seconds) for all `BMSClient` network requests.
+    public var requestTimeout: Double = 20.0
+    
+    // Handles the authentication process for network requests.
+    public var authorizationManager: AuthorizationManager
+    
+    
+    
+    // MARK: Initializers
     
     /**
         The required intializer for the `BMSClient` class.
@@ -97,21 +175,22 @@ public class BMSClient {
         - parameter backendAppRoute:           (Optional) The base URL for the authorization server.
         - parameter backendAppGUID:            (Optional) The GUID of the Bluemix application.
         - parameter bluemixRegion:             The region where your Bluemix application is hosted. Use one of the `BMSClient.Region` constants.
-     */
+    */
     public func initialize(bluemixAppRoute bluemixAppRoute: String? = nil, bluemixAppGUID: String? = nil, bluemixRegion: String...) {
-        
+    
         self.bluemixAppRoute = bluemixAppRoute
         self.bluemixAppGUID = bluemixAppGUID
         self.bluemixRegion = bluemixRegion[0]
     }
-
-    
-#endif
     
     
     // Prevent users from using BMSClient() initializer - They must use BMSClient.sharedInstance
-	private init() {
-		self.authorizationManager = BaseAuthorizationManager()
-	}
-
+    private init() {
+        self.authorizationManager = BaseAuthorizationManager()
+    }
+    
 }
+
+
+
+#endif

@@ -12,7 +12,12 @@
 */
 
 
-// MARK: HttpMethod
+
+// MARK: - Swift 3
+
+#if swift(>=3.0)
+
+    
 
 /**
     The HTTP method to be used in the `Request` class initializer.
@@ -22,10 +27,6 @@ public enum HttpMethod: String {
     case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
 }
 
-
-
-#if swift(>=3.0)
-    
     
 
 // MARK: - BMSCompletionHandler
@@ -36,8 +37,6 @@ public enum HttpMethod: String {
 public typealias BMSCompletionHandler = (Response?, Error?) -> Void
 
     
-    
-// MARK: - BaseRequest (Swift 3)
     
     
 /**
@@ -207,7 +206,6 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     // MARK: Methods (internal)
     
-    
     private func buildAndSendRequest(url: URL, callback: BMSCompletionHandler?) {
         
         // A callback that builds the Response object and passes it to the user
@@ -304,9 +302,29 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
 }
     
-
-
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
+    
 #else
+    
+    
+
+/**
+    The HTTP method to be used in the `Request` class initializer.
+*/
+public enum HttpMethod: String {
+
+    case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
+}
     
     
     
@@ -318,8 +336,6 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
 public typealias BMSCompletionHandler = (Response?, NSError?) -> Void
     
     
-    
-// MARK: - BaseRequest (Swift 2)
 
 
 /**
@@ -405,7 +421,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter cachePolicy:	  Cache policy to use when sending request.
 
         - Note: A relative `url` may be supplied if the `BMSClient` class is initialized with a Bluemix app route beforehand.
-     */
+    */
     public init(url: String,
                method: HttpMethod = HttpMethod.GET,
                headers: [String: String]? = nil,
@@ -456,7 +472,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
 
         - parameter requestBody: The HTTP request body.
         - parameter completionHandler: The block that will be called when this request finishes.
-     */
+    */
     public func send(requestBody requestBody: NSData? = nil, completionHandler: BMSCompletionHandler?) {
         
         self.requestBody = requestBody
@@ -487,7 +503,6 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     
     // MARK: Methods (internal)
-    
     
     private func buildAndSendRequest(url url: NSURL, callback: BMSCompletionHandler?) {
     
@@ -538,7 +553,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         - parameter originalURL: The url that the parameters will be appeneded to
 
         - returns: The original URL with the query parameters appended to it
-     */
+    */
     static func append(queryParameters parameters: [String: String], toURL originalUrl: NSURL) -> NSURL? {
     
         if parameters.isEmpty {

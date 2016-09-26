@@ -12,6 +12,7 @@
 */
 
 
+
 public protocol DeviceIdentity {
     
 	var ID: String? { get }

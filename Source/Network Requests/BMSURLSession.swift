@@ -12,6 +12,9 @@
 */
 
 
+
+// MARK: - Swift 3
+
 #if swift(>=3.0)
 
 
@@ -19,9 +22,6 @@
 /// Callback for data tasks created with BMSURLSession.
 public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) -> Void
     
-    
-    
-// MARK: - BMSURLSession (Swift 3)
 
     
 /**
@@ -52,7 +52,7 @@ public struct BMSURLSession {
         - parameter configuration:  Defines the behavior of the session.
         - parameter delegate:       Handles session-related events. If nil, use task methods that take completion handlers.
         - parameter delegateQueue:  Queue for scheduling the delegate calls and completion handlers.
-     */
+    */
     public init(configuration: URLSessionConfiguration = .default,
                 delegate: URLSessionDelegate? = nil,
                 delegateQueue: OperationQueue? = nil) {
@@ -72,7 +72,7 @@ public struct BMSURLSession {
         To start the task, you must call its `resume` method.
 
         - parameter url:  The URL to retrieve data from.
-     */
+    */
     public func dataTask(with url: URL) -> URLSessionDataTask {
         
         return dataTask(with: URLRequest(url: url))
@@ -89,7 +89,7 @@ public struct BMSURLSession {
 
         - parameter url:                The URL to retrieve data from.
         - parameter completionHandler:  The completion handler to call when the request is complete.
-     */
+    */
     public func dataTask(with url: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask {
         
         return dataTask(with: URLRequest(url: url), completionHandler: completionHandler)
@@ -103,7 +103,7 @@ public struct BMSURLSession {
 
         - parameter request:  An object that provides request-specific information
                               such as the URL, cache policy, request type, and body data.
-     */
+    */
     public func dataTask(with request: URLRequest) -> URLSessionDataTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -130,7 +130,7 @@ public struct BMSURLSession {
         - parameter request:            An object that provides request-specific information
                                         such as the URL, cache policy, request type, and body data.
         - parameter completionHandler:  The completion handler to call when the request is complete.
-     */
+    */
     public func dataTask(with request: URLRequest, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -156,7 +156,7 @@ public struct BMSURLSession {
         - parameter request:   An object that provides request-specific information
                                such as the URL and cache policy. The request body is ignored.
         - parameter bodyData:  The body data for the request.
-     */
+    */
     public func uploadTask(with request: URLRequest, from bodyData: Data) -> URLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -183,7 +183,7 @@ public struct BMSURLSession {
                                         such as the URL and cache policy. The request body is ignored.
         - parameter bodyData:           The body data for the request.
         - parameter completionHandler:  The completion handler to call when the request is complete.
-     */
+    */
     public func uploadTask(with request: URLRequest, from bodyData: Data?, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -206,7 +206,7 @@ public struct BMSURLSession {
         - parameter request:  An object that provides request-specific information
                               such as the URL and cache policy. The request body is ignored.
         - parameter fileURL:  The location of the file to upload.
-     */
+    */
     public func uploadTask(with request: URLRequest, fromFile fileURL: URL) -> URLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -233,7 +233,7 @@ public struct BMSURLSession {
                                         such as the URL and cache policy. The request body is ignored.
         - parameter fileURL:            The location of the file to upload.
         - parameter completionHandler:  The completion handler to call when the request is complete.
-     */
+    */
     public func uploadTask(with request: URLRequest, fromFile fileURL: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -375,13 +375,23 @@ internal enum BMSURLSessionTaskType {
     case uploadTaskWithFileAndCompletionHandler(URL, BMSDataTaskCompletionHandler)
     case uploadTaskWithDataAndCompletionHandler(Data?, BMSDataTaskCompletionHandler)
 }
-
     
-
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
+    
 #else
-
     
     
+   
 // MARK: BMSURLSession (Swift 2)
     
 /// Callback for data tasks created with BMSURLSession.
@@ -453,7 +463,7 @@ public struct BMSURLSession {
      
         - parameter url:                The URL to retrieve data from.
         - parameter completionHandler:  The completion handler to call when the request is complete.
-     */
+    */
     public func dataTaskWithURL(url: NSURL, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionDataTask {
         
         return dataTaskWithRequest(NSURLRequest(URL: url), completionHandler: completionHandler)
@@ -467,7 +477,7 @@ public struct BMSURLSession {
      
         - parameter request:  An object that provides request-specific information
                               such as the URL, cache policy, request type, and body data.
-     */
+    */
     public func dataTaskWithRequest(request: NSURLRequest) -> NSURLSessionDataTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -495,7 +505,7 @@ public struct BMSURLSession {
         - parameter request:            An object that provides request-specific information
                                         such as the URL, cache policy, request type, and body data.
         - parameter completionHandler:  The completion handler to call when the request is complete.
-     */
+    */
     public func dataTaskWithRequest(request: NSURLRequest, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionDataTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -521,7 +531,7 @@ public struct BMSURLSession {
         - parameter request:   An object that provides request-specific information
                                such as the URL and cache policy. The request body is ignored.
         - parameter bodyData:  The body data for the request.
-     */
+    */
     public func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData) -> NSURLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -548,7 +558,7 @@ public struct BMSURLSession {
                                         such as the URL and cache policy. The request body is ignored.
         - parameter bodyData:           The body data for the request.
         - parameter completionHandler:  The completion handler to call when the request is complete.
-     */
+    */
     public func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData?, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -571,7 +581,7 @@ public struct BMSURLSession {
         - parameter request:  An object that provides request-specific information
                               such as the URL and cache policy. The request body is ignored.
         - parameter fileURL:  The location of the file to upload.
-     */
+    */
     public func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL) -> NSURLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
@@ -598,7 +608,7 @@ public struct BMSURLSession {
                                         such as the URL and cache policy. The request body is ignored.
         - parameter fileURL:            The location of the file to upload.
         - parameter completionHandler:  The completion handler to call when the request is complete.
-     */
+    */
     public func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask {
         
         let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
