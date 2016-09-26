@@ -14,6 +14,8 @@
 import XCTest
 @testable import BMSCore
 
+
+
 class BMSClientTests: XCTestCase {
     
     
@@ -21,11 +23,7 @@ class BMSClientTests: XCTestCase {
         
         let clientInstance = BMSClient.sharedInstance
         
-        #if swift(>=3.0)
-            clientInstance.initialize(bluemixAppRoute: "http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.Region.usSouth)
-        #else
-            clientInstance.initialize(bluemixAppRoute: "http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.Region.usSouth)
-        #endif
+        clientInstance.initialize(bluemixAppRoute: "http://example.com", bluemixAppGUID: "1234", bluemixRegion:BMSClient.Region.usSouth)
         
         XCTAssertEqual(clientInstance.bluemixAppRoute, "http://example.com")
         XCTAssertEqual(clientInstance.bluemixAppGUID, "1234")
@@ -37,11 +35,7 @@ class BMSClientTests: XCTestCase {
         
         let clientInstance = BMSClient.sharedInstance
         
-        #if swift(>=3.0)
-            clientInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
-        #else
-            clientInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
-        #endif
+        clientInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
         
         XCTAssertNil(clientInstance.bluemixAppRoute)
         XCTAssertNil(clientInstance.bluemixAppGUID)

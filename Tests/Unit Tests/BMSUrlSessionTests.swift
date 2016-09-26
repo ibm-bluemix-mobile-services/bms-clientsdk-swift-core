@@ -16,11 +16,15 @@ import XCTest
 @testable import BMSCore
 
 
-class BMSUrlSessionTests: XCTestCase {
-    
-    
+
+// MARK: - Swift 3
+
 #if swift(>=3.0)
-    
+
+
+
+class BMSUrlSessionTests: XCTestCase {
+
     
     let testUrl = URL(string: "x")!
     
@@ -529,9 +533,25 @@ class BMSUrlSessionTests: XCTestCase {
         self.waitForExpectations(timeout: 5.0, handler: nil)
     }
     
+}
     
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
     
 #else
+
+    
+    
+class BMSUrlSessionTests: XCTestCase {
     
     
     let testUrl = NSURL(string: "x")!
@@ -1041,7 +1061,8 @@ class BMSUrlSessionTests: XCTestCase {
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
     
-    
-#endif
-    
 }
+
+
+
+#endif

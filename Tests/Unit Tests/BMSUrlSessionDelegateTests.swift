@@ -16,14 +16,18 @@ import XCTest
 @testable import BMSCore
 
 
-/* 
+
+// MARK: - Swift 3
+
+#if swift(>=3.0)
+    
+
+
+/*
     These tests ensure that the BMSURLSessionDelegate methods
     call the appropriate URLSession methods in the parent delegate.
 */
 class BMSUrlSessionDelegateTests: XCTestCase {
-    
-    
-#if swift(>=3.0)
 
     
     let testUrl = URL(string: "x")!
@@ -315,8 +319,29 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         }
     }
     
+}
+    
+    
+    
+    
+    
+/**************************************************************************************************/
+    
+    
+    
+    
+    
+// MARK: - Swift 2
     
 #else
+    
+  
+    
+/*
+    These tests ensure that the BMSURLSessionDelegate methods
+    call the appropriate URLSession methods in the parent delegate.
+*/
+class BMSUrlSessionDelegateTests: XCTestCase {
     
     
     let testUrl = NSURL(string: "x")!
@@ -591,7 +616,8 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         }
     }
     
-    
-#endif
-    
 }
+
+
+
+#endif
