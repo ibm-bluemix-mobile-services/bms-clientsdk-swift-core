@@ -101,6 +101,8 @@ let dataTask = urlSession.dataTaskWithRequest(request) { (data: NSData?, respons
         logger.error("Error: \(error.debugDescription)")
     }
 }
+
+dataTask.resume()
 ```
 
 
