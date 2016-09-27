@@ -91,11 +91,11 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     // The time at which the request is sent.
     // Public access required by BMSAnalytics framework.
-    public private(set) var startTime: TimeInterval = 0.0
+    open private(set) var startTime: TimeInterval = 0.0
     
     // The unique ID to keep track of each request.
     // Public access required by BMSAnalytics framework.
-    public private(set) var trackingId: String = ""
+    open private(set) var trackingId: String = ""
     
     // Metadata for the request.
     // This will obtain a value when the Analytics class from BMSAnalytics is initialized.

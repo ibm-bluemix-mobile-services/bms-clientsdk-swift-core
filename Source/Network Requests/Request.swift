@@ -26,7 +26,7 @@
 
     When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via the `send()` method.
 */
-public class Request: BaseRequest {
+open class Request: BaseRequest {
     
     
     // MARK: Properties (internal)
