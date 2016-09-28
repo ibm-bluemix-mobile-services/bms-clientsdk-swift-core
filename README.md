@@ -75,13 +75,13 @@ For apps built with Swift 2.3, use the command `carthage update --toolchain com.
 
 let appRoute = "https://myapp.mybluemix.net"
 let appGuid = "2fe35477-5410-4c87-1234-aca59511433b"
-let bluemixRegion = BMSClient.REGION_US_SOUTH
+let bluemixRegion = BMSClient.Region.usSouth
 
-BMSClient.sharedInstance.initialize(appRoute,
-	                               bluemixAppGUID: appGuid,
-	                               bluemixRegion: bluemixRegion)
+BMSClient.sharedInstance.initialize(bluemixAppRoute: appRoute,
+	                            bluemixAppGUID: appGuid,
+	                            bluemixRegion: bluemixRegion)
 	                               
-let logger = Logger.logger(forName: "My Logger")
+let logger = Logger.logger(name: "My Logger")
 
 // Make a network request
 
@@ -92,13 +92,13 @@ request.allHTTPHeaderFields = ["foo":"bar"]
 
 let dataTask = urlSession.dataTaskWithRequest(request) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
     if let httpResponse = response as? NSHTTPURLResponse {
-        logger.info("Status code: \(httpResponse.statusCode)")
+        logger.info(message: "Status code: \(httpResponse.statusCode)")
     }
     if data != nil, let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding) {
-        logger.info("Response data: \(responseString)")
+        logger.info(message: "Response data: \(responseString)")
     }
     if let error = error {
-        logger.error("Error: \(error.debugDescription)")
+        logger.error(message: "Error: \(error)")
     }
 }
 
@@ -113,13 +113,13 @@ dataTask.resume()
 
 let appRoute = "https://myapp.mybluemix.net"
 let appGuid = "2fe35477-5410-4c87-1234-aca59511433b"
-let bluemixRegion = BMSClient.REGION_US_SOUTH
+let bluemixRegion = BMSClient.Region.usSouth
 
 BMSClient.sharedInstance.initialize(bluemixAppRoute: appRoute,
 	                            bluemixAppGUID: appGuid,
 	                            bluemixRegion: bluemixRegion)
 	                            
-let logger = Logger.logger(forName: "My Logger")
+let logger = Logger.logger(name: "My Logger")
 
 // Make a network request
 
