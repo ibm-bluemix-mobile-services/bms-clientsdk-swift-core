@@ -90,7 +90,7 @@ open class Request: BaseRequest {
 			authManager.obtainAuthorization(completionHandler: authCallback)
         }
         
-        super.send(completionHandler: sendCompletionHandler)
+        super.send(requestBody: requestBody, completionHandler: sendCompletionHandler)
     }
     
 }
@@ -140,7 +140,7 @@ public class Request: BaseRequest {
         
         savedRequestBody = requestBody
         
-        let myCallback : BMSCompletionHandler = {(response: Response?, error: NSError?) in
+        let sendCompletionHandler : BMSCompletionHandler = {(response: Response?, error: NSError?) in
         
             guard error == nil else {
                 if let callback = completionHandler {
@@ -182,7 +182,7 @@ public class Request: BaseRequest {
             authManager.obtainAuthorization(completionHandler: authCallback)
         }
         
-        super.send(completionHandler: myCallback)
+        super.send(requestBody: requestBody, completionHandler: sendCompletionHandler)
     }
 
 }
