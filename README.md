@@ -29,6 +29,7 @@ The Bluemix Mobile Services Swift SDKs are available via [Cocoapods](http://coco
 
 
 ### Cocoapods
+
 To install BMSCore using Cocoapods, add it to your Podfile:
 
 ```ruby
@@ -39,25 +40,27 @@ target 'MyApp' do
 end
 ```
 
-Then run the `pod install` command.
+Then run the `pod install` command. To update to a newer release of BMSCore, use `pod update BMSCore`.
 
 #### Xcode 8
 
-Before running the `pod install` command, make sure to use the latest Cocoapods [pre-release version](https://github.com/CocoaPods/CocoaPods/releases).
+Before running the `pod install` command, install Cocoapods [1.1.0.rc.2](https://github.com/CocoaPods/CocoaPods/releases) (or later), using the command `sudo gem install cocoapods --pre`.
 
 If you receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore), **do not** convert BMSCore or BMSAnalyticsAPI.
 
 
 ### Carthage
-To install BMSCore using Carthage, add it to your Cartfile: 
+
+To install BMSCore with Carthage, follow the instructions [here](https://github.com/Carthage/Carthage#getting-started).
+
+Add this line to your Cartfile: 
 
 ```ogdl
 github "ibm-bluemix-mobile-services/bms-clientsdk-swift-core"
 ```
 
-Then run the `carthage update` command. Once the build is finished, drag `BMSCore.framework` and `BMSAnalyticsAPI.framework` into your Xcode project. 
+Then run the `carthage update` command. Once the build is finished, add `BMSCore.framework` and `BMSAnalyticsAPI.framework` to your project. 
 
-To complete the integration, follow the instructions [here](https://github.com/Carthage/Carthage#getting-started).
 
 #### Xcode 8
 
