@@ -79,7 +79,6 @@ BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
 let logger = Logger.logger(name: "My Logger")
 
 // Make a network request
-
 let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
 let request = NSMutableURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
 request.HTTPMethod = "GET"
@@ -110,7 +109,6 @@ BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
 let logger = Logger.logger(name: "My Logger")
 
 // Make a network request
-
 let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
 var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
 request.httpMethod = "GET"
@@ -127,9 +125,11 @@ let dataTask = urlSession.dataTaskWithRequest(request) { (data: Data?, response:
         logger.error(message: "Error: \(error)")
     }
 }
+
+dataTask.resume()
 ```
 
-> By default the Bluemix Mobile Service SDK internal debug logging will not be printed to Xcode console. If you want to enable SDK debug logging output set the `Logger.sdkDebugLoggingEnabled` property to `true`.
+> By default the Bluemix Mobile Service SDK internal debug logging will not be printed to Xcode console. If you want to enable SDK debug logging output set the `Logger.isInternalDebugLoggingEnabled` property to `true`.
 
 
 ### Disabling Logging output for production applications
