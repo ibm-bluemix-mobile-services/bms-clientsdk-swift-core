@@ -74,22 +74,15 @@ For apps built with Swift 2.3, use the command `carthage update --toolchain com.
 
 ```Swift
 // Initialize BMSClient
-
-let appRoute = "https://myapp.mybluemix.net"
-let appGuid = "2fe35477-5410-4c87-1234-aca59511433b"
-let bluemixRegion = BMSClient.Region.usSouth
-
-BMSClient.sharedInstance.initialize(bluemixAppRoute: appRoute,
-	                            bluemixAppGUID: appGuid,
-	                            bluemixRegion: bluemixRegion)
+BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
 	                               
 let logger = Logger.logger(name: "My Logger")
 
 // Make a network request
 
 let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
-
 let request = NSMutableURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
+request.HTTPMethod = "GET"
 request.allHTTPHeaderFields = ["foo":"bar"]
 
 let dataTask = urlSession.dataTaskWithRequest(request) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
@@ -112,21 +105,13 @@ dataTask.resume()
 
 ```Swift
 // Initialize BMSClient
-
-let appRoute = "https://myapp.mybluemix.net"
-let appGuid = "2fe35477-5410-4c87-1234-aca59511433b"
-let bluemixRegion = BMSClient.Region.usSouth
-
-BMSClient.sharedInstance.initialize(bluemixAppRoute: appRoute,
-	                            bluemixAppGUID: appGuid,
-	                            bluemixRegion: bluemixRegion)
+BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
 	                            
 let logger = Logger.logger(name: "My Logger")
 
 // Make a network request
 
 let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
-
 var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
 request.httpMethod = "GET"
 request.allHTTPHeaderFields = ["foo":"bar"]
