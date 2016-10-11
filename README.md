@@ -114,7 +114,7 @@ var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
 request.httpMethod = "GET"
 request.allHTTPHeaderFields = ["foo":"bar"]
 
-let dataTask = urlSession.dataTaskWithRequest(request) { (data: Data?, response: URLResponse?, error: Error?) in
+let dataTask = urlSession.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
     if let httpResponse = response as? HTTPURLResponse {
         logger.info(message: "Status code: \(httpResponse.statusCode)")
     }
