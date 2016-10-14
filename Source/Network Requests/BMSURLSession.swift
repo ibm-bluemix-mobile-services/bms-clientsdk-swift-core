@@ -12,6 +12,7 @@
 */
 
 
+import BMSAnalyticsAPI
 
 // MARK: - Swift 3
 
@@ -35,6 +36,11 @@ public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) ->
 */
 public struct BMSURLSession {
 
+    
+    // Determines whether metadata gets recorded for all BMSURLSession network requests
+    // Can only be set to true by passing DeviceEvent.network in the Analytics.initialize() method in the BMSAnalytics framework.
+    
+    public static var shouldRecordNetworkMetadata: Bool = false
     
     private let configuration: URLSessionConfiguration
     
@@ -332,14 +338,17 @@ public struct BMSURLSession {
             }
             else {
                 
-                let bytesReceived: Int64 = Int64(data?.count ?? 0)
-                var bytesSent: Int64 = 0
-                if requestBody != nil {
-                    bytesSent = Int64(requestBody!.count)
+                if shouldRecordNetworkMetadata {
+                    
+                    let bytesReceived: Int64 = Int64(data?.count ?? 0)
+                    var bytesSent: Int64 = 0
+                    if requestBody != nil {
+                        bytesSent = Int64(requestBody!.count)
+                    }
+                    
+                    let requestMetadata = getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.url)
+                    Analytics.log(metadata: requestMetadata)
                 }
-                
-                let requestMetadata = getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.url)
-                Analytics.log(metadata: requestMetadata)
                 
                 completionHandler(data, response, error)
             }

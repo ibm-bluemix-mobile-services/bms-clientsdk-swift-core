@@ -34,6 +34,8 @@ class BMSUrlSessionTests: XCTestCase {
         
         testBundle = Bundle(for: type(of: self))
         testUrl = testBundle.url(forResource: "Andromeda", withExtension: "jpg")!
+        
+        BMSURLSession.shouldRecordNetworkMetadata = true
     }
     
     

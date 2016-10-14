@@ -33,6 +33,11 @@ class BMSUrlSessionDelegateTests: XCTestCase {
     let testUrl = URL(string: "x")!
     
     
+    public override func setUp() {
+        
+        BMSURLSession.shouldRecordNetworkMetadata = true
+    }
+    
     
     func testDelegateRecordsRequestMetadata() {
         

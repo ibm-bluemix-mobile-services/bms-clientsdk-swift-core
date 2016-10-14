@@ -194,7 +194,7 @@ extension BMSURLSessionDelegate {
     fileprivate func logRequestMetadata() {
         
         // This function can be called from 2 places (willCacheResponse and didCompleteWithError), so we make sure to log analytics only once in case both of those methods get called.
-        if !requestMetadataWasRecorded {
+        if BMSURLSession.shouldRecordNetworkMetadata && !requestMetadataWasRecorded {
             let requestMetadata = BMSURLSession.getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: url)
             Analytics.log(metadata: requestMetadata)
             
