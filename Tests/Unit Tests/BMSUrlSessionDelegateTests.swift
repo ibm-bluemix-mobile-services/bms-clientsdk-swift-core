@@ -34,6 +34,29 @@ class BMSUrlSessionDelegateTests: XCTestCase {
     
     
     
+    func testDelegateRecordsRequestMetadata() {
+        
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: nil), originalTask: .dataTask)
+
+        let urlSession = URLSession(configuration: .default)
+        let testBundle = Bundle(for: type(of: self))
+        let url = testBundle.url(forResource: "Andromeda", withExtension: "jpg")!
+        let dataTask = urlSession.dataTask(with: url)
+        let response = HTTPURLResponse(url: testUrl, statusCode: 200, httpVersion: nil, headerFields: nil)!
+        
+        let dataReceived = "Some response data".data(using: .utf8)!
+        let dataReceivedBytes = Int64(dataReceived.count)
+        
+        bmsDelegate.urlSession(urlSession, dataTask: dataTask, didReceive: response, completionHandler: {(_) in })
+        bmsDelegate.urlSession(urlSession, dataTask: dataTask, didReceive: dataReceived)
+        
+        XCTAssertEqual(bmsDelegate.url!, url)
+        XCTAssertEqual(bmsDelegate.response, response)
+        XCTAssertEqual(bmsDelegate.bytesReceived, dataReceivedBytes)
+    }
+    
+    
+    
     // MARK: Session delegate
     
     func testDidBecomeInvalidWithError() {
@@ -144,8 +167,13 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectation(description: "Called didReceiveResponse")
         
+        // Need to create a real data task for this test because the delegate's didReceiveResponse method attempts to read properties from the data task.
+        let urlSession = URLSession(configuration: .default)
+        let dataTask = urlSession.dataTask(with: URL(fileURLWithPath: "http://example.com"))
+        
         let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
-        bmsDelegate.urlSession(URLSession(), dataTask: URLSessionDataTask(), didReceive: URLResponse(), completionHandler: {(_) in })
+        bmsDelegate.urlSession(urlSession, dataTask: dataTask, didReceive: URLResponse(), completionHandler: {(_) in })
+        
         
         self.waitForExpectations(timeout: 0.1, handler: nil)
     }
@@ -247,12 +275,12 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
     
     
@@ -261,7 +289,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -271,23 +299,23 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         func urlSession(_ session: URLSession, task: URLSessionTask, needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         @available(iOS, introduced: 10)
         func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
 
         func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
     
     
@@ -295,27 +323,27 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didBecome downloadTask: URLSessionDownloadTask) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didBecome streamTask: URLSessionStreamTask) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
     }
     

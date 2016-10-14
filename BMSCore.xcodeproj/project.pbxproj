@@ -46,7 +46,6 @@
 		924E0A9C1CB5766E00C2FEE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 924E0A961CB5766E00C2FEE2 /* Assets.xcassets */; };
 		924E0A9E1CB5766E00C2FEE2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924E0A981CB5766E00C2FEE2 /* ViewController.swift */; };
 		926061BF1D8AF91100A98083 /* URLSessionDelegateExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926061BE1D8AF91100A98083 /* URLSessionDelegateExample.swift */; };
-		926061C11D8B0BE800A98083 /* Andromeda.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 926061C01D8B0BE800A98083 /* Andromeda.jpg */; };
 		926061C31D8B3AB000A98083 /* CallbackPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926061C21D8B3AB000A98083 /* CallbackPickerViewController.swift */; };
 		926061C51D8B3AC000A98083 /* HttpMethodPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926061C41D8B3AC000A98083 /* HttpMethodPickerViewController.swift */; };
 		926679B91BF3D4E000F597C5 /* TestApp watchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestApp watchOS.app */; };
@@ -61,12 +60,13 @@
 		927DF20C1C7CF63F00245647 /* BaseAuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51C00E1C7625BC00023F37 /* BaseAuthorizationManager.swift */; };
 		929D46151D6659C8002192E3 /* BMSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D46141D6659C3002192E3 /* BMSURLSession.swift */; };
 		929D46161D6659C9002192E3 /* BMSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D46141D6659C3002192E3 /* BMSURLSession.swift */; };
+		92A39C991DB1475700DEC4CA /* Andromeda.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92A39C981DB1474700DEC4CA /* Andromeda.jpg */; };
+		92A39C9B1DB147E700DEC4CA /* Andromeda.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92A39C9A1DB1477C00DEC4CA /* Andromeda.jpg */; };
 		92A60C0A1D831F6D005E0969 /* BMSUrlSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A60C091D831F6D005E0969 /* BMSUrlSessionTests.swift */; };
 		92A60C0C1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A60C0B1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift */; };
 		92A8DD3B1CEA2F6B0092417A /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
 		92BBA3A11D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */; };
 		92BBA3A21D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */; };
-		92ED06FD1C45AEC900E0BA1D /* LargeData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 92018A7C1C45AC380031C893 /* LargeData.txt */; };
 		A8DC446009D6586F8DB0A399 /* Pods_BMSCore_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E75E9EA9BBCD7E2F4FC7103 /* Pods_BMSCore_iOS.framework */; };
 		CECE3807C60FC48B9F835471 /* Pods_BMSCore_watchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE070372C5BAB5000E5BBD47 /* Pods_BMSCore_watchOS.framework */; };
 		ED49FC2E202A8336C64EE57C /* Pods_TestApp_watchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CCA0DC33589F11B9392E3B1 /* Pods_TestApp_watchOS.framework */; };
@@ -182,7 +182,6 @@
 		92018A771C45AC380031C893 /* BMSClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClientTests.swift; sourceTree = "<group>"; };
 		92018A791C45AC380031C893 /* BaseRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequestTests.swift; sourceTree = "<group>"; };
 		92018A7B1C45AC380031C893 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		92018A7C1C45AC380031C893 /* LargeData.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LargeData.txt; sourceTree = "<group>"; };
 		92018A7D1C45AC380031C893 /* ResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
 		9235D0A81BC3181900946A32 /* TestApp iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestApp iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0BC1BC3183F00946A32 /* TestApp watchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestApp watchOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -201,7 +200,6 @@
 		924E0A971CB5766E00C2FEE2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		924E0A981CB5766E00C2FEE2 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		926061BE1D8AF91100A98083 /* URLSessionDelegateExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionDelegateExample.swift; sourceTree = "<group>"; };
-		926061C01D8B0BE800A98083 /* Andromeda.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Andromeda.jpg; sourceTree = "<group>"; };
 		926061C21D8B3AB000A98083 /* CallbackPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallbackPickerViewController.swift; sourceTree = "<group>"; };
 		926061C41D8B3AC000A98083 /* HttpMethodPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpMethodPickerViewController.swift; sourceTree = "<group>"; };
 		927DF2001C7CD7B900245647 /* RequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
@@ -209,6 +207,8 @@
 		927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDeviceIdentity.swift; sourceTree = "<group>"; };
 		927DF2051C7CF60600245647 /* BaseUserIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseUserIdentity.swift; sourceTree = "<group>"; };
 		929D46141D6659C3002192E3 /* BMSURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMSURLSession.swift; sourceTree = "<group>"; };
+		92A39C981DB1474700DEC4CA /* Andromeda.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Andromeda.jpg; sourceTree = "<group>"; };
+		92A39C9A1DB1477C00DEC4CA /* Andromeda.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Andromeda.jpg; sourceTree = "<group>"; };
 		92A60C091D831F6D005E0969 /* BMSUrlSessionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSUrlSessionTests.swift; sourceTree = "<group>"; };
 		92A60C0B1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSUrlSessionDelegateTests.swift; sourceTree = "<group>"; };
 		92A6ACC11CB2CA2D00052C2C /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
@@ -395,8 +395,8 @@
 		92018A7A1C45AC380031C893 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				92A39C981DB1474700DEC4CA /* Andromeda.jpg */,
 				92018A7B1C45AC380031C893 /* Info.plist */,
-				92018A7C1C45AC380031C893 /* LargeData.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -455,8 +455,8 @@
 		924E0A951CB5766E00C2FEE2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				92A39C9A1DB1477C00DEC4CA /* Andromeda.jpg */,
 				924E0A911CB5766E00C2FEE2 /* LaunchScreen.storyboard */,
-				926061C01D8B0BE800A98083 /* Andromeda.jpg */,
 				924E0A961CB5766E00C2FEE2 /* Assets.xcassets */,
 				924E0A971CB5766E00C2FEE2 /* Info.plist */,
 			);
@@ -724,7 +724,7 @@
 				924E0A9A1CB5766E00C2FEE2 /* LaunchScreen.storyboard in Resources */,
 				924E0A9C1CB5766E00C2FEE2 /* Assets.xcassets in Resources */,
 				924E0A9B1CB5766E00C2FEE2 /* Main.storyboard in Resources */,
-				926061C11D8B0BE800A98083 /* Andromeda.jpg in Resources */,
+				92A39C9B1DB147E700DEC4CA /* Andromeda.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,7 +763,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92ED06FD1C45AEC900E0BA1D /* LargeData.txt in Resources */,
+				92A39C991DB1475700DEC4CA /* Andromeda.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
