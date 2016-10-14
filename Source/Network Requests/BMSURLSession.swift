@@ -417,18 +417,18 @@ public struct BMSURLSession {
         
         responseMetadata["$category"] = "network"
         responseMetadata["$trackingId"] = trackingId
-        responseMetadata["$outboundTimestamp"] = startTime
-        responseMetadata["$inboundTimestamp"] = endTime
-        responseMetadata["$roundTripTime"] = roundTripTime
-        responseMetadata["$bytesSent"] = bytesSent
-        responseMetadata["$bytesReceived"] = bytesReceived
+        responseMetadata["$outboundTimestamp"] = String(describing: startTime)
+        responseMetadata["$inboundTimestamp"] = String(describing: endTime)
+        responseMetadata["$roundTripTime"] = String(describing: roundTripTime)
+        responseMetadata["$bytesSent"] = String(describing: bytesSent)
+        responseMetadata["$bytesReceived"] = String(describing: bytesReceived)
 
         if let urlString = url?.absoluteString {
             responseMetadata["$path"] = urlString
         }
         
         if let httpResponse = response as? HTTPURLResponse {
-            responseMetadata["$responseCode"] = httpResponse.statusCode
+            responseMetadata["$responseCode"] = String(describing: httpResponse.statusCode)
         }
         
         return responseMetadata
