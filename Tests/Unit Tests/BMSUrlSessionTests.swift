@@ -563,15 +563,15 @@ class BMSUrlSessionTests: XCTestCase {
                 print(metadata)
             }
             
-            let endTime = responseMetadata["$inboundTimestamp"] as! Int64
+            let endTime = responseMetadata["$inboundTimestamp"] as! Int
             
             XCTAssertEqual(responseMetadata["$category"] as! String, "network")
             XCTAssertEqual(responseMetadata["$trackingid"] as! String, trackingId)
-            XCTAssertEqual(responseMetadata["$outboundTimestamp"] as! Int64, startTime)
-            XCTAssertGreaterThan(endTime, startTime)
-            XCTAssertEqual(responseMetadata["$roundTripTime"] as! Int64, endTime - startTime)
-            XCTAssertEqual(responseMetadata["$bytesSent"] as! Int64, bytesSent)
-            XCTAssertEqual(responseMetadata["$bytesReceived"] as! Int64, bytesReceived)
+            XCTAssertEqual(responseMetadata["$outboundTimestamp"] as! Int, Int(startTime))
+            XCTAssertGreaterThan(endTime, Int(startTime))
+            XCTAssertEqual(responseMetadata["$roundTripTime"] as! Int, endTime - Int(startTime))
+            XCTAssertEqual(responseMetadata["$bytesSent"] as! Int, Int(bytesSent))
+            XCTAssertEqual(responseMetadata["$bytesReceived"] as! Int, Int(bytesReceived))
             XCTAssertEqual(responseMetadata["$path"] as! String, self.testUrl.absoluteString)
             XCTAssertEqual((responseMetadata["$responseCode"] as! Int), testResponse?.statusCode)
             
