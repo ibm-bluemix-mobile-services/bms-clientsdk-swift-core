@@ -29,7 +29,7 @@ The Bluemix Mobile Services Swift SDKs are available via [Cocoapods](http://coco
 
 ### Cocoapods
 
-To install BMSCore using Cocoapods, add it to your Podfile:
+To install BMSCore using Cocoapods, add it to your Podfile. If your project does not have a Podfile yet, use the `pod init` command.
 
 ```ruby
 use_frameworks!
