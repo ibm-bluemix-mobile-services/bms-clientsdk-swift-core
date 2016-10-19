@@ -566,7 +566,7 @@ class BMSUrlSessionTests: XCTestCase {
             let endTime = responseMetadata["$inboundTimestamp"] as! Int64
             
             XCTAssertEqual(responseMetadata["$category"] as! String, "network")
-            XCTAssertEqual(responseMetadata["$trackingId"] as! String, trackingId)
+            XCTAssertEqual(responseMetadata["$trackingid"] as! String, trackingId)
             XCTAssertEqual(responseMetadata["$outboundTimestamp"] as! Int64, startTime)
             XCTAssertGreaterThan(endTime, startTime)
             XCTAssertEqual(responseMetadata["$roundTripTime"] as! Int64, endTime - startTime)

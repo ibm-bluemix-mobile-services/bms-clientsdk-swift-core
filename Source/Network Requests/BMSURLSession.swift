@@ -416,7 +416,7 @@ public struct BMSURLSession {
         var responseMetadata: [String: Any] = [:]
         
         responseMetadata["$category"] = "network"
-        responseMetadata["$trackingId"] = trackingId
+        responseMetadata["$trackingid"] = trackingId
         responseMetadata["$outboundTimestamp"] = String(describing: startTime)
         responseMetadata["$inboundTimestamp"] = String(describing: endTime)
         responseMetadata["$roundTripTime"] = String(describing: roundTripTime)
