@@ -559,10 +559,6 @@ class BMSUrlSessionTests: XCTestCase {
             
             let responseMetadata: [String: Any] = BMSURLSession.getRequestMetadata(response: testResponse, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: self.testUrl)
             
-            for metadata in responseMetadata {
-                print(metadata)
-            }
-            
             let endTime = responseMetadata["$inboundTimestamp"] as! Int
             
             XCTAssertEqual(responseMetadata["$category"] as! String, "network")

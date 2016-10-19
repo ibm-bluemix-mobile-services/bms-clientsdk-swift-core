@@ -38,8 +38,7 @@ public struct BMSURLSession {
 
     
     // Determines whether metadata gets recorded for all BMSURLSession network requests
-    // Can only be set to true by passing DeviceEvent.network in the Analytics.initialize() method in the BMSAnalytics framework.
-    
+    // Should only be set to true by passing DeviceEvent.network in the Analytics.initialize() method in the BMSAnalytics framework.
     public static var shouldRecordNetworkMetadata: Bool = false
     
     private let configuration: URLSessionConfiguration
