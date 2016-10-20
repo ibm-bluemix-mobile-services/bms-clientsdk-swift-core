@@ -69,6 +69,33 @@ For apps built with Swift 2.3, use the command `carthage update --toolchain com.
 
 ## Usage Examples
 
+### Swift 3.0
+
+```Swift
+// Initialize BMSClient
+BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
+	                            
+let logger = Logger.logger(name: "My Logger")
+
+// Make a network request
+let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
+request.httpMethod = "GET"
+request.allHTTPHeaderFields = ["foo":"bar"]
+
+urlSession.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
+    if let httpResponse = response as? HTTPURLResponse {
+        logger.info(message: "Status code: \(httpResponse.statusCode)")
+    }
+    if data != nil, let responseString = String(data: data!, encoding: .utf8) {
+        logger.info(message: "Response data: \(responseString)")
+    }
+    if let error = error {
+        logger.error(message: "Error: \(error)")
+    }
+}.resume()
+```
+
 
 ### Swift 2.2
 
@@ -84,7 +111,7 @@ let request = NSMutableURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
 request.HTTPMethod = "GET"
 request.allHTTPHeaderFields = ["foo":"bar"]
 
-let dataTask = urlSession.dataTaskWithRequest(request) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+urlSession.dataTaskWithRequest(request) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
     if let httpResponse = response as? NSHTTPURLResponse {
         logger.info(message: "Status code: \(httpResponse.statusCode)")
     }
@@ -94,42 +121,12 @@ let dataTask = urlSession.dataTaskWithRequest(request) { (data: NSData?, respons
     if let error = error {
         logger.error(message: "Error: \(error)")
     }
-}
-
-dataTask.resume()
+}.resume()
 ```
 
-
-### Swift 3.0
-
-```Swift
-// Initialize BMSClient
-BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
-	                            
-let logger = Logger.logger(name: "My Logger")
-
-// Make a network request
-let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
-var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
-request.httpMethod = "GET"
-request.allHTTPHeaderFields = ["foo":"bar"]
-
-let dataTask = urlSession.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
-    if let httpResponse = response as? HTTPURLResponse {
-        logger.info(message: "Status code: \(httpResponse.statusCode)")
-    }
-    if data != nil, let responseString = String(data: data!, encoding: .utf8) {
-        logger.info(message: "Response data: \(responseString)")
-    }
-    if let error = error {
-        logger.error(message: "Error: \(error)")
-    }
-}
-
-dataTask.resume()
-```
 
 > By default the Bluemix Mobile Service SDK internal debug logging will not be printed to Xcode console. If you want to enable SDK debug logging output set the `Logger.isInternalDebugLoggingEnabled` property to `true`.
+
 
 
 ### Disabling Logging output for production applications
