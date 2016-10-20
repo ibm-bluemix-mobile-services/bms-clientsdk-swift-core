@@ -26,8 +26,8 @@ import XCTest
 class BMSUrlSessionTests: XCTestCase {
 
     
-    var testBundle: Bundle = Bundle.main
-    var testUrl: URL = URL(fileURLWithPath: "x")
+    var testBundle = Bundle.main
+    var testUrl = URL(fileURLWithPath: "x")
     
     
     override func setUp() {
@@ -598,7 +598,19 @@ class BMSUrlSessionTests: XCTestCase {
 class BMSUrlSessionTests: XCTestCase {
     
     
-    let testUrl = NSURL(string: "x")!
+    var testBundle = NSBundle.mainBundle()
+    var testUrl = NSURL(fileURLWithPath: "x")
+    
+    
+    
+    override func setUp() {
+        
+        testBundle = NSBundle(forClass: self.dynamicType)
+        testUrl = testBundle.URLForResource("Andromeda", withExtension: "jpg")!
+        
+        BMSURLSession.shouldRecordNetworkMetadata = true
+    }
+    
     
     
     // MARK: - Data Tasks
@@ -1028,7 +1040,7 @@ class BMSUrlSessionTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask)
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil)
         
         testCompletionHandler(nil, nil, nil)
         
@@ -1058,7 +1070,7 @@ class BMSUrlSessionTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask)
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil)
         let testResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 403, HTTPVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
         testCompletionHandler(nil, testResponse, nil)
@@ -1095,7 +1107,7 @@ class BMSUrlSessionTests: XCTestCase {
         }
         
         let originalTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(bmsCompletionHandler)
-        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: originalTask)
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: originalTask, requestBody: nil)
         let testResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
         testCompletionHandler(nil, testResponse, nil)
@@ -1103,6 +1115,40 @@ class BMSUrlSessionTests: XCTestCase {
         self.waitForExpectationsWithTimeout(5.0, handler: nil)
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testGetRequestMetadata() {
+        
+        let testResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+        let trackingId = NSUUID().UUIDString
+        let bytesSent = Int64(555)
+        let bytesReceived = Int64(666)
+        let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000)
+        
+        let expectation = self.expectationWithDescription("Should receive request metadata.")
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, 5000000)
+        dispatch_after(delayTime, dispatch_get_main_queue(), {
+            
+            let responseMetadata: [String: AnyObject] = BMSURLSession.getRequestMetadata(response: testResponse, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: self.testUrl)
+            
+            let endTime = responseMetadata["$inboundTimestamp"] as! Int
+            
+            XCTAssertEqual(responseMetadata["$category"] as? String, "network")
+            XCTAssertEqual(responseMetadata["$trackingid"] as? String, trackingId)
+            XCTAssertEqual(responseMetadata["$outboundTimestamp"] as? Int, Int(startTime))
+            XCTAssertGreaterThan(endTime, Int(startTime))
+            XCTAssertEqual(responseMetadata["$roundTripTime"] as? Int, endTime - Int(startTime))
+            XCTAssertEqual(responseMetadata["$bytesSent"] as? Int, Int(bytesSent))
+            XCTAssertEqual(responseMetadata["$bytesReceived"] as? Int, Int(bytesReceived))
+            XCTAssertEqual(responseMetadata["$path"] as? String, self.testUrl.absoluteString)
+            XCTAssertEqual((responseMetadata["$responseCode"] as? Int), testResponse?.statusCode)
+            
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
     }
     
 }

@@ -33,7 +33,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
     let testUrl = URL(string: "x")!
     
     
-    public override func setUp() {
+    override func setUp() {
         
         BMSURLSession.shouldRecordNetworkMetadata = true
     }
@@ -381,6 +381,36 @@ class BMSUrlSessionDelegateTests: XCTestCase {
     
     
     
+    internal override func setUp() {
+        
+        BMSURLSession.shouldRecordNetworkMetadata = true
+    }
+    
+    
+    func testDelegateRecordsRequestMetadata() {
+        
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: nil), originalTask: .dataTask)
+        
+        let urlSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+        let testBundle = NSBundle(forClass: self.dynamicType)
+        let url = testBundle.URLForResource("Andromeda", withExtension: "jpg")!
+        let dataTask = urlSession.dataTaskWithURL(url)
+        let response = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: nil)!
+        
+        let dataReceived = "Some response data".dataUsingEncoding(NSUTF8StringEncoding)!
+        let dataReceivedBytes = Int64(dataReceived.length)
+        
+        bmsDelegate.URLSession(urlSession, dataTask: dataTask, didReceiveResponse: response, completionHandler: {(_) in })
+        bmsDelegate.URLSession(urlSession, dataTask: dataTask, didReceiveData: dataReceived)
+        
+        XCTAssertEqual(bmsDelegate.url!, url)
+        XCTAssertEqual(bmsDelegate.response, response)
+        XCTAssertEqual(bmsDelegate.bytesReceived, dataReceivedBytes)
+    }
+
+    
+    
+    
     // MARK: Session delegate
     
     func testDidBecomeInvalidWithError() {
@@ -479,8 +509,12 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called didReceiveResponse")
         
+        // Need to create a real data task for this test because the delegate's didReceiveResponse method attempts to read properties from the data task.
+        let urlSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+        let dataTask = urlSession.dataTaskWithURL(NSURL(fileURLWithPath: "http://example.com"))
+        
         let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
-        bmsDelegate.URLSession(NSURLSession(), dataTask: NSURLSessionDataTask(), didReceiveResponse: NSURLResponse(), completionHandler: {(_) in })
+        bmsDelegate.URLSession(urlSession, dataTask: dataTask, didReceiveResponse: NSURLResponse(), completionHandler: {(_) in })
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
     }
@@ -582,12 +616,12 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         @objc func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         @objc func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         
@@ -596,7 +630,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         @objc func URLSession(session: NSURLSession, task: NSURLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         @objc func URLSession(session: NSURLSession, task: NSURLSessionTask, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
@@ -606,17 +640,17 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         @objc func URLSession(session: NSURLSession, task: NSURLSessionTask, needNewBodyStream completionHandler: (NSInputStream?) -> Void) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         @objc func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         @objc func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse, newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         
@@ -625,27 +659,27 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         @objc func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, willCacheResponse proposedResponse: NSCachedURLResponse, completionHandler: (NSCachedURLResponse?) -> Void) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         @objc func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         @objc func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeDownloadTask downloadTask: NSURLSessionDownloadTask) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         @objc func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeStreamTask streamTask: NSURLSessionStreamTask) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
         
         @objc func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
             
-            delegateExpectation!.fulfill()
+            delegateExpectation?.fulfill()
         }
     }
     

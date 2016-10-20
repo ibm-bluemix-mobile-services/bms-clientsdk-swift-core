@@ -335,16 +335,16 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
                     taskWithAuthorization.resume()
                 }
                 else {
-                    
-                    self.url = dataTask.originalRequest?.URL
-                    self.response = response
-                    self.bytesSent = dataTask.countOfBytesSent
-
                     (self.parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
                 }
             })
         }
         else {
+            
+            self.url = dataTask.originalRequest?.URL
+            self.response = response
+            self.bytesSent = dataTask.countOfBytesSent
+            
             (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
         }
     }
