@@ -1,4 +1,6 @@
+#ifdef __OBJC__
 #import <Foundation/Foundation.h>
+#endif
 
 
 FOUNDATION_EXPORT double Pods_TestApp_watchOS_ExtensionVersionNumber;
