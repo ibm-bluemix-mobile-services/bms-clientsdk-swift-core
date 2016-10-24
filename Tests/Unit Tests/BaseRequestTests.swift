@@ -78,7 +78,6 @@ class BaseRequestTests: XCTestCase {
         XCTAssertEqual(request.requestBody, requestData)
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
-
     
     func testSendWithoutOverwritingContentTypeHeader() {
         

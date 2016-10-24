@@ -836,12 +836,9 @@ public struct BMSURLSession {
                 if shouldRecordNetworkMetadata {
                     
                     let bytesReceived: Int64 = Int64(data?.length ?? 0)
-                    var bytesSent: Int64 = 0
-                    if requestBody != nil {
-                        bytesSent = Int64(requestBody!.length)
-                    }
-                    
+                    let bytesSent = Int64(requestBody?.length ?? 0)
                     let requestMetadata = getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.URL)
+                    
                     Analytics.log(metadata: requestMetadata)
                 }
                 
