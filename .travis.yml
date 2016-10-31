@@ -15,3 +15,17 @@ script:
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore iOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore watchOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
   - xcodebuild -workspace 'BMSCore.xcworkspace' test -scheme 'BMSCore Tests' -destination 'platform=iOS Simulator,name=iPhone 6'
+
+  # When merging to the master branch, we check if the version specified in the .podspec does not already exist as a git tag.
+  # If the version does not exist yet, we add a git tag for this new version and publish to Cocoapods.
+  - if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ] && [[ "${TRAVIS_JOB_NUMBER}" = *".2"* ]]; then
+        version=$(grep -o 'version.*=.*[0-9]' BMSCore.podspec | cut -f 2 -d "'");
+        git fetch --tags;
+        git_tags=$(git tag);
+        if [[ ! " ${array[@]} " =~ " ${version} " ]]; then
+          echo "Publishing new version ${version} ";
+          git tag $version;
+          git push origin --tags;
+          pod trunk push;
+        fi
+      fi
