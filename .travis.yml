@@ -4,7 +4,7 @@ matrix:
     - osx_image: xcode7.3
     - osx_image: xcode8
 install:
-  - gem install cocoapods --pre
+  - gem install cocoapods -v 1.1.1
 before_script:
   - rm -rf ~/Library/Developer/Xcode/DerivedData
   - pod setup
@@ -19,6 +19,11 @@ script:
   # When merging to the master branch, we check if the version specified in the .podspec does not already exist as a git tag.
   # If the version does not exist yet, we add a git tag for this new version and publish to Cocoapods.
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ] && [[ "${TRAVIS_JOB_NUMBER}" = *".2"* ]]; then
+        cd ~/Documents;
+        git clone https://ibm-bluemix-mobile-services:${GITHUB_TOKEN}@github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.git;
+        cd bms-clientsdk-swift-core;
+        git remote rm origin;
+        git remote add origin https://ibm-bluemix-mobile-services:${GITHUB_TOKEN}@github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.git;
         version=$(grep -o 'version.*=.*[0-9]' BMSCore.podspec | cut -f 2 -d "'");
         git fetch --tags;
         git_tags=$(git tag);
