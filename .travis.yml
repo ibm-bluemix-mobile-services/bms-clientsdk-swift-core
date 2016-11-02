@@ -26,8 +26,7 @@ script:
         git remote add origin https://ibm-bluemix-mobile-services:${GITHUB_TOKEN}@github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.git;
         version=$(grep -o 'version.*=.*[0-9]' BMSCore.podspec | cut -f 2 -d "'");
         git fetch --tags;
-        git_tags=$(git tag);
-        if [[ ! " ${array[@]} " =~ " ${version} " ]]; then
+        if [[ ! "$(git tag)" =~ "${version}" ]]; then
           echo "Publishing new version ${version} ";
           git tag $version;
           git push origin --tags;
