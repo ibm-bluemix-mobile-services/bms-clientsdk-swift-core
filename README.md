@@ -1,18 +1,28 @@
-IBM Bluemix Mobile Services - Client SDK Swift Core
+IBM Bluemix Mobile Services - Client SDK Swift Core (BMSCore)
 ===================================================
 
+[![](https://img.shields.io/badge/bluemix-powered-blue.svg)](https://bluemix.net)
+[![Platform](https://img.shields.io/cocoapods/p/BMSCore.svg?style=flat)](http://cocoadocs.org/docsets/BMSCore)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/BMSCore.svg)](https://img.shields.io/cocoapods/v/BMSCore.svg)
 [![Build Status](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.svg?branch=master)](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core)
 
-This is the core component of the Swift SDK for [IBM Bluemix Mobile Services](https://console.ng.bluemix.net/docs/mobile/index.html).
+This is the core component of the Swift SDKs for [IBM Bluemix Mobile Services](https://console.ng.bluemix.net/docs/mobile/index.html).
 
 
 
-## Contents
-This package contains the core components of the Swift SDK.
+## Table of Contents
+* [Summary](#summary)
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Example Usage](#example-usage)
+* [License](#license)
 
-* HTTP Infrastructure
-* Security and Authentication interfaces
-* Logger and Analytics interfaces
+
+## Summary
+
+BMSCore provides the HTTP infrastructure that the other Bluemix Mobile Services (BMS) client SDKs use to communicate with their respective Bluemix services. These other SDKs include [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics), [BMSPush](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-push), [BMSSecurity](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-security), and [BluemixObjectStorage](https://github.com/ibm-bluemix-mobile-services/bluemix-objectstorage-clientsdk-swift). 
+
+You can also use this SDK to make network requests to any resource using `BMSURLSession`. This API is a wrapper around the native Swift [URLSession](https://developer.apple.com/reference/foundation/urlsession) and currently supports data tasks and upload tasks. `BMSURLSession` becomes more powerful if you have other BMS SDKs installed in your app. With [BMSSecurity](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-security), you can make network requests to backends protected by Mobile Client Access. With [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics), analytics data will automatically be gathered (if you opt in) for all requests made with `BMSURLSession`.
 
 
 
@@ -43,7 +53,7 @@ Then run the `pod install` command. To update to a newer release of BMSCore, use
 
 #### Xcode 8
 
-Before running the `pod install` command, install Cocoapods [1.1.0.rc.2](https://github.com/CocoaPods/CocoaPods/releases) (or later), using the command `sudo gem install cocoapods --pre`.
+Before running the `pod install` command, make sure you have installed Cocoapods [1.1.0](https://github.com/CocoaPods/CocoaPods/releases) or later. You can get the latest version of Cocoapods using the command `sudo gem install cocoapods`.
 
 If you receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore), **do not** convert BMSCore or BMSAnalyticsAPI.
 
@@ -67,14 +77,14 @@ For apps built with Swift 2.3, use the command `carthage update --toolchain com.
 
 
 
-## Usage Examples
+## Example Usage
 
 ### Swift 3.0
 
 ```Swift
 // Initialize BMSClient
 BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
-	                            
+                                
 let logger = Logger.logger(name: "My Logger")
 
 // Make a network request
@@ -102,7 +112,7 @@ urlSession.dataTask(with: request) { (data: Data?, response: URLResponse?, error
 ```Swift
 // Initialize BMSClient
 BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
-	                               
+                                   
 let logger = Logger.logger(name: "My Logger")
 
 // Make a network request
@@ -135,7 +145,7 @@ By default the Logger class will print its logs to Xcode console. If is advised 
 
 
 
-=======================
+## License
 Copyright 2016 IBM Corp.
 
 Licensed under the Apache License, Version 2.0 (the "License");
