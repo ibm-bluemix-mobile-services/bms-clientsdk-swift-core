@@ -15,14 +15,16 @@ This is the core component of the Swift SDKs for [IBM Bluemix Mobile Services](h
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Example Usage](#example-usage)
+* [Release Notes](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-core/releases)
 * [License](#license)
+
 
 
 ## Summary
 
-BMSCore provides the HTTP infrastructure that the other Bluemix Mobile Services (BMS) client SDKs use to communicate with their respective Bluemix services. These other SDKs include [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics), [BMSPush](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-push), [BMSSecurity](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-security), and [BluemixObjectStorage](https://github.com/ibm-bluemix-mobile-services/bluemix-objectstorage-clientsdk-swift). 
+BMSCore provides the HTTP infrastructure that the other Bluemix Mobile Services (BMS) client SDKs use to communicate with their corresponding Bluemix services. These other SDKs include [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics), [BMSPush](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-push), [BMSSecurity](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-security), and [BluemixObjectStorage](https://github.com/ibm-bluemix-mobile-services/bluemix-objectstorage-clientsdk-swift). 
 
-You can also use this SDK to make network requests to any resource using `BMSURLSession`. This API is a wrapper around the native Swift [URLSession](https://developer.apple.com/reference/foundation/urlsession) and currently supports data tasks and upload tasks. `BMSURLSession` becomes more powerful if you have other BMS SDKs installed in your app. With [BMSSecurity](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-security), you can make network requests to backends protected by Mobile Client Access. With [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics), analytics data will automatically be gathered (if you opt in) for all requests made with `BMSURLSession`.
+You can also use this SDK to make network requests to any resource using `BMSURLSession`. This API is a wrapper around the native Swift [URLSession](https://developer.apple.com/reference/foundation/urlsession) that currently supports data tasks and upload tasks. `BMSURLSession` becomes more powerful if you have other BMS SDKs installed in your app. With [BMSSecurity](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-security), you can make network requests to backends protected by [Mobile Client Access](https://console.ng.bluemix.net/docs/services/mobileaccess/index.html). With [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics), analytics data will automatically be gathered (if you opt in) for all requests made with `BMSURLSession`, which can then be sent to a [Mobile Analytics](https://console.ng.bluemix.net/docs/services/mobileanalytics/index.html) service.
 
 
 
@@ -49,11 +51,13 @@ target 'MyApp' do
 end
 ```
 
-Then run the `pod install` command. To update to a newer release of BMSCore, use `pod update BMSCore`.
+Then run the `pod install` command, and open the generated `.xcworkspace` file. To update to a newer release of BMSCore, use `pod update BMSCore`.
+
+For more information on using Cocoapods, refer to the [Cocoapods Guides](https://guides.cocoapods.org/using/index.html).
 
 #### Xcode 8
 
-Before running the `pod install` command, make sure you have installed Cocoapods [1.1.0](https://github.com/CocoaPods/CocoaPods/releases) or later. You can get the latest version of Cocoapods using the command `sudo gem install cocoapods`.
+When installing with Cocoapods in Xcode 8, make sure you have installed Cocoapods [1.1.0](https://github.com/CocoaPods/CocoaPods/releases) or later. You can get the latest version of Cocoapods using the command `sudo gem install cocoapods`.
 
 If you receive a prompt saying "Convert to Current Swift Syntax?" when opening your project in Xcode 8 (following the installation of BMSCore), **do not** convert BMSCore or BMSAnalyticsAPI.
 
@@ -68,8 +72,7 @@ Add this line to your Cartfile:
 github "ibm-bluemix-mobile-services/bms-clientsdk-swift-core"
 ```
 
-Then run the `carthage update` command. Once the build is finished, add `BMSCore.framework` and `BMSAnalyticsAPI.framework` to your project. 
-
+Then run the `carthage update` command. Once the build is finished, add `BMSCore.framework` and `BMSAnalyticsAPI.framework` to your project (step 3 in the link above). 
 
 #### Xcode 8
 
@@ -79,69 +82,328 @@ For apps built with Swift 2.3, use the command `carthage update --toolchain com.
 
 ## Example Usage
 
-### Swift 3.0
+* [Import the module](#import-the-module)
+* [Initialize the client](#initialize-the-client)
+* [Make a network request](#make-a-network-request)
+	* [Data task](#data-task)
+	* [Upload task](#upload-task)
+
+> View the complete API reference [here](http://cocoadocs.org/docsets/BMSCore).
+
+--
+
+
+### Import the module
 
 ```Swift
-// Initialize BMSClient
-BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
-                                
-let logger = Logger.logger(name: "My Logger")
+import BMSCore
+```
 
-// Make a network request
-let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+--
+
+### Initialize the client
+
+Initializing `BMSClient` is only required when using `BMSCore` with other BMS SDKs.
+
+```Swift
+BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
+```
+
+--
+
+### Make a network request
+
+#### Data task
+
+With `BMSURLSession`, you can create data tasks to send and receive data.
+
+The example belows show how to create and send a data task, using a completion handler to parse the response.
+
+**Note**: If you are also using the [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics) framework to gather data on these network requests, be sure to call `.resume()` immediately after creating the data task as shown in the examples below.
+
+##### Swift 3
+
+```Swift
 var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
 request.httpMethod = "GET"
-request.allHTTPHeaderFields = ["foo":"bar"]
+request.setValue("value", forHTTPHeaderField: "key")
 
+let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
 urlSession.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
+
     if let httpResponse = response as? HTTPURLResponse {
-        logger.info(message: "Status code: \(httpResponse.statusCode)")
+        print("Status code: \(httpResponse.statusCode)")
     }
     if data != nil, let responseString = String(data: data!, encoding: .utf8) {
-        logger.info(message: "Response data: \(responseString)")
+        print("Response data: \(responseString)")
     }
     if let error = error {
-        logger.error(message: "Error: \(error)")
+        print("Error: \(error)")
     }
 }.resume()
 ```
 
 
-### Swift 2.2
+##### Swift 2
 
 ```Swift
-// Initialize BMSClient
-BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
-                                   
-let logger = Logger.logger(name: "My Logger")
-
-// Make a network request
-let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
 let request = NSMutableURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
 request.HTTPMethod = "GET"
-request.allHTTPHeaderFields = ["foo":"bar"]
+request.setValue("value", forHTTPHeaderField: "key")
 
+let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
 urlSession.dataTaskWithRequest(request) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+
     if let httpResponse = response as? NSHTTPURLResponse {
-        logger.info(message: "Status code: \(httpResponse.statusCode)")
+        print("Status code: \(httpResponse.statusCode)")
     }
     if data != nil, let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding) {
-        logger.info(message: "Response data: \(responseString)")
+        print("Response data: \(responseString)")
     }
     if let error = error {
-        logger.error(message: "Error: \(error)")
+        print("Error: \(error)")
     }
 }.resume()
 ```
 
+--
 
-> By default the Bluemix Mobile Service SDK internal debug logging will not be printed to Xcode console. If you want to enable SDK debug logging output set the `Logger.isInternalDebugLoggingEnabled` property to `true`.
+As an alternative to using completion handlers, you can create your own [URLSessionDelegate](https://developer.apple.com/reference/foundation/urlsessiondelegate) for more control over handling the response. 
+
+##### Swift 3
+
+```Swift
+var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
+request.httpMethod = "GET"
+request.setValue("value", forHTTPHeaderField: "key")
+
+let urlSession = BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(), delegateQueue: nil)
+urlSession.dataTask(with: request).resume()
+```
+
+```Swift
+class URLSessionDelegateExample: NSObject, URLSessionDataDelegate {
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    
+        if let error = error {
+            print("Error: \(error)\n")
+        }
+    }
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+    
+        if let httpResponse = response as? HTTPURLResponse {
+            print("Status code: \(httpResponse.statusCode)")
+        }
+        // Required when connecting with an MCA-protected backend
+        completionHandler(URLSession.ResponseDisposition.allow)
+    }
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+    
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("Response data: \(responseString)")
+        }
+    }
+}
+```
 
 
+##### Swift 2
 
-### Disabling Logging output for production applications
+```Swift
+let request = NSMutableURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
+request.HTTPMethod = "GET"
+request.setValue("value", forHTTPHeaderField: "key")
 
-By default the Logger class will print its logs to Xcode console. If is advised to disable Logger output for applications built in release mode. In order to do so add a debug flag named `RELEASE_BUILD` to your release build configuration. One of the way of doing so is adding `-D RELEASE_BUILD` to `Other Swift Flags` section of the project build configuration.
+let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: NSURLSessionDelegateExample(), delegateQueue: nil)
+urlSession.dataTaskWithRequest(request).resume()
+```
+
+```Swift
+class NSURLSessionDelegateExample: NSObject, NSURLSessionDataDelegate {
+    
+    internal func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+    
+        if let error = error {
+            print("Error: \(error)\n")
+        }
+    }
+    
+    internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
+    
+        if let httpResponse = response as? NSHTTPURLResponse {
+            print("Status code: \(httpResponse.statusCode)")
+        }
+        // Required when connecting with an MCA-protected backend
+        completionHandler(NSURLSessionResponseDisposition.Allow)
+    }
+    
+    internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
+    
+        if let responseString = String(data: data, encoding: NSUTF8StringEncoding) {
+            print("Response data: \(responseString)")
+        }
+    }
+}
+```
+
+--
+
+#### Upload task
+
+Upload tasks are data tasks that make it easier to upload data or files. With upload tasks, you can monitor the progress of each upload, and continue the upload in the background when the app is not running.
+
+The examples below show how to upload a file, using a completion handler to parse the response.
+
+**Note**: If you are also using the [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics) framework to gather data on these network requests, be sure to call `.resume()` immediately after creating the data task as shown in the examples below.
+
+##### Swift 3
+
+```Swift
+let file = Bundle.main.url(forResource: "MyPicture", withExtension: "jpg")!
+
+var request = URLRequest(url: URL(string: "https://httpbin.org/post")!)
+request.httpMethod = "POST"
+request.setValue("value", forHTTPHeaderField: "key")
+
+let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+urlSession.uploadTask(with: request, fromFile: file, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
+
+    if let httpResponse = response as? HTTPURLResponse {
+        print("Status code: \(httpResponse.statusCode)")
+    }
+    if let error = error {
+        print("Error: \(error)")
+    }
+}).resume()
+```
+
+##### Swift 2
+
+```Swift
+let file = NSBundle.mainBundle().URLForResource("MyPicture", withExtension: "jpg")!
+
+let request = NSMutableURLRequest(URL: NSURL(string: "https://httpbin.org/post")!)
+request.HTTPMethod = "POST"
+request.setValue("value", forHTTPHeaderField: "key")
+
+let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+urlSession.uploadTaskWithRequest(request, fromFile: file, completionHandler: { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+
+    if let httpResponse = response as? NSHTTPURLResponse {
+        print("Status code: \(httpResponse.statusCode)")
+    }
+    if let error = error {
+        print("Error: \(error)")
+    }
+}).resume()
+```
+
+--
+
+As an alternative to using completion handlers, you can create your own [URLSessionDelegate](https://developer.apple.com/reference/foundation/urlsessiondelegate) for more control over handling the response. 
+
+##### Swift 3
+
+```Swift
+let file = Bundle.main.url(forResource: "MyPicture", withExtension: "jpg")!
+
+var request = URLRequest(url: URL(string: "https://httpbin.org/post")!)
+request.httpMethod = "POST"
+request.setValue("value", forHTTPHeaderField: "key")
+
+let urlSession = BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(), delegateQueue: nil)
+urlSession.uploadTask(with: request, fromFile: file).resume()
+```
+
+```Swift
+class URLSessionDelegateExample: NSObject, URLSessionDataDelegate {
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        
+        if let error = error {
+            print("Error: \(error)\n")
+        }
+    }
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        
+        if let httpResponse = response as? HTTPURLResponse {
+            print("Status code: \(httpResponse.statusCode)")
+        }
+        // Required when connecting with an MCA-protected backend
+        completionHandler(URLSession.ResponseDisposition.allow)
+    }
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("Response data: \(responseString)")
+        }
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+    
+        DispatchQueue.main.async {
+            let currentProgress = Float(totalBytesSent) / Float(totalBytesExpectedToSend) * 100
+            print("Upload progress = \(currentProgress)%")
+        }
+    }
+}
+```
+
+
+##### Swift 2
+
+```Swift
+let file = NSBundle.mainBundle().URLForResource("MyPicture", withExtension: "jpg")!
+
+let request = NSMutableURLRequest(URL: NSURL(string: "https://httpbin.org/post")!)
+request.HTTPMethod = "POST"
+request.setValue("value", forHTTPHeaderField: "key")
+
+let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: NSURLSessionDelegateExample(), delegateQueue: nil)
+urlSession.uploadTaskWithRequest(request, fromFile: file).resume()
+```
+
+```Swift
+class NSURLSessionDelegateExample: NSObject, NSURLSessionDataDelegate {
+    
+    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+        
+        if let error = error {
+            print("Error: \(error)\n")
+        }
+    }
+    
+    internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
+        
+        if let httpResponse = response as? NSHTTPURLResponse {
+            print("Status code: \(httpResponse.statusCode)")
+        }
+        
+        // Required when connecting with an MCA-protected backend
+        completionHandler(NSURLSessionResponseDisposition.Allow)
+    }
+    
+    internal func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
+        
+        if let responseString = String(data: data, encoding: NSUTF8StringEncoding) {
+            print("Response data: \(responseString)")
+        }
+    }
+    
+    internal func URLSession(session: NSURLSession, task: NSURLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            let currentProgress = Float(totalBytesSent) / Float(totalBytesExpectedToSend) * 100
+            print("Upload progress = \(currentProgress)%")
+        }
+    }
+}
+```
 
 
 
