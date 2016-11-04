@@ -26,6 +26,8 @@ BMSCore provides the HTTP infrastructure that the other Bluemix Mobile Services 
 
 You can also use this SDK to make network requests to any resource using `BMSURLSession`. This API is a wrapper around the native Swift [URLSession](https://developer.apple.com/reference/foundation/urlsession) that currently supports data tasks and upload tasks. `BMSURLSession` becomes more powerful if you have other BMS SDKs installed in your app. With [BMSSecurity](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-security), you can make network requests to backends protected by [Mobile Client Access](https://console.ng.bluemix.net/docs/services/mobileaccess/index.html). With [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics), analytics data will automatically be gathered (if you opt in) for all requests made with `BMSURLSession`, which can then be sent to a [Mobile Analytics](https://console.ng.bluemix.net/docs/services/mobileanalytics/index.html) service.
 
+BMSCore is also available for [Android](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-android-core) and [Cordova](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-cordova-plugin-core). 
+
 
 
 ## Requirements
