@@ -1,12 +1,12 @@
-IBM Bluemix Mobile Services - Client SDK Swift Core (BMSCore)
+BMSCore
 ===================================================
 
-[![](https://img.shields.io/badge/bluemix-powered-blue.svg)](https://bluemix.net)
 [![Platform](https://img.shields.io/cocoapods/p/BMSCore.svg?style=flat)](http://cocoadocs.org/docsets/BMSCore)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/BMSCore.svg)](https://img.shields.io/cocoapods/v/BMSCore.svg)
 [![Build Status](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.svg?branch=master)](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core)
+[![](https://img.shields.io/badge/bluemix-powered-blue.svg)](https://bluemix.net)
 
-This is the core component of the Swift SDKs for [IBM Bluemix Mobile Services](https://console.ng.bluemix.net/docs/mobile/index.html).
+BMSCore is the core component of the Swift SDKs for [IBM Bluemix Mobile Services](https://console.ng.bluemix.net/docs/mobile/index.html).
 
 
 
@@ -34,6 +34,7 @@ BMSCore is also available for [Android](https://github.com/ibm-bluemix-mobile-se
 * iOS 8.0+ / watchOS 2.0+
 * Xcode 7.3, 8.0
 * Swift 2.2 - 3.0
+* Cocoapods or Carthage
 
 
 
