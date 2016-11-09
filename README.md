@@ -1,12 +1,12 @@
 BMSCore
 ===================================================
 
+[![Build Status](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.svg?branch=master)](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core)
 [![Platform](https://img.shields.io/cocoapods/p/BMSCore.svg?style=flat)](http://cocoadocs.org/docsets/BMSCore)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/BMSCore.svg)](https://img.shields.io/cocoapods/v/BMSCore.svg)
-[![Build Status](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core.svg?branch=master)](https://travis-ci.org/ibm-bluemix-mobile-services/bms-clientsdk-swift-core)
 [![](https://img.shields.io/badge/bluemix-powered-blue.svg)](https://bluemix.net)
 
-BMSCore is the core component of the Swift SDKs for [IBM Bluemix Mobile Services](https://console.ng.bluemix.net/docs/mobile/index.html).
+BMSCore is the core component of the Swift SDKs for [IBM Bluemix Mobile Services](https://console.ng.bluemix.net/docs/mobile/services.html).
 
 
 
@@ -39,7 +39,7 @@ BMSCore is also available for [Android](https://github.com/ibm-bluemix-mobile-se
 
 
 ## Installation
-The Bluemix Mobile Services Swift SDKs are available via [Cocoapods](http://cocoapods.org/) and [Carthage](https://github.com/Carthage/Carthage).
+The Bluemix Mobile Services Swift SDKs can be installed with either [Cocoapods](http://cocoapods.org/) or [Carthage](https://github.com/Carthage/Carthage).
 
 
 ### Cocoapods
