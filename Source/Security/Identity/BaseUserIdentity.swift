@@ -19,7 +19,7 @@
     
     
 
-/// This class represents the base user identity class, with default methods and keys
+// This class represents the base user identity class, with default methods and keys
 open class BaseUserIdentity: UserIdentity {
     
     
@@ -82,7 +82,7 @@ open class BaseUserIdentity: UserIdentity {
     
     
     
-/// This class represents the base user identity class, with default methods and keys
+// This class represents the base user identity class, with default methods and keys
 public class BaseUserIdentity: UserIdentity {
     
     

@@ -24,7 +24,24 @@
 */
 public enum HttpMethod: String {
     
-    case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
+    ///
+    case GET
+    ///
+    case POST
+    ///
+    case PUT
+    ///
+    case DELETE
+    ///
+    case TRACE
+    ///
+    case HEAD
+    ///
+    case OPTIONS
+    /// 
+    case CONNECT
+    ///
+    case PATCH
 }
 
     
@@ -32,7 +49,7 @@ public enum HttpMethod: String {
 // MARK: - BMSCompletionHandler
 
 /**
-    The type of callback sent with BMS network requests.
+    The type of callback sent with network requests made with `Request`.
 */
 public typealias BMSCompletionHandler = (Response?, Error?) -> Void
 
@@ -42,9 +59,9 @@ public typealias BMSCompletionHandler = (Response?, Error?) -> Void
 /**
     Sends HTTP network requests. 
      
-    Analytics data is automatically gathered for all requests initiated by this class.
-
-    When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via the `send()` method.
+    When building a BaseRequest object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via `send(requestBody:completionHandler:)`.
+     
+    - important: It is recommended to use the `Request` class instead of `BaseRequest`.
 */
 open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
@@ -72,7 +89,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     /// The query parameters to append to the `resourceURL`.
     public var queryParameters: [String: String]?
     
-    /// The request body is set when sending the request via the `send()` method.
+    /// The request body is set when sending the request via `send(requestBody:completionHandler:)`.
     public private(set) var requestBody: Data?
     
     /// Determines whether request should follow HTTP redirects.
@@ -331,7 +348,24 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
 */
 public enum HttpMethod: String {
 
-    case GET, POST, PUT, DELETE, TRACE, HEAD, OPTIONS, CONNECT, PATCH
+    ///
+    case GET
+    ///
+    case POST
+    ///
+    case PUT
+    ///
+    case DELETE
+    ///
+    case TRACE
+    ///
+    case HEAD
+    ///
+    case OPTIONS
+    ///
+    case CONNECT
+    ///
+    case PATCH
 }
     
     
@@ -339,7 +373,7 @@ public enum HttpMethod: String {
 // MARK: - BMSCompletionHandler
 
 /**
-    The type of callback sent with BMS network requests.
+     The type of callback sent with network requests made with `Request`.
 */
 public typealias BMSCompletionHandler = (Response?, NSError?) -> Void
     
@@ -348,10 +382,11 @@ public typealias BMSCompletionHandler = (Response?, NSError?) -> Void
 
 /**
     Sends HTTP network requests.
-     
-    Analytics data is automatically gathered for all requests initiated by this class.
 
-    When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as NSData when sending the request via the `send()` method.
+    When building a BaseRequest object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via `send(requestBody:completionHandler:)`.
+
+     - important: It is recommended to use the `Request` class instead of `BaseRequest`.
+
 */
 public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
@@ -379,7 +414,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     /// Query parameters to append to the `resourceURL`.
     public var queryParameters: [String: String]?
     
-    /// The request body can be set when sending the request via the `send()` method.
+    /// The request body is set when sending the request via `send(requestBody:completionHandler:)`.
     public private(set) var requestBody: NSData?
     
     /// Determines whether request should follow HTTP redirects.

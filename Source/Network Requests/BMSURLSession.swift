@@ -20,7 +20,7 @@ import BMSAnalyticsAPI
 
 
     
-/// Callback for data tasks created with BMSURLSession.
+/// Callback for data tasks created with `BMSURLSession`.
 public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) -> Void
     
 
@@ -32,7 +32,7 @@ public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) ->
 
     Currently, `BMSURLSession` only supports `URLSessionDataTask` and `URLSessionUploadTask`.
 
-    For more information, refer to the documentation for `NSURLSession` in the Swift `Foundation` framework.
+    For more information, refer to the documentation for `URLSession` in the Swift Foundation framework.
 */
 public struct BMSURLSession {
 
@@ -468,7 +468,7 @@ internal enum BMSURLSessionTaskType {
    
 // MARK: BMSURLSession (Swift 2)
     
-/// Callback for data tasks created with BMSURLSession.
+/// Callback for data tasks created with `BMSURLSession`.
 public typealias BMSDataTaskCompletionHandler = (NSData?, NSURLResponse?, NSError?) -> Void
 
 
@@ -479,7 +479,7 @@ public typealias BMSDataTaskCompletionHandler = (NSData?, NSURLResponse?, NSErro
 
     Currently, `BMSURLSession` only supports `NSURLSessionDataTask` and `NSURLSessionUploadTask`.
 
-    For more information, refer to the documentation for `NSURLSession` in the Swift `Foundation` framework.
+    For more information, refer to the documentation for `NSURLSession` in the Swift Foundation framework.
 */
 public struct BMSURLSession {
     

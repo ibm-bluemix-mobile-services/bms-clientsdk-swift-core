@@ -19,7 +19,7 @@
 
     
 
-/// This class represents the base app identity class, with default methods and keys
+// This class represents the base app identity class, with default methods and keys
 open class BaseAppIdentity: AppIdentity {
     
     
@@ -76,7 +76,7 @@ open class BaseAppIdentity: AppIdentity {
     
     
     
-/// This class represents the base app identity class, with default methods and keys
+// This class represents the base app identity class, with default methods and keys
 public class BaseAppIdentity: AppIdentity {
 
     
