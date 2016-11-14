@@ -7,11 +7,11 @@ install:
   - gem install cocoapods -v 1.1.1
 before_script:
   - rm -rf ~/Library/Developer/Xcode/DerivedData
-  - pod setup
 script:
-  - pod install
-  - pod lib lint
+  # Test that the framework can be installed and built, and passes all unit tests
+  - pod update
   - carthage update
+  - pod lib lint
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore iOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore watchOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
   - travis_retry xcodebuild -workspace 'BMSCore.xcworkspace' test -scheme 'BMSCore Tests' -destination 'platform=iOS Simulator,name=iPhone 6'
