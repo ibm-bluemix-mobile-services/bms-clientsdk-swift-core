@@ -17,7 +17,7 @@ cd ..
 version=$(grep -o 'version.*=.*[0-9]' BMSCore.podspec | cut -f 2 -d "'")
 docs_directory='./ibm-bluemix-mobile-services.github.io/API docs/Client SDK/BMSCore/Swift'
 rm -rf "${docs_directory}"/*
-jazzy --output "${docs_directory}" --skip-undocumented --clean
+jazzy --output "${docs_directory}"
 
 # Publish docs
 cd ibm-bluemix-mobile-services.github.io
