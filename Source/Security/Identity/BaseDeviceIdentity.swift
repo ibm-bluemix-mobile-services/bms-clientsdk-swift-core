@@ -78,7 +78,11 @@ open class BaseDeviceIdentity: DeviceIdentity {
             jsonData[BaseDeviceIdentity.Key.model] =  UIDevice.current.model
         #endif
 	}
-    
+
+    public init(map: [String:AnyObject]?) {
+        self.init(map as [String:Any]?)
+    }
+
     public init(map: [String:Any]?) {
         guard let json = map as? [String:String] else {
             jsonData = ([:])

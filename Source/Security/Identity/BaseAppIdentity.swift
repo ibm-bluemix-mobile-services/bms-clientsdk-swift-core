@@ -49,6 +49,10 @@ open class BaseAppIdentity: AppIdentity {
         jsonData[BaseAppIdentity.Key.version] = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     }
     
+    public init(map: [String:AnyObject]?) {
+        self.init(map as [String:Any]?)
+    }
+    
     public init(map: [String:Any]?) {
         guard let json = map as? [String:String] else {
             jsonData = ([:])
