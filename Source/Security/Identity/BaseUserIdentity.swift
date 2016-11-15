@@ -55,7 +55,11 @@ open class BaseUserIdentity: UserIdentity {
 
     }
     
-    public init(map: [String:AnyObject]?) {
+    public convenience init(map: [String:AnyObject]?) {
+        self.init(map : map as [String:Any]?)
+    }
+    
+    public init(map: [String:Any]?) {
         guard let json = map as? [String:String] else {
             jsonData = ([:])
             return
