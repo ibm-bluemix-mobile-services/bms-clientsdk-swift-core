@@ -142,7 +142,7 @@ public class Response {
     // MARK: Initializer
     
     /**
-        Converts an `NSHTTPURLResponse` to a more accessible response object.
+        Converts an `NSHTTPURLResponse` to a more accessible `Response` object.
 
         - parameter responseData: Data returned from the server.
         - parameter httpResponse: Response object returned from the `NSURLSession` request.

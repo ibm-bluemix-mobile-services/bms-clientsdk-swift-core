@@ -22,8 +22,6 @@
 /**
     Sends HTTP network requests. It is recommended to use this class instead of `BaseRequest`.
 
-    When building a Request object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via `send(requestBody:completionHandler:)`.
-
     For more information on `Request`, see the documentation for `BaseRequest`.
 */
 open class Request: BaseRequest {

@@ -26,13 +26,11 @@ public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) ->
 
     
 /**
-    A wrapper around Swift's `URLSession` API that incorporates
-    Bluemix Mobile Services. Use this API to gather analytics data on your network requests
-    and/or to access backends that are protected by Mobile Client Access.
+    A wrapper around Swift's [URLSession](https://developer.apple.com/reference/foundation/urlsession) API that incorporates
+    Bluemix Mobile Services. Use `BMSURLSession` to gather [Mobile Analytics](https://console.ng.bluemix.net/docs/services/mobileanalytics/mobileanalytics_overview.html) data on your network requests
+    and/or to access backends that are protected by [Mobile Client Access](https://console.ng.bluemix.net/docs/services/mobileaccess/overview.html).
 
-    Currently, `BMSURLSession` only supports `URLSessionDataTask` and `URLSessionUploadTask`.
-
-    For more information, refer to the documentation for `URLSession` in the Swift Foundation framework.
+    Currently, `BMSURLSession` only supports [URLSessionDataTask](https://developer.apple.com/reference/foundation/urlsessiondatatask) and [URLSessionUploadTask](https://developer.apple.com/reference/foundation/urlsessionuploadtask).
 */
 public struct BMSURLSession {
 

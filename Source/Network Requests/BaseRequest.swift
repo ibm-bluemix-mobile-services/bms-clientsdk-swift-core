@@ -49,7 +49,7 @@ public enum HttpMethod: String {
 // MARK: - BMSCompletionHandler
 
 /**
-    The type of callback sent with network requests made with `Request`.
+    Callback for network requests made with `Request`.
 */
 public typealias BMSCompletionHandler = (Response?, Error?) -> Void
 
