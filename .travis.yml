@@ -12,6 +12,7 @@ before_script:
   - rm -rf ~/Library/Developer/Xcode/DerivedData
 script:
   # Test that the framework can be installed and built, and passes all unit tests
+  - set -e
   - pod update
   - carthage update
   - pod lib lint --allow-warnings
