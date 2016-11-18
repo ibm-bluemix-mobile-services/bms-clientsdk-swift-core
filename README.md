@@ -91,7 +91,7 @@ For apps built with Swift 2.3, use the command `carthage update --toolchain com.
 	* [Data task](#data-task)
 	* [Upload task](#upload-task)
 
-> View the complete API reference [here](http://cocoadocs.org/docsets/BMSCore).
+> View the complete API reference [here](https://ibm-bluemix-mobile-services.github.io/API docs/Client SDK/BMSCore/Swift/index.html).
 
 --
 
