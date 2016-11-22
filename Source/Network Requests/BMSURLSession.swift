@@ -32,7 +32,7 @@ public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) ->
 
     Currently, `BMSURLSession` only supports [URLSessionDataTask](https://developer.apple.com/reference/foundation/urlsessiondatatask) and [URLSessionUploadTask](https://developer.apple.com/reference/foundation/urlsessionuploadtask).
 */
-public struct BMSURLSession {
+public struct BMSURLSession: NetworkSession {
 
     
     // Determines whether metadata gets recorded for all BMSURLSession network requests
@@ -276,7 +276,7 @@ public struct BMSURLSession {
     internal static func addBMSHeaders(to request: URLRequest) -> URLRequest {
         
         var bmsRequest = request
-        
+    
         // Security
         let authManager = BMSClient.sharedInstance.authorizationManager
         if let authHeader: String = authManager.cachedAuthorizationHeader {
@@ -479,7 +479,7 @@ public typealias BMSDataTaskCompletionHandler = (NSData?, NSURLResponse?, NSErro
 
     For more information, refer to the documentation for `NSURLSession` in the Swift Foundation framework.
 */
-public struct BMSURLSession {
+public struct BMSURLSession: NetworkSession {
     
     
     // Determines whether metadata gets recorded for all BMSURLSession network requests

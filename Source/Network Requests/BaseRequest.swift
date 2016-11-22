@@ -53,9 +53,28 @@ public enum HttpMethod: String {
 */
 public typealias BMSCompletionHandler = (Response?, Error?) -> Void
 
+
+
+// MARK: - NetworkSession
     
+// We need this type so that BaseRequest.networkSession can be either a BMSURLSession (required by BMSCore) or a URLSession (required by BMSSecurity)
+public protocol NetworkSession {
+ 
+    func dataTask(with url: URL) -> URLSessionDataTask
+    func dataTask(with url: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask
+    func dataTask(with request: URLRequest) -> URLSessionDataTask
+    func dataTask(with request: URLRequest, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask
     
+    func uploadTask(with request: URLRequest, from bodyData: Data) -> URLSessionUploadTask
+    func uploadTask(with request: URLRequest, from bodyData: Data?, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask
+    func uploadTask(with request: URLRequest, fromFile fileURL: URL) -> URLSessionUploadTask
+    func uploadTask(with request: URLRequest, fromFile fileURL: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask
+}
     
+extension URLSession: NetworkSession { }
+
+
+
 /**
     Sends HTTP network requests. 
      
@@ -102,9 +121,9 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     // MARK: Properties (internal)
     
-    // The request timeout is set in this URLSession's configuration.
+    // The session that handles sending requests.
     // Public access required by BMSSecurity framework.
-    public var networkSession: URLSession!
+    public var networkSession: NetworkSession!
     
     // The unique ID to keep track of each request.
     // Public access required by BMSAnalytics framework.
@@ -171,7 +190,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
 		
         super.init()
                 
-        self.networkSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        self.networkSession = BMSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
 
     
@@ -191,19 +210,8 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     public func send(requestBody: Data? = nil, completionHandler: BMSCompletionHandler?) {
         
         self.requestBody = requestBody
-		
-        // Add metadata to the request header so that analytics data can be obtained for ALL bms network requests
-        
-        // The analytics server needs this ID to match each request with its corresponding response
-        self.trackingId = UUID().uuidString
-        headers["x-wl-analytics-tracking-id"] = self.trackingId
-        
-        if let requestMetadata = BaseRequest.requestAnalyticsData {
-            self.headers["x-mfp-analytics-metadata"] = requestMetadata
-        }
         
         if let url = URL(string: self.resourceUrl) {
-            
             buildAndSendRequest(url: url, callback: completionHandler)
         }
         else {
@@ -219,27 +227,17 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     private func buildAndSendRequest(url: URL, callback: BMSCompletionHandler?) {
         
-        // The time at which the request is sent.
-        let startTime = Int64(Date.timeIntervalSinceReferenceDate * 1000)
-        
-        // Our internal completion handler that does 2 things:
-        // 1) Builds the Response object and passes it to the user
-        // 2) Records network metadata for Analytics
+        // Wrapper for the original completion handler that converts the NSURLResponse into a Response object
         let buildAndSendResponse = { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             
             let networkResponse = Response(responseData: data, httpResponse: response as? HTTPURLResponse, isRedirect: self.allowRedirects)
-
-            callback?(networkResponse, error)
             
-            // Log network request metadata
-            if BMSURLSession.shouldRecordNetworkMetadata {
-                
-                let dataSent = Int64(self.requestBody?.count ?? 0)
-                let dataReceived = Int64(data?.count ?? 0)
-                let requestMetadata = BMSURLSession.getRequestMetadata(response: response, bytesSent: dataSent, bytesReceived: dataReceived, trackingId: self.trackingId, startTime: startTime, url: url)
-                
-                Analytics.log(metadata: requestMetadata)
+            var error = error
+            if error == nil, let statusCode = networkResponse.statusCode, statusCode >= 400 {
+                error = BMSCoreError.serverRespondedWithError
             }
+                
+            callback?(networkResponse, error)
         }
         
         var requestUrl = url
@@ -260,9 +258,11 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
         resourceUrl = String(describing: requestUrl)
         networkRequest.url = requestUrl
         networkRequest.httpMethod = httpMethod.rawValue
-        networkRequest.allHTTPHeaderFields = headers
         networkRequest.httpBody = requestBody
 		networkRequest.cachePolicy = cachePolicy
+        for header in self.headers {
+            networkRequest.setValue(header.value, forHTTPHeaderField: header.key)
+        }
         
         BaseRequest.logger.debug(message: "Sending Request to " + resourceUrl)
         
@@ -376,7 +376,26 @@ public enum HttpMethod: String {
      The type of callback sent with network requests made with `Request`.
 */
 public typealias BMSCompletionHandler = (Response?, NSError?) -> Void
+
+
+
+// MARK: - NetworkSession
+
+// We need this type so that BaseRequest.networkSession can be either a BMSURLSession (required by BMSCore) or a URLSession (required by BMSSecurity)
+public protocol NetworkSession {
     
+    func dataTaskWithURL(url: NSURL) -> NSURLSessionDataTask
+    func dataTaskWithURL(url: NSURL, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionDataTask
+    func dataTaskWithRequest(request: NSURLRequest) -> NSURLSessionDataTask
+    func dataTaskWithRequest(request: NSURLRequest, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionDataTask
+
+    func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData) -> NSURLSessionUploadTask
+    func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData?, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask
+    func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL) -> NSURLSessionUploadTask
+    func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask
+}
+
+extension NSURLSession: NetworkSession { }
     
 
 
@@ -427,9 +446,9 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     // MARK: Properties (internal)
     
-    // The request timeout is set in this URLSession's configuration.
+    // The session that handles sending requests.
     // Public access required by BMSSecurity framework.
-    public var networkSession: NSURLSession!
+    public var networkSession: NetworkSession!
     
     // The unique ID to keep track of each request.
     // Public access required by BMSAnalytics framework.
@@ -495,7 +514,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         
         super.init()
         
-        self.networkSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        self.networkSession = BMSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
     
     
@@ -515,17 +534,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     public func send(requestBody requestBody: NSData? = nil, completionHandler: BMSCompletionHandler?) {
         
         self.requestBody = requestBody
-    
-        // Add metadata to the request header so that analytics data can be obtained for ALL bms network requests
-        
-        // The analytics server needs this ID to match each request with its corresponding response
-        self.trackingId = NSUUID().UUIDString
-        headers["x-wl-analytics-tracking-id"] = self.trackingId
-        
-        if let requestMetadata = BaseRequest.requestAnalyticsData {
-            self.headers["x-mfp-analytics-metadata"] = requestMetadata
-        }
-        
+
         if let url = NSURL(string: self.resourceUrl) {
             buildAndSendRequest(url: url, callback: completionHandler)
         }
@@ -542,28 +551,18 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     // MARK: Methods (internal)
     
     private func buildAndSendRequest(url url: NSURL, callback: BMSCompletionHandler?) {
-    
-        // The time at which the request is sent.
-        let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000)
-        
-        // Our internal completion handler that does 2 things:
-        // 1) Builds the Response object and passes it to the user
-        // 2) Records network metadata for Analytics
+
+        // Wrapper for the original completion handler that converts the NSURLResponse into a Response object
         let buildAndSendResponse = { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
             let networkResponse = Response(responseData: data, httpResponse: response as? NSHTTPURLResponse, isRedirect: self.allowRedirects)
             
-            callback?(networkResponse, error)
-            
-            // Log network request metadata
-            if BMSURLSession.shouldRecordNetworkMetadata {
-                
-                let dataSent = Int64(self.requestBody?.length ?? 0)
-                let dataReceived = Int64(data?.length ?? 0)
-                let requestMetadata = BMSURLSession.getRequestMetadata(response: response, bytesSent: dataSent, bytesReceived: dataReceived, trackingId: self.trackingId, startTime: startTime, url: url)
-                
-                Analytics.log(metadata: requestMetadata)
+            var error = error
+            if error == nil, let statusCode = networkResponse.statusCode where statusCode >= 400 {
+                error = NSError(domain: BMSCoreError.domain, code: BMSCoreError.serverRespondedWithError.rawValue, userInfo: nil)
             }
+            
+            callback?(networkResponse, error)
         }
     
         var requestUrl = url
@@ -585,9 +584,12 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         resourceUrl = String(requestUrl)
         networkRequest.URL = requestUrl
         networkRequest.HTTPMethod = httpMethod.rawValue
-        networkRequest.allHTTPHeaderFields = headers
         networkRequest.HTTPBody = requestBody
         networkRequest.cachePolicy = cachePolicy
+        
+        for header in self.headers {
+            networkRequest.setValue(header.1, forHTTPHeaderField: header.0)
+        }
         
         BaseRequest.logger.debug(message: "Sending Request to " + resourceUrl)
         
