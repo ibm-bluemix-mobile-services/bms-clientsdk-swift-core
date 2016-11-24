@@ -72,7 +72,6 @@ class BaseRequestTests: XCTestCase {
         
         request.send(requestBody: requestData!, completionHandler: nil)
         
-        XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(request.requestBody, requestData)
@@ -88,7 +87,6 @@ class BaseRequestTests: XCTestCase {
         request.send(requestBody: bodyData, completionHandler: nil)
         let requestBodyAsString = String(data: request.requestBody!, encoding: .utf8)
         
-        XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
@@ -242,7 +240,6 @@ class BaseRequestTests: XCTestCase {
         
         request.send(requestBody: requestData!, completionHandler: nil)
         
-        XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(request.requestBody, requestData)
@@ -259,7 +256,6 @@ class BaseRequestTests: XCTestCase {
         request.send(requestBody: bodyData, completionHandler: nil)
         let requestBodyAsString = NSString(data: request.requestBody!, encoding: NSUTF8StringEncoding) as? String
     
-        XCTAssertNotNil(request.headers["x-wl-analytics-tracking-id"])
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
