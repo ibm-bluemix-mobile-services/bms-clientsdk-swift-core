@@ -82,6 +82,7 @@ extension URLSession: NetworkSession { }
      
     - important: It is recommended to use the `Request` class instead of `BaseRequest`.
 */
+@available(*, deprecated, message: "Please use the Request class instead.")
 open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     
@@ -407,6 +408,7 @@ extension NSURLSession: NetworkSession { }
      - important: It is recommended to use the `Request` class instead of `BaseRequest`.
 
 */
+@available(*, deprecated, message="Please use the Request class instead.")
 public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     
