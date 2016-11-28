@@ -63,7 +63,7 @@ extension BMSURLSessionDelegate: URLSessionDelegate {
     
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         
-        parentDelegate?.urlSession!(session, didBecomeInvalidWithError: error)
+        parentDelegate?.urlSession?(session, didBecomeInvalidWithError: error)
     }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -73,7 +73,7 @@ extension BMSURLSessionDelegate: URLSessionDelegate {
     
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         
-        parentDelegate?.urlSessionDidFinishEvents!(forBackgroundURLSession: session)
+        parentDelegate?.urlSessionDidFinishEvents?(forBackgroundURLSession: session)
     }
 }
     
@@ -86,7 +86,7 @@ extension BMSURLSessionDelegate: URLSessionTaskDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         
-        (parentDelegate as? URLSessionTaskDelegate)?.urlSession!(session, task: task, willPerformHTTPRedirection: response, newRequest: request, completionHandler: completionHandler)
+        (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, willPerformHTTPRedirection: response, newRequest: request, completionHandler: completionHandler)
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -96,24 +96,24 @@ extension BMSURLSessionDelegate: URLSessionTaskDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
         
-        (parentDelegate as? URLSessionTaskDelegate)?.urlSession!(session, task: task, needNewBodyStream: completionHandler)
+        (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, needNewBodyStream: completionHandler)
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         
-        (parentDelegate as? URLSessionTaskDelegate)?.urlSession!(session, task: task, didSendBodyData: bytesSent, totalBytesSent: totalBytesSent, totalBytesExpectedToSend: totalBytesExpectedToSend)
+        (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didSendBodyData: bytesSent, totalBytesSent: totalBytesSent, totalBytesExpectedToSend: totalBytesExpectedToSend)
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         
-        (parentDelegate as? URLSessionTaskDelegate)?.urlSession!(session, task: task, didCompleteWithError: error)
+        (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didCompleteWithError: error)
     }
     
     @available(watchOS 3.0, *)
     @available(iOS, introduced: 10)
     func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
     
-        (parentDelegate as? URLSessionTaskDelegate)?.urlSession!(session, task: task, didFinishCollecting: metrics)
+        (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didFinishCollecting: metrics)
     }
 }
 
@@ -146,31 +146,31 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
     
             BMSURLSession.logRequestMetadata(response: response, bytesSent: dataTask.countOfBytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: dataTask.originalRequest?.url)
 
-            (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
+            (parentDelegate as? URLSessionDataDelegate)?.urlSession?(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
         }
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didBecome downloadTask: URLSessionDownloadTask) {
         
-        (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didBecome: downloadTask)
+        (parentDelegate as? URLSessionDataDelegate)?.urlSession?(session, dataTask: dataTask, didBecome: downloadTask)
     }
     
     @available(iOS 9.0, *)
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didBecome streamTask: URLSessionStreamTask) {
         
-        (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didBecome: streamTask)
+        (parentDelegate as? URLSessionDataDelegate)?.urlSession?(session, dataTask: dataTask, didBecome: streamTask)
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         
         self.bytesReceived += data.count
         
-        (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didReceive: data)
+        (parentDelegate as? URLSessionDataDelegate)?.urlSession?(session, dataTask: dataTask, didReceive: data)
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
         
-        (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
+        (parentDelegate as? URLSessionDataDelegate)?.urlSession?(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
     }
 }
     
