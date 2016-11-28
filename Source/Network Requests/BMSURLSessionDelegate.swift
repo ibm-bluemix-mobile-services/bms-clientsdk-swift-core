@@ -33,9 +33,6 @@ internal class BMSURLSessionDelegate: NSObject {
     // Network request metadata that will be logged via Analytics
     internal let startTime: Int64
     internal let trackingId: String
-    internal var url: URL?
-    internal var response: URLResponse?
-    internal var bytesSent: Int64 = 0
     internal var bytesReceived: Int64 = 0
     
     // When the request is complete, either the didBecomeInvalidWithError or willCacheResponse method will be called depending on the type of task. When this occurs, we log request metadata using the Analytics API. In case both of the prior methods are called, we want to make sure that the metadata does not get logged twice for the same request.
@@ -109,9 +106,6 @@ extension BMSURLSessionDelegate: URLSessionTaskDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         
-        // No other delegate methods should be called after this one, so we are ready to record the request metadata.
-        logRequestMetadata()
-        
         (parentDelegate as? URLSessionTaskDelegate)?.urlSession!(session, task: task, didCompleteWithError: error)
     }
     
@@ -150,9 +144,7 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
         }
         else {
     
-            self.url = dataTask.originalRequest?.url
-            self.response = response
-            self.bytesSent = dataTask.countOfBytesSent
+            BMSURLSession.logRequestMetadata(response: response, bytesSent: dataTask.countOfBytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: dataTask.originalRequest?.url)
 
             (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
         }
@@ -178,30 +170,8 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
         
-        // No other delegate methods should be called after this one, so we are ready to record the request metadata.
-        logRequestMetadata()
-        
         (parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
     }
-}
-    
-    
-    
-// MARK: Helpers
-    
-extension BMSURLSessionDelegate {
-    
-    fileprivate func logRequestMetadata() {
-        
-        // This function can be called from 2 places (willCacheResponse and didCompleteWithError), so we make sure to log analytics only once in case both of those methods get called.
-        if BMSURLSession.shouldRecordNetworkMetadata && !requestMetadataWasRecorded {
-            let requestMetadata = BMSURLSession.getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: url)
-            Analytics.log(metadata: requestMetadata)
-            
-            requestMetadataWasRecorded = true
-        }
-    }
-    
 }
     
     
@@ -232,9 +202,6 @@ internal class BMSURLSessionDelegate: NSObject {
     // Network request metadata that will be logged via Analytics
     internal let startTime: Int64
     internal let trackingId: String
-    internal var url: NSURL?
-    internal var response: NSURLResponse?
-    internal var bytesSent: Int64 = 0
     internal var bytesReceived: Int64 = 0
     
     // When the request is complete, either the didBecomeInvalidWithError or willCacheResponse method will be called depending on the type of task. When this occurs, we log request metadata using the Analytics API. In case both of the prior methods are called, we want to make sure that the metadata does not get logged twice for the same request.
@@ -308,9 +275,6 @@ extension BMSURLSessionDelegate: NSURLSessionTaskDelegate {
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
         
-        // No other delegate methods should be called after this one, so we are ready to record the request metadata.
-        logRequestMetadata()
-        
         (parentDelegate as? NSURLSessionTaskDelegate)?.URLSession?(session, task: task, didCompleteWithError: error)
     }
 }
@@ -341,9 +305,7 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
         }
         else {
             
-            self.url = dataTask.originalRequest?.URL
-            self.response = response
-            self.bytesSent = dataTask.countOfBytesSent
+            BMSURLSession.logRequestMetadata(response: response, bytesSent: dataTask.countOfBytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: dataTask.originalRequest?.URL)
             
             (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
         }
@@ -369,32 +331,10 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
     
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, willCacheResponse proposedResponse: NSCachedURLResponse, completionHandler: (NSCachedURLResponse?) -> Void) {
         
-        // No other delegate methods should be called after this one, so we are ready to record the request metadata.
-        logRequestMetadata()
-        
         (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
     }
 }
-    
-    
-    
-// MARK: Helpers
 
-extension BMSURLSessionDelegate {
-    
-    private func logRequestMetadata() {
-        
-        // This function can be called from 2 places (willCacheResponse and didCompleteWithError), so we make sure to log analytics only once in case both of those methods get called.
-        if BMSURLSession.shouldRecordNetworkMetadata && !requestMetadataWasRecorded {
-            let requestMetadata = BMSURLSession.getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: url)
-            Analytics.log(metadata: requestMetadata)
-            
-            requestMetadataWasRecorded = true
-        }
-    }
-    
-}
 
-    
 
 #endif

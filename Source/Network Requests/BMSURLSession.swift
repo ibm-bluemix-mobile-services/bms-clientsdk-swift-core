@@ -293,20 +293,6 @@ public struct BMSURLSession: NetworkSession {
     }
     
     
-    internal static func isAuthorizationManagerRequired(for response: URLResponse?) -> Bool {
-        
-        let authManager = BMSClient.sharedInstance.authorizationManager
-        
-        if let response = response as? HTTPURLResponse,
-            let wwwAuthHeader = response.allHeaderFields["Www-Authenticate"] as? String,
-            authManager.isAuthorizationRequired(for: response.statusCode, httpResponseAuthorizationHeader: wwwAuthHeader) {
-            
-            return true
-        }
-        return false
-    }
-    
-    
     // Required to hook in challenge handling via AuthorizationManager
     internal static func generateBmsCompletionHandler(from completionHandler: @escaping BMSDataTaskCompletionHandler, urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType, requestBody: Data?) -> BMSDataTaskCompletionHandler {
         
@@ -335,21 +321,28 @@ public struct BMSURLSession: NetworkSession {
             }
             else {
                 
-                if shouldRecordNetworkMetadata {
-                    
-                    let bytesReceived: Int64 = Int64(data?.count ?? 0)
-                    var bytesSent: Int64 = 0
-                    if requestBody != nil {
-                        bytesSent = Int64(requestBody!.count)
-                    }
-                    
-                    let requestMetadata = getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.url)
-                    Analytics.log(metadata: requestMetadata)
-                }
+                let bytesReceived = Int64(data?.count ?? 0)
+                let bytesSent = Int64(requestBody?.count ?? 0)
+                
+                BMSURLSession.logRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.url)
                 
                 completionHandler(data, response, error)
             }
         }
+    }
+    
+    
+    internal static func isAuthorizationManagerRequired(for response: URLResponse?) -> Bool {
+        
+        let authManager = BMSClient.sharedInstance.authorizationManager
+        
+        if let response = response as? HTTPURLResponse,
+            let wwwAuthHeader = response.allHeaderFields["Www-Authenticate"] as? String,
+            authManager.isAuthorizationRequired(for: response.statusCode, httpResponseAuthorizationHeader: wwwAuthHeader) {
+            
+            return true
+        }
+        return false
     }
     
     
@@ -403,7 +396,18 @@ public struct BMSURLSession: NetworkSession {
     }
     
     
-    // Gather response data as JSON to be recorded in an Analytics log
+    // Use analytics to record the request metadata
+    public static func logRequestMetadata(response: URLResponse?, bytesSent: Int64, bytesReceived: Int64, trackingId: String, startTime: Int64, url: URL?) {
+        
+        if BMSURLSession.shouldRecordNetworkMetadata {
+            
+            let requestMetadata = BMSURLSession.getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: url)
+            Analytics.log(metadata: requestMetadata)
+        }
+    }
+    
+    
+    // Gather response data as JSON to be recorded with Analytics
     internal static func getRequestMetadata(response: URLResponse?, bytesSent: Int64, bytesReceived: Int64, trackingId: String, startTime: Int64, url: URL?) -> [String: Any] {
         
         let endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
@@ -740,6 +744,46 @@ public struct BMSURLSession: NetworkSession {
     }
     
     
+    // Required to hook in challenge handling via AuthorizationManager
+    internal static func generateBmsCompletionHandler(from completionHandler: BMSDataTaskCompletionHandler, urlSession: NSURLSession, request: NSURLRequest, originalTask: BMSURLSessionTaskType, requestBody: NSData?) -> BMSDataTaskCompletionHandler {
+        
+        // Allows Analytics to track each network request and its associated metadata.
+        let trackingId = NSUUID().UUIDString
+        
+        // The time at which the request is considered to have started.
+        // We start the request timer here so that it doesn't need to get passed around via method parameters.
+        // The request is considered to have begun when the URLSessionTask is created.
+        let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
+        
+        return { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
+            
+            if BMSURLSession.isAuthorizationManagerRequired(response) {
+                
+                // Resend the original request with the "Authorization" header added
+                let originalRequest = request.mutableCopy() as! NSMutableURLRequest
+                BMSURLSession.handleAuthorizationChallenge(session: urlSession, request: originalRequest, originalTask: originalTask, handleTask: { (urlSessionTask) in
+                    
+                    if let taskWithAuthorization = urlSessionTask {
+                        taskWithAuthorization.resume()
+                    }
+                    else {
+                        completionHandler(data, response, error)
+                    }
+                })
+            }
+            else {
+                
+                let bytesReceived = Int64(data?.length ?? 0)
+                let bytesSent = Int64(requestBody?.length ?? 0)
+                
+                BMSURLSession.logRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.URL)
+                
+                completionHandler(data, response, error)
+            }
+        }
+    }
+    
+    
     internal static func isAuthorizationManagerRequired(response: NSURLResponse?) -> Bool {
         
         let authManager = BMSClient.sharedInstance.authorizationManager
@@ -802,51 +846,18 @@ public struct BMSURLSession: NetworkSession {
     }
     
     
-    // Required to hook in challenge handling via AuthorizationManager
-    internal static func generateBmsCompletionHandler(from completionHandler: BMSDataTaskCompletionHandler, urlSession: NSURLSession, request: NSURLRequest, originalTask: BMSURLSessionTaskType, requestBody: NSData?) -> BMSDataTaskCompletionHandler {
+    // Use analytics to record the request metadata
+    public static func logRequestMetadata(response response: NSURLResponse?, bytesSent: Int64, bytesReceived: Int64, trackingId: String, startTime: Int64, url: NSURL?) {
         
-        // Allows Analytics to track each network request and its associated metadata.
-        let trackingId = NSUUID().UUIDString
-        
-        // The time at which the request is considered to have started.
-        // We start the request timer here so that it doesn't need to get passed around via method parameters.
-        // The request is considered to have begun when the URLSessionTask is created.
-        let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
-        
-        return { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
+        if BMSURLSession.shouldRecordNetworkMetadata {
             
-            if BMSURLSession.isAuthorizationManagerRequired(response) {
-                
-                // Resend the original request with the "Authorization" header added
-                let originalRequest = request.mutableCopy() as! NSMutableURLRequest
-                BMSURLSession.handleAuthorizationChallenge(session: urlSession, request: originalRequest, originalTask: originalTask, handleTask: { (urlSessionTask) in
-                    
-                    if let taskWithAuthorization = urlSessionTask {
-                        taskWithAuthorization.resume()
-                    }
-                    else {
-                        completionHandler(data, response, error)
-                    }
-                })
-            }
-            else {
-                
-                if shouldRecordNetworkMetadata {
-                    
-                    let bytesReceived: Int64 = Int64(data?.length ?? 0)
-                    let bytesSent = Int64(requestBody?.length ?? 0)
-                    let requestMetadata = getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.URL)
-                    
-                    Analytics.log(metadata: requestMetadata)
-                }
-                
-                completionHandler(data, response, error)
-            }
+            let requestMetadata = BMSURLSession.getRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: url)
+            Analytics.log(metadata: requestMetadata)
         }
     }
     
     
-    // Gather response data as JSON to be recorded in an Analytics log
+    // Gather response data as JSON to be recorded with Analytics
     internal static func getRequestMetadata(response response: NSURLResponse?, bytesSent: Int64, bytesReceived: Int64, trackingId: String, startTime: Int64, url: NSURL?) -> [String: AnyObject] {
         
         let endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
