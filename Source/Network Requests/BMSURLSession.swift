@@ -32,12 +32,15 @@ public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) ->
 
     Currently, `BMSURLSession` only supports [URLSessionDataTask](https://developer.apple.com/reference/foundation/urlsessiondatatask) and [URLSessionUploadTask](https://developer.apple.com/reference/foundation/urlsessionuploadtask).
 */
-public struct BMSURLSession: NetworkSession {
+public struct BMSURLSession {
 
     
     // Determines whether metadata gets recorded for all BMSURLSession network requests
     // Should only be set to true by passing DeviceEvent.network in the Analytics.initialize() method in the BMSAnalytics framework.
     public static var shouldRecordNetworkMetadata: Bool = false
+    
+    // Should only be set to true by the BMSSecurity framework when creating a BMSURLSession request for authenticating with the MCA authorization server
+    public var isBMSAuthorizationRequest: Bool = false
     
     private let configuration: URLSessionConfiguration
     
@@ -115,7 +118,7 @@ public struct BMSURLSession: NetworkSession {
     */
     public func dataTask(with request: URLRequest) -> URLSessionDataTask {
         
-        let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
+        let bmsRequest = BMSURLSession.addBMSHeaders(to: request, onlyIf: !isBMSAuthorizationRequest)
         
         let originalTask = BMSURLSessionTaskType.dataTask
         let parentDelegate = BMSURLSessionDelegate(parentDelegate: delegate, originalTask: originalTask)
@@ -143,7 +146,7 @@ public struct BMSURLSession: NetworkSession {
     */
     public func dataTask(with request: URLRequest, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask {
         
-        let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
+        let bmsRequest = BMSURLSession.addBMSHeaders(to: request, onlyIf: !isBMSAuthorizationRequest)
         
         let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(completionHandler)
@@ -170,7 +173,7 @@ public struct BMSURLSession: NetworkSession {
     */
     public func uploadTask(with request: URLRequest, from bodyData: Data) -> URLSessionUploadTask {
         
-        let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
+        let bmsRequest = BMSURLSession.addBMSHeaders(to: request, onlyIf: !isBMSAuthorizationRequest)
         
         let originalTask = BMSURLSessionTaskType.uploadTaskWithData(bodyData)
         let parentDelegate = BMSURLSessionDelegate(parentDelegate: delegate, originalTask: originalTask)
@@ -198,7 +201,7 @@ public struct BMSURLSession: NetworkSession {
     */
     public func uploadTask(with request: URLRequest, from bodyData: Data?, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask {
         
-        let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
+        let bmsRequest = BMSURLSession.addBMSHeaders(to: request, onlyIf: !isBMSAuthorizationRequest)
         
         let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(bodyData, completionHandler)
@@ -222,7 +225,7 @@ public struct BMSURLSession: NetworkSession {
     */
     public func uploadTask(with request: URLRequest, fromFile fileURL: URL) -> URLSessionUploadTask {
         
-        let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
+        let bmsRequest = BMSURLSession.addBMSHeaders(to: request, onlyIf: !isBMSAuthorizationRequest)
         
         let originalTask = BMSURLSessionTaskType.uploadTaskWithFile(fileURL)
         let parentDelegate = BMSURLSessionDelegate(parentDelegate: delegate, originalTask: originalTask)
@@ -258,7 +261,7 @@ public struct BMSURLSession: NetworkSession {
             BMSURLSession.logger.warn(message: "Cannot retrieve the contents of the file \(fileURL.absoluteString). Error: \(error)")
         }
         
-        let bmsRequest = BMSURLSession.addBMSHeaders(to: request)
+        let bmsRequest = BMSURLSession.addBMSHeaders(to: request, onlyIf: !isBMSAuthorizationRequest)
         
         let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(fileURL, completionHandler)
@@ -273,20 +276,24 @@ public struct BMSURLSession: NetworkSession {
     // MARK: - Helpers
     
     // Inject BMSSecurity and BMSAnalytics into the request object by adding headers
-    internal static func addBMSHeaders(to request: URLRequest) -> URLRequest {
+    internal static func addBMSHeaders(to request: URLRequest, onlyIf precondition: Bool) -> URLRequest {
         
         var bmsRequest = request
     
-        // Security
-        let authManager = BMSClient.sharedInstance.authorizationManager
-        if let authHeader: String = authManager.cachedAuthorizationHeader {
-            bmsRequest.setValue(authHeader, forHTTPHeaderField: "Authorization")
-        }
-        
-        // Analytics
-        bmsRequest.setValue(UUID().uuidString, forHTTPHeaderField: "x-wl-analytics-tracking-id")
-        if let requestMetadata = BaseRequest.requestAnalyticsData {
-            bmsRequest.setValue(requestMetadata, forHTTPHeaderField: "x-mfp-analytics-metadata")
+        // If the request is in the process of authentication with the MCA authorization server, do not attempt to add headers, since this is an intermediary request.
+        if precondition {
+            
+            // Security
+            let authManager = BMSClient.sharedInstance.authorizationManager
+            if let authHeader: String = authManager.cachedAuthorizationHeader {
+                bmsRequest.setValue(authHeader, forHTTPHeaderField: "Authorization")
+            }
+            
+            // Analytics
+            bmsRequest.setValue(UUID().uuidString, forHTTPHeaderField: "x-wl-analytics-tracking-id")
+            if let requestMetadata = BaseRequest.requestAnalyticsData {
+                bmsRequest.setValue(requestMetadata, forHTTPHeaderField: "x-mfp-analytics-metadata")
+            }
         }
         
         return bmsRequest

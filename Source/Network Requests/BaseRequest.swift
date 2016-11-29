@@ -55,26 +55,6 @@ public typealias BMSCompletionHandler = (Response?, Error?) -> Void
 
 
 
-// MARK: - NetworkSession
-    
-// We need this type so that BaseRequest.networkSession can be either a BMSURLSession (required by BMSCore) or a URLSession (required by BMSSecurity)
-public protocol NetworkSession {
- 
-    func dataTask(with url: URL) -> URLSessionDataTask
-    func dataTask(with url: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask
-    func dataTask(with request: URLRequest) -> URLSessionDataTask
-    func dataTask(with request: URLRequest, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask
-    
-    func uploadTask(with request: URLRequest, from bodyData: Data) -> URLSessionUploadTask
-    func uploadTask(with request: URLRequest, from bodyData: Data?, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask
-    func uploadTask(with request: URLRequest, fromFile fileURL: URL) -> URLSessionUploadTask
-    func uploadTask(with request: URLRequest, fromFile fileURL: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask
-}
-    
-extension URLSession: NetworkSession { }
-
-
-
 /**
     Sends HTTP network requests. 
      
@@ -124,7 +104,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     // The session that handles sending requests.
     // Public access required by BMSSecurity framework.
-    public var networkSession: NetworkSession!
+    public var networkSession: BMSURLSession!
     
     // The unique ID to keep track of each request.
     // Public access required by BMSAnalytics framework.
