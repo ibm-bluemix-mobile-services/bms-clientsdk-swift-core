@@ -315,8 +315,8 @@ public struct BMSURLSession {
             
             if BMSURLSession.isAuthorizationManagerRequired(for: response) {
                 
-                // Resend the original request with the "Authorization" header added
-                BMSURLSession.handleAuthorizationChallenge(session: urlSession, request: request, originalTask: originalTask, handleTask: { (urlSessionTask) in
+                // If authentication is successful, resend the original request with the "Authorization" header added
+                BMSURLSession.handleAuthorizationChallenge(session: urlSession, request: request, trackingId: trackingId, startTime: startTime, originalTask: originalTask, handleTask: { (urlSessionTask) in
                     
                     if let taskWithAuthorization = urlSessionTask {
                         taskWithAuthorization.resume()
@@ -360,7 +360,7 @@ public struct BMSURLSession {
     // First, obtain authorization with AuthorizationManager from BMSSecurity.
     // If authentication is successful, a new URLSessionTask is generated.
     // This new task is the same as the original task, but now with the "Authorization" header needed to complete the request successfully.
-    internal static func handleAuthorizationChallenge(session urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType, handleTask: @escaping (URLSessionTask?) -> Void){
+    internal static func handleAuthorizationChallenge(session urlSession: URLSession, request: URLRequest, trackingId: String = "", startTime: Int64 = 0, originalTask: BMSURLSessionTaskType, handleTask: @escaping (URLSessionTask?) -> Void){
         
         let authManager = BMSClient.sharedInstance.authorizationManager
         let authCallback: BMSCompletionHandler = {(response: Response?, error:Error?) in
@@ -376,6 +376,11 @@ public struct BMSURLSession {
                     request.setValue(authHeader, forHTTPHeaderField: "Authorization")
                 }
                 
+                // Gather network metadata for logging (only used with completion handlers, not delegates)
+                
+                let bytesReceived = Int64(response?.responseData?.count ?? 0)
+                let bytesSent = Int64(request.httpBody?.count ?? 0)
+                
                 // Figure out the original URLSessionTask created by the user, and pass it back to the completionHandler
                 switch originalTask {
                     
@@ -383,7 +388,11 @@ public struct BMSURLSession {
                     handleTask(urlSession.dataTask(with: request))
                     
                 case .dataTaskWithCompletionHandler(let completionHandler):
-                    handleTask(urlSession.dataTask(with: request, completionHandler: completionHandler))
+                    
+                    var metadataCompletionHandler = {(data: Data?, response: URLResponse?, error: Error?) -> Void in
+                        logRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.url)
+                    }
+                    handleTask(urlSession.dataTask(with: request, completionHandler: metadataCompletionHandler))
                     
                 case .uploadTaskWithFile(let file):
                     handleTask(urlSession.uploadTask(with: request, fromFile: file))
@@ -392,10 +401,18 @@ public struct BMSURLSession {
                     handleTask(urlSession.uploadTask(with: request, from: data))
                     
                 case .uploadTaskWithFileAndCompletionHandler(let file, let completionHandler):
-                    handleTask(urlSession.uploadTask(with: request, fromFile: file, completionHandler: completionHandler))
+                    
+                    var metadataCompletionHandler = {(data: Data?, response: URLResponse?, error: Error?) -> Void in
+                        logRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.url)
+                    }
+                    handleTask(urlSession.uploadTask(with: request, fromFile: file, completionHandler: metadataCompletionHandler))
                     
                 case .uploadTaskWithDataAndCompletionHandler(let data, let completionHandler):
-                    handleTask(urlSession.uploadTask(with: request, from: data, completionHandler: completionHandler))
+                    
+                    var metadataCompletionHandler = {(data: Data?, response: URLResponse?, error: Error?) -> Void in
+                        logRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.url)
+                    }
+                    handleTask(urlSession.uploadTask(with: request, from: data, completionHandler: metadataCompletionHandler))
                 }
             }
             else {
