@@ -326,13 +326,17 @@ public struct BMSURLSession {
                     }
                 })
             }
-            else {
+            // Log the request metadata unless it's a redirect
+            else if let response = response as? HTTPURLResponse, response.statusCode != nil && response.statusCode >= 200 && response.statusCode < 300 {
                 
                 let bytesReceived = Int64(data?.count ?? 0)
                 let bytesSent = Int64(requestBody?.count ?? 0)
                 
                 BMSURLSession.logRequestMetadata(response: response, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: request.url)
                 
+                completionHandler(data, response, error)
+            }
+            else {
                 completionHandler(data, response, error)
             }
         }
@@ -353,7 +357,7 @@ public struct BMSURLSession {
     }
     
     
-    // Handle the challenge with AuthorizationManager from BMSSecurity.
+    // First, obtain authorization with AuthorizationManager from BMSSecurity.
     // If authentication is successful, a new URLSessionTask is generated.
     // This new task is the same as the original task, but now with the "Authorization" header needed to complete the request successfully.
     internal static func handleAuthorizationChallenge(session urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType, handleTask: @escaping (URLSessionTask?) -> Void){

@@ -295,7 +295,6 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
             BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
                 
                 if let taskWithAuthorization = urlSessionTask {
-                    
                     taskWithAuthorization.resume()
                 }
                 else {
