@@ -31,12 +31,7 @@ internal class BMSURLSessionDelegate: NSObject {
     internal let originalTask: BMSURLSessionTaskType
     
     // Network request metadata that will be logged via Analytics
-    internal let startTime: Int64
-    internal let trackingId: String
-    internal var bytesReceived: Int64 = 0
-    
-    // When the request is complete, either the didBecomeInvalidWithError or willCacheResponse method will be called depending on the type of task. When this occurs, we log request metadata using the Analytics API. In case both of the prior methods are called, we want to make sure that the metadata does not get logged twice for the same request.
-    internal var requestMetadataWasRecorded = false
+    internal var requestMetadata: RequestMetadata
     
     
     
@@ -45,13 +40,9 @@ internal class BMSURLSessionDelegate: NSObject {
         self.parentDelegate = parentDelegate
         self.originalTask = originalTask
         
-        // Allows Analytics to track each network request and its associated metadata.
-        self.trackingId = UUID().uuidString
-        
-        // The time at which the request is considered to have started.
-        // We start the request timer here so that it doesn't need to get passed around via method parameters.
-        // The request is considered to have begun when the URLSessionTask is created.
-        self.startTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+        let trackingId = UUID().uuidString
+        let startTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+        self.requestMetadata = RequestMetadata(url: nil, startTime: startTime, trackingId: trackingId)
     }
 }
     
@@ -132,7 +123,7 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
             let originalRequest = dataTask.originalRequest!
             
             // Resend the original request with the "Authorization" header added
-            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
+            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
                 
                 if let taskWithAuthorization = urlSessionTask {
                     taskWithAuthorization.resume()
@@ -143,8 +134,12 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
             })
         }
         else {
-    
-            BMSURLSession.logRequestMetadata(response: response, bytesSent: dataTask.countOfBytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: dataTask.originalRequest?.url)
+            
+            requestMetadata.url = dataTask.originalRequest?.url
+            requestMetadata.response = response
+            requestMetadata.bytesSent = dataTask.countOfBytesSent
+            requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+            requestMetadata.logMetadata()
 
             (parentDelegate as? URLSessionDataDelegate)?.urlSession?(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
         }
@@ -163,7 +158,7 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         
-        self.bytesReceived += data.count
+        requestMetadata.bytesReceived += data.count
         
         (parentDelegate as? URLSessionDataDelegate)?.urlSession?(session, dataTask: dataTask, didReceive: data)
     }
@@ -203,9 +198,6 @@ internal class BMSURLSessionDelegate: NSObject {
     internal let startTime: Int64
     internal let trackingId: String
     internal var bytesReceived: Int64 = 0
-    
-    // When the request is complete, either the didBecomeInvalidWithError or willCacheResponse method will be called depending on the type of task. When this occurs, we log request metadata using the Analytics API. In case both of the prior methods are called, we want to make sure that the metadata does not get logged twice for the same request.
-    internal var requestMetadataWasRecorded = false
     
     
     

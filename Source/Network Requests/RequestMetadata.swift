@@ -1,0 +1,125 @@
+/*
+*     Copyright 2016 IBM Corp.
+*     Licensed under the Apache License, Version 2.0 (the "License");
+*     you may not use this file except in compliance with the License.
+*     You may obtain a copy of the License at
+*     http://www.apache.org/licenses/LICENSE-2.0
+*     Unless required by applicable law or agreed to in writing, software
+*     distributed under the License is distributed on an "AS IS" BASIS,
+*     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*     See the License for the specific language governing permissions and
+*     limitations under the License.
+*/
+
+
+
+// MARK: - Swift 3
+
+#if swift(>=3.0)
+    
+    
+    
+/*
+    Contains all of the metadata for one network request made via Request or BMSURLSession.
+    Once the response is received and all of the metadata has been gathered, the metadata can be logged with Analytics.
+*/
+internal struct RequestMetadata {
+    
+    
+    // The URL of the resource that the request is being sent to.
+    var url: URL?
+    
+    // The time at which the request is considered to have started.
+    let startTime: Int64
+    
+    // Allows Analytics to track each network request and its associated metadata.
+    let trackingId: String
+    
+    // The response received.
+    var response: URLResponse? = nil
+    
+    // The time at which the request is considered complete.
+    var endTime: Int64 = 0
+    
+    // Amount of data sent.
+    var bytesSent: Int64 = 0
+    
+    // Amount of data received in the response.
+    var bytesReceived: Int64 = 0
+    
+    // Combines all of the metadata into a single JSON object
+    var combinedMetadata: [String: Any] {
+        
+        var roundTripTime = 0
+        // If this is not true, that means some BMSCore developer forgot to set the endTime somewhere
+        if endTime > startTime {
+            roundTripTime = endTime - startTime
+        }
+        
+        // Data for analytics logging
+        // NSNumber is used because, for some reason, JSONSerialization fails to convert Int64 to JSON
+        var responseMetadata: [String: Any] = [:]
+        responseMetadata["$category"] = "network"
+        responseMetadata["$trackingid"] = trackingId
+        responseMetadata["$outboundTimestamp"] = NSNumber(value: startTime)
+        responseMetadata["$inboundTimestamp"] = NSNumber(value: endTime)
+        responseMetadata["$roundTripTime"] = NSNumber(value: roundTripTime)
+        responseMetadata["$bytesSent"] = NSNumber(value: bytesSent)
+        responseMetadata["$bytesReceived"] = NSNumber(value: bytesReceived)
+        
+        if let urlString = url?.absoluteString {
+            responseMetadata["$path"] = urlString
+        }
+        
+        if let httpResponse = response as? HTTPURLResponse {
+            responseMetadata["$responseCode"] = httpResponse.statusCode
+        }
+        
+        return responseMetadata
+    }
+    
+    
+    
+    init(url: URL?, startTime: Int64, trackingId: String) {
+        self.url = url
+        self.startTime = startTime
+        self.trackingId = trackingId
+    }
+    
+    
+    // Use analytics to record the request metadata
+    func logMetadata() {
+        
+        if BMSURLSession.shouldRecordNetworkMetadata {
+            Analytics.log(metadata: combinedMetadata)
+        }
+    }
+}
+
+
+
+
+
+/**************************************************************************************************/
+
+
+
+
+
+// MARK: - Swift 2
+
+#else
+
+
+
+/*
+     Contains all of the metadata for one network request made via Request or BMSURLSession.
+     Once the response is received and all of the metadata has been gathered, the metadata can be logged with Analytics.
+*/
+internal struct RequestMetadata {
+
+}
+    
+    
+    
+#endif
