@@ -102,9 +102,15 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     // MARK: Properties (internal)
     
-    // The session that handles sending requests.
+    // The old session that handles sending requests. 
+    // This will be replaced by `urlSession` once BMSSecurity 3.0 is released.
     // Public access required by BMSSecurity framework.
-    public var networkSession: BMSURLSession!
+    public var networkSession: URLSession?
+    
+    // The new session that handles sending requests.
+    // Meant to replace `networkSession`.
+    // Public access required by BMSSecurity framework.
+    public var urlSession: BMSURLSession!
     
     // The unique ID to keep track of each request.
     // Public access required by BMSAnalytics framework.
@@ -171,7 +177,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
 		
         super.init()
                 
-        self.networkSession = BMSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        self.urlSession = BMSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
 
     
@@ -248,7 +254,13 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
         BaseRequest.logger.debug(message: "Sending Request to " + resourceUrl)
         
         // Send request
-        self.networkSession.dataTask(with: networkRequest, completionHandler: buildAndSendResponse).resume()
+        // Use `networkSession` instead of `urlSession` only if using an old version of BMSSecurity that doesn't support BMSURLSession.
+        if networkSession != nil {
+            self.networkSession!.dataTask(with: networkRequest, completionHandler: buildAndSendResponse).resume()
+        }
+        else {
+            self.urlSession.dataTask(with: networkRequest, completionHandler: buildAndSendResponse).resume()
+        }
     }
     
     
