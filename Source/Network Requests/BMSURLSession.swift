@@ -328,10 +328,12 @@ public struct BMSURLSession {
                 completionHandler(data, response, error)
             }
             else {
-                
+    
+                requestMetadata.response = response
                 requestMetadata.bytesReceived = Int64(data?.count ?? 0)
                 requestMetadata.bytesSent = Int64(requestBody?.count ?? 0)
-                
+                requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+    
                 requestMetadata.logMetadata()
                 
                 completionHandler(data, response, error)
@@ -394,6 +396,8 @@ public struct BMSURLSession {
                 
                 requestMetadata.bytesReceived = Int64(data?.count ?? 0)
                 requestMetadata.bytesSent = Int64(request.httpBody?.count ?? 0)
+                requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+    
                 requestMetadata.logMetadata()
                 
                 originalCompletionHandler(data, response, error)
@@ -773,8 +777,10 @@ public struct BMSURLSession {
             }
             else {
                 
+                requestMetadata.response = response
                 requestMetadata.bytesReceived = Int64(data?.length ?? 0)
                 requestMetadata.bytesSent = Int64(requestBody?.length ?? 0)
+                requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
                 
                 requestMetadata.logMetadata()
                 
@@ -838,6 +844,8 @@ public struct BMSURLSession {
                 
                 requestMetadata.bytesReceived = Int64(data?.length ?? 0)
                 requestMetadata.bytesSent = Int64(request.HTTPBody?.length ?? 0)
+                requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
+                
                 requestMetadata.logMetadata()
                 
                 originalCompletionHandler(data, response, error)

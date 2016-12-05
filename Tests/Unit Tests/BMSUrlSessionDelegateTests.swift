@@ -54,6 +54,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         bmsDelegate.urlSession(urlSession, dataTask: dataTask, didReceive: response, completionHandler: {(_) in })
         bmsDelegate.urlSession(urlSession, dataTask: dataTask, didReceive: dataReceived)
+        bmsDelegate.urlSession(urlSession, task: dataTask, didCompleteWithError: nil)
         
         XCTAssertEqual(bmsDelegate.requestMetadata.url, url)
         XCTAssertEqual(bmsDelegate.requestMetadata.response, response)
@@ -403,6 +404,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         bmsDelegate.URLSession(urlSession, dataTask: dataTask, didReceiveResponse: response, completionHandler: {(_) in })
         bmsDelegate.URLSession(urlSession, dataTask: dataTask, didReceiveData: dataReceived)
+        bmsDelegate.URLSession(urlSession, task: dataTask, didCompleteWithError: nil)
         
         XCTAssertEqual(bmsDelegate.requestMetadata.url, url)
         XCTAssertEqual(bmsDelegate.requestMetadata.response, response)
