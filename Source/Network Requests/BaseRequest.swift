@@ -366,29 +366,9 @@ public enum HttpMethod: String {
 // MARK: - BMSCompletionHandler
 
 /**
-     The type of callback sent with network requests made with `Request`.
+    Callback for network requests made with `Request`.
 */
 public typealias BMSCompletionHandler = (Response?, NSError?) -> Void
-
-
-
-// MARK: - NetworkSession
-
-// We need this type so that BaseRequest.networkSession can be either a BMSURLSession (required by BMSCore) or a URLSession (required by BMSSecurity)
-public protocol NetworkSession {
-    
-    func dataTaskWithURL(url: NSURL) -> NSURLSessionDataTask
-    func dataTaskWithURL(url: NSURL, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionDataTask
-    func dataTaskWithRequest(request: NSURLRequest) -> NSURLSessionDataTask
-    func dataTaskWithRequest(request: NSURLRequest, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionDataTask
-
-    func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData) -> NSURLSessionUploadTask
-    func uploadTaskWithRequest(request: NSURLRequest, fromData bodyData: NSData?, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask
-    func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL) -> NSURLSessionUploadTask
-    func uploadTaskWithRequest(request: NSURLRequest, fromFile fileURL: NSURL, completionHandler: BMSDataTaskCompletionHandler) -> NSURLSessionUploadTask
-}
-
-extension NSURLSession: NetworkSession { }
     
 
 
@@ -440,9 +420,15 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     // MARK: Properties (internal)
     
-    // The session that handles sending requests.
+    // The old session that handles sending requests.
+    // This will be replaced by `urlSession` once BMSSecurity 3.0 is released.
     // Public access required by BMSSecurity framework.
-    public var networkSession: NetworkSession!
+    public var networkSession: NSURLSession?
+    
+    // The new session that handles sending requests.
+    // Meant to replace `networkSession`.
+    // Public access required by BMSSecurity framework.
+    public var urlSession: BMSURLSession!
     
     // The unique ID to keep track of each request.
     // Public access required by BMSAnalytics framework.
@@ -502,13 +488,14 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         // Set timeout and initialize network session and request
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = timeout
-        networkRequest = NSMutableURLRequest()
         
         self.cachePolicy = cachePolicy
         
+        self.networkRequest = NSMutableURLRequest(URL: NSURL(string: "PLACEHOLDER")!)
+        
         super.init()
         
-        self.networkSession = BMSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        self.urlSession = BMSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
     
     
@@ -580,7 +567,6 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         networkRequest.HTTPMethod = httpMethod.rawValue
         networkRequest.HTTPBody = requestBody
         networkRequest.cachePolicy = cachePolicy
-        
         for header in self.headers {
             networkRequest.setValue(header.1, forHTTPHeaderField: header.0)
         }
@@ -588,7 +574,13 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         BaseRequest.logger.debug(message: "Sending Request to " + resourceUrl)
         
         // Send request
-        self.networkSession.dataTaskWithRequest(networkRequest as NSURLRequest, completionHandler: buildAndSendResponse).resume()
+        // Use `networkSession` instead of `urlSession` only if using an old version of BMSSecurity that doesn't support BMSURLSession.
+        if networkSession != nil {
+            self.networkSession!.dataTaskWithRequest(networkRequest, completionHandler: buildAndSendResponse).resume()
+        }
+        else {
+            self.urlSession.dataTaskWithRequest(networkRequest, completionHandler: buildAndSendResponse).resume()
+        }
     }
     
     

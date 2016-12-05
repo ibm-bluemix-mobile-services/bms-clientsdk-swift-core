@@ -96,40 +96,6 @@ class RequestMetadataTests: XCTestCase {
         self.waitForExpectations(timeout: 0.1, handler: nil)
     }
     
-    
-    
-//    func testGetRequestMetadata() {
-//        
-//        let testResponse = HTTPURLResponse(url: testUrl, statusCode: 200, httpVersion: nil, headerFields: nil)
-//        let trackingId = UUID().uuidString
-//        let bytesSent = Int64(555)
-//        let bytesReceived = Int64(666)
-//        let startTime = Int64(Date.timeIntervalSinceReferenceDate * 1000)
-//        
-//        let expectation = self.expectation(description: "Should receive request metadata.")
-//        
-//        DispatchQueue.main.asyncAfter(deadline: DispatchTime(uptimeNanoseconds: 5000000) , execute: {
-//            
-//            let responseMetadata: [String: Any] = BMSURLSession.getRequestMetadata(response: testResponse, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: self.testUrl)
-//            
-//            let endTime = responseMetadata["$inboundTimestamp"] as! Int
-//            
-//            XCTAssertEqual(responseMetadata["$category"] as! String, "network")
-//            XCTAssertEqual(responseMetadata["$trackingid"] as! String, trackingId)
-//            XCTAssertEqual(responseMetadata["$outboundTimestamp"] as! Int, Int(startTime))
-//            XCTAssertGreaterThan(endTime, Int(startTime))
-//            XCTAssertEqual(responseMetadata["$roundTripTime"] as! Int, endTime - Int(startTime))
-//            XCTAssertEqual(responseMetadata["$bytesSent"] as! Int, Int(bytesSent))
-//            XCTAssertEqual(responseMetadata["$bytesReceived"] as! Int, Int(bytesReceived))
-//            XCTAssertEqual(responseMetadata["$path"] as! String, self.testUrl.absoluteString)
-//            XCTAssertEqual((responseMetadata["$responseCode"] as! Int), testResponse?.statusCode)
-//            
-//            expectation.fulfill()
-//        })
-//        
-//        self.waitForExpectations(timeout: 0.1, handler: nil)
-//    }
-    
 }
 
 
@@ -149,6 +115,80 @@ class RequestMetadataTests: XCTestCase {
 
 
 class RequestMetadataTests: XCTestCase {
+    
+    
+    func testCombinedMetadata() {
+        
+        let url = NSURL(string:"http://example.com")!
+        let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000)
+        let trackingId = "1234"
+        let response = NSHTTPURLResponse(URL: url, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+        let bytesSent = Int64(555)
+        let bytesReceived = Int64(666)
+        
+        var requestMetadata = RequestMetadata(url: url, startTime: startTime, trackingId: trackingId)
+        requestMetadata.response = response
+        requestMetadata.bytesSent = bytesSent
+        requestMetadata.bytesReceived = bytesReceived
+        
+        let expectation = self.expectationWithDescription("Should receive request metadata.")
+        
+        // Need to wait so that the endTime and roundtripTime are larger than startTime
+        let timeDelay = dispatch_time(DISPATCH_TIME_NOW, 5000000) // 5 milliseconds
+        dispatch_after(timeDelay, dispatch_get_main_queue()) { () -> Void in
+            
+            requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000)
+            
+            let combinedMetadata: [String: AnyObject] = requestMetadata.combinedMetadata
+            let endTime = combinedMetadata["$inboundTimestamp"] as! Int
+            
+            XCTAssertEqual(combinedMetadata["$category"] as? String, "network")
+            XCTAssertEqual(combinedMetadata["$trackingid"] as? String, trackingId)
+            XCTAssertEqual(combinedMetadata["$outboundTimestamp"] as? Int, Int(startTime))
+            XCTAssertGreaterThan(endTime, Int(startTime))
+            XCTAssertEqual(combinedMetadata["$roundTripTime"] as? Int, endTime - Int(startTime))
+            XCTAssertEqual(combinedMetadata["$bytesSent"] as? Int, Int(bytesSent))
+            XCTAssertEqual(combinedMetadata["$bytesReceived"] as? Int, Int(bytesReceived))
+            XCTAssertEqual(combinedMetadata["$path"] as? String, url.absoluteString)
+            XCTAssertEqual((combinedMetadata["$responseCode"] as! Int), response?.statusCode)
+            
+            expectation.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
+    
+    
+    func testCombinedMetadataWithNilValues() {
+        
+        let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000)
+        let trackingId = "1234"
+        
+        let requestMetadata = RequestMetadata(url: nil, startTime: startTime, trackingId: trackingId)
+        
+        let expectation = self.expectationWithDescription("Should receive request metadata.")
+        
+        // Need to wait so that the endTime and roundtripTime are larger than startTime
+        let timeDelay = dispatch_time(DISPATCH_TIME_NOW, 5000000) // 5 milliseconds
+        dispatch_after(timeDelay, dispatch_get_main_queue()) { () -> Void in
+            
+            let combinedMetadata: [String: AnyObject] = requestMetadata.combinedMetadata
+            
+            XCTAssertEqual(combinedMetadata["$category"] as? String, "network")
+            XCTAssertEqual(combinedMetadata["$trackingid"] as? String, trackingId)
+            XCTAssertEqual(combinedMetadata["$outboundTimestamp"] as? Int, Int(startTime))
+            XCTAssertEqual(combinedMetadata["$inboundTimestamp"] as? Int, 0)
+            XCTAssertEqual(combinedMetadata["$roundTripTime"] as? Int, 0)
+            XCTAssertEqual(combinedMetadata["$bytesSent"] as? Int, 0)
+            XCTAssertEqual(combinedMetadata["$bytesReceived"] as? Int, 0)
+            XCTAssertNil(combinedMetadata["$path"])
+            XCTAssertNil(combinedMetadata["$responseCode"])
+            
+            expectation.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
 }
     
     

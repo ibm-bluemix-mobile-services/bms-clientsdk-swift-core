@@ -19,7 +19,7 @@
     
 
     
-// Custom wrapper for UrlSessionDelegate
+// Custom wrapper for URLSessionDelegate
 // Uses AuthorizationManager from the BMSSecurity framework to handle network requests to MCA-protected backends
 internal class BMSURLSessionDelegate: NSObject {
     
@@ -185,6 +185,8 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
     
     
 
+// Custom wrapper for NSURLSessionDelegate
+// Uses AuthorizationManager from the BMSSecurity framework to handle network requests to MCA-protected backends
 internal class BMSURLSessionDelegate: NSObject {
     
     
@@ -195,9 +197,7 @@ internal class BMSURLSessionDelegate: NSObject {
     internal let originalTask: BMSURLSessionTaskType
     
     // Network request metadata that will be logged via Analytics
-    internal let startTime: Int64
-    internal let trackingId: String
-    internal var bytesReceived: Int64 = 0
+    internal var requestMetadata: RequestMetadata
     
     
     
@@ -206,14 +206,9 @@ internal class BMSURLSessionDelegate: NSObject {
         self.parentDelegate = parentDelegate
         self.originalTask = originalTask
         
-        // Allows Analytics to track each network request and its associated metadata.
-        self.trackingId = NSUUID().UUIDString
-        
-        // The time at which the request is considered to have started.
-        // We start the request timer here so that it doesn't need to get passed around via method parameters.
-        // The request is considered to have begun when the URLSessionTask is created.
-        self.startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
-
+        let trackingId = NSUUID().UUIDString
+        let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
+        self.requestMetadata = RequestMetadata(url: nil, startTime: startTime, trackingId: trackingId)
     }
 }
     
@@ -284,7 +279,7 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
             // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSURLSession.
             let originalRequest = dataTask.originalRequest!.mutableCopy() as! NSMutableURLRequest
             
-            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
+            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
                 
                 if let taskWithAuthorization = urlSessionTask {
                     taskWithAuthorization.resume()
@@ -296,7 +291,11 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
         }
         else {
             
-            BMSURLSession.logRequestMetadata(response: response, bytesSent: dataTask.countOfBytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: dataTask.originalRequest?.URL)
+            requestMetadata.url = dataTask.originalRequest?.URL
+            requestMetadata.response = response
+            requestMetadata.bytesSent = dataTask.countOfBytesSent
+            requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
+            requestMetadata.logMetadata()
             
             (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
         }
@@ -314,8 +313,6 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
     }
     
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
-        
-        self.bytesReceived += data.length
         
         (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveData: data)
     }
