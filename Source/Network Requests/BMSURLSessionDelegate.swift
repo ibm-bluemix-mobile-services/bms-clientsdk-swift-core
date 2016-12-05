@@ -33,6 +33,9 @@ internal class BMSURLSessionDelegate: NSObject {
     // Network request metadata that will be logged via Analytics
     internal var requestMetadata: RequestMetadata
     
+    // Checks if request metadata has already been recorded so that the same request is not logged more than once
+    internal var requestMetadataWasRecorded: Bool = false
+    
     
     
     init(parentDelegate: URLSessionDelegate?, originalTask: BMSURLSessionTaskType) {
@@ -97,6 +100,8 @@ extension BMSURLSessionDelegate: URLSessionTaskDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         
+        recordNetworkMetadata()
+        
         (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didCompleteWithError: error)
     }
     
@@ -138,8 +143,6 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
             requestMetadata.url = dataTask.originalRequest?.url
             requestMetadata.response = response
             requestMetadata.bytesSent = dataTask.countOfBytesSent
-            requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
-            requestMetadata.logMetadata()
 
             (parentDelegate as? URLSessionDataDelegate)?.urlSession?(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
         }
@@ -165,7 +168,24 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, willCacheResponse proposedResponse: CachedURLResponse, completionHandler: @escaping (CachedURLResponse?) -> Void) {
         
+        recordNetworkMetadata()
+        
         (parentDelegate as? URLSessionDataDelegate)?.urlSession?(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
+    }
+    
+    
+    
+    // MARK: - Helpers
+    
+    // Log the request network metadata if it has not been already
+    func recordNetworkMetadata() {
+        
+        if !requestMetadataWasRecorded {
+    
+            requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+            requestMetadata.logMetadata()
+            requestMetadataWasRecorded = true
+        }
     }
 }
     
@@ -198,6 +218,9 @@ internal class BMSURLSessionDelegate: NSObject {
     
     // Network request metadata that will be logged via Analytics
     internal var requestMetadata: RequestMetadata
+    
+    // Checks if request metadata has already been recorded so that the same request is not logged more than once
+    internal var requestMetadataWasRecorded: Bool = false
     
     
     
@@ -262,6 +285,8 @@ extension BMSURLSessionDelegate: NSURLSessionTaskDelegate {
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
         
+        recordNetworkMetadata()
+        
         (parentDelegate as? NSURLSessionTaskDelegate)?.URLSession?(session, task: task, didCompleteWithError: error)
     }
 }
@@ -294,8 +319,6 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
             requestMetadata.url = dataTask.originalRequest?.URL
             requestMetadata.response = response
             requestMetadata.bytesSent = dataTask.countOfBytesSent
-            requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
-            requestMetadata.logMetadata()
             
             (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
         }
@@ -313,14 +336,34 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
     }
     
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
-        
+    
+        requestMetadata.bytesReceived += data.length
+    
         (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveData: data)
     }
     
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, willCacheResponse proposedResponse: NSCachedURLResponse, completionHandler: (NSCachedURLResponse?) -> Void) {
         
+        recordNetworkMetadata()
+        
         (parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, willCacheResponse: proposedResponse, completionHandler: completionHandler)
     }
+    
+    
+    
+    // MARK: - Helpers
+    
+    // Log the request network metadata if it has not been already
+    func recordNetworkMetadata() {
+        
+        if !requestMetadataWasRecorded {
+            
+            requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
+            requestMetadata.logMetadata()
+            requestMetadataWasRecorded = true
+        }
+    }
+    
 }
 
 
