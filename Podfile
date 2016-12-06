@@ -2,7 +2,7 @@ use_frameworks!
 
 
 def shared_pod
-	pod 'BMSAnalyticsAPI', '~> 2.1'
+	pod 'BMSAnalyticsAPI', '~> 2.2'
 end
 
 

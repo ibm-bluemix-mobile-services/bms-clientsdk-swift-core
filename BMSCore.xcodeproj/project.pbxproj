@@ -50,7 +50,6 @@
 		926061C51D8B3AC000A98083 /* HttpMethodPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926061C41D8B3AC000A98083 /* HttpMethodPickerViewController.swift */; };
 		926679B91BF3D4E000F597C5 /* TestApp watchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9235D0BC1BC3183F00946A32 /* TestApp watchOS.app */; };
 		926679BD1BF4FBD300F597C5 /* BMSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		927DF2011C7CD7B900245647 /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2001C7CD7B900245647 /* RequestTests.swift */; };
 		927DF2061C7CF60600245647 /* BaseAppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2031C7CF60600245647 /* BaseAppIdentity.swift */; };
 		927DF2071C7CF60600245647 /* BaseAppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2031C7CF60600245647 /* BaseAppIdentity.swift */; };
 		927DF2081C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */; };
@@ -202,7 +201,6 @@
 		926061BE1D8AF91100A98083 /* URLSessionDelegateExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionDelegateExample.swift; sourceTree = "<group>"; };
 		926061C21D8B3AB000A98083 /* CallbackPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallbackPickerViewController.swift; sourceTree = "<group>"; };
 		926061C41D8B3AC000A98083 /* HttpMethodPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpMethodPickerViewController.swift; sourceTree = "<group>"; };
-		927DF2001C7CD7B900245647 /* RequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		927DF2031C7CF60600245647 /* BaseAppIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAppIdentity.swift; sourceTree = "<group>"; };
 		927DF2041C7CF60600245647 /* BaseDeviceIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDeviceIdentity.swift; sourceTree = "<group>"; };
 		927DF2051C7CF60600245647 /* BaseUserIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseUserIdentity.swift; sourceTree = "<group>"; };
@@ -383,7 +381,6 @@
 			children = (
 				92018A771C45AC380031C893 /* BMSClientTests.swift */,
 				92018A791C45AC380031C893 /* BaseRequestTests.swift */,
-				927DF2001C7CD7B900245647 /* RequestTests.swift */,
 				92018A7D1C45AC380031C893 /* ResponseTests.swift */,
 				92A60C091D831F6D005E0969 /* BMSUrlSessionTests.swift */,
 				92A60C0B1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift */,
@@ -1068,7 +1065,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				92A60C0C1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift in Sources */,
-				927DF2011C7CD7B900245647 /* RequestTests.swift in Sources */,
 				92018A921C45AC380031C893 /* ResponseTests.swift in Sources */,
 				92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */,
 				92A60C0A1D831F6D005E0969 /* BMSUrlSessionTests.swift in Sources */,

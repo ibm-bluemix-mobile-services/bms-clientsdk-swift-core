@@ -154,7 +154,7 @@ class BMSUrlSessionTests: XCTestCase {
         BaseRequest.requestAnalyticsData = "testData"
         
         let originalRequest = URLRequest(url: testUrl)
-        let preparedRequest = BMSURLSession.addBMSHeaders(to: originalRequest)
+        let preparedRequest = BMSURLSession.addBMSHeaders(to: originalRequest, onlyIf: true)
         
         XCTAssertEqual(preparedRequest.allHTTPHeaderFields?["Authorization"], "testHeader")
         XCTAssertEqual(preparedRequest.allHTTPHeaderFields?["x-mfp-analytics-metadata"], "testData")
@@ -162,298 +162,6 @@ class BMSUrlSessionTests: XCTestCase {
         
         BaseRequest.requestAnalyticsData = nil
     
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testIsAuthorizationManagerRequired() {
-        
-        let responseWithoutAuthorization = URLResponse()
-        XCTAssertFalse(BMSURLSession.isAuthorizationManagerRequired(for: responseWithoutAuthorization))
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
-                return true
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let responseWithAuthorization = HTTPURLResponse(url: testUrl, statusCode: 403, httpVersion: "5", headerFields: ["WWW-Authenticate" : "asdf"])!
-        XCTAssertTrue(BMSURLSession.isAuthorizationManagerRequired(for: responseWithAuthorization))
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithCachedAuthorizationHeader() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-            
-            override var cachedAuthorizationHeader:String? {
-                get{
-                    return "testHeader"
-                }
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = URLSession(configuration: .default)
-        let testRequest = URLRequest(url: testUrl)
-        let dataTaskType = BMSURLSessionTaskType.dataTask
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertEqual(taskWithAuthorization.currentRequest!.allHTTPHeaderFields?["Authorization"], "testHeader")
-            }
-            else {
-                XCTFail("URLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithDataTask() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = URLSession(configuration: .default)
-        let testRequest = URLRequest(url: testUrl)
-        let dataTaskType = BMSURLSessionTaskType.dataTask
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is URLSessionDataTask)
-            }
-            else {
-                XCTFail("URLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithDataTaskAndCompletionHandler() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        func testCompletionHandler(data: Data?, response: URLResponse?, error: Error?) {
-            let httpResponse = response as! HTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
-        
-        let testSession = URLSession(configuration: .default)
-        let testRequest = URLRequest(url: testUrl)
-        let dataTaskType = BMSURLSessionTaskType.dataTaskWithCompletionHandler(testCompletionHandler)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is URLSessionDataTask)
-            }
-            else {
-                XCTFail("URLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithUploadTaskFile() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = URLSession(configuration: .default)
-        let testRequest = URLRequest(url: testUrl)
-        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFile(testUrl)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is URLSessionUploadTask)
-            }
-            else {
-                XCTFail("URLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithUploadTaskFileAndCompletionHandler() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        func testCompletionHandler(data: Data?, response: URLResponse?, error: Error?) {
-            let httpResponse = response as! HTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
-        
-        let testSession = URLSession(configuration: .default)
-        let testRequest = URLRequest(url: testUrl)
-        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(testUrl, testCompletionHandler)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is URLSessionUploadTask)
-            }
-            else {
-                XCTFail("URLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithUploadTaskData() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = URLSession(configuration: .default)
-        let testRequest = URLRequest(url: testUrl)
-        let testData = Data()
-        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithData(testData)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is URLSessionUploadTask)
-            }
-            else {
-                XCTFail("URLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithUploadTaskDataAndCompletionHandler() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        func testCompletionHandler(data: Data?, response: URLResponse?, error: Error?) {
-            let httpResponse = response as! HTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
-        
-        let testSession = URLSession(configuration: .default)
-        let testRequest = URLRequest(url: testUrl)
-        let testData = Data()
-        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(testData, testCompletionHandler)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is URLSessionUploadTask)
-            }
-            else {
-                XCTFail("URLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithFailureResponse() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                callback?(nil, NSError(domain: "", code: 401, userInfo: nil))
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = URLSession(configuration: .default)
-        let testRequest = URLRequest(url: testUrl)
-        let dataTaskType = BMSURLSessionTaskType.dataTask
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
-            
-            XCTAssertNil(urlSessionTask)
-        })
-        
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
     
@@ -476,7 +184,7 @@ class BMSUrlSessionTests: XCTestCase {
     
     
     func testGenerateBmsCompletionHandlerWithFailedAuthentication() {
-    
+        
         class TestAuthorizationManager: BaseAuthorizationManager {
             
             override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
@@ -496,7 +204,7 @@ class BMSUrlSessionTests: XCTestCase {
             
             expectation.fulfill()
         }
-    
+        
         let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil)
         let testResponse = HTTPURLResponse(url: testUrl, statusCode: 403, httpVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
@@ -545,36 +253,305 @@ class BMSUrlSessionTests: XCTestCase {
     }
     
     
-    func testGetRequestMetadata() {
+    func testIsAuthorizationManagerRequired() {
         
-        let testResponse = HTTPURLResponse(url: testUrl, statusCode: 200, httpVersion: nil, headerFields: nil)
-        let trackingId = UUID().uuidString
-        let bytesSent = Int64(555)
-        let bytesReceived = Int64(666)
-        let startTime = Int64(Date.timeIntervalSinceReferenceDate * 1000)
+        let responseWithoutAuthorization = URLResponse()
+        XCTAssertFalse(BMSURLSession.isAuthorizationManagerRequired(for: responseWithoutAuthorization))
         
-        let expectation = self.expectation(description: "Should receive request metadata.")
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+                return true
+            }
+        }
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime(uptimeNanoseconds: 5000000) , execute: {
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let responseWithAuthorization = HTTPURLResponse(url: testUrl, statusCode: 403, httpVersion: "5", headerFields: ["WWW-Authenticate" : "asdf"])!
+        XCTAssertTrue(BMSURLSession.isAuthorizationManagerRequired(for: responseWithAuthorization))
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    // The `testHandleAuthorizationChallenge...` methods below test both `handleAuthorizationChallenge` and `resendOriginalRequest`
+    
+    func testHandleAuthorizationChallengeWithCachedAuthorizationHeader() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
             
-            let responseMetadata: [String: Any] = BMSURLSession.getRequestMetadata(response: testResponse, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: self.testUrl)
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
             
-            let endTime = responseMetadata["$inboundTimestamp"] as! Int
+            override var cachedAuthorizationHeader:String? {
+                get{
+                    return "testHeader"
+                }
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = URLSession(configuration: .default)
+        let testRequest = URLRequest(url: testUrl)
+        let dataTaskType = BMSURLSessionTaskType.dataTask
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
             
-            XCTAssertEqual(responseMetadata["$category"] as! String, "network")
-            XCTAssertEqual(responseMetadata["$trackingid"] as! String, trackingId)
-            XCTAssertEqual(responseMetadata["$outboundTimestamp"] as! Int, Int(startTime))
-            XCTAssertGreaterThan(endTime, Int(startTime))
-            XCTAssertEqual(responseMetadata["$roundTripTime"] as! Int, endTime - Int(startTime))
-            XCTAssertEqual(responseMetadata["$bytesSent"] as! Int, Int(bytesSent))
-            XCTAssertEqual(responseMetadata["$bytesReceived"] as! Int, Int(bytesReceived))
-            XCTAssertEqual(responseMetadata["$path"] as! String, self.testUrl.absoluteString)
-            XCTAssertEqual((responseMetadata["$responseCode"] as! Int), testResponse?.statusCode)
-            
-            expectation.fulfill()
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertEqual(taskWithAuthorization.currentRequest!.allHTTPHeaderFields?["Authorization"], "testHeader")
+            }
+            else {
+                XCTFail("URLSessionTask should not be nil")
+            }
         })
         
-        self.waitForExpectations(timeout: 0.1, handler: nil)
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithDataTask() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = URLSession(configuration: .default)
+        let testRequest = URLRequest(url: testUrl)
+        let dataTaskType = BMSURLSessionTaskType.dataTask
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is URLSessionDataTask)
+            }
+            else {
+                XCTFail("URLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithDataTaskAndCompletionHandler() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        func testCompletionHandler(data: Data?, response: URLResponse?, error: Error?) {
+            let httpResponse = response as! HTTPURLResponse
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+        
+        let testSession = URLSession(configuration: .default)
+        let testRequest = URLRequest(url: testUrl)
+        let dataTaskType = BMSURLSessionTaskType.dataTaskWithCompletionHandler(testCompletionHandler)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is URLSessionDataTask)
+            }
+            else {
+                XCTFail("URLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithUploadTaskFile() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = URLSession(configuration: .default)
+        let testRequest = URLRequest(url: testUrl)
+        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFile(testUrl)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is URLSessionUploadTask)
+            }
+            else {
+                XCTFail("URLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithUploadTaskFileAndCompletionHandler() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        func testCompletionHandler(data: Data?, response: URLResponse?, error: Error?) {
+            let httpResponse = response as! HTTPURLResponse
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+        
+        let testSession = URLSession(configuration: .default)
+        let testRequest = URLRequest(url: testUrl)
+        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(testUrl, testCompletionHandler)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is URLSessionUploadTask)
+            }
+            else {
+                XCTFail("URLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithUploadTaskData() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = URLSession(configuration: .default)
+        let testRequest = URLRequest(url: testUrl)
+        let testData = Data()
+        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithData(testData)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is URLSessionUploadTask)
+            }
+            else {
+                XCTFail("URLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithUploadTaskDataAndCompletionHandler() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = HTTPURLResponse(url: URL(string: "x")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        func testCompletionHandler(data: Data?, response: URLResponse?, error: Error?) {
+            let httpResponse = response as! HTTPURLResponse
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+        
+        let testSession = URLSession(configuration: .default)
+        let testRequest = URLRequest(url: testUrl)
+        let testData = Data()
+        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(testData, testCompletionHandler)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is URLSessionUploadTask)
+            }
+            else {
+                XCTFail("URLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithFailureResponse() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                callback?(nil, NSError(domain: "", code: 401, userInfo: nil))
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = URLSession(configuration: .default)
+        let testRequest = URLRequest(url: testUrl)
+        let dataTaskType = BMSURLSessionTaskType.dataTask
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+            
+            XCTAssertNil(urlSessionTask)
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
     
 }
@@ -727,305 +704,13 @@ class BMSUrlSessionTests: XCTestCase {
         BaseRequest.requestAnalyticsData = "testData"
         
         let originalRequest = NSURLRequest(URL: testUrl)
-        let preparedRequest = BMSURLSession.addBMSHeaders(to: originalRequest)
+        let preparedRequest = BMSURLSession.addBMSHeaders(to: originalRequest, onlyIf: true)
         
         XCTAssertEqual(preparedRequest.allHTTPHeaderFields?["Authorization"], "testHeader")
         XCTAssertEqual(preparedRequest.allHTTPHeaderFields?["x-mfp-analytics-metadata"], "testData")
         XCTAssertNotNil(preparedRequest.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
         
         BaseRequest.requestAnalyticsData = nil
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testIsAuthorizationManagerRequired() {
-        
-        let responseWithoutAuthorization = NSURLResponse()
-        XCTAssertFalse(BMSURLSession.isAuthorizationManagerRequired(responseWithoutAuthorization))
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
-                return true
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let responseWithAuthorization = NSHTTPURLResponse(URL: testUrl, statusCode: 403, HTTPVersion: "5", headerFields: ["WWW-Authenticate" : ""])!
-        XCTAssertTrue(BMSURLSession.isAuthorizationManagerRequired(responseWithAuthorization))
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithCachedAuthorizationHeader() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-            
-            override var cachedAuthorizationHeader:String? {
-                get{
-                    return "testHeader"
-                }
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
-        let testRequest = NSMutableURLRequest(URL: testUrl)
-        let dataTaskType = BMSURLSessionTaskType.dataTask
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertEqual(taskWithAuthorization.currentRequest!.allHTTPHeaderFields?["Authorization"], "testHeader")
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithDataTask() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
-        let testRequest = NSMutableURLRequest(URL: testUrl)
-        let dataTaskType = BMSURLSessionTaskType.dataTask
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithDataTaskAndCompletionHandler() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
-            let httpResponse = response as! NSHTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
-        
-        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
-        let testRequest = NSMutableURLRequest(URL: testUrl)
-        let dataTaskType = BMSURLSessionTaskType.dataTaskWithCompletionHandler(testCompletionHandler)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithUploadTaskFile() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
-        let testRequest = NSMutableURLRequest(URL: testUrl)
-        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFile(testUrl)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithUploadTaskFileAndCompletionHandler() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
-            let httpResponse = response as! NSHTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
-        
-        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
-        let testRequest = NSMutableURLRequest(URL: testUrl)
-        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(testUrl, testCompletionHandler)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithUploadTaskData() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
-        let testRequest = NSMutableURLRequest(URL: testUrl)
-        let testData = NSData()
-        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithData(testData)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithUploadTaskDataAndCompletionHandler() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
-                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
-                
-                callback?(testResponse, nil)
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
-            let httpResponse = response as! NSHTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
-        
-        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
-        let testRequest = NSMutableURLRequest(URL: testUrl)
-        let testData = NSData()
-        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(testData, testCompletionHandler)
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
-            
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
-        })
-        
-        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
-    }
-    
-    
-    func testHandleAuthorizationChallengeWithFailureResponse() {
-        
-        class TestAuthorizationManager: BaseAuthorizationManager {
-            
-            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
-                callback?(nil, NSError(domain: "", code: 401, userInfo: nil))
-            }
-        }
-        
-        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
-        
-        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
-        let testRequest = NSMutableURLRequest(URL: testUrl)
-        let dataTaskType = BMSURLSessionTaskType.dataTask
-        
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
-            
-            XCTAssertNil(urlSessionTask)
-        })
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
@@ -1118,39 +803,306 @@ class BMSUrlSessionTests: XCTestCase {
     }
     
     
-    func testGetRequestMetadata() {
+    func testIsAuthorizationManagerRequired() {
         
-        let testResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: nil)
-        let trackingId = NSUUID().UUIDString
-        let bytesSent = Int64(555)
-        let bytesReceived = Int64(666)
-        let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000)
+        let responseWithoutAuthorization = NSURLResponse()
+        XCTAssertFalse(BMSURLSession.isAuthorizationManagerRequired(responseWithoutAuthorization))
         
-        let expectation = self.expectationWithDescription("Should receive request metadata.")
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func isAuthorizationRequired(for statusCode: Int, httpResponseAuthorizationHeader: String) -> Bool{
+                return true
+            }
+        }
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, 5000000)
-        dispatch_after(delayTime, dispatch_get_main_queue(), {
-            
-            let responseMetadata: [String: AnyObject] = BMSURLSession.getRequestMetadata(response: testResponse, bytesSent: bytesSent, bytesReceived: bytesReceived, trackingId: trackingId, startTime: startTime, url: self.testUrl)
-            
-            let endTime = responseMetadata["$inboundTimestamp"] as! Int
-            
-            XCTAssertEqual(responseMetadata["$category"] as? String, "network")
-            XCTAssertEqual(responseMetadata["$trackingid"] as? String, trackingId)
-            XCTAssertEqual(responseMetadata["$outboundTimestamp"] as? Int, Int(startTime))
-            XCTAssertGreaterThan(endTime, Int(startTime))
-            XCTAssertEqual(responseMetadata["$roundTripTime"] as? Int, endTime - Int(startTime))
-            XCTAssertEqual(responseMetadata["$bytesSent"] as? Int, Int(bytesSent))
-            XCTAssertEqual(responseMetadata["$bytesReceived"] as? Int, Int(bytesReceived))
-            XCTAssertEqual(responseMetadata["$path"] as? String, self.testUrl.absoluteString)
-            XCTAssertEqual((responseMetadata["$responseCode"] as? Int), testResponse?.statusCode)
-            
-            expectation.fulfill()
-        })
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
         
-        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+        let responseWithAuthorization = NSHTTPURLResponse(URL: testUrl, statusCode: 403, HTTPVersion: "5", headerFields: ["WWW-Authenticate" : ""])!
+        XCTAssertTrue(BMSURLSession.isAuthorizationManagerRequired(responseWithAuthorization))
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
     
+    
+    // The `testHandleAuthorizationChallenge...` methods below test both `handleAuthorizationChallenge` and `resendOriginalRequest`
+    
+    func testHandleAuthorizationChallengeWithCachedAuthorizationHeader() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+            
+            override var cachedAuthorizationHeader:String? {
+                get{
+                    return "testHeader"
+                }
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
+        let testRequest = NSMutableURLRequest(URL: testUrl)
+        let dataTaskType = BMSURLSessionTaskType.dataTask
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertEqual(taskWithAuthorization.currentRequest!.allHTTPHeaderFields?["Authorization"], "testHeader")
+            }
+            else {
+                XCTFail("NSURLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithDataTask() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
+        let testRequest = NSMutableURLRequest(URL: testUrl)
+        let dataTaskType = BMSURLSessionTaskType.dataTask
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
+            }
+            else {
+                XCTFail("NSURLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithDataTaskAndCompletionHandler() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            let httpResponse = response as! NSHTTPURLResponse
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+        
+        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
+        let testRequest = NSMutableURLRequest(URL: testUrl)
+        let dataTaskType = BMSURLSessionTaskType.dataTaskWithCompletionHandler(testCompletionHandler)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
+            }
+            else {
+                XCTFail("NSURLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithUploadTaskFile() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
+        let testRequest = NSMutableURLRequest(URL: testUrl)
+        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFile(testUrl)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
+            }
+            else {
+                XCTFail("NSURLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithUploadTaskFileAndCompletionHandler() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            let httpResponse = response as! NSHTTPURLResponse
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+        
+        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
+        let testRequest = NSMutableURLRequest(URL: testUrl)
+        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(testUrl, testCompletionHandler)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
+            }
+            else {
+                XCTFail("NSURLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithUploadTaskData() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
+        let testRequest = NSMutableURLRequest(URL: testUrl)
+        let testData = NSData()
+        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithData(testData)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
+            }
+            else {
+                XCTFail("NSURLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithUploadTaskDataAndCompletionHandler() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                let testHttpResponse = NSHTTPURLResponse(URL: NSURL(string: "x")!, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+                let testResponse = Response(responseData: nil, httpResponse: testHttpResponse, isRedirect: false)
+                
+                callback?(testResponse, nil)
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            let httpResponse = response as! NSHTTPURLResponse
+            XCTAssertEqual(httpResponse.statusCode, 200)
+        }
+        
+        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
+        let testRequest = NSMutableURLRequest(URL: testUrl)
+        let testData = NSData()
+        let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(testData, testCompletionHandler)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+            
+            if let taskWithAuthorization = urlSessionTask {
+                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
+            }
+            else {
+                XCTFail("NSURLSessionTask should not be nil")
+            }
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testHandleAuthorizationChallengeWithFailureResponse() {
+        
+        class TestAuthorizationManager: BaseAuthorizationManager {
+            
+            override func obtainAuthorization(completionHandler callback: BMSCompletionHandler?) {
+                callback?(nil, NSError(domain: "", code: 401, userInfo: nil))
+            }
+        }
+        
+        BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
+        
+        let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
+        let testRequest = NSMutableURLRequest(URL: testUrl)
+        let dataTaskType = BMSURLSessionTaskType.dataTask
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+            
+            XCTAssertNil(urlSessionTask)
+        })
+        
+        BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
 }
 
 
