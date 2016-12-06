@@ -328,13 +328,16 @@ public struct BMSURLSession {
                 completionHandler(data, response, error)
             }
             else {
+                
+                if BMSURLSession.shouldRecordNetworkMetadata {
     
-                requestMetadata.response = response
-                requestMetadata.bytesReceived = Int64(data?.count ?? 0)
-                requestMetadata.bytesSent = Int64(requestBody?.count ?? 0)
-                requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
-    
-                requestMetadata.logMetadata()
+                    requestMetadata.response = response
+                    requestMetadata.bytesReceived = Int64(data?.count ?? 0)
+                    requestMetadata.bytesSent = Int64(requestBody?.count ?? 0)
+                    requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+        
+                    requestMetadata.recordMetadata()
+                }
                 
                 completionHandler(data, response, error)
             }
@@ -394,11 +397,14 @@ public struct BMSURLSession {
             
             let newCompletionHandler = {(data: Data?, response: URLResponse?, error: Error?) -> Void in
                 
-                requestMetadata.bytesReceived = Int64(data?.count ?? 0)
-                requestMetadata.bytesSent = Int64(request.httpBody?.count ?? 0)
-                requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
-    
-                requestMetadata.logMetadata()
+                if BMSURLSession.shouldRecordNetworkMetadata {
+                    
+                    requestMetadata.bytesReceived = Int64(data?.count ?? 0)
+                    requestMetadata.bytesSent = Int64(request.httpBody?.count ?? 0)
+                    requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+        
+                    requestMetadata.recordMetadata()
+                }
                 
                 originalCompletionHandler(data, response, error)
             }
@@ -776,14 +782,17 @@ public struct BMSURLSession {
                 completionHandler(data, response, error)
             }
             else {
-                
-                requestMetadata.response = response
-                requestMetadata.bytesReceived = Int64(data?.length ?? 0)
-                requestMetadata.bytesSent = Int64(requestBody?.length ?? 0)
-                requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
-                
-                requestMetadata.logMetadata()
-                
+    
+                if BMSURLSession.shouldRecordNetworkMetadata {
+    
+                    requestMetadata.response = response
+                    requestMetadata.bytesReceived = Int64(data?.length ?? 0)
+                    requestMetadata.bytesSent = Int64(requestBody?.length ?? 0)
+                    requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
+                    
+                    requestMetadata.recordMetadata()
+                }
+    
                 completionHandler(data, response, error)
             }
         }
@@ -841,13 +850,16 @@ public struct BMSURLSession {
             var requestMetadata = requestMetadata
             
             let newCompletionHandler = {(data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
-                
-                requestMetadata.bytesReceived = Int64(data?.length ?? 0)
-                requestMetadata.bytesSent = Int64(request.HTTPBody?.length ?? 0)
-                requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
-                
-                requestMetadata.logMetadata()
-                
+    
+                if BMSURLSession.shouldRecordNetworkMetadata {
+    
+                    requestMetadata.bytesReceived = Int64(data?.length ?? 0)
+                    requestMetadata.bytesSent = Int64(request.HTTPBody?.length ?? 0)
+                    requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
+                    
+                    requestMetadata.recordMetadata()
+                }
+    
                 originalCompletionHandler(data, response, error)
             }
             

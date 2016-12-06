@@ -180,10 +180,10 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
     // Log the request network metadata if it has not been already
     func recordNetworkMetadata() {
         
-        if !requestMetadataWasRecorded {
+        if !requestMetadataWasRecorded && BMSURLSession.shouldRecordNetworkMetadata {
     
             requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
-            requestMetadata.logMetadata()
+            requestMetadata.recordMetadata()
             requestMetadataWasRecorded = true
         }
     }
@@ -356,10 +356,10 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
     // Log the request network metadata if it has not been already
     func recordNetworkMetadata() {
         
-        if !requestMetadataWasRecorded {
+        if !requestMetadataWasRecorded && BMSURLSession.shouldRecordNetworkMetadata {
             
             requestMetadata.endTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
-            requestMetadata.logMetadata()
+            requestMetadata.recordMetadata()
             requestMetadataWasRecorded = true
         }
     }
