@@ -16,7 +16,6 @@
 		92018A2A1C45A7720031C893 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A171C45A7720031C893 /* Error.swift */; };
 		92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A231C45A7720031C893 /* AuthorizationManager.swift */; };
 		92018A401C45A8170031C893 /* BMSCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 92018A3C1C45A8170031C893 /* BMSCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A471C45AA890031C893 /* BMSClient.swift */; };
 		92018A501C45AA890031C893 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4A1C45AA890031C893 /* Request.swift */; };
 		92018A511C45AA890031C893 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4B1C45AA890031C893 /* BaseRequest.swift */; };
 		92018A521C45AA890031C893 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4C1C45AA890031C893 /* Response.swift */; };
@@ -24,11 +23,12 @@
 		92018A581C45AAC70031C893 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4C1C45AA890031C893 /* Response.swift */; };
 		92018A591C45AACA0031C893 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4B1C45AA890031C893 /* BaseRequest.swift */; };
 		92018A5A1C45AACC0031C893 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4A1C45AA890031C893 /* Request.swift */; };
-		92018A5C1C45AAD30031C893 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A471C45AA890031C893 /* BMSClient.swift */; };
 		92018A5D1C45AAD60031C893 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A171C45A7720031C893 /* Error.swift */; };
 		92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A771C45AC380031C893 /* BMSClientTests.swift */; };
 		92018A8F1C45AC380031C893 /* BaseRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A791C45AC380031C893 /* BaseRequestTests.swift */; };
 		92018A921C45AC380031C893 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A7D1C45AC380031C893 /* ResponseTests.swift */; };
+		921D0CD61DF7823800EB6F7D /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921D0CD51DF7823800EB6F7D /* BMSClient.swift */; };
+		921D0CD71DF7823800EB6F7D /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921D0CD51DF7823800EB6F7D /* BMSClient.swift */; };
 		922CD63F1CA04DDE002E29C0 /* UserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF111C973DAA00890633 /* UserIdentity.swift */; };
 		922CD6401CA04DE1002E29C0 /* AppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF131C973E4800890633 /* AppIdentity.swift */; };
 		922CD6411CA04DE3002E29C0 /* DeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF151C973E5F00890633 /* DeviceIdentity.swift */; };
@@ -174,7 +174,6 @@
 		92018A3C1C45A8170031C893 /* BMSCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMSCore.h; sourceTree = "<group>"; };
 		92018A3E1C45A8170031C893 /* Info_iOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info_iOS.plist; sourceTree = "<group>"; };
 		92018A3F1C45A8170031C893 /* Info_watchOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info_watchOS.plist; sourceTree = "<group>"; };
-		92018A471C45AA890031C893 /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
 		92018A4A1C45AA890031C893 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		92018A4B1C45AA890031C893 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
 		92018A4C1C45AA890031C893 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -182,6 +181,7 @@
 		92018A791C45AC380031C893 /* BaseRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequestTests.swift; sourceTree = "<group>"; };
 		92018A7B1C45AC380031C893 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92018A7D1C45AC380031C893 /* ResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
+		921D0CD51DF7823800EB6F7D /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
 		9235D0A81BC3181900946A32 /* TestApp iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestApp iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0BC1BC3183F00946A32 /* TestApp watchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestApp watchOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0C81BC3183F00946A32 /* TestApp watchOS Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TestApp watchOS Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -313,6 +313,7 @@
 		92018A101C45A7720031C893 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				921D0CD51DF7823800EB6F7D /* BMSClient.swift */,
 				92018A171C45A7720031C893 /* Error.swift */,
 				92018A461C45AA890031C893 /* Network Requests */,
 				92018A221C45A7720031C893 /* Security */,
@@ -346,7 +347,6 @@
 		92018A461C45AA890031C893 /* Network Requests */ = {
 			isa = PBXGroup;
 			children = (
-				92018A471C45AA890031C893 /* BMSClient.swift */,
 				92018A4B1C45AA890031C893 /* BaseRequest.swift */,
 				92018A4A1C45AA890031C893 /* Request.swift */,
 				92018A4C1C45AA890031C893 /* Response.swift */,
@@ -1021,8 +1021,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				927DF20C1C7CF63F00245647 /* BaseAuthorizationManager.swift in Sources */,
+				921D0CD71DF7823800EB6F7D /* BMSClient.swift in Sources */,
 				922CD6411CA04DE3002E29C0 /* DeviceIdentity.swift in Sources */,
-				92018A5C1C45AAD30031C893 /* BMSClient.swift in Sources */,
 				92018A5D1C45AAD60031C893 /* Error.swift in Sources */,
 				92018A571C45AAC40031C893 /* AuthorizationManager.swift in Sources */,
 				92018A591C45AACA0031C893 /* BaseRequest.swift in Sources */,
@@ -1043,10 +1043,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A9CDF121C973DAA00890633 /* UserIdentity.swift in Sources */,
+				921D0CD61DF7823800EB6F7D /* BMSClient.swift in Sources */,
 				927DF20A1C7CF60600245647 /* BaseUserIdentity.swift in Sources */,
 				92018A511C45AA890031C893 /* BaseRequest.swift in Sources */,
 				927DF2061C7CF60600245647 /* BaseAppIdentity.swift in Sources */,
-				92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */,
 				92018A501C45AA890031C893 /* Request.swift in Sources */,
 				929D46161D6659C9002192E3 /* BMSURLSession.swift in Sources */,
 				92018A521C45AA890031C893 /* Response.swift in Sources */,
