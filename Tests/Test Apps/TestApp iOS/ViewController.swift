@@ -104,7 +104,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             answer += "Status code: \(response.statusCode)\n\n"
         }
         if data != nil {
-            answer += "Response Data: \(String(data: data!, encoding: .utf8)!))\n\n"
+            answer += "Response Data: \(data!.count) bytes\n\n"
         }
         if error != nil {
             answer += "Error:  \(error!)"
