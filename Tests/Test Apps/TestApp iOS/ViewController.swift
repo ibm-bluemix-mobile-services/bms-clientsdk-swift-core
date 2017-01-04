@@ -63,6 +63,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         request.httpMethod = httpMethodViewController.httpMethod.rawValue
         return request
     }
+    
+    let networkMonitor = NetworkDetection()!
 
     
     @IBAction func sendDataTaskRequest(sender button: UIButton) {
@@ -113,6 +115,28 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
+    // Prints the current network connection types and monitors any changes (i.e. switching between WiFi, WWAN, and airplane mode)
+    // IMPORTANT: To test this fully, use a real device to switch between WiFi, 4G LTE, 3G, and airplane mode.
+    func getNetworkInformation() {
+     
+        let isMonitoringNetworkChanges = networkMonitor.startMonitoringNetworkChanges()
+        
+        print("Monitoring network changes: \(isMonitoringNetworkChanges)")
+        print("Network connection: \(networkMonitor.currentNetworkConnection.description)")
+        if let cellularNetwork = networkMonitor.cellularNetworkType {
+            print("Cellular network type: \(cellularNetwork)")
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(checkNetworkConnection), name: NetworkDetection.networkChangedNotificationName, object: nil)
+    }
+    
+    
+    func checkNetworkConnection() {
+        
+        print("Changed network connection to: \(networkMonitor.currentNetworkConnection)")
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -128,6 +152,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
         #endif
         responseLabel.layer.borderWidth = 1
+        
+        getNetworkInformation()
     }
 
     
