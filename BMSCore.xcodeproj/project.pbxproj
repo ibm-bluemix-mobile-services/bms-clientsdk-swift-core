@@ -27,6 +27,7 @@
 		92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A771C45AC380031C893 /* BMSClientTests.swift */; };
 		92018A8F1C45AC380031C893 /* BaseRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A791C45AC380031C893 /* BaseRequestTests.swift */; };
 		92018A921C45AC380031C893 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A7D1C45AC380031C893 /* ResponseTests.swift */; };
+		920B505F1E1DAC2900FB546F /* NetworkDetectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B505E1E1DAC2900FB546F /* NetworkDetectionTests.swift */; };
 		921D0CD61DF7823800EB6F7D /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921D0CD51DF7823800EB6F7D /* BMSClient.swift */; };
 		921D0CD71DF7823800EB6F7D /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921D0CD51DF7823800EB6F7D /* BMSClient.swift */; };
 		922CD63F1CA04DDE002E29C0 /* UserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF111C973DAA00890633 /* UserIdentity.swift */; };
@@ -182,6 +183,7 @@
 		92018A791C45AC380031C893 /* BaseRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequestTests.swift; sourceTree = "<group>"; };
 		92018A7B1C45AC380031C893 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92018A7D1C45AC380031C893 /* ResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
+		920B505E1E1DAC2900FB546F /* NetworkDetectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkDetectionTests.swift; sourceTree = "<group>"; };
 		921D0CD51DF7823800EB6F7D /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
 		9235D0A81BC3181900946A32 /* TestApp iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestApp iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0BC1BC3183F00946A32 /* TestApp watchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestApp watchOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -387,6 +389,7 @@
 				92018A7D1C45AC380031C893 /* ResponseTests.swift */,
 				92A60C091D831F6D005E0969 /* BMSUrlSessionTests.swift */,
 				92A60C0B1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift */,
+				920B505E1E1DAC2900FB546F /* NetworkDetectionTests.swift */,
 				92018A7A1C45AC380031C893 /* Resources */,
 			);
 			path = "Unit Tests";
@@ -1070,6 +1073,7 @@
 			files = (
 				92A60C0C1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift in Sources */,
 				92018A921C45AC380031C893 /* ResponseTests.swift in Sources */,
+				920B505F1E1DAC2900FB546F /* NetworkDetectionTests.swift in Sources */,
 				92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */,
 				92A60C0A1D831F6D005E0969 /* BMSUrlSessionTests.swift in Sources */,
 				92018A8F1C45AC380031C893 /* BaseRequestTests.swift in Sources */,

@@ -129,7 +129,7 @@ public class NetworkDetection {
     */
     public func startMonitoringNetworkChanges() -> Bool {
         
-        guard notifying == false else {
+        guard isMonitoringNetworkChanges == false else {
             return false
         }
         
@@ -144,12 +144,18 @@ public class NetworkDetection {
                     NotificationCenter.default.post(name: NetworkDetection.networkChangedNotificationName, object: networkReachability)
                 }
             }
-        }, &context) == true else { return false }
+        }, &context) == true else {
+            
+            return false
+        }
         
-        guard SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue) == true else { return false }
+        guard SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue) == true else {
+            
+            return false
+        }
         
-        notifying = true
-        return notifying
+        isMonitoringNetworkChanges = true
+        return isMonitoringNetworkChanges
     }
     
     
@@ -157,9 +163,9 @@ public class NetworkDetection {
         Stops monitoring changes in the `currentNetworkConnection` that were started by `startMonitoringNetworkChanges()`.
      */
     public func stopMonitoringNetworkChanges() {
-        if let reachability = networkReachability, notifying == true {
+        if let reachability = networkReachability, isMonitoringNetworkChanges == true {
             SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue)
-            notifying = false
+            isMonitoringNetworkChanges = false
         }
     }
     
@@ -167,7 +173,7 @@ public class NetworkDetection {
     
     // MARK: Internal
     
-    private var notifying: Bool = false
+    internal var isMonitoringNetworkChanges: Bool = false
     
     
     // This is used in `reachabilityFlags` to determine details about the current internet connection.
