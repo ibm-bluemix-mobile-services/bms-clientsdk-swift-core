@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 
   s.exclude_files = 'Source/Resources/*.plist'
   s.ios.exclude_files = 'Source/**/*watchOS*.swift'
-  s.watchos.exclude_files = 'Source/**/*iOS*.swift'
+  s.watchos.exclude_files = 'Source/**/*iOS*.swift', 'Source/Network Requests/NetworkDetection.swift'
 
   s.ios.deployment_target = '8.0'
   s.watchos.deployment_target = '2.0'
