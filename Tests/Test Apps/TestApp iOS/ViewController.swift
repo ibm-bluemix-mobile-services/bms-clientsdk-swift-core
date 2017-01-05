@@ -1,5 +1,5 @@
 /*
-*     Copyright 2016 IBM Corp.
+*     Copyright 2017 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -40,6 +40,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     let imageFile = Bundle.main.url(forResource: "Andromeda", withExtension: "jpg")!
     
+    let networkMonitor = NetworkDetection()!
+    
     var bmsUrlSession: BMSURLSession {
         
         switch callbackViewController.callbackType {
@@ -63,8 +65,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         request.httpMethod = httpMethodViewController.httpMethod.rawValue
         return request
     }
-    
-    let networkMonitor = NetworkDetection()!
 
     
     @IBAction func sendDataTaskRequest(sender button: UIButton) {
@@ -145,12 +145,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         self.httpMethodPicker.dataSource = httpMethodViewController
         self.httpMethodPicker.delegate = httpMethodViewController
-        
-        #if swift(>=3.0)
-            self.progressBar.transform = CGAffineTransform(scaleX: 1, y: 2)
-        #else
-            self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
-        #endif
+    
+        self.progressBar.transform = CGAffineTransform(scaleX: 1, y: 2)
         responseLabel.layer.borderWidth = 1
         
         getNetworkInformation()
@@ -195,6 +191,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     let logger = Logger.logger(name: "TestAppiOS")
     
     let imageFile = NSBundle.mainBundle().URLForResource("Andromeda", withExtension: "jpg")!
+    
+    let networkMonitor = NetworkDetection()!
     
     
     var bmsUrlSession: BMSURLSession {
@@ -268,8 +266,29 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.responseLabel.text = answer
         })
     }
-
     
+    
+    // Prints the current network connection types and monitors any changes (i.e. switching between WiFi, WWAN, and airplane mode)
+    // IMPORTANT: To test this fully, use a real device to switch between WiFi, 4G LTE, 3G, and airplane mode.
+    func getNetworkInformation() {
+        
+        let isMonitoringNetworkChanges = networkMonitor.startMonitoringNetworkChanges()
+        
+        print("Monitoring network changes: \(isMonitoringNetworkChanges)")
+        print("Network connection: \(networkMonitor.currentNetworkConnection.description)")
+        if let cellularNetwork = networkMonitor.cellularNetworkType {
+            print("Cellular network type: \(cellularNetwork)")
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(checkNetworkConnection), name: NetworkDetection.networkChangedNotificationName, object: nil)
+    }
+        
+        
+    func checkNetworkConnection() {
+        
+        print("Changed network connection to: \(networkMonitor.currentNetworkConnection)")
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -279,13 +298,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         self.httpMethodPicker.dataSource = httpMethodViewController
         self.httpMethodPicker.delegate = httpMethodViewController
-        
-        #if swift(>=3.0)
-            self.progressBar.transform = CGAffineTransform(scaleX: 1, y: 2)
-        #else
-            self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
-        #endif
+
+        self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
         responseLabel.layer.borderWidth = 1
+        
+        getNetworkInformation()
     }
     
     
