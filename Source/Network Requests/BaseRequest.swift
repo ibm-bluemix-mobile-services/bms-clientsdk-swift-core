@@ -139,8 +139,8 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
         - parameter queryParameters:    Optional query parameters to add to the request.
         - parameter timeout:            Timeout in seconds for this request.
         - parameter cachePolicy:        Cache policy to use when sending request.
-        - parameter autoRetries:        The number of times to retry each request if it fails to send (due to network issues, for example).
-    
+        - parameter autoRetries:        The number of times to retry each request if it fails to send. The conditions for retries are: request timeout, loss of network connectivity, failure to connect to the host, and 504 responses.
+     
         - Note: A relative `url` may be supplied if the `BMSClient` class is initialized with a Bluemix app route beforehand.
     */
     public init(url: String,

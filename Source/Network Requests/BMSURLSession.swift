@@ -67,7 +67,7 @@ public struct BMSURLSession: NetworkSession {
         - parameter configuration:  Defines the behavior of the session.
         - parameter delegate:       Handles session-related events. If nil, use task methods that take completion handlers.
         - parameter delegateQueue:  Queue for scheduling the delegate calls and completion handlers.
-        - parameter autoRetries:    The number of times to retry each request if it fails to send (due to network issues, for example).
+        - parameter autoRetries:    The number of times to retry each request if it fails to send. The conditions for retries are: timeout, loss of network connectivity, failure to connect to the host, and 504 responses.
     */
     public init(configuration: URLSessionConfiguration = .default,
                 delegate: URLSessionDelegate? = nil,
