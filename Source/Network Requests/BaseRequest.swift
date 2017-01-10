@@ -133,12 +133,13 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     /**
         Creates a new request.
 
-        - parameter url:             The resource URL.
-        - parameter method:          The HTTP method.
-        - parameter headers:         Optional headers to add to the request.
-        - parameter queryParameters: Optional query parameters to add to the request.
-        - parameter timeout:         Timeout in seconds for this request.
-        - parameter cachePolicy:     Cache policy to use when sending request.
+        - parameter url:                The resource URL.
+        - parameter method:             The HTTP method.
+        - parameter headers:            Optional headers to add to the request.
+        - parameter queryParameters:    Optional query parameters to add to the request.
+        - parameter timeout:            Timeout in seconds for this request.
+        - parameter cachePolicy:        Cache policy to use when sending request.
+        - parameter autoRetries:        The number of times to retry each request if it fails to send (due to network issues, for example).
     
         - Note: A relative `url` may be supplied if the `BMSClient` class is initialized with a Bluemix app route beforehand.
     */
@@ -147,7 +148,8 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
                headers: [String: String]? = nil,
                queryParameters: [String: String]? = nil,
                timeout: Double = BMSClient.sharedInstance.requestTimeout,
-               cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy) {
+               cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy,
+               autoRetries: Int = 0) {
         
         // Relative URL
         if (!url.contains("http://") && !url.contains("https://")),
@@ -177,7 +179,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
 		
         super.init()
                 
-        self.urlSession = BMSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        self.urlSession = BMSURLSession(configuration: configuration, delegate: self, delegateQueue: nil, autoRetries: autoRetries)
     }
 
     

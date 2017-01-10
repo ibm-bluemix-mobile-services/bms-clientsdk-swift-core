@@ -27,6 +27,8 @@ internal class BMSURLSessionDelegate: NSObject {
     // The user-supplied session delegate
     internal let parentDelegate: URLSessionDelegate?
     
+    internal let bmsUrlSession: BMSURLSession
+    
     // Used to reconstruct the original task if using AuthorizationManager
     internal let originalTask: BMSURLSessionTaskType
     
@@ -36,12 +38,17 @@ internal class BMSURLSessionDelegate: NSObject {
     // Checks if request metadata has already been recorded so that the same request is not logged more than once
     internal var requestMetadataWasRecorded: Bool = false
     
+    // The number of times to resend the original request if it fails to send.
+    internal var numberOfRetries: Int
     
     
-    init(parentDelegate: URLSessionDelegate?, originalTask: BMSURLSessionTaskType) {
+    
+    init(parentDelegate: URLSessionDelegate?, bmsUrlSession: BMSURLSession, originalTask: BMSURLSessionTaskType, numberOfRetries: Int) {
         
         self.parentDelegate = parentDelegate
+        self.bmsUrlSession = bmsUrlSession
         self.originalTask = originalTask
+        self.numberOfRetries = numberOfRetries
         
         let trackingId = UUID().uuidString
         let startTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
@@ -100,9 +107,23 @@ extension BMSURLSessionDelegate: URLSessionTaskDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         
-        recordNetworkMetadata()
-        
-        (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didCompleteWithError: error)
+        if BMSURLSession.shouldRetryRequest(response: requestMetadata.response, error: error, numberOfRetries: numberOfRetries) {
+            
+            if let originalRequest = task.originalRequest {
+                BMSURLSession.retryRequest(originalRequest: originalRequest, originalTask: originalTask, bmsUrlSession: bmsUrlSession)
+            }
+            else {
+                (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didCompleteWithError: error)
+            }
+        }
+        // Only log the request metadata if a response was received so that we have all of the required data for logging
+        else if requestMetadata.response != nil && requestMetadata.url != nil {
+            recordNetworkMetadata()
+            (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didCompleteWithError: error)
+        }
+        else {
+            (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didCompleteWithError: error)
+        }
     }
     
     @available(watchOS 3.0, *)
@@ -128,14 +149,8 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
             let originalRequest = dataTask.originalRequest!
             
             // Resend the original request with the "Authorization" header added
-            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
-                
-                if let taskWithAuthorization = urlSessionTask {
-                    taskWithAuthorization.resume()
-                }
-                else {
+            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleFailure: {
                     (self.parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
-                }
             })
         }
         else {
