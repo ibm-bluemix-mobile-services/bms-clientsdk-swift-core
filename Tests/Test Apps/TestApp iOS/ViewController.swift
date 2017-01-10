@@ -44,13 +44,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     var bmsUrlSession: BMSURLSession {
         
+        let configuration = URLSessionConfiguration.default
+        
+        // To test auto-retries, set the timeout very close to the time needed to complete the request. This way, some requests will fail due to timeout, but after enough retries, it should succeed.
+        configuration.timeoutIntervalForRequest = 10.0
+        
         switch callbackViewController.callbackType {
             
         case .delegate:
-            return BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil)
+            return BMSURLSession(configuration: configuration, delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil, autoRetries: 5)
             
         case .completionHandler:
-            return BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+            return BMSURLSession(configuration: configuration, delegate: nil, delegateQueue: nil, autoRetries: 5)
         }
     }
     
@@ -145,9 +150,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         self.httpMethodPicker.dataSource = httpMethodViewController
         self.httpMethodPicker.delegate = httpMethodViewController
+        // Default to HTTP POST, since that tends to have many useful test cases
+        self.httpMethodPicker.selectRow(1, inComponent: 0, animated: false)
     
         self.progressBar.transform = CGAffineTransform(scaleX: 1, y: 2)
         responseLabel.layer.borderWidth = 1
+        
+        BMSURLSession.shouldRecordNetworkMetadata = true
         
         getNetworkInformation()
     }
