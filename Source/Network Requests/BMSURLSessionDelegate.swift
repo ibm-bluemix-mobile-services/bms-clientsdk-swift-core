@@ -108,10 +108,10 @@ extension BMSURLSessionDelegate: URLSessionTaskDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         
-        if BMSURLSession.shouldRetryRequest(response: requestMetadata.response, error: error, numberOfRetries: numberOfRetries) {
+        if BMSURLSessionUtility.shouldRetryRequest(response: requestMetadata.response, error: error, numberOfRetries: numberOfRetries) {
             
             if let originalRequest = task.originalRequest {
-                BMSURLSession.retryRequest(originalRequest: originalRequest, originalTask: originalTask, bmsUrlSession: bmsUrlSession)
+                BMSURLSessionUtility.retryRequest(originalRequest: originalRequest, originalTask: originalTask, bmsUrlSession: bmsUrlSession)
             }
             else {
                 (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didCompleteWithError: error)
@@ -146,13 +146,13 @@ extension BMSURLSessionDelegate: URLSessionDataDelegate {
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         
-        if BMSURLSession.isAuthorizationManagerRequired(for: response) {
+        if BMSURLSessionUtility.isAuthorizationManagerRequired(for: response) {
             
             // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSURLSession.
             let originalRequest = dataTask.originalRequest!
             
             // Resend the original request with the "Authorization" header added
-            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleFailure: {
+            BMSURLSessionUtility.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleFailure: {
                     (self.parentDelegate as? URLSessionDataDelegate)?.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
             })
         }
@@ -311,10 +311,10 @@ extension BMSURLSessionDelegate: NSURLSessionTaskDelegate {
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
         
-        if BMSURLSession.shouldRetryRequest(response: requestMetadata.response, error: error, numberOfRetries: numberOfRetries) {
+        if BMSURLSessionUtility.shouldRetryRequest(response: requestMetadata.response, error: error, numberOfRetries: numberOfRetries) {
             
             if let originalRequest = task.originalRequest {
-                BMSURLSession.retryRequest(originalRequest: originalRequest, originalTask: originalTask, bmsUrlSession: bmsUrlSession)
+                BMSURLSessionUtility.retryRequest(originalRequest: originalRequest, originalTask: originalTask, bmsUrlSession: bmsUrlSession)
             }
             else {
                 (parentDelegate as? NSURLSessionTaskDelegate)?.URLSession?(session, task: task, didCompleteWithError: error)
@@ -341,12 +341,12 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
     
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
         
-        if BMSURLSession.isAuthorizationManagerRequired(response) {
+        if BMSURLSessionUtility.isAuthorizationManagerRequired(response) {
             
             // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSURLSession.
             let originalRequest = dataTask.originalRequest!.mutableCopy() as! NSMutableURLRequest
             
-            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleFailure: {
+            BMSURLSessionUtility.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleFailure: {
                     (self.parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
             })
         }
