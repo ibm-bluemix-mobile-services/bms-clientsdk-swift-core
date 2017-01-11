@@ -81,7 +81,7 @@ class URLSessionDelegateExample: NSObject, URLSessionDelegate, URLSessionTaskDel
         
         DispatchQueue.main.async {
             let currentProgress = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
-            self.viewController.progressBar.setProgress(currentProgress, animated: true)
+            self.viewController.progressBar.setProgress(currentProgress, animated: false)
         }
     }
     
@@ -212,7 +212,7 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
         
         dispatch_async(dispatch_get_main_queue()) {
             let currentProgress = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
-            self.viewController.progressBar.setProgress(currentProgress, animated: true)
+            self.viewController.progressBar.setProgress(currentProgress, animated: false)
         }
     }
     
