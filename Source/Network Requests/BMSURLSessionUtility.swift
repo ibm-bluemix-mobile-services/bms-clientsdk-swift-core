@@ -113,7 +113,7 @@ internal struct BMSURLSessionUtility {
             
             // If the device is running iOS, we should make sure that it has a network connection before resending the request
             #if os(iOS)
-                let networkDetector = NetworkDetection()
+                let networkDetector = NetworkMonitor()
                 if networkDetector?.currentNetworkConnection != NetworkConnection.noConnection {
                     return true
                 }
@@ -380,7 +380,7 @@ internal struct BMSURLSessionUtility {
             
             // If the device is running iOS, we should make sure that it has a network connection before resending the request
             #if os(iOS)
-                let networkDetector = NetworkDetection()
+                let networkDetector = NetworkMonitor()
                 if networkDetector?.currentNetworkConnection != NetworkConnection.noConnection {
                     return true
                 }

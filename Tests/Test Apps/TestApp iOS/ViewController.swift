@@ -40,7 +40,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     let imageFile = Bundle.main.url(forResource: "Andromeda", withExtension: "jpg")!
     
-    let networkMonitor = NetworkDetection()!
+    let networkMonitor = NetworkMonitor()!
     
     var bmsUrlSession: BMSURLSession {
         
@@ -132,7 +132,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             print("Cellular network type: \(cellularNetwork)")
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(checkNetworkConnection), name: NetworkDetection.networkChangedNotificationName, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkNetworkConnection), name: NetworkMonitor.networkChangedNotificationName, object: nil)
     }
     
     
@@ -201,7 +201,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     let imageFile = NSBundle.mainBundle().URLForResource("Andromeda", withExtension: "jpg")!
     
-    let networkMonitor = NetworkDetection()!
+    let networkMonitor = NetworkMonitor()!
     
     
     var bmsUrlSession: BMSURLSession {
@@ -295,7 +295,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             print("Cellular network type: \(cellularNetwork)")
         }
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(checkNetworkConnection), name: NetworkDetection.networkChangedNotificationName, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(checkNetworkConnection), name: NetworkMonitor.networkChangedNotificationName, object: nil)
     }
         
         

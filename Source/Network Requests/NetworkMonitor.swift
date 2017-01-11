@@ -22,7 +22,7 @@ import CoreTelephony
 #if swift(>=3.0)
     
     
-/// TODO: Naming - Network vs Internet
+
 /**
     Describes how the device is currently connected to the internet.
 */
@@ -53,14 +53,13 @@ public enum NetworkConnection {
 
 
 /**
-     Use the `NetworkDetection` class to determine the current status of the iOS device's connection to the internet.
+     Use the `NetworkMonitor` class to determine the current status of the iOS device's connection to the internet.
      
      To get the type of network connection currently available, use `currentNetworkConnection`. If the `currentNetworkConnection` is WWAN, you can narrow down the type further with `cellularNetworkType`, which shows whether the device is using 4G, 3G, or 2G.
      
-     To subscribe to network changes, call `startMonitoringNetworkChanges()` and add an observer to `NotificationCenter.default` with `NetworkDetection.networkChangedNotificationName` as the notification name. To turn off these notifications, call `stopMonitoringNetworkChanges()`.
+     To subscribe to network changes, call `startMonitoringNetworkChanges()` and add an observer to `NotificationCenter.default` with `NetworkMonitor.networkChangedNotificationName` as the notification name. To turn off these notifications, call `stopMonitoringNetworkChanges()`.
 */
-    //// TODO: Rename to NetworkMonitor
-public class NetworkDetection {
+public class NetworkMonitor {
     
     
     // MARK: API
@@ -122,7 +121,7 @@ public class NetworkDetection {
     }
     
     
-    /// Creates a new instance of `NetworkDetection` only if the current device's network can be accessed.
+    /// Creates a new instance of `NetworkMonitor` only if the current device's network can be accessed.
     public init?() {
         
         var zeroAddress = sockaddr_in()
@@ -144,9 +143,9 @@ public class NetworkDetection {
     /**
         Begins monitoring changes in the `currentNetworkConnection`.
         
-        If the device's connection to the internet changes (WiFi, WWAN, or no connection), a notification will be posted to `NotificationCenter.default` with `NetworkDetection.networkChangedNotificationName`. 
+        If the device's connection to the internet changes (WiFi, WWAN, or no connection), a notification will be posted to `NotificationCenter.default` with `NetworkMonitor.networkChangedNotificationName`. 
      
-        To intercept network changes, add an observer to `NotificationCenter.default` with `NetworkDetection.networkChangedNotificationName` as the notification name.
+        To intercept network changes, add an observer to `NotificationCenter.default` with `NetworkMonitor.networkChangedNotificationName` as the notification name.
     */
     public func startMonitoringNetworkChanges() -> Bool {
         
@@ -161,9 +160,9 @@ public class NetworkDetection {
     
             if let currentInfo = info {
                 let infoObject = Unmanaged<AnyObject>.fromOpaque(currentInfo).takeUnretainedValue()
-                if infoObject is NetworkDetection {
-                    let networkReachability = infoObject as! NetworkDetection
-                    NotificationCenter.default.post(name: NetworkDetection.networkChangedNotificationName, object: networkReachability)
+                if infoObject is NetworkMonitor {
+                    let networkReachability = infoObject as! NetworkMonitor
+                    NotificationCenter.default.post(name: NetworkMonitor.networkChangedNotificationName, object: networkReachability)
                 }
             }
         }, &context) == true else {
@@ -269,13 +268,13 @@ public enum NetworkConnection {
 
 
 /**
-    Use the `NetworkDetection` class to determine the current status of the iOS device's connection to the internet.
+    Use the `NetworkMonitor` class to determine the current status of the iOS device's connection to the internet.
 
     To get the type of network connection currently available, use `currentNetworkConnection`. If the `currentNetworkConnection` is WWAN, you can narrow down the type further with `cellularNetworkType`, which shows whether the device is using 4G, 3G, or 2G.
 
-    To subscribe to network changes, call `startMonitoringNetworkChanges()` and add an observer to `NSNotificationCenter.defaultCenter()` with `NetworkDetection.networkChangedNotificationName` as the notification name.
+    To subscribe to network changes, call `startMonitoringNetworkChanges()` and add an observer to `NSNotificationCenter.defaultCenter()` with `NetworkMonitor.networkChangedNotificationName` as the notification name.
 */
-public class NetworkDetection {
+public class NetworkMonitor {
     
     
     // MARK: API
@@ -337,7 +336,7 @@ public class NetworkDetection {
     }
     
     
-    /// Creates a new instance of `NetworkDetection` only if the current device's network can be accessed.
+    /// Creates a new instance of `NetworkMonitor` only if the current device's network can be accessed.
     public init?() {
         
         var zeroAddress = sockaddr_in()
@@ -357,9 +356,9 @@ public class NetworkDetection {
     /**
         Begins monitoring changes in the `currentNetworkConnection`.
 
-        If the device's connection to the internet changes (WiFi, WWAN, or no connection), a notification will be posted to `NSNotificationCenter.defaultCenter()` with `NetworkDetection.networkChangedNotificationName`.
+        If the device's connection to the internet changes (WiFi, WWAN, or no connection), a notification will be posted to `NSNotificationCenter.defaultCenter()` with `NetworkMonitor.networkChangedNotificationName`.
 
-        To intercept network changes, add an observer to `NSNotificationCenter.defaultCenter()` with `NetworkDetection.networkChangedNotificationName` as the notification name.
+        To intercept network changes, add an observer to `NSNotificationCenter.defaultCenter()` with `NetworkMonitor.networkChangedNotificationName` as the notification name.
      */
     public func startMonitoringNetworkChanges() -> Bool {
         
@@ -374,9 +373,9 @@ public class NetworkDetection {
             where SCNetworkReachabilitySetCallback(reachability, { (target: SCNetworkReachability, flags: SCNetworkReachabilityFlags, info: UnsafeMutablePointer<Void>) in
         
             let infoObject = Unmanaged<AnyObject>.fromOpaque(COpaquePointer(info)).takeUnretainedValue()
-            if infoObject is NetworkDetection {
-                let networkReachability = infoObject as! NetworkDetection
-                NSNotificationCenter.defaultCenter().postNotificationName(NetworkDetection.networkChangedNotificationName, object: networkReachability)
+            if infoObject is NetworkMonitor {
+                let networkReachability = infoObject as! NetworkMonitor
+                NSNotificationCenter.defaultCenter().postNotificationName(NetworkMonitor.networkChangedNotificationName, object: networkReachability)
             }
         }, &context) == true else {
         

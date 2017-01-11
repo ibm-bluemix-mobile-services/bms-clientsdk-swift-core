@@ -22,13 +22,13 @@ import XCTest
     
     
     
-// IMPORTANT: Unit tests are not adequate to ensure that the NetworkDetection class is behaving correctly. To fully exercise NetworkDetection, run the "TestApp iOS" target on a real iOS device.
+// IMPORTANT: Unit tests are not adequate to ensure that the NetworkMonitor class is behaving correctly. To fully exercise NetworkMonitor, run the "TestApp iOS" target on a real iOS device.
 class NetworkDetectionTests: XCTestCase {
     
     
     func testCellularNetworkType() {
         
-        let networkDetector = NetworkDetection()
+        let networkDetector = NetworkMonitor()
         XCTAssertNil(networkDetector?.cellularNetworkType)
     }
     
@@ -36,7 +36,7 @@ class NetworkDetectionTests: XCTestCase {
     func testCurrentNetworkConnection() {
         
         // Since unit tests run on a Mac, the internet connection must be either WiFi or no connection.
-        let networkDetector = NetworkDetection()
+        let networkDetector = NetworkMonitor()
         XCTAssert(networkDetector?.currentNetworkConnection != NetworkConnection.WWAN)
     }
 
@@ -51,7 +51,7 @@ class NetworkDetectionTests: XCTestCase {
     
     func testStartMonitoringNetworkChanges() {
         
-        let networkDetector = NetworkDetection()
+        let networkDetector = NetworkMonitor()
         let _ = networkDetector!.startMonitoringNetworkChanges()
         
         XCTAssertTrue(networkDetector!.isMonitoringNetworkChanges)
@@ -80,13 +80,13 @@ class NetworkDetectionTests: XCTestCase {
 
 
 
-// IMPORTANT: Unit tests are not adequate to ensure that the NetworkDetection class is behaving correctly. To fully exercise NetworkDetection, run the "TestApp iOS" target on a real iOS device.
+// IMPORTANT: Unit tests are not adequate to ensure that the NetworkMonitor class is behaving correctly. To fully exercise NetworkMonitor, run the "TestApp iOS" target on a real iOS device.
 class NetworkDetectionTests: XCTestCase {
     
     
     func testCellularNetworkType() {
         
-        let networkDetector = NetworkDetection()
+        let networkDetector = NetworkMonitor()
         XCTAssertNil(networkDetector?.cellularNetworkType)
     }
     
@@ -94,7 +94,7 @@ class NetworkDetectionTests: XCTestCase {
     func testCurrentNetworkConnection() {
         
         // Since unit tests run on a Mac, the internet connection must be either WiFi or no connection.
-        let networkDetector = NetworkDetection()
+        let networkDetector = NetworkMonitor()
         XCTAssert(networkDetector?.currentNetworkConnection != NetworkConnection.WWAN)
     }
     
@@ -109,7 +109,7 @@ class NetworkDetectionTests: XCTestCase {
     
     func testStartMonitoringNetworkChanges() {
         
-        let networkDetector = NetworkDetection()
+        let networkDetector = NetworkMonitor()
         let _ = networkDetector!.startMonitoringNetworkChanges()
         
         XCTAssertTrue(networkDetector!.isMonitoringNetworkChanges)

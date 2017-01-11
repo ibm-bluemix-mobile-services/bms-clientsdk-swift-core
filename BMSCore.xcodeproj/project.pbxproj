@@ -70,7 +70,7 @@
 		92B019071E26E3D4002A05CB /* BMSURLSessionUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B019061E26E3D4002A05CB /* BMSURLSessionUtilityTests.swift */; };
 		92BBA3A11D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */; };
 		92BBA3A21D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */; };
-		92C30BC51E1C127D00FCF65B /* NetworkDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C30BC41E1C127D00FCF65B /* NetworkDetection.swift */; };
+		92C30BC51E1C127D00FCF65B /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C30BC41E1C127D00FCF65B /* NetworkMonitor.swift */; };
 		A8DC446009D6586F8DB0A399 /* Pods_BMSCore_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E75E9EA9BBCD7E2F4FC7103 /* Pods_BMSCore_iOS.framework */; };
 		CECE3807C60FC48B9F835471 /* Pods_BMSCore_watchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE070372C5BAB5000E5BBD47 /* Pods_BMSCore_watchOS.framework */; };
 		ED49FC2E202A8336C64EE57C /* Pods_TestApp_watchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CCA0DC33589F11B9392E3B1 /* Pods_TestApp_watchOS.framework */; };
@@ -220,7 +220,7 @@
 		92B019031E26E114002A05CB /* BMSURLSessionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSURLSessionUtility.swift; sourceTree = "<group>"; };
 		92B019061E26E3D4002A05CB /* BMSURLSessionUtilityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSURLSessionUtilityTests.swift; sourceTree = "<group>"; };
 		92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSURLSessionDelegate.swift; sourceTree = "<group>"; };
-		92C30BC41E1C127D00FCF65B /* NetworkDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkDetection.swift; sourceTree = "<group>"; };
+		92C30BC41E1C127D00FCF65B /* NetworkMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		92F263F71B94EBB50063CC1D /* BMSCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F264011B94EBB60063CC1D /* BMSCore Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BMSCore Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9881D6CEA7A89D82EC905239 /* Pods-TestApp watchOS Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestApp watchOS Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestApp watchOS Extension/Pods-TestApp watchOS Extension.debug.xcconfig"; sourceTree = "<group>"; };
@@ -362,7 +362,7 @@
 				929D46141D6659C3002192E3 /* BMSURLSession.swift */,
 				92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */,
 				92B019031E26E114002A05CB /* BMSURLSessionUtility.swift */,
-				92C30BC41E1C127D00FCF65B /* NetworkDetection.swift */,
+				92C30BC41E1C127D00FCF65B /* NetworkMonitor.swift */,
 			);
 			name = "Network Requests";
 			path = "Source/Network Requests";
@@ -1067,7 +1067,7 @@
 				92018A521C45AA890031C893 /* Response.swift in Sources */,
 				3A9CDF161C973E5F00890633 /* DeviceIdentity.swift in Sources */,
 				92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */,
-				92C30BC51E1C127D00FCF65B /* NetworkDetection.swift in Sources */,
+				92C30BC51E1C127D00FCF65B /* NetworkMonitor.swift in Sources */,
 				3A9CDF141C973E4800890633 /* AppIdentity.swift in Sources */,
 				927DF2081C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */,
 				92BBA3A11D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */,
