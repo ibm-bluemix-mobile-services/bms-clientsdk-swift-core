@@ -27,6 +27,7 @@ internal class BMSURLSessionDelegate: NSObject {
     // The user-supplied session delegate
     internal let parentDelegate: URLSessionDelegate?
     
+    // The session that this delegate serves.
     internal let bmsUrlSession: BMSURLSession
     
     // Used to reconstruct the original task if using AuthorizationManager
@@ -118,10 +119,12 @@ extension BMSURLSessionDelegate: URLSessionTaskDelegate {
         }
         // Only log the request metadata if a response was received so that we have all of the required data for logging
         else if requestMetadata.response != nil && requestMetadata.url != nil {
+    
             recordNetworkMetadata()
             (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didCompleteWithError: error)
         }
         else {
+    
             (parentDelegate as? URLSessionTaskDelegate)?.urlSession?(session, task: task, didCompleteWithError: error)
         }
     }
@@ -228,6 +231,9 @@ internal class BMSURLSessionDelegate: NSObject {
     // The user-supplied session delegate
     internal let parentDelegate: NSURLSessionDelegate?
     
+    // The session that this delegate serves.
+    internal let bmsUrlSession: BMSURLSession
+    
     // Used to reconstruct the original task if using AuthorizationManager
     internal let originalTask: BMSURLSessionTaskType
     
@@ -237,12 +243,17 @@ internal class BMSURLSessionDelegate: NSObject {
     // Checks if request metadata has already been recorded so that the same request is not logged more than once
     internal var requestMetadataWasRecorded: Bool = false
     
+    // The number of times to resend the original request if it fails to send.
+    internal var numberOfRetries: Int
+
     
     
-    init(parentDelegate: NSURLSessionDelegate?, originalTask: BMSURLSessionTaskType) {
+    init(parentDelegate: NSURLSessionDelegate?, bmsUrlSession: BMSURLSession, originalTask: BMSURLSessionTaskType, numberOfRetries: Int) {
         
         self.parentDelegate = parentDelegate
+        self.bmsUrlSession = bmsUrlSession
         self.originalTask = originalTask
+        self.numberOfRetries = numberOfRetries
         
         let trackingId = NSUUID().UUIDString
         let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
@@ -300,9 +311,25 @@ extension BMSURLSessionDelegate: NSURLSessionTaskDelegate {
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
         
-        recordNetworkMetadata()
-        
-        (parentDelegate as? NSURLSessionTaskDelegate)?.URLSession?(session, task: task, didCompleteWithError: error)
+        if BMSURLSession.shouldRetryRequest(response: requestMetadata.response, error: error, numberOfRetries: numberOfRetries) {
+            
+            if let originalRequest = task.originalRequest {
+                BMSURLSession.retryRequest(originalRequest: originalRequest, originalTask: originalTask, bmsUrlSession: bmsUrlSession)
+            }
+            else {
+                (parentDelegate as? NSURLSessionTaskDelegate)?.URLSession?(session, task: task, didCompleteWithError: error)
+            }
+        }
+        // Only log the request metadata if a response was received so that we have all of the required data for logging
+        else if requestMetadata.response != nil && requestMetadata.url != nil {
+            
+            recordNetworkMetadata()
+            (parentDelegate as? NSURLSessionTaskDelegate)?.URLSession?(session, task: task, didCompleteWithError: error)
+        }
+        else {
+            
+            (parentDelegate as? NSURLSessionTaskDelegate)?.URLSession?(session, task: task, didCompleteWithError: error)
+        }
     }
 }
 
@@ -319,14 +346,8 @@ extension BMSURLSessionDelegate: NSURLSessionDataDelegate {
             // originalRequest should always have a value. It can only be nil for stream tasks, which is not supported by BMSURLSession.
             let originalRequest = dataTask.originalRequest!.mutableCopy() as! NSMutableURLRequest
             
-            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleTask: { (urlSessionTask) in
-                
-                if let taskWithAuthorization = urlSessionTask {
-                    taskWithAuthorization.resume()
-                }
-                else {
+            BMSURLSession.handleAuthorizationChallenge(session: session, request: originalRequest, requestMetadata: requestMetadata, originalTask: self.originalTask, handleFailure: {
                     (self.parentDelegate as? NSURLSessionDataDelegate)?.URLSession?(session, dataTask: dataTask, didReceiveResponse: response, completionHandler: completionHandler)
-                }
             })
         }
         else {

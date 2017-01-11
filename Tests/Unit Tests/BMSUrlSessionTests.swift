@@ -389,8 +389,6 @@ class BMSUrlSessionTests: XCTestCase {
     }
     
     
-    // The `testHandleAuthorizationChallenge...` methods below test both `handleAuthorizationChallenge` and `resendOriginalRequest`
-    
     func testHandleAuthorizationChallengeWithCachedAuthorizationHeader() {
         
         class TestAuthorizationManager: BaseAuthorizationManager {
@@ -670,31 +668,6 @@ class BMSUrlSessionTests: XCTestCase {
         self.waitForExpectations(timeout: 0.1, handler: nil)
     }
     
-    
-    // Used to check whether request metadata had been recorded by intercepting Analytics.log(metadata:), which delegates to BMSLogger
-    class BMSLoggerMock: LoggerDelegate {
-        
-        // Expect the LocationDelegate to log the metadata
-        var metadataLoggedExpectation: XCTestExpectation?
-        
-        init(expectation: XCTestExpectation?) {
-            self.metadataLoggedExpectation = expectation
-        }
-        
-        var isUncaughtExceptionDetected: Bool = false
-        
-        // Here, we intercept the log to check if request metadata has been recorded
-        func logToFile(message logMessage: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String : Any]?) {
-            
-            // Check if the logged metadata matches the expected sampleMetadata
-            if additionalMetadata != nil, additionalMetadata?["$category"] as? String == "network" {
-                
-                metadataLoggedExpectation?.fulfill()
-                metadataLoggedExpectation = nil
-            }
-        }
-    }
-    
 }
     
     
@@ -807,6 +780,32 @@ class BMSURLSessionTaskTypeTests: XCTestCase {
     
     
     
+// Used to check whether request metadata had been recorded by intercepting Analytics.log(metadata:), which delegates to BMSLogger
+class BMSLoggerMock: LoggerDelegate {
+
+    // Expect the LocationDelegate to log the metadata
+    var metadataLoggedExpectation: XCTestExpectation?
+
+    init(expectation: XCTestExpectation?) {
+        self.metadataLoggedExpectation = expectation
+    }
+
+    var isUncaughtExceptionDetected: Bool = false
+
+    // Here, we intercept the log to check if request metadata has been recorded
+    func logToFile(message logMessage: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String : Any]?) {
+
+        // Check if the logged metadata matches the expected sampleMetadata
+        if additionalMetadata != nil, additionalMetadata?["$category"] as? String == "network" {
+
+            metadataLoggedExpectation?.fulfill()
+            metadataLoggedExpectation = nil
+        }
+    }
+}
+    
+    
+    
     
     
 /**************************************************************************************************/
@@ -825,7 +824,7 @@ class BMSUrlSessionTests: XCTestCase {
     
     
     var testBundle = NSBundle.mainBundle()
-    var testUrl = NSURL(fileURLWithPath: "x")
+    var testUrl = NSURL(fileURLWithPath: "BMSURLSessionTests")
     
     
     
@@ -965,6 +964,48 @@ class BMSUrlSessionTests: XCTestCase {
     }
     
     
+    // No auto-retries, AuthorizationManager, redirects, or recorded metadata
+    func testGenerateBmsCompletionHandlerDefaultCase() {
+        
+        let expectation = self.expectationWithDescription("Should reach original completion handler.")
+        
+        func bmsCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            
+            expectation.fulfill()
+        }
+        
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        
+        testCompletionHandler(nil, nil, nil)
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
+    
+    
+    func testGenerateBmsCompletionHandlerWithAutoRetries() {
+        
+        let completionHandlerExpectation = self.expectationWithDescription("Should have reached the original completion handler.")
+        
+        func originalCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            
+            completionHandlerExpectation.fulfill()
+        }
+        let originalDataTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(originalCompletionHandler)
+        
+        func bmsCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            
+            XCTFail("Should have resent the original request instead of reaching the original completion handler.")
+        }
+        
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: originalDataTask, requestBody: nil, numberOfRetries: 1)
+        
+        let serverErrorHttpResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 504, HTTPVersion: nil, headerFields: nil)
+        testCompletionHandler(nil, serverErrorHttpResponse, nil)
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
+    
+    
     func testGenerateBmsCompletionHandlerWithoutAuthorizationManager() {
         
         let expectation = self.expectationWithDescription("Should reach original completion handler.")
@@ -974,9 +1015,27 @@ class BMSUrlSessionTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil)
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 1)
         
         testCompletionHandler(nil, nil, nil)
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
+    
+    
+    func testGenerateBmsCompletionHandlerForRedirects() {
+        
+        let expectation = self.expectationWithDescription("Should reach original completion handler.")
+        
+        func bmsCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            
+            expectation.fulfill()
+        }
+        
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        
+        let redirectHttpResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 300, HTTPVersion: nil, headerFields: nil)
+        testCompletionHandler(nil, redirectHttpResponse, nil)
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
     }
@@ -1004,7 +1063,7 @@ class BMSUrlSessionTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil)
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
         let testResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 403, HTTPVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
         testCompletionHandler(nil, testResponse, nil)
@@ -1041,7 +1100,7 @@ class BMSUrlSessionTests: XCTestCase {
         }
         
         let originalTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(bmsCompletionHandler)
-        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: originalTask, requestBody: nil)
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: originalTask, requestBody: nil, numberOfRetries: 0)
         let testResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
         testCompletionHandler(nil, testResponse, nil)
@@ -1049,6 +1108,79 @@ class BMSUrlSessionTests: XCTestCase {
         self.waitForExpectationsWithTimeout(5.0, handler: nil)
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+    }
+    
+    
+    func testGenerateBmsCompletionHandlerRecordsMetadata() {
+        
+        let expectation = self.expectationWithDescription("Should reach original completion handler.")
+        let metadataRecordedExpectation = self.expectationWithDescription("Should have recorded the network metadata.")
+        
+        Logger.delegate = BMSLoggerMock(expectation: metadataRecordedExpectation)
+        
+        func bmsCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            
+            expectation.fulfill()
+        }
+        
+        let testCompletionHandler = BMSURLSession.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        
+        let redirectHttpResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+        testCompletionHandler(nil, redirectHttpResponse, nil)
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
+    
+    
+    
+    func testShouldRetryRequestForSuccessfulResponse() {
+        
+        let testSuccessfulResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+        
+        XCTAssertFalse(BMSURLSession.shouldRetryRequest(response: testSuccessfulResponse, error: nil, numberOfRetries: 1))
+    }
+    
+    
+    func testShouldRetryRequestForZeroRetries() {
+        
+        XCTAssertFalse(BMSURLSession.shouldRetryRequest(response: nil, error: nil, numberOfRetries: 0))
+    }
+    
+    
+    func testShouldRetryRequestForClientIssues() {
+        
+        let timedOutError = NSError(domain: "", code: NSURLErrorTimedOut, userInfo: nil)
+        let cannotConnectToHostError = NSError(domain: "", code: NSURLErrorCannotConnectToHost, userInfo: nil)
+        let networkConnectionLostError = NSError(domain: "", code: NSURLErrorNetworkConnectionLost, userInfo: nil)
+        
+        XCTAssertTrue(BMSURLSession.shouldRetryRequest(response: nil, error: timedOutError, numberOfRetries: 1))
+        XCTAssertTrue(BMSURLSession.shouldRetryRequest(response: nil, error: cannotConnectToHostError, numberOfRetries: 1))
+        XCTAssertTrue(BMSURLSession.shouldRetryRequest(response: nil, error: networkConnectionLostError, numberOfRetries: 1))
+    }
+    
+    
+    func testShouldRetryRequestForServerIssues() {
+        
+        let testHttpResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 504, HTTPVersion: nil, headerFields: nil)
+        
+        XCTAssertTrue(BMSURLSession.shouldRetryRequest(response: testHttpResponse, error: nil, numberOfRetries: 1))
+    }
+    
+    
+    func testRetryRequest() {
+        
+        let completionHandlerExpectation = self.expectationWithDescription("Should have reached the original completion handler.")
+        
+        let testSession = BMSURLSession()
+        let testRequest = NSURLRequest(URL: NSURL(string: "testRetryRequest")!)
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            completionHandlerExpectation.fulfill()
+        }
+        let dataTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(testCompletionHandler)
+        
+        BMSURLSession.retryRequest(originalRequest: testRequest, originalTask: dataTask, bmsUrlSession: testSession)
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
     }
     
     
@@ -1072,8 +1204,6 @@ class BMSUrlSessionTests: XCTestCase {
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
     
-    
-    // The `testHandleAuthorizationChallenge...` methods below test both `handleAuthorizationChallenge` and `resendOriginalRequest`
     
     func testHandleAuthorizationChallengeWithCachedAuthorizationHeader() {
         
@@ -1100,17 +1230,14 @@ class BMSUrlSessionTests: XCTestCase {
         let dataTaskType = BMSURLSessionTaskType.dataTask
         let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
         
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleFailure: {
             
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertEqual(taskWithAuthorization.currentRequest!.allHTTPHeaderFields?["Authorization"], "testHeader")
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
+            XCTFail("Should have successfully regenerated the original request.")
         })
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+        
+        NSThread.sleepForTimeInterval(0.1)
     }
     
     
@@ -1133,17 +1260,14 @@ class BMSUrlSessionTests: XCTestCase {
         let dataTaskType = BMSURLSessionTaskType.dataTask
         let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
         
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleFailure: {
             
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
+            XCTFail("Should have successfully regenerated the original request.")
         })
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+        
+        NSThread.sleepForTimeInterval(0.1)
     }
     
     
@@ -1161,27 +1285,21 @@ class BMSUrlSessionTests: XCTestCase {
         
         BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
         
-        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
-            let httpResponse = response as! NSHTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) { }
         
         let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
         let testRequest = NSMutableURLRequest(URL: testUrl)
         let dataTaskType = BMSURLSessionTaskType.dataTaskWithCompletionHandler(testCompletionHandler)
         let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
         
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleFailure: {
             
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionDataTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
+            XCTFail("Should have successfully regenerated the original request.")
         })
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+        
+        NSThread.sleepForTimeInterval(0.1)
     }
     
     
@@ -1204,17 +1322,14 @@ class BMSUrlSessionTests: XCTestCase {
         let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFile(testUrl)
         let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
         
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleFailure: {
             
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
+            XCTFail("Should have successfully regenerated the original request.")
         })
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+        
+        NSThread.sleepForTimeInterval(0.1)
     }
     
     
@@ -1232,27 +1347,21 @@ class BMSUrlSessionTests: XCTestCase {
         
         BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
         
-        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
-            let httpResponse = response as! NSHTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) { }
         
         let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
         let testRequest = NSMutableURLRequest(URL: testUrl)
         let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(testUrl, testCompletionHandler)
         let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
         
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleFailure: {
             
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
+            XCTFail("Should have successfully regenerated the original request.")
         })
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+        
+        NSThread.sleepForTimeInterval(0.1)
     }
     
     
@@ -1276,17 +1385,14 @@ class BMSUrlSessionTests: XCTestCase {
         let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithData(testData)
         let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
         
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleFailure: {
             
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
+            XCTFail("Should have successfully regenerated the original request.")
         })
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+        
+        NSThread.sleepForTimeInterval(0.1)
     }
     
     
@@ -1304,10 +1410,7 @@ class BMSUrlSessionTests: XCTestCase {
         
         BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
         
-        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
-            let httpResponse = response as! NSHTTPURLResponse
-            XCTAssertEqual(httpResponse.statusCode, 200)
-        }
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) { }
         
         let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
         let testRequest = NSMutableURLRequest(URL: testUrl)
@@ -1315,17 +1418,14 @@ class BMSUrlSessionTests: XCTestCase {
         let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(testData, testCompletionHandler)
         let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
         
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleFailure: {
             
-            if let taskWithAuthorization = urlSessionTask {
-                XCTAssertTrue(taskWithAuthorization is NSURLSessionUploadTask)
-            }
-            else {
-                XCTFail("NSURLSessionTask should not be nil")
-            }
+            XCTFail("Should have successfully regenerated the original request.")
         })
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+        
+        NSThread.sleepForTimeInterval(0.1)
     }
     
     
@@ -1338,6 +1438,8 @@ class BMSUrlSessionTests: XCTestCase {
             }
         }
         
+        let expectation = self.expectationWithDescription("Should fail to handle the authorization challenge")
+        
         BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
         
         let testSession = NSURLSession(configuration: .defaultSessionConfiguration())
@@ -1345,12 +1447,175 @@ class BMSUrlSessionTests: XCTestCase {
         let dataTaskType = BMSURLSessionTaskType.dataTask
         let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
         
-        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleTask: { (urlSessionTask) in
+        BMSURLSession.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: dataTaskType, handleFailure:  {
             
-            XCTAssertNil(urlSessionTask)
+            expectation.fulfill()
         })
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+        
+        NSThread.sleepForTimeInterval(0.1)
+    }
+    
+    
+    func testRecordMetadataCompletionHandler() {
+        
+        let completionHandlerExpectation = self.expectationWithDescription("Should call the original completion handler.")
+        let metadataRecordedExpectation = self.expectationWithDescription("Should have recorded the network metadata.")
+        
+        Logger.delegate = BMSLoggerMock(expectation: metadataRecordedExpectation)
+        
+        let testRequest = NSURLRequest(URL: testUrl)
+        let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
+        let testData = "testRecordMetadataCompletionHandler".dataUsingEncoding(NSUTF8StringEncoding)
+        
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            XCTAssertEqual(data, testData)
+            completionHandlerExpectation.fulfill()
+        }
+        
+        let metadataCompletionHandler = BMSURLSession.recordMetadataCompletionHandler(request: testRequest, requestMetadata: testRequestMetadata, originalCompletionHandler: testCompletionHandler)
+        
+        metadataCompletionHandler(testData, nil, nil)
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
+    
+}
+
+
+
+class BMSURLSessionTaskTypeTests: XCTestCase {
+    
+    
+    func testPrepareForResendingDataTask() {
+        
+        let testSession = BMSURLSession()
+        let testRequest = NSURLRequest(URL: NSURL(string: "testPrepareForResendingDataTask")!)
+        
+        let dataTask = BMSURLSessionTaskType.dataTask
+        let dataTaskForResending: NSURLSessionTask = dataTask.prepareForResending(urlSession: testSession, request: testRequest)
+        XCTAssertTrue(dataTaskForResending is NSURLSessionDataTask)
+        XCTAssertEqual(dataTaskForResending.originalRequest?.URL, testRequest.URL)
+    }
+    
+    
+    func testPrepareForResendingDataTaskWithCompletionHandler() {
+        
+        let completionHandlerExpectation = self.expectationWithDescription("Should have reached the original completion handler.")
+        
+        let testSession = BMSURLSession()
+        let testRequest = NSURLRequest(URL: NSURL(string: "testPrepareForResendingDataTaskWithCompletionHandler")!)
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            completionHandlerExpectation.fulfill()
+        }
+        
+        let dataTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(testCompletionHandler)
+        let dataTaskForResending: NSURLSessionTask = dataTask.prepareForResending(urlSession: testSession, request: testRequest)
+        XCTAssertTrue(dataTaskForResending is NSURLSessionDataTask)
+        XCTAssertEqual(dataTaskForResending.originalRequest?.URL, testRequest.URL)
+        
+        dataTaskForResending.resume()
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
+    
+    
+    func testPrepareForResendingUploadTaskWithFile() {
+        
+        let testSession = BMSURLSession()
+        let testRequest = NSURLRequest(URL: NSURL(string: "testPrepareForResendingUploadTaskWithFile")!)
+        let testFile = NSURL(fileURLWithPath: "testFile")
+        
+        let uploadTask = BMSURLSessionTaskType.uploadTaskWithFile(testFile)
+        let uploadTaskForResending: NSURLSessionTask = uploadTask.prepareForResending(urlSession: testSession, request: testRequest)
+        XCTAssertTrue(uploadTaskForResending is NSURLSessionUploadTask)
+        XCTAssertEqual(uploadTaskForResending.originalRequest?.URL, testRequest.URL)
+    }
+    
+    
+    func testPrepareForResendingUploadTaskWithData() {
+        
+        let testSession = BMSURLSession()
+        let testRequest = NSURLRequest(URL: NSURL(string: "testPrepareForResendingUploadTaskWithData")!)
+        let testData = "testData".dataUsingEncoding(NSUTF8StringEncoding)!
+        
+        let uploadTask = BMSURLSessionTaskType.uploadTaskWithData(testData)
+        let uploadTaskForResending: NSURLSessionTask = uploadTask.prepareForResending(urlSession: testSession, request: testRequest)
+        XCTAssertTrue(uploadTaskForResending is NSURLSessionUploadTask)
+        XCTAssertEqual(uploadTaskForResending.originalRequest?.URL, testRequest.URL)
+    }
+    
+    
+    func testPrepareForResendingUploadTaskWithFileAndCompletionHandler() {
+        
+        let completionHandlerExpectation = self.expectationWithDescription("Should have reached the original completion handler.")
+        
+        let testSession = BMSURLSession()
+        let testRequest = NSURLRequest(URL: NSURL(string: "testPrepareForResendingUploadTaskWithFileAndCompletionHandler")!)
+        let testFile = NSURL(fileURLWithPath: "testFile")
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            completionHandlerExpectation.fulfill()
+        }
+        
+        let uploadTask = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(testFile, testCompletionHandler)
+        let uploadTaskForResending: NSURLSessionTask = uploadTask.prepareForResending(urlSession: testSession, request: testRequest)
+        XCTAssertTrue(uploadTaskForResending is NSURLSessionUploadTask)
+        XCTAssertEqual(uploadTaskForResending.originalRequest?.URL, testRequest.URL)
+        
+        uploadTaskForResending.resume()
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
+    
+    
+    func testPrepareForResendingUploadTaskWithDataAndCompletionHandler() {
+        
+        let completionHandlerExpectation = self.expectationWithDescription("Should have reached the original completion handler.")
+        
+        let testSession = BMSURLSession()
+        let testRequest = NSURLRequest(URL: NSURL(string: "testPrepareForResendingUploadTaskWithDataAndCompletionHandler")!)
+        let testData = "testData".dataUsingEncoding(NSUTF8StringEncoding)!
+        func testCompletionHandler(data: NSData?, response: NSURLResponse?, error: NSError?) {
+            completionHandlerExpectation.fulfill()
+        }
+        
+        let uploadTask = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(testData, testCompletionHandler)
+        let uploadTaskForResending: NSURLSessionTask = uploadTask.prepareForResending(urlSession: testSession, request: testRequest)
+        XCTAssertTrue(uploadTaskForResending is NSURLSessionUploadTask)
+        XCTAssertEqual(uploadTaskForResending.originalRequest?.URL, testRequest.URL)
+        
+        uploadTaskForResending.resume()
+        
+        self.waitForExpectationsWithTimeout(0.1, handler: nil)
+    }
+}
+
+
+
+// Used to check whether request metadata had been recorded by intercepting Analytics.log(metadata:), which delegates to BMSLogger
+class BMSLoggerMock: LoggerDelegate {
+    
+    // Expect the LocationDelegate to log the metadata
+    var metadataLoggedExpectation: XCTestExpectation?
+    
+    init(expectation: XCTestExpectation?) {
+        self.metadataLoggedExpectation = expectation
+    }
+    
+    var isUncaughtExceptionDetected: Bool = false
+    
+    // Here, we intercept the log to check if request metadata has been recorded
+    func logToFile(message logMessage: String, level: LogLevel, loggerName: String, calledFile: String, calledFunction: String, calledLineNumber: Int, additionalMetadata: [String : AnyObject]?) {
+        
+        // Check if the logged metadata matches the expected sampleMetadata
+        if additionalMetadata != nil && additionalMetadata?["$category"] as? String == "network" {
+            
+            metadataLoggedExpectation?.fulfill()
+            metadataLoggedExpectation = nil
+        }
     }
 }
 

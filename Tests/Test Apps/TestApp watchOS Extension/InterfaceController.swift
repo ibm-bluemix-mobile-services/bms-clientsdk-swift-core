@@ -54,7 +54,12 @@ class InterfaceController: WKInterfaceController {
             
         #else
             
-            let bmsUrlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+            let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+            
+            // To test auto-retries, set the timeout very close to the time needed to complete the request. This way, some requests will fail due to timeout, but after enough retries, it should succeed.
+            configuration.timeoutIntervalForRequest = 10.0
+
+            let bmsUrlSession = BMSURLSession(configuration: configuration, delegate: nil, delegateQueue: nil, autoRetries: 5)
             
             let request = NSURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
             let dataTask = bmsUrlSession.dataTaskWithRequest(request) { (_, response: NSURLResponse?, error: NSError?) in

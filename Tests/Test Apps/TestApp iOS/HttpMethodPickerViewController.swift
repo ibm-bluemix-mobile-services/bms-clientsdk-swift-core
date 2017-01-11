@@ -78,10 +78,10 @@ extension HttpMethod {
 
 
 
-class HttpMethodPickerViewController: NSObject,UIPickerViewDelegate, UIPickerViewDataSource {
+class HttpMethodPickerViewController: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
     
     
-    var httpMethod: HttpMethod = .GET
+    var httpMethod: HttpMethod = .POST
     
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {

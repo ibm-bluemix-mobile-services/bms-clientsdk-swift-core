@@ -391,7 +391,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
     
     func testDelegateRecordsRequestMetadata() {
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: nil), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: nil), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         
         let urlSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         let testBundle = NSBundle(forClass: self.dynamicType)
@@ -421,7 +421,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called didBecomeInvalidWithError")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), didBecomeInvalidWithError: nil)
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -430,7 +430,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
     
     func testDidReceiveChallengeSessionDelegate() {
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: nil), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: nil), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), didReceiveChallenge: NSURLAuthenticationChallenge(), completionHandler: {(_,_) in })
         
         // No expectation because this method should not be called in the parent delegate.
@@ -442,7 +442,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called urlSessionDidFinishEvents")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSessionDidFinishEventsForBackgroundURLSession(NSURLSession())
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -456,7 +456,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called willPerformHTTPRedirection")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), task: NSURLSessionTask(), willPerformHTTPRedirection: NSHTTPURLResponse(), newRequest: NSURLRequest(), completionHandler: {(_) in })
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -465,7 +465,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
     
     func testDidReceiveChallengeTaskDelegate() {
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: nil), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: nil), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), task: NSURLSessionTask(), didReceiveChallenge: NSURLAuthenticationChallenge(), completionHandler: {(_,_) in })
         
         // No expectation because this method should not be called in the parent delegate.
@@ -477,7 +477,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called needNewBodyStream")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), task: NSURLSessionTask(), needNewBodyStream: {(_) in })
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -488,7 +488,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called didSendBodyData")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), task: NSURLSessionTask(), didSendBodyData: 1, totalBytesSent: 1, totalBytesExpectedToSend: 1)
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -499,7 +499,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called didCompleteWithError")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), task: NSURLSessionTask(), didCompleteWithError: nil)
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -517,7 +517,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         let urlSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         let dataTask = urlSession.dataTaskWithURL(NSURL(fileURLWithPath: "http://example.com"))
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(urlSession, dataTask: dataTask, didReceiveResponse: NSURLResponse(), completionHandler: {(_) in })
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -538,7 +538,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
     
         BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
     
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         let authorizationResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 403, HTTPVersion: "5", headerFields: ["WWW-Authenticate" : ""])!
         let testDataTask = NSURLSession(configuration: .defaultSessionConfiguration()).dataTaskWithURL(testUrl)
         
@@ -554,7 +554,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called didBecomeDownloadTask")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), dataTask: NSURLSessionDataTask(), didBecomeDownloadTask: NSURLSessionDownloadTask())
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -566,7 +566,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called didBecomeStreamTask")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), dataTask: NSURLSessionDataTask(), didBecomeStreamTask: NSURLSessionStreamTask())
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -577,7 +577,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called didReceiveData")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), dataTask: NSURLSessionDataTask(), didReceiveData: NSData())
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)
@@ -588,7 +588,7 @@ class BMSUrlSessionDelegateTests: XCTestCase {
         
         let delegateExpectation = self.expectationWithDescription("Called willCacheResponse")
         
-        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), originalTask: .dataTask)
+        let bmsDelegate = BMSURLSessionDelegate(parentDelegate: TestBmsDelegate(expectation: delegateExpectation), bmsUrlSession: BMSURLSession(), originalTask: .dataTask, numberOfRetries: 0)
         bmsDelegate.URLSession(NSURLSession(), dataTask: NSURLSessionDataTask(), willCacheResponse: NSCachedURLResponse(), completionHandler: {(_) in })
         
         self.waitForExpectationsWithTimeout(0.1, handler: nil)

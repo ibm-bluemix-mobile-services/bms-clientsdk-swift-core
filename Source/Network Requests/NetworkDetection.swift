@@ -59,6 +59,7 @@ public enum NetworkConnection {
      
      To subscribe to network changes, call `startMonitoringNetworkChanges()` and add an observer to `NotificationCenter.default` with `NetworkDetection.networkChangedNotificationName` as the notification name. To turn off these notifications, call `stopMonitoringNetworkChanges()`.
 */
+    //// TODO: Rename to NetworkMonitor
 public class NetworkDetection {
     
     
@@ -247,7 +248,7 @@ public enum NetworkConnection {
     case noConnection
     /// The device is connected to a WiFi network.
     case WiFi
-    /// The device is using cellular data (i.e. 4G or 3G).
+    /// The device is using cellular data (i.e. 4G, 3G, or 2G).
     case WWAN
     
     /// Raw string representation of the `NetworkConnection`.
@@ -272,7 +273,7 @@ public enum NetworkConnection {
 
     To get the type of network connection currently available, use `currentNetworkConnection`. If the `currentNetworkConnection` is WWAN, you can narrow down the type further with `cellularNetworkType`, which shows whether the device is using 4G, 3G, or 2G.
 
-    To subscribe to network changes, call `stopMonitoringNetworkChanges()` and add an observer to `NotificationCenter.default` with `NetworkDetection.networkChangedNotificationName` as the notification name.
+    To subscribe to network changes, call `startMonitoringNetworkChanges()` and add an observer to `NSNotificationCenter.defaultCenter()` with `NetworkDetection.networkChangedNotificationName` as the notification name.
 */
 public class NetworkDetection {
     

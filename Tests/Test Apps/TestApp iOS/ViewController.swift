@@ -47,7 +47,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let configuration = URLSessionConfiguration.default
         
         // To test auto-retries, set the timeout very close to the time needed to complete the request. This way, some requests will fail due to timeout, but after enough retries, it should succeed.
-        configuration.timeoutIntervalForRequest = 10.0
+        configuration.timeoutIntervalForRequest = 0.5
         
         switch callbackViewController.callbackType {
             
@@ -55,7 +55,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             return BMSURLSession(configuration: configuration, delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil, autoRetries: 5)
             
         case .completionHandler:
-            return BMSURLSession(configuration: configuration, delegate: nil, delegateQueue: nil, autoRetries: 5)
+            return BMSURLSession(configuration: configuration, delegate: nil, delegateQueue: nil, autoRetries: 10)
         }
     }
     
@@ -206,13 +206,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     var bmsUrlSession: BMSURLSession {
         
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        
+        // To test auto-retries, set the timeout very close to the time needed to complete the request. This way, some requests will fail due to timeout, but after enough retries, it should succeed.
+        configuration.timeoutIntervalForRequest = 10.0
+
+        
         switch callbackViewController.callbackType {
             
         case .delegate:
-            return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil)
+            return BMSURLSession(configuration: configuration, delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil, autoRetries: 5)
             
         case .completionHandler:
-            return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+            return BMSURLSession(configuration: configuration, delegate: nil, delegateQueue: nil, autoRetries: 5)
         }
     }
     
@@ -266,7 +272,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             answer += "Status code: \(response.statusCode)\n\n"
         }
         if data != nil {
-            answer += "Response Data: \(String(data: data!, encoding: NSUTF8StringEncoding)!))\n\n"
+            answer += "Response Data: \(data!.length) bytes\n\n"
         }
         if error != nil {
             answer += "Error:  \(error!)"
@@ -307,9 +313,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         self.httpMethodPicker.dataSource = httpMethodViewController
         self.httpMethodPicker.delegate = httpMethodViewController
+        // Default to HTTP POST, since that tends to have many useful test cases
+        self.httpMethodPicker.selectRow(1, inComponent: 0, animated: false)
 
         self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
         responseLabel.layer.borderWidth = 1
+        
+        BMSURLSession.shouldRecordNetworkMetadata = true
         
         getNetworkInformation()
     }
