@@ -47,7 +47,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let configuration = URLSessionConfiguration.default
         
         // To test auto-retries, set the timeout very close to the time needed to complete the request. This way, some requests will fail due to timeout, but after enough retries, it should succeed.
-        configuration.timeoutIntervalForRequest = 0.5
+        configuration.timeoutIntervalForRequest = 10.0
         
         switch callbackViewController.callbackType {
             
