@@ -87,6 +87,7 @@ For apps built with Swift 2.3, use the command `carthage update --toolchain com.
 
 * [Import the module](#import-the-module)
 * [Initialize the client](#initialize-the-client)
+* [Monitor the network connection](#monitor-the-network-connection)
 * [Make a network request](#make-a-network-request)
 	* [Data task](#data-task)
 	* [Upload task](#upload-task)
@@ -111,6 +112,44 @@ Initializing `BMSClient` is only required when using `BMSCore` with other BMS SD
 
 ```Swift
 BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
+```
+
+--
+
+### Monitor the network connection
+
+With the `NetworkMonitor` API, you can monitor the status of the iOS device's connection to the internet. You can use this information to decide when to send network requests and to handle offline or slow network conditions.
+
+First, create a new instance of the `NetworkMonitor`. Only one instance is needed per app. **Note**: The initializer is failable, so you will need to unwrap the result later.
+
+```Swift
+let networkMonitor = NetworkMonitor()
+```
+
+To get the current type of network connection (WiFi, WWAN, or no connection), use `networkMonitor.currentNetworkConnection`. If the device has a data plan enabled, you can see whether they have access to 4G, 3G, or 2G with `networkMonitor.cellularNetworkType`.
+
+You can also create an observer to detect changes in the network connection.
+
+##### Swift 3
+
+```Swift
+networkMonitor.startMonitoringNetworkChanges()
+NotificationCenter.default.addObserver(self, selector: #selector(networkConnectionChanged), name: NetworkMonitor.networkChangedNotificationName, object: nil)
+
+func networkConnectionChanged() {    
+    print("Changed network connection to: \(networkMonitor.currentNetworkConnection)")
+}
+```
+
+##### Swift 2
+
+```Swift
+networkMonitor.startMonitoringNetworkChanges()
+NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(networkConnectionChanged), name: NetworkMonitor.networkChangedNotificationName, object: nil)
+
+func networkConnectionChanged() {    
+    print("Changed network connection to: \(networkMonitor.currentNetworkConnection)")
+}
 ```
 
 --
