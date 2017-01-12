@@ -90,6 +90,7 @@ For apps built with Swift 2.3, use the command `carthage update --toolchain com.
 * [Make a network request](#make-a-network-request)
 	* [Data task](#data-task)
 	* [Upload task](#upload-task)
+	* [Automatically resend requests](#automatically-resend-requests)
 
 > View the complete API reference [here](https://ibm-bluemix-mobile-services.github.io/API-docs/client-SDK/BMSCore/Swift/index.html).
 
@@ -120,7 +121,7 @@ BMSClient.sharedInstance.initialize(bluemixRegion: BMSClient.Region.usSouth)
 
 With `BMSURLSession`, you can create data tasks to send and receive data.
 
-The example belows show how to create and send a data task, using a completion handler to parse the response.
+The example belows show how to create and send a data task, using a completion handler to parse the response. 
 
 **Note**: If you are also using the [BMSAnalytics](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-analytics) framework to gather data on these network requests, be sure to call `.resume()` immediately after creating the data task as shown in the examples below.
 
@@ -131,7 +132,7 @@ var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
 request.httpMethod = "GET"
 request.setValue("value", forHTTPHeaderField: "key")
 
-let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil, autoRetries: 2)
 urlSession.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
 
     if let httpResponse = response as? HTTPURLResponse {
@@ -154,7 +155,7 @@ let request = NSMutableURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
 request.HTTPMethod = "GET"
 request.setValue("value", forHTTPHeaderField: "key")
 
-let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil, autoRetries: 2)
 urlSession.dataTaskWithRequest(request) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
 
     if let httpResponse = response as? NSHTTPURLResponse {
@@ -180,7 +181,7 @@ var request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
 request.httpMethod = "GET"
 request.setValue("value", forHTTPHeaderField: "key")
 
-let urlSession = BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(), delegateQueue: nil)
+let urlSession = BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(), delegateQueue: nil, autoRetries: 2)
 urlSession.dataTask(with: request).resume()
 ```
 
@@ -220,7 +221,7 @@ let request = NSMutableURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
 request.HTTPMethod = "GET"
 request.setValue("value", forHTTPHeaderField: "key")
 
-let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: NSURLSessionDelegateExample(), delegateQueue: nil)
+let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: NSURLSessionDelegateExample(), delegateQueue: nil, autoRetries: 2)
 urlSession.dataTaskWithRequest(request).resume()
 ```
 
@@ -271,7 +272,7 @@ var request = URLRequest(url: URL(string: "https://httpbin.org/post")!)
 request.httpMethod = "POST"
 request.setValue("value", forHTTPHeaderField: "key")
 
-let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+let urlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil, autoRetries: 2)
 urlSession.uploadTask(with: request, fromFile: file, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
 
     if let httpResponse = response as? HTTPURLResponse {
@@ -292,7 +293,7 @@ let request = NSMutableURLRequest(URL: NSURL(string: "https://httpbin.org/post")
 request.HTTPMethod = "POST"
 request.setValue("value", forHTTPHeaderField: "key")
 
-let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil, autoRetries: 2)
 urlSession.uploadTaskWithRequest(request, fromFile: file, completionHandler: { (data: NSData?, response: NSURLResponse?, error: NSError?) in
 
     if let httpResponse = response as? NSHTTPURLResponse {
@@ -317,7 +318,7 @@ var request = URLRequest(url: URL(string: "https://httpbin.org/post")!)
 request.httpMethod = "POST"
 request.setValue("value", forHTTPHeaderField: "key")
 
-let urlSession = BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(), delegateQueue: nil)
+let urlSession = BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(), delegateQueue: nil, autoRetries: 2)
 urlSession.uploadTask(with: request, fromFile: file).resume()
 ```
 
@@ -367,7 +368,7 @@ let request = NSMutableURLRequest(URL: NSURL(string: "https://httpbin.org/post")
 request.HTTPMethod = "POST"
 request.setValue("value", forHTTPHeaderField: "key")
 
-let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: NSURLSessionDelegateExample(), delegateQueue: nil)
+let urlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: NSURLSessionDelegateExample(), delegateQueue: nil, autoRetries: 2)
 urlSession.uploadTaskWithRequest(request, fromFile: file).resume()
 ```
 
@@ -407,6 +408,21 @@ class NSURLSessionDelegateExample: NSObject, NSURLSessionDataDelegate {
     }
 }
 ```
+
+--
+
+#### Automatically resend requests
+
+In the data task and upload task examples above, there is an optional parameter `autoRetries` in the `BMSURLSession` initializers. This is the number of times that `BMSURLSession` will automatically resend the task if it fails due to network issues. These automatic retries occur under the following conditions:
+
+1. Request timeout
+2. Loss of network connection (such as WiFi disconnect or lost cellular service)
+3. Failure to connect to the host
+4. 504 response
+
+If this parameter is excluded from the initializer, no automatic retries will occur.
+
+--------
 
 
 
