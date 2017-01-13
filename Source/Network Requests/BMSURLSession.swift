@@ -26,9 +26,12 @@ public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) ->
 
     
 /**
-    A wrapper around Swift's [URLSession](https://developer.apple.com/reference/foundation/urlsession) API that incorporates
-    Bluemix Mobile Services. Use `BMSURLSession` to gather [Mobile Analytics](https://console.ng.bluemix.net/docs/services/mobileanalytics/mobileanalytics_overview.html) data on your network requests
-    and/or to access backends that are protected by [Mobile Client Access](https://console.ng.bluemix.net/docs/services/mobileaccess/overview.html).
+    Sends HTTP network requests.
+
+    `BMSURLSession` is an alternative to `BaseRequest` that provides more flexibility and control over requests and their responses.
+     
+    It is built as a wrapper around Swift's [URLSession](https://developer.apple.com/reference/foundation/urlsession) API that incorporates Bluemix Mobile Services. 
+    It automatically gathers [Mobile Analytics](https://console.ng.bluemix.net/docs/services/mobileanalytics/mobileanalytics_overview.html) data on each network request, and can be used to access backends that are protected by [Mobile Client Access](https://console.ng.bluemix.net/docs/services/mobileaccess/overview.html).
 
     Currently, `BMSURLSession` only supports [URLSessionDataTask](https://developer.apple.com/reference/foundation/urlsessiondatatask) and [URLSessionUploadTask](https://developer.apple.com/reference/foundation/urlsessionuploadtask).
 */
@@ -326,9 +329,12 @@ public typealias BMSDataTaskCompletionHandler = (NSData?, NSURLResponse?, NSErro
 
 
 /**
-    A wrapper around Swift's [NSURLSession](https://developer.apple.com/reference/foundation/urlsession) API that incorporates
-    Bluemix Mobile Services. Use this API to gather [Mobile Analytics](https://console.ng.bluemix.net/docs/services/mobileanalytics/mobileanalytics_overview.html) data on your network requests
-    and/or to access backends that are protected by [Mobile Client Access](https://console.ng.bluemix.net/docs/services/mobileaccess/overview.html).
+    Sends HTTP network requests.
+
+    `BMSURLSession` is an alternative to `BaseRequest` that provides more flexibility and control over requests and their responses.
+
+    It is built as a wrapper around Swift's [NSURLSession](https://developer.apple.com/reference/foundation/urlsession) API that incorporates Bluemix Mobile Services.
+    It automatically gathers [Mobile Analytics](https://console.ng.bluemix.net/docs/services/mobileanalytics/mobileanalytics_overview.html) data on each network request, and can be used to access backends that are protected by [Mobile Client Access](https://console.ng.bluemix.net/docs/services/mobileaccess/overview.html).
 
     Currently, `BMSURLSession` only supports [NSURLSessionDataTask](https://developer.apple.com/reference/foundation/urlsessiondatatask) and [NSURLSessionUploadTask](https://developer.apple.com/reference/foundation/urlsessionuploadtask).
 */

@@ -56,11 +56,13 @@ public typealias BMSCompletionHandler = (Response?, Error?) -> Void
 
 
 /**
-    Sends HTTP network requests. 
+    Sends HTTP network requests.
+    
+    `BaseRequest` is a simpler alternative to `BMSURLSession` that requires no familiarity with Swift's [URLSession](https://developer.apple.com/reference/foundation/urlsession) API.
      
     When building a BaseRequest object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via `send(requestBody:completionHandler:)`.
      
-    - important: It is recommended to use the `Request` class instead of `BaseRequest`.
+    - important: It is recommended to use the `Request` class instead of `BaseRequest`, since it will replace `BaseRequest` in the future.
 */
 @available(*, deprecated, message: "Please use the Request class instead.")
 open class BaseRequest: NSObject, URLSessionTaskDelegate {
@@ -377,10 +379,11 @@ public typealias BMSCompletionHandler = (Response?, NSError?) -> Void
 /**
     Sends HTTP network requests.
 
-    When building a BaseRequest object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via `send(requestBody:completionHandler:)`.
+    `BaseRequest` is a simpler alternative to `BMSURLSession` that requires no familiarity with Swift's [NSURLSession](https://developer.apple.com/reference/foundation/urlsession) API.
 
-     - important: It is recommended to use the `Request` class instead of `BaseRequest`.
+    When building a BaseRequest object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as NSData when sending the request via `send(requestBody:completionHandler:)`.
 
+    - important: It is recommended to use the `Request` class instead of `BaseRequest`, since it will replace `BaseRequest` in the future.
 */
 @available(*, deprecated, message="Please use the Request class instead.")
 public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
