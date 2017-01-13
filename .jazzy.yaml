@@ -15,8 +15,13 @@ custom_categories:
     - BMSURLSession
     - BaseRequest
     - Request
-    - HttpMethod
     - Response
+    - HttpMethod
+
+  - name: Network Monitoring
+    children:
+    - NetworkMonitor
+    - NetworkConnection
 
   - name: Completion Handlers
     children:
