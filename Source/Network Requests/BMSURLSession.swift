@@ -35,6 +35,8 @@ public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) ->
 public struct BMSURLSession: NetworkSession {
 
     
+    // MARK: - Properties (internal)
+    
     // Determines whether metadata gets recorded for all BMSURLSession network requests
     // Should only be set to true by passing DeviceEvent.network in the Analytics.initialize() method in the BMSAnalytics framework
     public static var shouldRecordNetworkMetadata: Bool = false
@@ -61,6 +63,8 @@ public struct BMSURLSession: NetworkSession {
     
     
     
+    // MARK: - Initializer
+    
     /**
         Creates a network session similar to `URLSession`.
 
@@ -82,7 +86,7 @@ public struct BMSURLSession: NetworkSession {
     
     
     
-    // MARK: - Data tasks
+    // MARK: - Methods
     
     /**
         Creates a task that retrieves the contents of the specified URL.
@@ -168,9 +172,6 @@ public struct BMSURLSession: NetworkSession {
         return dataTask
     }
     
-    
-    
-    // MARK: - Upload tasks
     
     /**
         Creates a task that uploads data to the URL specified in the request object.
@@ -334,6 +335,8 @@ public typealias BMSDataTaskCompletionHandler = (NSData?, NSURLResponse?, NSErro
 public struct BMSURLSession: NetworkSession {
     
     
+    // MARK: - Properties (internal)
+    
     // Determines whether metadata gets recorded for all BMSURLSession network requests
     // Should only be set to true by passing DeviceEvent.network in the Analytics.initialize() method in the BMSAnalytics framework
     public static var shouldRecordNetworkMetadata: Bool = false
@@ -360,6 +363,8 @@ public struct BMSURLSession: NetworkSession {
     
     
     
+    // MARK: - Initializer
+    
     /**
         Creates a network session similar to `NSURLSession`.
      
@@ -381,7 +386,7 @@ public struct BMSURLSession: NetworkSession {
     
     
     
-    // MARK: - Data tasks
+    // MARK: - Methods
     
     /**
         Creates a task that retrieves the contents of the specified URL.
@@ -467,9 +472,6 @@ public struct BMSURLSession: NetworkSession {
         return dataTask
     }
     
-    
-    
-    // MARK: - Upload tasks
     
     /**
         Creates a task that uploads data to the URL specified in the request object.
