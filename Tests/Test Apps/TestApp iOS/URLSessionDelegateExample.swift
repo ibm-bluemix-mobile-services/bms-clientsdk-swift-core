@@ -1,5 +1,5 @@
 /*
-*     Copyright 2016 IBM Corp.
+*     Copyright 2017 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -81,7 +81,7 @@ class URLSessionDelegateExample: NSObject, URLSessionDelegate, URLSessionTaskDel
         
         DispatchQueue.main.async {
             let currentProgress = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
-            self.viewController.progressBar.setProgress(currentProgress, animated: true)
+            self.viewController.progressBar.setProgress(currentProgress, animated: false)
         }
     }
     
@@ -212,7 +212,7 @@ class URLSessionDelegateExample: NSObject, NSURLSessionDelegate, NSURLSessionTas
         
         dispatch_async(dispatch_get_main_queue()) {
             let currentProgress = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
-            self.viewController.progressBar.setProgress(currentProgress, animated: true)
+            self.viewController.progressBar.setProgress(currentProgress, animated: false)
         }
     }
     

@@ -1,5 +1,5 @@
 /*
-*     Copyright 2016 IBM Corp.
+*     Copyright 2017 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -40,15 +40,22 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     let imageFile = Bundle.main.url(forResource: "Andromeda", withExtension: "jpg")!
     
+    let networkMonitor = NetworkMonitor()!
+    
     var bmsUrlSession: BMSURLSession {
+        
+        let configuration = URLSessionConfiguration.default
+        
+        // To test auto-retries, set the timeout very close to the time needed to complete the request. This way, some requests will fail due to timeout, but after enough retries, it should succeed.
+        configuration.timeoutIntervalForRequest = 10.0
         
         switch callbackViewController.callbackType {
             
         case .delegate:
-            return BMSURLSession(configuration: .default, delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil)
+            return BMSURLSession(configuration: configuration, delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil, autoRetries: 5)
             
         case .completionHandler:
-            return BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+            return BMSURLSession(configuration: configuration, delegate: nil, delegateQueue: nil, autoRetries: 10)
         }
     }
     
@@ -102,7 +109,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             answer += "Status code: \(response.statusCode)\n\n"
         }
         if data != nil {
-            answer += "Response Data: \(String(data: data!, encoding: .utf8)!))\n\n"
+            answer += "Response Data: \(data!.count) bytes\n\n"
         }
         if error != nil {
             answer += "Error:  \(error!)"
@@ -110,6 +117,28 @@ class ViewController: UIViewController, UITextFieldDelegate {
         DispatchQueue.main.async {
             self.responseLabel.text = answer
         }
+    }
+    
+    
+    // Prints the current network connection types and monitors any changes (i.e. switching between WiFi, WWAN, and airplane mode)
+    // IMPORTANT: To test this fully, use a real device to switch between WiFi, 4G LTE, 3G, and airplane mode.
+    func getNetworkInformation() {
+     
+        let isMonitoringNetworkChanges = networkMonitor.startMonitoringNetworkChanges()
+        
+        print("Monitoring network changes: \(isMonitoringNetworkChanges)")
+        print("Network connection: \(networkMonitor.currentNetworkConnection.description)")
+        if let cellularNetwork = networkMonitor.cellularNetworkType {
+            print("Cellular network type: \(cellularNetwork)")
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(checkNetworkConnection), name: NetworkMonitor.networkChangedNotificationName, object: nil)
+    }
+    
+    
+    func checkNetworkConnection() {
+        
+        print("Changed network connection to: \(networkMonitor.currentNetworkConnection)")
     }
     
     
@@ -121,13 +150,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         self.httpMethodPicker.dataSource = httpMethodViewController
         self.httpMethodPicker.delegate = httpMethodViewController
-        
-        #if swift(>=3.0)
-            self.progressBar.transform = CGAffineTransform(scaleX: 1, y: 2)
-        #else
-            self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
-        #endif
+        // Default to HTTP POST, since that tends to have many useful test cases
+        self.httpMethodPicker.selectRow(1, inComponent: 0, animated: false)
+    
+        self.progressBar.transform = CGAffineTransform(scaleX: 1, y: 2)
         responseLabel.layer.borderWidth = 1
+        
+        BMSURLSession.shouldRecordNetworkMetadata = true
+        
+        getNetworkInformation()
     }
 
     
@@ -170,16 +201,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     let imageFile = NSBundle.mainBundle().URLForResource("Andromeda", withExtension: "jpg")!
     
+    let networkMonitor = NetworkMonitor()!
+    
     
     var bmsUrlSession: BMSURLSession {
+        
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        
+        // To test auto-retries, set the timeout very close to the time needed to complete the request. This way, some requests will fail due to timeout, but after enough retries, it should succeed.
+        configuration.timeoutIntervalForRequest = 10.0
+
         
         switch callbackViewController.callbackType {
             
         case .delegate:
-            return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil)
+            return BMSURLSession(configuration: configuration, delegate: URLSessionDelegateExample(viewController: self), delegateQueue: nil, autoRetries: 5)
             
         case .completionHandler:
-            return BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+            return BMSURLSession(configuration: configuration, delegate: nil, delegateQueue: nil, autoRetries: 5)
         }
     }
     
@@ -233,7 +272,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             answer += "Status code: \(response.statusCode)\n\n"
         }
         if data != nil {
-            answer += "Response Data: \(String(data: data!, encoding: NSUTF8StringEncoding)!))\n\n"
+            answer += "Response Data: \(data!.length) bytes\n\n"
         }
         if error != nil {
             answer += "Error:  \(error!)"
@@ -242,8 +281,29 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.responseLabel.text = answer
         })
     }
-
     
+    
+    // Prints the current network connection types and monitors any changes (i.e. switching between WiFi, WWAN, and airplane mode)
+    // IMPORTANT: To test this fully, use a real device to switch between WiFi, 4G LTE, 3G, and airplane mode.
+    func getNetworkInformation() {
+        
+        let isMonitoringNetworkChanges = networkMonitor.startMonitoringNetworkChanges()
+        
+        print("Monitoring network changes: \(isMonitoringNetworkChanges)")
+        print("Network connection: \(networkMonitor.currentNetworkConnection.description)")
+        if let cellularNetwork = networkMonitor.cellularNetworkType {
+            print("Cellular network type: \(cellularNetwork)")
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(checkNetworkConnection), name: NetworkMonitor.networkChangedNotificationName, object: nil)
+    }
+        
+        
+    func checkNetworkConnection() {
+        
+        print("Changed network connection to: \(networkMonitor.currentNetworkConnection)")
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -253,13 +313,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         self.httpMethodPicker.dataSource = httpMethodViewController
         self.httpMethodPicker.delegate = httpMethodViewController
-        
-        #if swift(>=3.0)
-            self.progressBar.transform = CGAffineTransform(scaleX: 1, y: 2)
-        #else
-            self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
-        #endif
+        // Default to HTTP POST, since that tends to have many useful test cases
+        self.httpMethodPicker.selectRow(1, inComponent: 0, animated: false)
+
+        self.progressBar.transform = CGAffineTransformMakeScale(1, 2)
         responseLabel.layer.borderWidth = 1
+        
+        BMSURLSession.shouldRecordNetworkMetadata = true
+        
+        getNetworkInformation()
     }
     
     

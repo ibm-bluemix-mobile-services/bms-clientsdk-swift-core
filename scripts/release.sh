@@ -17,5 +17,5 @@ if [[ ! "$(git tag)" =~ "${version}" ]]; then
 	echo "Publishing new version ${version} ";
 	git tag $version;
 	git push origin --tags;
-	pod trunk push;
+	pod trunk push --allow-warnings;
 fi

@@ -1,5 +1,5 @@
 /*
-*     Copyright 2016 IBM Corp.
+*     Copyright 2017 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -26,7 +26,12 @@ class InterfaceController: WKInterfaceController {
         
         #if swift(>=3.0)
             
-            let bmsUrlSession = BMSURLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+            let configuration = URLSessionConfiguration.default
+            
+            // To test auto-retries, set the timeout very close to the time needed to complete the request. This way, some requests will fail due to timeout, but after enough retries, it should succeed.
+            configuration.timeoutIntervalForRequest = 10.0
+            
+            let bmsUrlSession = BMSURLSession(configuration: configuration, delegate: nil, delegateQueue: nil, autoRetries: 5)
             
             let request = URLRequest(url: URL(string: "http://httpbin.org/get")!)
             let dataTask = bmsUrlSession.dataTask(with: request) { (_, response: URLResponse?, error: Error?) in
@@ -34,11 +39,12 @@ class InterfaceController: WKInterfaceController {
                 var responseLabelText = ""
                 
                 if let responseError = error {
-                    responseLabelText = "ERROR: \(responseError.localizedDescription)"
+                    responseLabelText = "ERROR"
+                    print("ERROR: \(responseError.localizedDescription)")
                 }
                 else if let response = response as? HTTPURLResponse {
                     let status = response.statusCode
-                    responseLabelText = "Status: \(status) \n\n"
+                    responseLabelText = "Status: \(status)"
                 }
                 
                 DispatchQueue.main.async {
@@ -48,7 +54,12 @@ class InterfaceController: WKInterfaceController {
             
         #else
             
-            let bmsUrlSession = BMSURLSession(configuration: .defaultSessionConfiguration(), delegate: nil, delegateQueue: nil)
+            let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+            
+            // To test auto-retries, set the timeout very close to the time needed to complete the request. This way, some requests will fail due to timeout, but after enough retries, it should succeed.
+            configuration.timeoutIntervalForRequest = 10.0
+
+            let bmsUrlSession = BMSURLSession(configuration: configuration, delegate: nil, delegateQueue: nil, autoRetries: 5)
             
             let request = NSURLRequest(URL: NSURL(string: "http://httpbin.org/get")!)
             let dataTask = bmsUrlSession.dataTaskWithRequest(request) { (_, response: NSURLResponse?, error: NSError?) in
@@ -56,11 +67,12 @@ class InterfaceController: WKInterfaceController {
                 var responseLabelText = ""
                 
                 if let responseError = error {
-                    responseLabelText = "ERROR: \(responseError.localizedDescription)"
+                    responseLabelText = "ERROR"
+                    print("ERROR: \(responseError.localizedDescription)")
                 }
                 else if let response = response as? NSHTTPURLResponse {
                     let status = response.statusCode ?? 0
-                    responseLabelText = "Status: \(status) \n\n"
+                    responseLabelText = "Status: \(status)"
                 }
                 
                 dispatch_async(dispatch_get_main_queue(), {

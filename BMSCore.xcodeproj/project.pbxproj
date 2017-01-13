@@ -16,7 +16,6 @@
 		92018A2A1C45A7720031C893 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A171C45A7720031C893 /* Error.swift */; };
 		92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A231C45A7720031C893 /* AuthorizationManager.swift */; };
 		92018A401C45A8170031C893 /* BMSCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 92018A3C1C45A8170031C893 /* BMSCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A471C45AA890031C893 /* BMSClient.swift */; };
 		92018A501C45AA890031C893 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4A1C45AA890031C893 /* Request.swift */; };
 		92018A511C45AA890031C893 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4B1C45AA890031C893 /* BaseRequest.swift */; };
 		92018A521C45AA890031C893 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4C1C45AA890031C893 /* Response.swift */; };
@@ -24,11 +23,13 @@
 		92018A581C45AAC70031C893 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4C1C45AA890031C893 /* Response.swift */; };
 		92018A591C45AACA0031C893 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4B1C45AA890031C893 /* BaseRequest.swift */; };
 		92018A5A1C45AACC0031C893 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A4A1C45AA890031C893 /* Request.swift */; };
-		92018A5C1C45AAD30031C893 /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A471C45AA890031C893 /* BMSClient.swift */; };
 		92018A5D1C45AAD60031C893 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A171C45A7720031C893 /* Error.swift */; };
 		92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A771C45AC380031C893 /* BMSClientTests.swift */; };
 		92018A8F1C45AC380031C893 /* BaseRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A791C45AC380031C893 /* BaseRequestTests.swift */; };
 		92018A921C45AC380031C893 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92018A7D1C45AC380031C893 /* ResponseTests.swift */; };
+		920B505F1E1DAC2900FB546F /* NetworkDetectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B505E1E1DAC2900FB546F /* NetworkDetectionTests.swift */; };
+		921D0CD61DF7823800EB6F7D /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921D0CD51DF7823800EB6F7D /* BMSClient.swift */; };
+		921D0CD71DF7823800EB6F7D /* BMSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921D0CD51DF7823800EB6F7D /* BMSClient.swift */; };
 		922CD63F1CA04DDE002E29C0 /* UserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF111C973DAA00890633 /* UserIdentity.swift */; };
 		922CD6401CA04DE1002E29C0 /* AppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF131C973E4800890633 /* AppIdentity.swift */; };
 		922CD6411CA04DE3002E29C0 /* DeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CDF151C973E5F00890633 /* DeviceIdentity.swift */; };
@@ -64,8 +65,12 @@
 		92A60C0A1D831F6D005E0969 /* BMSUrlSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A60C091D831F6D005E0969 /* BMSUrlSessionTests.swift */; };
 		92A60C0C1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A60C0B1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift */; };
 		92A8DD3B1CEA2F6B0092417A /* BMSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F263F71B94EBB50063CC1D /* BMSCore.framework */; };
+		92B019041E26E114002A05CB /* BMSURLSessionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B019031E26E114002A05CB /* BMSURLSessionUtility.swift */; };
+		92B019051E26E118002A05CB /* BMSURLSessionUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B019031E26E114002A05CB /* BMSURLSessionUtility.swift */; };
+		92B019071E26E3D4002A05CB /* BMSURLSessionUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B019061E26E3D4002A05CB /* BMSURLSessionUtilityTests.swift */; };
 		92BBA3A11D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */; };
 		92BBA3A21D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */; };
+		92C30BC51E1C127D00FCF65B /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C30BC41E1C127D00FCF65B /* NetworkMonitor.swift */; };
 		A8DC446009D6586F8DB0A399 /* Pods_BMSCore_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E75E9EA9BBCD7E2F4FC7103 /* Pods_BMSCore_iOS.framework */; };
 		CECE3807C60FC48B9F835471 /* Pods_BMSCore_watchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE070372C5BAB5000E5BBD47 /* Pods_BMSCore_watchOS.framework */; };
 		ED49FC2E202A8336C64EE57C /* Pods_TestApp_watchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CCA0DC33589F11B9392E3B1 /* Pods_TestApp_watchOS.framework */; };
@@ -174,7 +179,6 @@
 		92018A3C1C45A8170031C893 /* BMSCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMSCore.h; sourceTree = "<group>"; };
 		92018A3E1C45A8170031C893 /* Info_iOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info_iOS.plist; sourceTree = "<group>"; };
 		92018A3F1C45A8170031C893 /* Info_watchOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info_watchOS.plist; sourceTree = "<group>"; };
-		92018A471C45AA890031C893 /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
 		92018A4A1C45AA890031C893 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		92018A4B1C45AA890031C893 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
 		92018A4C1C45AA890031C893 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -182,6 +186,8 @@
 		92018A791C45AC380031C893 /* BaseRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequestTests.swift; sourceTree = "<group>"; };
 		92018A7B1C45AC380031C893 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92018A7D1C45AC380031C893 /* ResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
+		920B505E1E1DAC2900FB546F /* NetworkDetectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkDetectionTests.swift; sourceTree = "<group>"; };
+		921D0CD51DF7823800EB6F7D /* BMSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSClient.swift; sourceTree = "<group>"; };
 		9235D0A81BC3181900946A32 /* TestApp iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestApp iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0BC1BC3183F00946A32 /* TestApp watchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestApp watchOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9235D0C81BC3183F00946A32 /* TestApp watchOS Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TestApp watchOS Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -211,7 +217,10 @@
 		92A60C0B1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSUrlSessionDelegateTests.swift; sourceTree = "<group>"; };
 		92A6ACC11CB2CA2D00052C2C /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		92A8E4D61BBF2D9C00995FE8 /* BMSCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		92B019031E26E114002A05CB /* BMSURLSessionUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSURLSessionUtility.swift; sourceTree = "<group>"; };
+		92B019061E26E3D4002A05CB /* BMSURLSessionUtilityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSURLSessionUtilityTests.swift; sourceTree = "<group>"; };
 		92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BMSURLSessionDelegate.swift; sourceTree = "<group>"; };
+		92C30BC41E1C127D00FCF65B /* NetworkMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		92F263F71B94EBB50063CC1D /* BMSCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BMSCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F264011B94EBB60063CC1D /* BMSCore Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BMSCore Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9881D6CEA7A89D82EC905239 /* Pods-TestApp watchOS Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestApp watchOS Extension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestApp watchOS Extension/Pods-TestApp watchOS Extension.debug.xcconfig"; sourceTree = "<group>"; };
@@ -313,6 +322,7 @@
 		92018A101C45A7720031C893 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				921D0CD51DF7823800EB6F7D /* BMSClient.swift */,
 				92018A171C45A7720031C893 /* Error.swift */,
 				92018A461C45AA890031C893 /* Network Requests */,
 				92018A221C45A7720031C893 /* Security */,
@@ -346,12 +356,13 @@
 		92018A461C45AA890031C893 /* Network Requests */ = {
 			isa = PBXGroup;
 			children = (
-				92018A471C45AA890031C893 /* BMSClient.swift */,
 				92018A4B1C45AA890031C893 /* BaseRequest.swift */,
 				92018A4A1C45AA890031C893 /* Request.swift */,
 				92018A4C1C45AA890031C893 /* Response.swift */,
 				929D46141D6659C3002192E3 /* BMSURLSession.swift */,
 				92BBA3A01D63B1F70026EC66 /* BMSURLSessionDelegate.swift */,
+				92B019031E26E114002A05CB /* BMSURLSessionUtility.swift */,
+				92C30BC41E1C127D00FCF65B /* NetworkMonitor.swift */,
 			);
 			name = "Network Requests";
 			path = "Source/Network Requests";
@@ -384,6 +395,8 @@
 				92018A7D1C45AC380031C893 /* ResponseTests.swift */,
 				92A60C091D831F6D005E0969 /* BMSUrlSessionTests.swift */,
 				92A60C0B1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift */,
+				92B019061E26E3D4002A05CB /* BMSURLSessionUtilityTests.swift */,
+				920B505E1E1DAC2900FB546F /* NetworkDetectionTests.swift */,
 				92018A7A1C45AC380031C893 /* Resources */,
 			);
 			path = "Unit Tests";
@@ -1021,8 +1034,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				927DF20C1C7CF63F00245647 /* BaseAuthorizationManager.swift in Sources */,
+				921D0CD71DF7823800EB6F7D /* BMSClient.swift in Sources */,
+				92B019051E26E118002A05CB /* BMSURLSessionUtility.swift in Sources */,
 				922CD6411CA04DE3002E29C0 /* DeviceIdentity.swift in Sources */,
-				92018A5C1C45AAD30031C893 /* BMSClient.swift in Sources */,
 				92018A5D1C45AAD60031C893 /* Error.swift in Sources */,
 				92018A571C45AAC40031C893 /* AuthorizationManager.swift in Sources */,
 				92018A591C45AACA0031C893 /* BaseRequest.swift in Sources */,
@@ -1043,15 +1057,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A9CDF121C973DAA00890633 /* UserIdentity.swift in Sources */,
+				921D0CD61DF7823800EB6F7D /* BMSClient.swift in Sources */,
 				927DF20A1C7CF60600245647 /* BaseUserIdentity.swift in Sources */,
 				92018A511C45AA890031C893 /* BaseRequest.swift in Sources */,
 				927DF2061C7CF60600245647 /* BaseAppIdentity.swift in Sources */,
-				92018A4D1C45AA890031C893 /* BMSClient.swift in Sources */,
 				92018A501C45AA890031C893 /* Request.swift in Sources */,
 				929D46161D6659C9002192E3 /* BMSURLSession.swift in Sources */,
+				92B019041E26E114002A05CB /* BMSURLSessionUtility.swift in Sources */,
 				92018A521C45AA890031C893 /* Response.swift in Sources */,
 				3A9CDF161C973E5F00890633 /* DeviceIdentity.swift in Sources */,
 				92018A331C45A7720031C893 /* AuthorizationManager.swift in Sources */,
+				92C30BC51E1C127D00FCF65B /* NetworkMonitor.swift in Sources */,
 				3A9CDF141C973E4800890633 /* AppIdentity.swift in Sources */,
 				927DF2081C7CF60600245647 /* BaseDeviceIdentity.swift in Sources */,
 				92BBA3A11D63B1F70026EC66 /* BMSURLSessionDelegate.swift in Sources */,
@@ -1066,6 +1082,8 @@
 			files = (
 				92A60C0C1D831F8E005E0969 /* BMSUrlSessionDelegateTests.swift in Sources */,
 				92018A921C45AC380031C893 /* ResponseTests.swift in Sources */,
+				920B505F1E1DAC2900FB546F /* NetworkDetectionTests.swift in Sources */,
+				92B019071E26E3D4002A05CB /* BMSURLSessionUtilityTests.swift in Sources */,
 				92018A8D1C45AC380031C893 /* BMSClientTests.swift in Sources */,
 				92A60C0A1D831F6D005E0969 /* BMSUrlSessionTests.swift in Sources */,
 				92018A8F1C45AC380031C893 /* BaseRequestTests.swift in Sources */,
@@ -1135,7 +1153,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6E950CBC0D013A87D8FCBF03 /* Pods-TestApp iOS.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1152,7 +1169,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BA9A0B36CED6C1974AB10368 /* Pods-TestApp iOS.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1170,7 +1186,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9881D6CEA7A89D82EC905239 /* Pods-TestApp watchOS Extension.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Tests/Test Apps/TestApp watchOS Extension/Resources/Info.plist";
@@ -1189,7 +1204,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0F9249D385C6F5DE20C07538 /* Pods-TestApp watchOS Extension.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Tests/Test Apps/TestApp watchOS Extension/Resources/Info.plist";
@@ -1241,7 +1255,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B1136C7EDAAEDE2205745B5F /* Pods-BMSCore watchOS.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1268,7 +1281,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 30D7F9A8E27DAE1898D28CC0 /* Pods-BMSCore watchOS.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1386,7 +1398,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 808D92A9A07EAF3261A49BFD /* Pods-BMSCore iOS.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1410,7 +1421,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 38A25AC35537B1D22C842EE1 /* Pods-BMSCore iOS.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1433,7 +1443,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F15F59304023C31087E10A19 /* Pods-BMSCore Tests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Tests/Unit Tests/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1447,7 +1456,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D8A391253C1520B32D97EBED /* Pods-BMSCore Tests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Tests/Unit Tests/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

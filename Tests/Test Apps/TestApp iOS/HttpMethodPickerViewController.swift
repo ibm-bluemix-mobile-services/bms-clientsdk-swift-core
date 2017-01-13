@@ -1,5 +1,5 @@
 /*
-*     Copyright 2016 IBM Corp.
+*     Copyright 2017 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -24,10 +24,10 @@ import BMSCore
     
 
 
-class HttpMethodPickerViewController: NSObject,UIPickerViewDelegate, UIPickerViewDataSource {
+class HttpMethodPickerViewController: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
     
     
-    var httpMethod: HttpMethod = .GET
+    var httpMethod: HttpMethod = .POST
     
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -78,10 +78,10 @@ extension HttpMethod {
 
 
 
-class HttpMethodPickerViewController: NSObject,UIPickerViewDelegate, UIPickerViewDataSource {
+class HttpMethodPickerViewController: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
     
     
-    var httpMethod: HttpMethod = .GET
+    var httpMethod: HttpMethod = .POST
     
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {

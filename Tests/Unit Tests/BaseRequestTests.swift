@@ -1,5 +1,5 @@
 /*
-*     Copyright 2016 IBM Corp.
+*     Copyright 2017 IBM Corp.
 *     Licensed under the Apache License, Version 2.0 (the "License");
 *     you may not use this file except in compliance with the License.
 *     You may obtain a copy of the License at
@@ -29,13 +29,14 @@ class BaseRequestTests: XCTestCase {
     
     func testInitWithAllParameters() {
         
-        let request = BaseRequest(url: "http://example.com", method: HttpMethod.GET, headers:[BaseRequest.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], timeout: 10.0)
+        let request = BaseRequest(url: "http://example.com", method: HttpMethod.GET, headers:[BaseRequest.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], timeout: 10.0, autoRetries: 4)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, 10.0)
         XCTAssertEqual(request.headers, [BaseRequest.contentType: "text/plain"])
         XCTAssertEqual(request.queryParameters!, ["someKey": "someValue"])
+        XCTAssertEqual(request.urlSession.numberOfRetries, 4)
         XCTAssertNotNil(request.networkRequest)
     }
     
@@ -197,13 +198,14 @@ class BaseRequestTests: XCTestCase {
     
     func testInitWithAllParameters() {
         
-        let request = BaseRequest(url: "http://example.com", method: HttpMethod.GET, headers:[BaseRequest.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], timeout: 10.0)
+        let request = BaseRequest(url: "http://example.com", method: HttpMethod.GET, headers:[BaseRequest.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], timeout: 10.0, autoRetries: 4)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, 10.0)
         XCTAssertEqual(request.headers, [BaseRequest.contentType: "text/plain"])
         XCTAssertEqual(request.queryParameters!, ["someKey": "someValue"])
+        XCTAssertEqual(request.urlSession.numberOfRetries, 4)
         XCTAssertNotNil(request.networkRequest)
     }
     
