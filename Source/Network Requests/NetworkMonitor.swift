@@ -62,11 +62,14 @@ public enum NetworkConnection {
 public class NetworkMonitor {
     
     
-    // MARK: API
+    // MARK: - Constants
     
     /// When using the `startMonitoringNetworkChanges()` method, register an observer with `NotificationCenter` using this `Notification.Name`.
     public static let networkChangedNotificationName = Notification.Name("NetworkChangedNotification")
     
+    
+    
+    // MARK: - Properties
     
     /// The type of cellular data network available to the iOS device.
     /// The possible values are `4G`, `3G`, `2G`, and `unknown`.
@@ -121,6 +124,9 @@ public class NetworkMonitor {
     }
     
     
+    
+    // MARK: - Initializer
+    
     /// Creates a new instance of `NetworkMonitor` only if the current device's network can be accessed.
     public init?() {
         
@@ -139,6 +145,9 @@ public class NetworkMonitor {
         }
     }
     
+    
+    
+    // MARK: - Methods
     
     /**
         Begins monitoring changes in the `currentNetworkConnection`.
@@ -191,7 +200,7 @@ public class NetworkMonitor {
     
     
     
-    // MARK: Internal
+    // MARK: - Internal
     
     internal var isMonitoringNetworkChanges: Bool = false
     
@@ -277,11 +286,14 @@ public enum NetworkConnection {
 public class NetworkMonitor {
     
     
-    // MARK: API
+    // MARK: - Constants
     
     /// When using the `startMonitoringNetworkChanges()` method, register an observer with `NSNotificationCenter` using this constant.
     public static let networkChangedNotificationName = "NetworkChangedNotification"
     
+    
+    
+    // MARK: - Properties
     
     /// The type of cellular data network available to the iOS device.
     /// The possible values are `4G`, `3G`, `2G`, and `unknown`.
@@ -336,6 +348,9 @@ public class NetworkMonitor {
     }
     
     
+    
+    // MARK: - Initializer
+
     /// Creates a new instance of `NetworkMonitor` only if the current device's network can be accessed.
     public init?() {
         
@@ -353,6 +368,9 @@ public class NetworkMonitor {
     }
     
     
+    
+    // MARK: - Methods
+
     /**
         Begins monitoring changes in the `currentNetworkConnection`.
 
@@ -403,7 +421,7 @@ public class NetworkMonitor {
     
     
     
-    // MARK: Internal
+    // MARK: - Internal
     
     internal var isMonitoringNetworkChanges: Bool = false
     

@@ -56,23 +56,25 @@ public typealias BMSCompletionHandler = (Response?, Error?) -> Void
 
 
 /**
-    Sends HTTP network requests. 
+    Sends HTTP network requests.
+    
+    `BaseRequest` is a simpler alternative to `BMSURLSession` that requires no familiarity with Swift's [URLSession](https://developer.apple.com/reference/foundation/urlsession) API.
      
     When building a BaseRequest object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via `send(requestBody:completionHandler:)`.
      
-    - important: It is recommended to use the `Request` class instead of `BaseRequest`.
+    - important: It is recommended to use the `Request` class instead of `BaseRequest`, since it will replace `BaseRequest` in the future.
 */
 @available(*, deprecated, message: "Please use the Request class instead.")
 open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     
-    // MARK: Constants
+    // MARK: - Constants
     
     public static let contentType = "Content-Type"
     
     
     
-    // MARK: Properties (API)
+    // MARK: - Properties
     
     /// URL that the request is being sent to.
     public private(set) var resourceUrl: String
@@ -100,7 +102,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     
     
-    // MARK: Properties (internal)
+    // MARK: - Properties (internal)
     
     // The old session that handles sending requests. 
     // This will be replaced by `urlSession` once BMSSecurity 3.0 is released.
@@ -128,7 +130,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     
     
-    // MARK: Initializer
+    // MARK: - Initializer
     
     /**
         Creates a new request.
@@ -184,7 +186,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
 
     
     
-    // MARK: Methods (API)
+    // MARK: - Methods
 
     /**
         Send the request asynchronously with an optional request body.
@@ -212,7 +214,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     
     
-    // MARK: Methods (internal)
+    // MARK: - Methods (internal)
     
     private func buildAndSendRequest(url: URL, callback: BMSCompletionHandler?) {
         
@@ -302,7 +304,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
     
     
     
-    // MARK: URLSessionTaskDelegate
+    // MARK: - URLSessionTaskDelegate
     
     // Handle HTTP redirection
     public func urlSession(_ session: URLSession,
@@ -377,22 +379,23 @@ public typealias BMSCompletionHandler = (Response?, NSError?) -> Void
 /**
     Sends HTTP network requests.
 
-    When building a BaseRequest object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as Data when sending the request via `send(requestBody:completionHandler:)`.
+    `BaseRequest` is a simpler alternative to `BMSURLSession` that requires no familiarity with Swift's [NSURLSession](https://developer.apple.com/reference/foundation/urlsession) API.
 
-     - important: It is recommended to use the `Request` class instead of `BaseRequest`.
+    When building a BaseRequest object, all components of the HTTP request must be provided in the initializer, except for the `requestBody`, which can be supplied as NSData when sending the request via `send(requestBody:completionHandler:)`.
 
+    - important: It is recommended to use the `Request` class instead of `BaseRequest`, since it will replace `BaseRequest` in the future.
 */
 @available(*, deprecated, message="Please use the Request class instead.")
 public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     
-    // MARK: Constants
+    // MARK: - Constants
     
     public static let contentType = "Content-Type"
     
     
     
-    // MARK: Properties (API)
+    // MARK: - Properties
     
     /// URL that the request is being sent to.
     public private(set) var resourceUrl: String
@@ -420,7 +423,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     
     
-    // MARK: Properties (internal)
+    // MARK: - Properties (internal)
     
     // The old session that handles sending requests.
     // This will be replaced by `urlSession` once BMSSecurity 3.0 is released.
@@ -448,7 +451,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     
     
-    // MARK: Initializer
+    // MARK: - Initializer
     
     /**
         Creates a new request.
@@ -504,7 +507,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     
     
-    // MARK: Methods (API)
+    // MARK: - Methods
     
     /**
         Send the request asynchronously with an optional request body.
@@ -533,7 +536,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     
     
-    // MARK: Methods (internal)
+    // MARK: - Methods (internal)
     
     private func buildAndSendRequest(url url: NSURL, callback: BMSCompletionHandler?) {
 
@@ -624,7 +627,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
     
     
     
-    // MARK: NSURLSessionTaskDelegate
+    // MARK: - NSURLSessionTaskDelegate
     
     // Handle HTTP redirection
     public func URLSession(session: NSURLSession,
