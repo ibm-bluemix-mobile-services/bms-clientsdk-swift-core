@@ -51,7 +51,64 @@ internal struct BMSURLSessionUtility {
     
     
     // Required to hook in challenge handling via AuthorizationManager, as well as handling auto-retries
-    internal static func generateBmsCompletionHandler(from completionHandler: @escaping BMSDataTaskCompletionHandler, bmsUrlSession: BMSURLSession, urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType, requestBody: Data?, numberOfRetries: Int) -> BMSDataTaskCompletionHandler {
+    internal static func generateDownloadTaskCompletionHandler(from completionHandler: @escaping BMSDownloadTaskCompletionHandler, bmsUrlSession: BMSURLSession, urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType, numberOfRetries: Int) -> BMSDownloadTaskCompletionHandler {
+        
+        let trackingId = UUID().uuidString
+        let startTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+        var requestMetadata = RequestMetadata(url: request.url, startTime: startTime, trackingId: trackingId)
+        
+        return { (url: URL?, response: URLResponse?, error: Error?) -> Void in
+            
+            if shouldRetryRequest(response: response, error: error, numberOfRetries: numberOfRetries) {
+                
+                retryRequest(originalRequest: request, originalTask: originalTask, bmsUrlSession: bmsUrlSession)
+            }
+            else if isAuthorizationManagerRequired(for: response) {
+                
+                // If authentication is successful, resend the original request with the "Authorization" header added
+                handleAuthorizationChallenge(session: urlSession, request: request, requestMetadata: requestMetadata, originalTask: originalTask, handleFailure: {
+                    completionHandler(url, response, error)
+                })
+            }
+            // Don't log the request metadata if the response is a redirect
+            else if let response = response as? HTTPURLResponse, response.statusCode >= 300 && response.statusCode < 400 {
+                
+                completionHandler(url, response, error)
+            }
+            // Only log the request metadata if a response was received so that we have all of the required data for logging
+            else if response != nil {
+                
+                if BMSURLSession.shouldRecordNetworkMetadata {
+                    
+                    requestMetadata.response = response
+                    requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+                    requestMetadata.bytesSent = 0
+                    
+                    if let url = url {
+                        do {
+                            try requestMetadata.bytesReceived = Int64(Data(contentsOf: url).count)
+                        }
+                        catch {
+                            requestMetadata.bytesReceived = 0
+                        }
+                        
+                    }
+                    
+                    requestMetadata.recordMetadata()
+                }
+                
+                completionHandler(url, response, error)
+            }
+            else {
+                
+                completionHandler(url, response, error)
+            }
+        }
+    }
+    
+    
+    // Required to hook in challenge handling via AuthorizationManager, as well as handling auto-retries
+    internal static func generateDataTaskCompletionHandler(from completionHandler: @escaping BMSDataTaskCompletionHandler, bmsUrlSession: BMSURLSession, urlSession: URLSession, request: URLRequest, originalTask: BMSURLSessionTaskType, requestBody: Data?, numberOfRetries: Int) -> BMSDataTaskCompletionHandler {
         
         let trackingId = UUID().uuidString
         let startTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
@@ -317,7 +374,7 @@ internal struct BMSURLSessionUtility {
     
     
     // Needed to hook in challenge handling via AuthorizationManager, as well as handling auto-retries
-    internal static func generateBmsCompletionHandler(from completionHandler: BMSDataTaskCompletionHandler, bmsUrlSession: BMSURLSession, urlSession: NSURLSession, request: NSURLRequest, originalTask: BMSURLSessionTaskType, requestBody: NSData?, numberOfRetries: Int) -> BMSDataTaskCompletionHandler {
+    internal static func generateDataTaskCompletionHandler(from completionHandler: BMSDataTaskCompletionHandler, bmsUrlSession: BMSURLSession, urlSession: NSURLSession, request: NSURLRequest, originalTask: BMSURLSessionTaskType, requestBody: NSData?, numberOfRetries: Int) -> BMSDataTaskCompletionHandler {
         
         let trackingId = NSUUID().UUIDString
         let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds

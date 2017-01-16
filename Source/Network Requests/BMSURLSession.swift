@@ -22,6 +22,10 @@ import BMSAnalyticsAPI
     
 /// Callback for data tasks created with `BMSURLSession`.
 public typealias BMSDataTaskCompletionHandler = (Data?, URLResponse?, Error?) -> Void
+    
+    
+/// Callback for download tasks created with `BMSURLSession`.
+public typealias BMSDownloadTaskCompletionHandler = (URL?, URLResponse?, Error?) -> Void
 
 
     
@@ -102,7 +106,7 @@ public struct BMSURLSession: NetworkSession {
     */
     public func dataTask(with url: URL) -> URLSessionDataTask {
         
-        return dataTask(with: URLRequest(url: url))
+        return self.dataTask(with: URLRequest(url: url))
     }
     
     
@@ -121,7 +125,7 @@ public struct BMSURLSession: NetworkSession {
     */
     public func dataTask(with url: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionDataTask {
         
-        return dataTask(with: URLRequest(url: url), completionHandler: completionHandler)
+        return self.dataTask(with: URLRequest(url: url), completionHandler: completionHandler)
     }
     
     
@@ -169,7 +173,7 @@ public struct BMSURLSession: NetworkSession {
         
         let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(completionHandler)
-        let bmsCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: nil, numberOfRetries: numberOfRetries)
+        let bmsCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: nil, numberOfRetries: numberOfRetries)
         
         let dataTask = urlSession.dataTask(with: bmsRequest, completionHandler: bmsCompletionHandler)
         return dataTask
@@ -221,7 +225,7 @@ public struct BMSURLSession: NetworkSession {
         
         let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(bodyData, completionHandler)
-        let bmsCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: bodyData, numberOfRetries: numberOfRetries)
+        let bmsCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: bodyData, numberOfRetries: numberOfRetries)
         
         let uploadTask = urlSession.uploadTask(with: bmsRequest, from: bodyData, completionHandler: bmsCompletionHandler)
         return uploadTask
@@ -281,7 +285,7 @@ public struct BMSURLSession: NetworkSession {
         
         let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(fileURL, completionHandler)
-        let bmsCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: fileContents, numberOfRetries: numberOfRetries)
+        let bmsCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: fileContents, numberOfRetries: numberOfRetries)
         
         let uploadTask = urlSession.uploadTask(with: bmsRequest, fromFile: fileURL, completionHandler: bmsCompletionHandler)
         return uploadTask
@@ -293,20 +297,14 @@ public struct BMSURLSession: NetworkSession {
     
     public func downloadTask(with url: URL) -> URLSessionDownloadTask {
         
-        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
-        
-        let downloadTask = urlSession.downloadTask(with: url)
-        return downloadTask
+        return self.downloadTask(with: URLRequest(url: url))
     }
     
     
     public func downloadTask(with url: URL,
                             completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
         
-        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
-        
-        let downloadTask = urlSession.downloadTask(with: url, completionHandler: completionHandler)
-        return downloadTask
+        return self.downloadTask(with: URLRequest(url: url), completionHandler: completionHandler)
     }
     
     
@@ -533,7 +531,7 @@ public struct BMSURLSession: NetworkSession {
         
         let urlSession = NSURLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(completionHandler)
-        let bmsCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: nil, numberOfRetries: numberOfRetries)
+        let bmsCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: nil, numberOfRetries: numberOfRetries)
         
         let dataTask = urlSession.dataTaskWithRequest(bmsRequest, completionHandler: bmsCompletionHandler)
         return dataTask
@@ -586,7 +584,7 @@ public struct BMSURLSession: NetworkSession {
         
         let urlSession = NSURLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSURLSessionTaskType.uploadTaskWithDataAndCompletionHandler(bodyData, completionHandler)
-        let bmsCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: bodyData, numberOfRetries: numberOfRetries)
+        let bmsCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: bodyData, numberOfRetries: numberOfRetries)
         
         let uploadTask = urlSession.uploadTaskWithRequest(bmsRequest, fromData: bodyData, completionHandler: bmsCompletionHandler)
         return uploadTask
@@ -644,7 +642,7 @@ public struct BMSURLSession: NetworkSession {
         
         let urlSession = NSURLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         let originalTask = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(fileURL, completionHandler)
-        let bmsCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: fileContents, numberOfRetries: numberOfRetries)
+        let bmsCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, requestBody: fileContents, numberOfRetries: numberOfRetries)
         
         let uploadTask = urlSession.uploadTaskWithRequest(bmsRequest, fromFile: fileURL, completionHandler: bmsCompletionHandler)
         return uploadTask

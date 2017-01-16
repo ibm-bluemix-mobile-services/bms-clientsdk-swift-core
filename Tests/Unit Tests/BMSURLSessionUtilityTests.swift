@@ -70,7 +70,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
     
     
     
-    // MARK: - generateBmsCompletionHandler()
+    // MARK: - generateDataTaskCompletionHandler()
     
     // No auto-retries, AuthorizationManager, redirects, or recorded metadata
     func testGenerateBmsCompletionHandlerDefaultCase() {
@@ -82,7 +82,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
         
         testCompletionHandler(nil, nil, nil)
         
@@ -105,7 +105,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             XCTFail("Should have resent the original request instead of reaching the original completion handler.")
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: originalDataTask, requestBody: nil, numberOfRetries: 1)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: originalDataTask, requestBody: nil, numberOfRetries: 1)
         
         let serverErrorHttpResponse = HTTPURLResponse(url: testUrl, statusCode: 504, httpVersion: nil, headerFields: nil)
         testCompletionHandler(nil, serverErrorHttpResponse, nil)
@@ -123,7 +123,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
         
         let redirectHttpResponse = HTTPURLResponse(url: testUrl, statusCode: 300, httpVersion: nil, headerFields: nil)
         testCompletionHandler(nil, redirectHttpResponse, nil)
@@ -154,7 +154,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
         let testResponse = HTTPURLResponse(url: testUrl, statusCode: 403, httpVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
         testCompletionHandler(nil, testResponse, nil)
@@ -191,7 +191,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
         }
         
         let originalTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(bmsCompletionHandler)
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: originalTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: originalTask, requestBody: nil, numberOfRetries: 0)
         let testResponse = HTTPURLResponse(url: testUrl, statusCode: 200, httpVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
         testCompletionHandler(nil, testResponse, nil)
@@ -214,7 +214,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: URLSession(configuration: .default), request: URLRequest(url: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
         
         let redirectHttpResponse = HTTPURLResponse(url: testUrl, statusCode: 200, httpVersion: nil, headerFields: nil)
         testCompletionHandler(nil, redirectHttpResponse, nil)
@@ -790,7 +790,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
     
     
     
-    // MARK: - generateBmsCompletionHandler()
+    // MARK: - generateDataTaskCompletionHandler()
     
     // No auto-retries, AuthorizationManager, redirects, or recorded metadata
     func testGenerateBmsCompletionHandlerDefaultCase() {
@@ -802,7 +802,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
         
         testCompletionHandler(nil, nil, nil)
         
@@ -825,7 +825,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             XCTFail("Should have resent the original request instead of reaching the original completion handler.")
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: originalDataTask, requestBody: nil, numberOfRetries: 1)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: originalDataTask, requestBody: nil, numberOfRetries: 1)
         
         let serverErrorHttpResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 504, HTTPVersion: nil, headerFields: nil)
         testCompletionHandler(nil, serverErrorHttpResponse, nil)
@@ -843,7 +843,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 1)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 1)
         
         testCompletionHandler(nil, nil, nil)
         
@@ -860,7 +860,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
         
         let redirectHttpResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 300, HTTPVersion: nil, headerFields: nil)
         testCompletionHandler(nil, redirectHttpResponse, nil)
@@ -891,7 +891,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
         let testResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 403, HTTPVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
         testCompletionHandler(nil, testResponse, nil)
@@ -928,7 +928,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
         }
         
         let originalTask = BMSURLSessionTaskType.dataTaskWithCompletionHandler(bmsCompletionHandler)
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: originalTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: .defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: originalTask, requestBody: nil, numberOfRetries: 0)
         let testResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: ["WWW-Authenticate": ""])
         
         testCompletionHandler(nil, testResponse, nil)
@@ -951,7 +951,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
             expectation.fulfill()
         }
         
-        let testCompletionHandler = BMSURLSessionUtility.generateBmsCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
+        let testCompletionHandler = BMSURLSessionUtility.generateDataTaskCompletionHandler(from: bmsCompletionHandler, bmsUrlSession: BMSURLSession(), urlSession: NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()), request: NSURLRequest(URL: testUrl), originalTask: BMSURLSessionTaskType.dataTask, requestBody: nil, numberOfRetries: 0)
         
         let redirectHttpResponse = NSHTTPURLResponse(URL: testUrl, statusCode: 200, HTTPVersion: nil, headerFields: nil)
         testCompletionHandler(nil, redirectHttpResponse, nil)
