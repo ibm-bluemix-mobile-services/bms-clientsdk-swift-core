@@ -286,6 +286,67 @@ public struct BMSURLSession: NetworkSession {
         let uploadTask = urlSession.uploadTask(with: bmsRequest, fromFile: fileURL, completionHandler: bmsCompletionHandler)
         return uploadTask
     }
+    
+    
+    
+    // MARK: - TODO: Inject BMSAnalytics and BMSSecurity into completion handlers and delegates
+    
+    public func downloadTask(with url: URL) -> URLSessionDownloadTask {
+        
+        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        
+        let downloadTask = urlSession.downloadTask(with: url)
+        return downloadTask
+    }
+    
+    
+    public func downloadTask(with url: URL,
+                            completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
+        
+        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        
+        let downloadTask = urlSession.downloadTask(with: url, completionHandler: completionHandler)
+        return downloadTask
+    }
+    
+    
+    public func downloadTask(with request: URLRequest) -> URLSessionDownloadTask {
+        
+        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        
+        let downloadTask = urlSession.downloadTask(with: request)
+        return downloadTask
+    }
+    
+    
+    public func downloadTask(with request: URLRequest,
+                             completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
+        
+        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        
+        let downloadTask = urlSession.downloadTask(with: request, completionHandler: completionHandler)
+        return downloadTask
+    }
+
+    
+    public func downloadTask(withResumeData resumeData: Data) -> URLSessionDownloadTask {
+        
+        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        
+        let downloadTask = urlSession.downloadTask(withResumeData: resumeData)
+        return downloadTask
+    }
+    
+    
+    func downloadTask(withResumeData resumeData: Data,
+                      completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
+        
+        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        
+        let downloadTask = urlSession.downloadTask(withResumeData: resumeData, completionHandler: completionHandler)
+        return downloadTask
+    }
+
 }
 
     
