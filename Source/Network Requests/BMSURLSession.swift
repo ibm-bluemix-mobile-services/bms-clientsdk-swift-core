@@ -320,9 +320,13 @@ public struct BMSURLSession: NetworkSession {
     public func downloadTask(with request: URLRequest,
                              completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
         
-        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        let bmsRequest = BMSURLSessionUtility.addBMSHeaders(to: request, onlyIf: !isBMSAuthorizationRequest)
         
-        let downloadTask = urlSession.downloadTask(with: request, completionHandler: completionHandler)
+        let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        let originalTask = BMSURLSessionTaskType.downloadTaskWithRequest(bmsRequest)
+        let bmsCompletionHandler = BMSURLSessionUtility.generateDownloadTaskCompletionHandler(from: completionHandler, bmsUrlSession: self, urlSession: urlSession, request: bmsRequest, originalTask: originalTask, numberOfRetries: numberOfRetries)
+        
+        let downloadTask = urlSession.downloadTask(with: request, completionHandler: bmsCompletionHandler)
         return downloadTask
     }
 
@@ -340,6 +344,8 @@ public struct BMSURLSession: NetworkSession {
                       completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask {
         
         let urlSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
+        
+        
         
         let downloadTask = urlSession.downloadTask(withResumeData: resumeData, completionHandler: completionHandler)
         return downloadTask
@@ -361,6 +367,11 @@ internal protocol NetworkSession {
     func uploadTask(with request: URLRequest, from bodyData: Data?, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask
     func uploadTask(with request: URLRequest, fromFile fileURL: URL) -> URLSessionUploadTask
     func uploadTask(with request: URLRequest, fromFile fileURL: URL, completionHandler: @escaping BMSDataTaskCompletionHandler) -> URLSessionUploadTask
+    
+    func downloadTask(with request: URLRequest) -> URLSessionDownloadTask
+    func downloadTask(with request: URLRequest, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask
+    func downloadTask(withResumeData resumeData: Data) -> URLSessionDownloadTask
+    func downloadTask(withResumeData resumeData: Data, completionHandler: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask
 }
 
 extension URLSession: NetworkSession { }

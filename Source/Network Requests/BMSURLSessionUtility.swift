@@ -91,7 +91,6 @@ internal struct BMSURLSessionUtility {
                         catch {
                             requestMetadata.bytesReceived = 0
                         }
-                        
                     }
                     
                     requestMetadata.recordMetadata()
@@ -247,7 +246,7 @@ internal struct BMSURLSessionUtility {
     }
     
     
-    internal static func recordMetadataCompletionHandler(request: URLRequest, requestMetadata: RequestMetadata, originalCompletionHandler: @escaping BMSDataTaskCompletionHandler) -> BMSDataTaskCompletionHandler {
+    internal static func recordMetadataDataTaskCompletionHandler(request: URLRequest, requestMetadata: RequestMetadata, originalCompletionHandler: @escaping BMSDataTaskCompletionHandler) -> BMSDataTaskCompletionHandler {
         
         var requestMetadata = requestMetadata
         
@@ -267,7 +266,36 @@ internal struct BMSURLSessionUtility {
         
         return newCompletionHandler
     }
+
     
+    internal static func recordMetadataDownloadTaskCompletionHandler(request: URLRequest, requestMetadata: RequestMetadata, originalCompletionHandler: @escaping BMSDownloadTaskCompletionHandler) -> BMSDownloadTaskCompletionHandler {
+        
+        var requestMetadata = requestMetadata
+        
+        let newCompletionHandler = {(url: URL?, response: URLResponse?, error: Error?) -> Void in
+            
+            if BMSURLSession.shouldRecordNetworkMetadata {
+                
+                requestMetadata.endTime = Int64(Date.timeIntervalSinceReferenceDate * 1000) // milliseconds
+                requestMetadata.bytesSent = Int64(request.httpBody?.count ?? 0)
+                if let url = url {
+                    do {
+                        try requestMetadata.bytesReceived = Int64(Data(contentsOf: url).count)
+                    }
+                    catch {
+                        requestMetadata.bytesReceived = 0
+                    }
+                }
+                
+                requestMetadata.recordMetadata()
+            }
+            
+            originalCompletionHandler(url, response, error)
+        }
+        
+        return newCompletionHandler
+    }
+
 }
 
 
@@ -287,17 +315,31 @@ internal enum BMSURLSessionTaskType {
     case uploadTaskWithFileAndCompletionHandler(URL, BMSDataTaskCompletionHandler)
     case uploadTaskWithDataAndCompletionHandler(Data?, BMSDataTaskCompletionHandler)
     
+    case downloadTaskWithRequest(URLRequest)
+    case downloadTaskWithResumeData(Data)
+    case downloadTaskWithRequestAndCompletionHandler(URLRequest, BMSDownloadTaskCompletionHandler)
+    case downloadTaskWithResumeDataAndCompletionHandler(Data, BMSDownloadTaskCompletionHandler)
+    
     
     // Recreate the URLSessionTask from the original request to later resend it
     func prepareForResending(urlSession: NetworkSession, request: URLRequest, requestMetadata: RequestMetadata? = nil) -> URLSessionTask {
         
         // If this request is considered a continuation of the original request, then we record metadata from the original request instead of creating a new set of metadata (i.e. for MCA authorization requests). Otherwise, return the original completion handler (i.e. for auto-retries).
         // This is not required for delegates since this is already taken care of in BMSURLSessionDelegate
-        func createNewCompletionHandler(originalCompletionHandler: @escaping BMSDataTaskCompletionHandler) -> BMSDataTaskCompletionHandler {
+        func createNewDataTaskCompletionHandler(originalCompletionHandler: @escaping BMSDataTaskCompletionHandler) -> BMSDataTaskCompletionHandler {
             
             var completionHandler = originalCompletionHandler
             if let requestMetadata = requestMetadata {
-                completionHandler = BMSURLSessionUtility.recordMetadataCompletionHandler(request: request, requestMetadata: requestMetadata, originalCompletionHandler: completionHandler)
+                completionHandler = BMSURLSessionUtility.recordMetadataDataTaskCompletionHandler(request: request, requestMetadata: requestMetadata, originalCompletionHandler: completionHandler)
+            }
+            return completionHandler
+        }
+        
+        func createNewDownloadTaskCompletionHandler(originalCompletionHandler: @escaping BMSDownloadTaskCompletionHandler) -> BMSDownloadTaskCompletionHandler {
+            
+            var completionHandler = originalCompletionHandler
+            if let requestMetadata = requestMetadata {
+                completionHandler = BMSURLSessionUtility.recordMetadataDownloadTaskCompletionHandler(request: request, requestMetadata: requestMetadata, originalCompletionHandler: completionHandler)
             }
             return completionHandler
         }
@@ -308,7 +350,7 @@ internal enum BMSURLSessionTaskType {
             return urlSession.dataTask(with: request)
             
         case .dataTaskWithCompletionHandler(let completionHandler):
-            let newCompletionHandler = createNewCompletionHandler(originalCompletionHandler: completionHandler)
+            let newCompletionHandler = createNewDataTaskCompletionHandler(originalCompletionHandler: completionHandler)
             return urlSession.dataTask(with: request, completionHandler: newCompletionHandler)
             
         case .uploadTaskWithFile(let file):
@@ -318,12 +360,26 @@ internal enum BMSURLSessionTaskType {
             return urlSession.uploadTask(with: request, from: data)
             
         case .uploadTaskWithFileAndCompletionHandler(let file, let completionHandler):
-            let newCompletionHandler = createNewCompletionHandler(originalCompletionHandler: completionHandler)
+            let newCompletionHandler = createNewDataTaskCompletionHandler(originalCompletionHandler: completionHandler)
             return urlSession.uploadTask(with: request, fromFile: file, completionHandler: newCompletionHandler)
             
         case .uploadTaskWithDataAndCompletionHandler(let data, let completionHandler):
-            let newCompletionHandler = createNewCompletionHandler(originalCompletionHandler: completionHandler)
+            let newCompletionHandler = createNewDataTaskCompletionHandler(originalCompletionHandler: completionHandler)
             return urlSession.uploadTask(with: request, from: data, completionHandler: newCompletionHandler)
+            
+        case .downloadTaskWithRequest(let request):
+            return urlSession.downloadTask(with: request)
+            
+        case .downloadTaskWithResumeData(let data):
+            return urlSession.downloadTask(withResumeData: data)
+            
+        case .downloadTaskWithRequestAndCompletionHandler(let request, let completionHandler):
+            let newCompletionHandler = createNewDownloadTaskCompletionHandler(originalCompletionHandler: completionHandler)
+            return urlSession.downloadTask(with: request, completionHandler: newCompletionHandler)
+            
+        case .downloadTaskWithResumeDataAndCompletionHandler(let data, let completionHandler):
+            let newCompletionHandler = createNewDownloadTaskCompletionHandler(originalCompletionHandler: completionHandler)
+            return urlSession.downloadTask(withResumeData: data, completionHandler: newCompletionHandler)
         }
     }
     
