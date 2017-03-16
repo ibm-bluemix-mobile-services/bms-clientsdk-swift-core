@@ -1,6 +1,3 @@
 coverage_service: coveralls
 xcodeproj: BMSCore.xcodeproj
 scheme: BMSCore iOS
-build_directory: Build/
-ignore:
-  - Tests/*
