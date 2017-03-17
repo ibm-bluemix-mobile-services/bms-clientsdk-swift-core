@@ -20,11 +20,7 @@ script:
   - pod lib lint --allow-warnings
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore iOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
   - xcodebuild -workspace 'BMSCore.xcworkspace' -scheme 'BMSCore watchOS' clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO
-  # For Xcode 7, test with iOS 8.1
-  - if [[ "${TRAVIS_JOB_NUMBER}" = *".1"* ]]; then
-      travis_retry xcodebuild test -workspace BMSCore.xcworkspace -scheme 'BMSCore Tests' -destination 'platform=iOS Simulator,name=iPhone 6,OS=8.1';
-    fi
-  # For Xcode 8, test with iOS 10.1
+  # Do not test with Xcode 7 because the tests contain Swift 3 code
   - if [[ "${TRAVIS_JOB_NUMBER}" = *".2"* ]]; then
       travis_retry xcodebuild test -workspace BMSCore.xcworkspace -scheme 'BMSCore Tests' -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.1';
     fi
