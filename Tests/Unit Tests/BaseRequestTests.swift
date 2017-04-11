@@ -111,7 +111,7 @@ class BaseRequestTests: XCTestCase {
         
         self.waitForExpectations(timeout: 5.0) { (error: Error?) -> Void in
             if error != nil {
-                XCTFail("Expectation failed with error: \(error)")
+                XCTFail("Expectation failed with error: \(String(describing: error))")
             }
         }
     }
