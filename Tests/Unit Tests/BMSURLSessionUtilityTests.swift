@@ -456,7 +456,6 @@ class BMSURLSessionUtilityTests: XCTestCase {
         let uploadTaskType = BMSURLSessionTaskType.uploadTaskWithFileAndCompletionHandler(testUrl, testCompletionHandler)
         let testRequestMetadata = RequestMetadata(url: nil, startTime: 0, trackingId: "")
         
-        let bmsUrlSession = BMSURLSession()
         BMSURLSessionUtility.handleAuthorizationChallenge(session: testSession, request: testRequest, requestMetadata: testRequestMetadata, originalTask: uploadTaskType, handleFailure: {
             
             XCTFail("Should have successfully regenerated the original request.")
