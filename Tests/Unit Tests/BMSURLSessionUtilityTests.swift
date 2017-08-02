@@ -53,8 +53,8 @@ class BMSURLSessionUtilityTests: XCTestCase {
         
         BMSClient.sharedInstance.authorizationManager = TestAuthorizationManager()
         
-        XCTAssertNil(BaseRequest.requestAnalyticsData)
-        BaseRequest.requestAnalyticsData = "testData"
+        XCTAssertNil(Request.requestAnalyticsData)
+        Request.requestAnalyticsData = "testData"
         
         let originalRequest = URLRequest(url: testUrl)
         let preparedRequest = BMSURLSessionUtility.addBMSHeaders(to: originalRequest, onlyIf: true)
@@ -63,7 +63,7 @@ class BMSURLSessionUtilityTests: XCTestCase {
         XCTAssertEqual(preparedRequest.allHTTPHeaderFields?["x-mfp-analytics-metadata"], "testData")
         XCTAssertNotNil(preparedRequest.allHTTPHeaderFields?["x-wl-analytics-tracking-id"])
         
-        BaseRequest.requestAnalyticsData = nil
+        Request.requestAnalyticsData = nil
         
         BMSClient.sharedInstance.authorizationManager = BaseAuthorizationManager()
     }
