@@ -323,7 +323,7 @@ internal struct BMSURLSessionUtility {
         let trackingId = NSUUID().UUIDString
         let startTime = Int64(NSDate.timeIntervalSinceReferenceDate() * 1000) // milliseconds
         var requestMetadata = RequestMetadata(url: request.URL, startTime: startTime, trackingId: trackingId)
-        requestMetadata.requestMethod = request.httpMethod
+        requestMetadata.requestMethod = request.HTTPMethod
         
         return { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
