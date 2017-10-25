@@ -40,6 +40,9 @@ public struct RequestMetadata {
     // The response received.
     public var response: URLResponse? = nil
     
+    // The request method
+    public var requestMethod: String? = nil
+
     // The time at which the request is considered complete.
     public var endTime: Int64 = 0
     
@@ -68,6 +71,7 @@ public struct RequestMetadata {
         responseMetadata["$roundTripTime"] = NSNumber(value: roundTripTime)
         responseMetadata["$bytesSent"] = NSNumber(value: bytesSent)
         responseMetadata["$bytesReceived"] = NSNumber(value: bytesReceived)
+        responseMetadata["$requestMethod"] = requestMethod
         
         if let urlString = url?.absoluteString {
             responseMetadata["$path"] = urlString
@@ -132,7 +136,10 @@ public struct RequestMetadata {
     
     // The response received.
     public var response: NSURLResponse? = nil
-    
+
+    // The request method
+    public var requestMethod: String? = nil
+
     // The time at which the request is considered complete.
     public var endTime: Int64 = 0
     
@@ -161,6 +168,7 @@ public struct RequestMetadata {
         responseMetadata["$roundTripTime"] = NSNumber(integer: roundTripTime)
         responseMetadata["$bytesSent"] = NSNumber(longLong: bytesSent)
         responseMetadata["$bytesReceived"] = NSNumber(longLong: bytesReceived)
+	responseMetadata["$requestMethod"] = requestMethod
         
         if let urlString = url?.absoluteString {
             responseMetadata["$path"] = urlString

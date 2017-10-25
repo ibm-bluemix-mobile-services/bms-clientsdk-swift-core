@@ -1,12 +1,12 @@
 PODS:
-  - BMSAnalyticsAPI (2.2.1)
+  - BMSAnalyticsAPI (2.2.2)
 
 DEPENDENCIES:
   - BMSAnalyticsAPI (~> 2.2)
 
 SPEC CHECKSUMS:
-  BMSAnalyticsAPI: 2e07dee6452e3cdbdc5fd0ee7362b66a281e3963
+  BMSAnalyticsAPI: 10c9301b13f0ae1d4ef5c219ddf4dee50fdc5513
 
 PODFILE CHECKSUM: 04c2dbaedce0b608b2af32831a066e42534f33f8
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.2.0.beta.1
