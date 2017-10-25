@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name              = 'BMSCore'
-  s.version           = '2.3.3'
+  s.version           = '2.3.4'
   s.summary           = 'The core component of the Swift client SDK for IBM Bluemix Mobile Services'
   s.homepage          = 'https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-core'
   s.documentation_url = 'https://ibm-bluemix-mobile-services.github.io/API-docs/client-SDK/BMSCore/Swift/index.html'
