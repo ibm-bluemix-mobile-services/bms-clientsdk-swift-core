@@ -22,19 +22,19 @@ import XCTest
     
     
 
-class BaseRequestTests: XCTestCase {
+class RequestTests: XCTestCase {
     
     
     // MARK: init
     
     func testInitWithAllParameters() {
         
-        let request = BaseRequest(url: "http://example.com", method: HttpMethod.GET, headers:[BaseRequest.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], timeout: 10.0, autoRetries: 4)
+        let request = Request(url: "http://example.com", method: HttpMethod.GET, headers:[Request.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], timeout: 10.0, autoRetries: 4)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, 10.0)
-        XCTAssertEqual(request.headers, [BaseRequest.contentType: "text/plain"])
+        XCTAssertEqual(request.headers, [Request.contentType: "text/plain"])
         XCTAssertEqual(request.queryParameters!, ["someKey": "someValue"])
         XCTAssertEqual(request.urlSession.numberOfRetries, 4)
         XCTAssertNotNil(request.networkRequest)
@@ -44,14 +44,14 @@ class BaseRequestTests: XCTestCase {
     
         BMSClient.sharedInstance.initialize(bluemixAppRoute: "https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.Region.usSouth)
         
-        let request = BaseRequest(url: "/path/to/resource", headers: nil, queryParameters: nil)
+        let request = Request(url: "/path/to/resource", headers: nil, queryParameters: nil)
         
         XCTAssertEqual(request.resourceUrl, "https://mybluemixapp.net/path/to/resource")
     }
     
     func testInitWithDefaultParameters() {
         
-        let request = BaseRequest(url: "http://example.com", headers: nil, queryParameters: nil)
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: nil)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
@@ -67,7 +67,7 @@ class BaseRequestTests: XCTestCase {
     
     func testSend() {
         
-        let request = BaseRequest(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
         
         let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".data(using: .utf8)
         
@@ -81,7 +81,7 @@ class BaseRequestTests: XCTestCase {
     
     func testSendWithoutOverwritingContentTypeHeader() {
         
-        let request = BaseRequest(url: "http://example.com", headers: [BaseRequest.contentType: "media-type"], queryParameters: ["someKey": "someValue"])
+        let request = Request(url: "http://example.com", headers: [Request.contentType: "media-type"], queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
         let bodyData = "Some data text".data(using: .utf8)
@@ -91,7 +91,7 @@ class BaseRequestTests: XCTestCase {
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[BaseRequest.contentType], "media-type")
+        XCTAssertEqual(request.headers[Request.contentType], "media-type")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
@@ -100,7 +100,7 @@ class BaseRequestTests: XCTestCase {
         let responseReceivedExpectation = self.expectation(description: "Receive network response")
         
         let badUrl = "!@#$%^&*()"
-        let request = BaseRequest(url: badUrl, headers: nil, queryParameters: nil)
+        let request = Request(url: badUrl, headers: nil, queryParameters: nil)
         
         request.send { (response: Response?, error: Error?) -> Void in
             XCTAssertNil(response)
@@ -125,7 +125,7 @@ class BaseRequestTests: XCTestCase {
         let parameters: [String: String] = [:]
         
         let url = URL(string: "http://example.com")
-        let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( describing: Request.append(queryParameters: parameters, toURL: url!)! )
         
         XCTAssertEqual(finalUrl, "http://example.com")
     }
@@ -136,7 +136,7 @@ class BaseRequestTests: XCTestCase {
         let parameters = ["key1": "value1", "key2": "value2"]
         
         let url = URL(string: "http://example.com")
-        let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( describing: Request.append(queryParameters: parameters, toURL: url!)! )
         
         XCTAssertEqual(finalUrl, "http://example.com?key2=value2&key1=value1")
     }
@@ -146,7 +146,7 @@ class BaseRequestTests: XCTestCase {
         let parameters = ["Reserved_characters": "\"#%<>[\\]^`{|}"]
         
         let url = URL(string: "http://example.com")
-        let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( describing: Request.append(queryParameters: parameters, toURL: url!)! )
         
         XCTAssert(finalUrl.contains("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
     }
@@ -156,7 +156,7 @@ class BaseRequestTests: XCTestCase {
         let parameters = ["key1": "value1", "key2": "value2"]
         
         let url = URL(string: "http://example.com?hardCodedKey=hardCodedValue")
-        let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( describing: Request.append(queryParameters: parameters, toURL: url!)! )
         
         XCTAssertEqual(finalUrl, "http://example.com?hardCodedKey=hardCodedValue&key2=value2&key1=value1")
     }
@@ -166,7 +166,7 @@ class BaseRequestTests: XCTestCase {
         let parameters = ["k1": "v1", "k2": "v2", "k3": "v3", "k4": "v4"]
         
         let url = URL(string: "http://example.com")
-        let finalUrl = String( describing: BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( describing: Request.append(queryParameters: parameters, toURL: url!)! )
         
         let numberOfAmpersands = finalUrl.components(separatedBy: "&")
         
@@ -191,19 +191,19 @@ class BaseRequestTests: XCTestCase {
     
     
 
-class BaseRequestTests: XCTestCase {
+class RequestTests: XCTestCase {
     
     
     // MARK: init
     
     func testInitWithAllParameters() {
         
-        let request = BaseRequest(url: "http://example.com", method: HttpMethod.GET, headers:[BaseRequest.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], timeout: 10.0, autoRetries: 4)
+        let request = Request(url: "http://example.com", method: HttpMethod.GET, headers:[Request.contentType: "text/plain"], queryParameters: ["someKey": "someValue"], timeout: 10.0, autoRetries: 4)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
         XCTAssertEqual(request.timeout, 10.0)
-        XCTAssertEqual(request.headers, [BaseRequest.contentType: "text/plain"])
+        XCTAssertEqual(request.headers, [Request.contentType: "text/plain"])
         XCTAssertEqual(request.queryParameters!, ["someKey": "someValue"])
         XCTAssertEqual(request.urlSession.numberOfRetries, 4)
         XCTAssertNotNil(request.networkRequest)
@@ -213,14 +213,14 @@ class BaseRequestTests: XCTestCase {
         
         BMSClient.sharedInstance.initialize(bluemixAppRoute: "https://mybluemixapp.net", bluemixAppGUID: "1234", bluemixRegion: BMSClient.Region.usSouth)
         
-        let request = BaseRequest(url: "/path/to/resource", headers: nil, queryParameters: nil)
+        let request = Request(url: "/path/to/resource", headers: nil, queryParameters: nil)
         
         XCTAssertEqual(request.resourceUrl, "https://mybluemixapp.net/path/to/resource")
     }
     
     func testInitWithDefaultParameters() {
         
-        let request = BaseRequest(url: "http://example.com", headers: nil, queryParameters: nil)
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: nil)
         
         XCTAssertEqual(request.resourceUrl, "http://example.com")
         XCTAssertEqual(request.httpMethod.rawValue, "GET")
@@ -236,7 +236,7 @@ class BaseRequestTests: XCTestCase {
     
     func testSend() {
         
-        let request = BaseRequest(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
+        let request = Request(url: "http://example.com", headers: nil, queryParameters: ["someKey": "someValue"])
         
         let requestData = "{\"key1\": \"value1\", \"key2\": \"value2\"}".dataUsingEncoding(NSUTF8StringEncoding)
         
@@ -251,7 +251,7 @@ class BaseRequestTests: XCTestCase {
     
     func testSendWithoutOverwritingContentTypeHeader() {
         
-        let request = BaseRequest(url: "http://example.com", headers: [BaseRequest.contentType: "media-type"], queryParameters: ["someKey": "someValue"])
+        let request = Request(url: "http://example.com", headers: [Request.contentType: "media-type"], queryParameters: ["someKey": "someValue"])
         let dataString = "Some data text"
         
         let bodyData = "Some data text".dataUsingEncoding(NSUTF8StringEncoding)
@@ -261,7 +261,7 @@ class BaseRequestTests: XCTestCase {
         XCTAssertNil(request.headers["x-mfp-analytics-metadata"]) // This can only be set by the BMSAnalytics framework
         
         XCTAssertEqual(requestBodyAsString, dataString)
-        XCTAssertEqual(request.headers[BaseRequest.contentType], "media-type")
+        XCTAssertEqual(request.headers[Request.contentType], "media-type")
         XCTAssertEqual(request.resourceUrl, "http://example.com?someKey=someValue")
     }
     
@@ -270,7 +270,7 @@ class BaseRequestTests: XCTestCase {
         let responseReceivedExpectation = self.expectationWithDescription("Receive network response")
         
         let badUrl = "!@#$%^&*()"
-        let request = BaseRequest(url: badUrl, headers: nil, queryParameters: nil)
+        let request = Request(url: badUrl, headers: nil, queryParameters: nil)
         
         request.send { (response: Response?, error: NSError?) -> Void in
             XCTAssertNil(response)
@@ -296,7 +296,7 @@ class BaseRequestTests: XCTestCase {
         let parameters: [String: String] = [:]
         
         let url = NSURL(string: "http://example.com")
-        let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( Request.append(queryParameters: parameters, toURL: url!)! )
     
         XCTAssertEqual(finalUrl, "http://example.com")
     }
@@ -307,7 +307,7 @@ class BaseRequestTests: XCTestCase {
         let parameters = ["key1": "value1", "key2": "value2"]
         
         let url = NSURL(string: "http://example.com")
-        let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( Request.append(queryParameters: parameters, toURL: url!)! )
         
         XCTAssertEqual(finalUrl, "http://example.com?key1=value1&key2=value2")
     }
@@ -317,7 +317,7 @@ class BaseRequestTests: XCTestCase {
         let parameters = ["Reserved_characters": "\"#%<>[\\]^`{|}"]
         
         let url = NSURL(string: "http://example.com")
-        let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( Request.append(queryParameters: parameters, toURL: url!)! )
         
         XCTAssert(finalUrl.containsString("%22%23%25%3C%3E%5B%5C%5D%5E%60%7B%7C%7D"))
     }
@@ -327,7 +327,7 @@ class BaseRequestTests: XCTestCase {
         let parameters = ["key1": "value1", "key2": "value2"]
         
         let url = NSURL(string: "http://example.com?hardCodedKey=hardCodedValue")
-        let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( Request.append(queryParameters: parameters, toURL: url!)! )
     
         XCTAssertEqual(finalUrl, "http://example.com?hardCodedKey=hardCodedValue&key1=value1&key2=value2")
     }
@@ -337,7 +337,7 @@ class BaseRequestTests: XCTestCase {
         let parameters = ["k1": "v1", "k2": "v2", "k3": "v3", "k4": "v4"]
         
         let url = NSURL(string: "http://example.com")
-        let finalUrl = String( BaseRequest.append(queryParameters: parameters, toURL: url!)! )
+        let finalUrl = String( Request.append(queryParameters: parameters, toURL: url!)! )
     
         let numberOfAmpersands = finalUrl.componentsSeparatedByString("&")
     

@@ -13,7 +13,6 @@ custom_categories:
   - name: Network Requests
     children:
     - BMSURLSession
-    - BaseRequest
     - Request
     - Response
     - HttpMethod
