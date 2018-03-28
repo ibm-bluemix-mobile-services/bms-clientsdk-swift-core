@@ -168,7 +168,7 @@ open class BaseRequest: NSObject, URLSessionTaskDelegate {
         if headers != nil {
             self.headers = headers!
         }
-        self.headers["application/bundleId"] = BaseAppIdentity().ID
+        self.headers["x-bms-core-application/bundleId"] = BaseAppIdentity().ID
         self.timeout = timeout
         self.queryParameters = queryParameters
                 
@@ -490,7 +490,7 @@ public class BaseRequest: NSObject, NSURLSessionTaskDelegate {
         if headers != nil {
             self.headers = headers!
         }
-        self.headers["application/bundleId"] = BaseAppIdentity().ID
+        self.headers["x-bms-core-application/bundleId"] = BaseAppIdentity().ID
         self.timeout = timeout
         self.queryParameters = queryParameters
         
