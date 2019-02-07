@@ -67,6 +67,13 @@ public class BMSClient {
             - note: Use this in the `BMSClient.initialize(bluemixAppRoute:bluemixAppGUID:bluemixRegion:)` method.
          */
 	public static let usEast = ".us-east.bluemix.net"
+    
+    /**
+	    The Tokyo Bluemix region.
+         
+            - note: Use this in the `BMSClient.initialize(bluemixAppRoute:bluemixAppGUID:bluemixRegion:)` method.
+         */
+	public static let jpTok = ".jp-tok.bluemix.net"
         
     }
     
