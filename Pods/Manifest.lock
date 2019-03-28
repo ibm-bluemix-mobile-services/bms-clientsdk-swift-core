@@ -1,12 +1,16 @@
 PODS:
-  - BMSAnalyticsAPI (2.2.3)
+  - BMSAnalyticsAPI (2.3.1)
 
 DEPENDENCIES:
-  - BMSAnalyticsAPI (~> 2.2)
+  - BMSAnalyticsAPI (~> 2.3)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - BMSAnalyticsAPI
 
 SPEC CHECKSUMS:
-  BMSAnalyticsAPI: d259379069bb11d2ff365bf5b796a2677dfc3849
+  BMSAnalyticsAPI: f9c740eb3c0857c0955e58a10321a96b5d85304e
 
-PODFILE CHECKSUM: 04c2dbaedce0b608b2af32831a066e42534f33f8
+PODFILE CHECKSUM: e4a8829675921e8b7ac9adc6c0e4d19439b2e46c
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.6.1

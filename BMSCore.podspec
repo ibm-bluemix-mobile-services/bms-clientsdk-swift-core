@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name              = 'BMSCore'
-  s.version           = '2.3.7'
+  s.version           = '2.4.0'
   s.summary           = 'The core component of the Swift client SDK for IBM Bluemix Mobile Services'
   s.homepage          = 'https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-swift-core'
   s.documentation_url = 'https://ibm-bluemix-mobile-services.github.io/API-docs/client-SDK/BMSCore/Swift/index.html'
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
 
   s.module_map = 'Source/Resources/module.modulemap'
 
-  s.dependency 'BMSAnalyticsAPI', '~> 2.2'
+  s.dependency 'BMSAnalyticsAPI', '~> 2.3'
 
   s.requires_arc = true
 
